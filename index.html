@@ -86,7 +86,7 @@
       box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.55);
     }
     .brand-icon span {
-      font-size: 18px;9
+      font-size: 18px;
     }
     .brand-text {
       display: flex;
@@ -872,162 +872,19 @@
   <script>
     const VIEWS = ['homeView','calendarView','catalogView','gardenView','diaryView','pestsView','fertView','moreView'];
 
-    // Cultivos con nombre de archivo de imagen explícito
-    const crops = [
-  // Usa los mismos nombres de archivo que tienes en /img
-  { id:'aji', nombre:'Ajíes', tipo:'Fruto', sol:'Sol pleno', dias:'90-120 días', meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-  { id:'pimiento', nombre:'Pimientos', tipo:'Fruto', sol:'Sol pleno', dias:'90 días', meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-  { id:'cilantro', nombre:'Cilantrillo', tipo:'Hoja', sol:'Media sombra', dias:'30-45 días', meses:['Todo el año'] },
-  { id:'recao', nombre:'Recao', tipo:'Hoja', sol:'Media sombra', dias:'8-10 semanas', meses:['Todo el año'] },
-  { id:'tomate', nombre:'Tomate', tipo:'Fruto', sol:'Sol pleno', dias:['75 días'], meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
-  { id:'lechuga', nombre:'Lechuga', tipo:'Hoja', sol:'Sol suave', dias:'45 días', meses:['Enero','Febrero','Noviembre','Diciembre'] },
-  { id:'cebolla', nombre:'Cebolla', tipo:'Bulbo', sol:'Sol pleno', dias:'110 días', meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-  { id:'menta', nombre:'Menta', tipo:'Hoja', sol:'Media sombra', dias:'60-90 días', meses:['Todo el año'] }
-    ];
-
-    const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-
-    function showView(id) {
-      VIEWS.forEach(v => {
-        const el = document.getElementById(v);
-        if (!el) return;
-        el.classList.toggle('active', v === id);
-      });
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.view === id || (id === 'homeView' && btn.dataset.view === 'homeView'));
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    document.querySelectorAll('[data-view-target]').forEach(el => {
-      el.addEventListener('click', () => {
-        const id = el.dataset.viewTarget;
-        if (id) showView(id);
-      });
-    });
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.view;
-        if (id) showView(id);
-      });
-    });
-
-    // Calendario
-    const monthButtonsContainer = document.getElementById('monthButtons');
-    const monthResultsContainer = document.getElementById('monthResults');
-    let activeMonth = null;
-
-    function renderMonthButtons() {
-      monthButtonsContainer.innerHTML = '';
-      months.forEach(m => {
-        const btn = document.createElement('button');
-        btn.className = 'month-btn';
-        btn.textContent = m;
-        btn.addEventListener('click', () => {
-          activeMonth = m;
-          updateMonthButtons();
-          renderMonthResults();
-        });
-        monthButtonsContainer.appendChild(btn);
-      });
-      // seleccionar mes actual por defecto
-      const now = new Date();
-      activeMonth = months[now.getMonth()];
-      updateMonthButtons();
-      renderMonthResults();
-    }
-
-    function updateMonthButtons() {
-      const nodes = monthButtonsContainer.querySelectorAll('.month-btn');
-      nodes.forEach(btn => {
-        btn.classList.toggle('active', btn.textContent === activeMonth);
-      });
-    }
-
-    function renderMonthResults() {
-      monthResultsContainer.innerHTML = '';
-      if (!activeMonth) return;
-      const filtered = crops.filter(c => c.meses.includes(activeMonth) || c.meses.includes('Todo el año'));
-      if (!filtered.length) {
-        const div = document.createElement('div');
-        div.className = 'empty-state';
-        div.innerHTML = '<span class="emoji">🤔</span>No hay cultivos configurados para este mes aún.';
-        monthResultsContainer.appendChild(div);
-        return;
-      }
-      filtered.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'list-item';
-        const main = document.createElement('div');
-        main.className = 'list-main';
-        const title = document.createElement('div');
-        title.className = 'list-title';
-        title.textContent = c.nombre;
-        const meta = document.createElement('div');
-        meta.className = 'list-meta';
-        const pillDias = document.createElement('span');
-        pillDias.className = 'meta-pill';
-        pillDias.textContent = c.dias;
-        meta.appendChild(pillDias);
-        const pillTipo = document.createElement('span');
-        pillTipo.className = 'meta-pill';
-        pillTipo.textContent = c.tipo;
-        meta.appendChild(pillTipo);
-        const pillSol = document.createElement('span');
-        pillSol.className = 'meta-pill';
-        pillSol.textContent = c.sol;
-        meta.appendChild(pillSol);
-        const subt = document.createElement('div');
-        subt.className = 'section-subtitle';
-        subt.textContent = 'Mes recomendado: ' + activeMonth;
-        main.appendChild(title);
-        main.appendChild(meta);
-        main.appendChild(subt);
-        item.appendChild(main);
-        monthResultsContainer.appendChild(item);
-      });
-    }
-
-    // Catálogo
-    const catalogGrid = document.getElementById('catalogGrid');
-    const catalogFilters = document.getElementById('catalogFilters');
-    let activeTypeFilter = 'Todos';
-
-    function renderCatalogFilters() {
-      const tipos = Array.from(new Set(crops.map(c => c.tipo)));
-      const all = ['Todos', ...tipos];
-      catalogFilters.innerHTML = '';
-      all.forEach(t => {
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'chip';
-        chip.innerHTML = '<span class="emoji">' + (t === 'Todos' ? '✨' : '🥬') + '</span><span>' + t + '</span>';
-        chip.addEventListener('click', () => {
-          activeTypeFilter = t;
-          renderCatalog();
-        });
-        catalogFilters.appendChild(chip);
-      });
-    }
-
-    function renderCatalog() {
-      catalogGrid.innerHTML = '';
-  <script>
-    const VIEWS = ['homeView','calendarView','catalogView','gardenView','diaryView','pestsView','fertView','moreView'];
-
-    // 👇 RUTA BASE FIJA A TU REPO EN GITHUB PAGES
+    // Ruta fija a las imágenes en GitHub Pages
     const IMAGE_BASE = 'https://eldespertarpr.github.io/MI-Siembra-Inteligente/img/';
 
-    // Cultivos (ids = nombre EXACTO del archivo sin .jpg)
+    // Cultivos (id = nombre del archivo sin .jpg)
     const crops = [
-      { id:'aji',        nombre:'Ajíes',      tipo:'Fruto', sol:'Sol pleno',   dias:'90-120 días', meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'pimiento',   nombre:'Pimiento',   tipo:'Fruto', sol:'Sol pleno',   dias:'90 días',      meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'cilantro',   nombre:'Cilantro',   tipo:'Hoja',  sol:'Media sombra',dias:'30-45 días',   meses:['Todo el año'] },
-      { id:'recao',      nombre:'Recao',      tipo:'Hoja',  sol:'Media sombra',dias:'8-10 semanas', meses:['Todo el año'] },
-      { id:'tomate',     nombre:'Tomate',     tipo:'Fruto', sol:'Sol pleno',   dias:'75 días',      meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
-      { id:'lechuga',    nombre:'Lechuga',    tipo:'Hoja',  sol:'Sol suave',   dias:'45 días',      meses:['Enero','Febrero','Noviembre','Diciembre'] },
-      { id:'cebolla',    nombre:'Cebolla',    tipo:'Bulbo', sol:'Sol pleno',   dias:'110 días',     meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-      { id:'menta',      nombre:'Menta',      tipo:'Hoja',  sol:'Media sombra',dias:'60-90 días',   meses:['Todo el año'] }
+      { id:'aji',       nombre:'Ajíes',    tipo:'Fruto', sol:'Sol pleno',    dias:'90-120 días', meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      { id:'pimiento',  nombre:'Pimiento', tipo:'Fruto', sol:'Sol pleno',    dias:'90 días',     meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      { id:'cilantro',  nombre:'Cilantro', tipo:'Hoja',  sol:'Media sombra', dias:'30-45 días',  meses:['Todo el año'] },
+      { id:'recao',     nombre:'Recao',    tipo:'Hoja',  sol:'Media sombra', dias:'8-10 semanas',meses:['Todo el año'] },
+      { id:'tomate',    nombre:'Tomate',   tipo:'Fruto', sol:'Sol pleno',    dias:'75 días',     meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
+      { id:'lechuga',   nombre:'Lechuga',  tipo:'Hoja',  sol:'Sol suave',    dias:'45 días',     meses:['Enero','Febrero','Noviembre','Diciembre'] },
+      { id:'cebolla',   nombre:'Cebolla',  tipo:'Bulbo', sol:'Sol pleno',    dias:'110 días',    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
+      { id:'menta',     nombre:'Menta',    tipo:'Hoja',  sol:'Media sombra', dias:'60-90 días',  meses:['Todo el año'] }
     ];
 
     const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -1164,7 +1021,7 @@
         const photo = document.createElement('div');
         photo.className = 'crop-photo';
         const img = document.createElement('img');
-        img.src = IMAGE_BASE + c.id + '.jpg';  // 👈 ahora usa ruta absoluta
+        img.src = IMAGE_BASE + c.id + '.jpg';
         img.alt = c.nombre;
         photo.appendChild(img);
 
@@ -1199,15 +1056,22 @@
       });
     }
 
-    // --- Mi huerto, diario, SW ---
-    // (todo lo demás de tu script original, sin cambios)
+    // --- Mi huerto ---
+    const gardenSize = 4;
+    const gardenGridEl = document.getElementById('gardenGrid');
+    const gardenDialog = document.getElementById('gardenDialog');
+    const gardenCropSelect = document.getElementById('gardenCropSelect');
+    const gardenDialogPosition = document.getElementById('gardenDialogPosition');
+    let gardenSelectedCell = null;
+    const GARDEN_KEY = 'mi_siembra_garden_v12';
 
-    // ...aquí puedes dejar igual el código de garden, diary, init() y service worker...
-  </script>
-
+    function loadGarden() {
+      const raw = localStorage.getItem(GARDEN_KEY);
+      if (!raw) return Array(gardenSize * gardenSize).fill(null);
+      try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length === gardenSize * gardenSize) return parsed;
-      } catch {}
+      } catch (e) {}
       return Array(gardenSize * gardenSize).fill(null);
     }
 
@@ -1284,7 +1148,7 @@
       renderGardenGrid();
     });
 
-    // Diario
+    // --- Diario ---
     const diaryListEl = document.getElementById('diaryList');
     const diaryEmptyEl = document.getElementById('diaryEmpty');
     const diaryDialog = document.getElementById('diaryDialog');
@@ -1300,7 +1164,7 @@
       try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) return parsed;
-      } catch {}
+      } catch (e) {}
       return [];
     }
 
@@ -1375,4 +1239,4 @@
     }
   </script>
 </body>
-</html
+</html>
