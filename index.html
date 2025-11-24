@@ -640,7 +640,7 @@
         </div>
       </section>
 
-      <!-- CALENDARIO / QUÉ SEMBRAR -->
+      <!-- CALENDARIO -->
       <section id="calendarView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -792,7 +792,7 @@
         </div>
       </section>
 
-      <!-- MÁS (ATAJOS) -->
+      <!-- MÁS -->
       <section id="moreView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -872,56 +872,41 @@
   <script>
     const VIEWS = ['homeView','calendarView','catalogView','gardenView','diaryView','pestsView','fertView','moreView'];
 
-    // Ruta fija a las imágenes en GitHub Pages
-    const IMAGE_BASE = 'https://eldespertarpr.github.io/MI-Siembra-Inteligente/img/';
+    // LISTA DE CULTIVOS (ids = nombre de archivo sin extensión)
+    // Si alguna imagen NO es .jpg, especifica "archivo" (ej. guayaba.png)
+    const crops = [
+      // Hortalizas básicas
+      { id:'aji',        nombre:'Ajíes',        tipo:'Fruto',          sol:'Sol pleno',    dias:'90-120 días', meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      { id:'pimiento',   nombre:'Pimiento',     tipo:'Fruto',          sol:'Sol pleno',    dias:'90 días',     meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      { id:'cilantro',   nombre:'Cilantro',     tipo:'Hoja',           sol:'Media sombra', dias:'30-45 días',  meses:['Todo el año'] },
+      { id:'recao',      nombre:'Recao',        tipo:'Hoja',           sol:'Media sombra', dias:'8-10 semanas',meses:['Todo el año'] },
+      { id:'tomate',     nombre:'Tomate',       tipo:'Fruto',          sol:'Sol pleno',    dias:'75 días',     meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
+      { id:'lechuga',    nombre:'Lechuga',      tipo:'Hoja',           sol:'Sol suave',    dias:'45 días',     meses:['Enero','Febrero','Noviembre','Diciembre'] },
+      { id:'cebolla',    nombre:'Cebolla',      tipo:'Bulbo',          sol:'Sol pleno',    dias:'110 días',    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
+      { id:'menta',      nombre:'Menta',        tipo:'Hoja',           sol:'Media sombra', dias:'60-90 días',  meses:['Todo el año'] },
 
-    // Cultivos (id = nombre del archivo sin .jpg)
-    // Cultivos con nombre de archivo de imagen explícito
-// id = nombre EXACTO del archivo en /img sin .jpg
-const crops = [
-  { id:'aji',       nombre:'Ajíes',      tipo:'Fruto',  sol:'Sol pleno',    dias:'90-120 días',
-    meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      // Hojas y aromáticas extra
+      { id:'albahaca',   nombre:'Albahaca',     tipo:'Hoja',           sol:'Sol pleno',    dias:'50-60 días',  meses:['Todo el año'] },
+      { id:'espinaca',   nombre:'Espinaca',     tipo:'Hoja',           sol:'Sol suave',    dias:'40-50 días',  meses:['Noviembre','Diciembre','Enero','Febrero'] },
 
-  { id:'pimiento',  nombre:'Pimiento',   tipo:'Fruto',  sol:'Sol pleno',    dias:'90 días',
-    meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      // Legumbres y raíces
+      { id:'habichuelas',nombre:'Habichuelas',  tipo:'Leguminosa',     sol:'Sol pleno',    dias:'60-75 días',  meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
+      { id:'batata',     nombre:'Batata',       tipo:'Raíz',           sol:'Sol pleno',    dias:'90-120 días', meses:['Marzo','Abril','Mayo','Junio','Julio'] },
+      { id:'apio',       nombre:'Apio',         tipo:'Tallo',          sol:'Sol suave',    dias:'90-120 días', meses:['Agosto','Septiembre','Octubre','Noviembre'] },
 
-  { id:'cilantro',  nombre:'Cilantro',   tipo:'Hoja',   sol:'Media sombra', dias:'30-45 días',
-    meses:['Todo el año'] },
+      // Bulbos adicionales
+      { id:'ajo',        nombre:'Ajo',          tipo:'Bulbo',          sol:'Sol pleno',    dias:'120-150 días',meses:['Octubre','Noviembre','Diciembre'] },
 
-  { id:'recao',     nombre:'Recao',      tipo:'Hoja',   sol:'Media sombra', dias:'8-10 semanas',
-    meses:['Todo el año'] },
+      // Árboles frutales
+      { id:'acerola',    nombre:'Acerola',      tipo:'Frutal',         sol:'Sol pleno',    dias:'8-12 meses',  meses:['Todo el año'] },
+      { id:'aguacate',   nombre:'Aguacate',     tipo:'Frutal',         sol:'Sol pleno',    dias:'2-3 años',    meses:['Todo el año'] },
+      { id:'guayaba',    nombre:'Guayaba',      tipo:'Frutal',         sol:'Sol pleno',    dias:'8-12 meses',  meses:['Todo el año'], archivo:'guayaba.png' },
+      { id:'limon',      nombre:'Limón',        tipo:'Frutal',         sol:'Sol pleno',    dias:'1-2 años',    meses:['Todo el año'] },
+      { id:'mandarina',  nombre:'Mandarina',    tipo:'Frutal',         sol:'Sol pleno',    dias:'1-2 años',    meses:['Todo el año'] }
+      // Si añades más imágenes, solo agrega aquí otro objeto usando el mismo id del archivo.
+    ];
 
-  { id:'tomate',    nombre:'Tomate',     tipo:'Fruto',  sol:'Sol pleno',    dias:'75 días',
-    meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
-
-  { id:'lechuga',   nombre:'Lechuga',    tipo:'Hoja',   sol:'Sol suave',    dias:'45 días',
-    meses:['Enero','Febrero','Noviembre','Diciembre'] },
-
-  { id:'cebolla',   nombre:'Cebolla',    tipo:'Bulbo',  sol:'Sol pleno',    dias:'110 días',
-    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-
-  { id:'menta',     nombre:'Menta',      tipo:'Hoja',   sol:'Media sombra', dias:'60-90 días',
-    meses:['Todo el año'] },
-
-  { id:'espinaca',  nombre:'Espinaca',   tipo:'Hoja',   sol:'Sol suave',    dias:'35-45 días',
-    meses:['Enero','Febrero','Noviembre','Diciembre'] },
-
-  { id:'habichuelas', nombre:'Habichuelas', tipo:'Leguminosa', sol:'Sol pleno', dias:'60-75 días',
-    meses:['Enero','Febrero','Marzo','Abril','Agosto','Septiembre','Octubre'] },
-
-  { id:'apio',      nombre:'Apio',       tipo:'Hoja',   sol:'Sol suave',    dias:'90-120 días',
-    meses:['Enero','Febrero','Noviembre','Diciembre'] },
-
-  { id:'batata',    nombre:'Batata',     tipo:'Raíz',   sol:'Sol pleno',    dias:'90-150 días',
-    meses:['Todo el año'] },
-
-  { id:'calabaza',  nombre:'Calabaza',   tipo:'Fruto',  sol:'Sol pleno',    dias:'90-120 días',
-    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-
-  { id:'albahaca',  nombre:'Albahaca',   tipo:'Hoja',   sol:'Sol pleno',    dias:'50-70 días',
-    meses:['Todo el año'] }
-];
- const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
     function showView(id) {
       VIEWS.forEach(v => {
@@ -1055,7 +1040,8 @@ const crops = [
         const photo = document.createElement('div');
         photo.className = 'crop-photo';
         const img = document.createElement('img');
-        img.src = IMAGE_BASE + c.id + '.jpg';
+        const fileName = c.archivo || (c.id + '.jpg');
+        img.src = 'img/' + fileName;
         img.alt = c.nombre;
         photo.appendChild(img);
 
@@ -1105,7 +1091,7 @@ const crops = [
       try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length === gardenSize * gardenSize) return parsed;
-      } catch (e) {}
+      } catch {}
       return Array(gardenSize * gardenSize).fill(null);
     }
 
@@ -1198,7 +1184,7 @@ const crops = [
       try {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) return parsed;
-      } catch (e) {}
+      } catch {}
       return [];
     }
 
@@ -1253,7 +1239,7 @@ const crops = [
       closeDialogs();
     });
 
-    // Inicializar todo
+    // --- Inicializar ---
     function init() {
       renderMonthButtons();
       renderCatalogFilters();
@@ -1265,7 +1251,7 @@ const crops = [
     }
     init();
 
-    // Registrar service worker PWA
+    // --- Service worker PWA ---
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js').catch(() => {});
