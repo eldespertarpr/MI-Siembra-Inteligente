@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mi Siembra Inteligente (v13)</title>
+  <title>Mi Siembra Inteligente (v14)</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#22c55e" />
   <style>
@@ -26,11 +26,9 @@
       --radius-xl: 20px;
       --radius-2xl: 26px;
       --transition-fast: 0.18s ease-out;
-      --nav-h: 56px;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -51,6 +49,7 @@
       margin: 0 auto;
       padding: 16px 12px 24px;
     }
+
     header.app-header {
       position: sticky;
       top: 0;
@@ -85,9 +84,7 @@
       justify-content: center;
       box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.55);
     }
-    .brand-icon span {
-      font-size: 18px;
-    }
+    .brand-icon span { font-size: 18px; }
     .brand-text {
       display: flex;
       flex-direction: column;
@@ -106,6 +103,7 @@
       font-size: 11px;
       color: var(--text-soft);
     }
+
     .pill-nav {
       display: flex;
       gap: 6px;
@@ -127,9 +125,7 @@
       cursor: pointer;
       transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
     }
-    .pill-nav button span.emoji {
-      font-size: 13px;
-    }
+    .pill-nav button span.emoji { font-size: 13px; }
     .pill-nav button.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
@@ -137,20 +133,18 @@
       box-shadow: 0 8px 20px rgba(34,197,94,0.6);
       transform: translateY(-0.5px);
     }
-    main {
-      padding: 8px 2px 24px;
-    }
+
+    main { padding: 8px 2px 24px; }
     section.view {
       display: none;
       animation: fadeIn 0.2s ease-out;
     }
-    section.view.active {
-      display: block;
-    }
+    section.view.active { display: block; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     .section-card {
       background: radial-gradient(circle at top left, rgba(148,163,184,0.14) 0, var(--card-soft) 42%, #020617 100%);
       border-radius: var(--radius-2xl);
@@ -188,9 +182,8 @@
       align-items: center;
       gap: 4px;
     }
-    .badge span.emoji {
-      font-size: 12px;
-    }
+    .badge span.emoji { font-size: 12px; }
+
     .grid-cards {
       display: flex;
       flex-direction: column;
@@ -234,6 +227,7 @@
       opacity: 0.18;
       transform: rotate(-8deg);
     }
+
     .chips-row {
       display: flex;
       flex-wrap: wrap;
@@ -251,9 +245,8 @@
       align-items: center;
       gap: 5px;
     }
-    .chip span.emoji {
-      font-size: 12px;
-    }
+    .chip span.emoji { font-size: 12px; }
+
     .month-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -280,6 +273,7 @@
       box-shadow: 0 10px 28px rgba(34,197,94,0.85);
       transform: translateY(-1px);
     }
+
     .list {
       display: flex;
       flex-direction: column;
@@ -318,6 +312,7 @@
       border: 1px solid rgba(148,163,184,0.7);
       color: var(--text-soft);
     }
+
     .small-btn {
       border-radius: 999px;
       border: 1px solid rgba(148,163,184,0.9);
@@ -330,9 +325,8 @@
       align-items: center;
       gap: 4px;
     }
-    .small-btn span.emoji {
-      font-size: 13px;
-    }
+    .small-btn span.emoji { font-size: 13px; }
+
     .catalog-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -348,6 +342,13 @@
       display: flex;
       flex-direction: column;
       min-height: 190px;
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    }
+    .crop-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(22,163,74,0.85);
+      border-color: rgba(190,242,100,0.95);
     }
     .crop-photo {
       height: 90px;
@@ -393,6 +394,7 @@
       border: 1px solid rgba(148,163,184,0.7);
       color: var(--text-soft);
     }
+
     .empty-state {
       padding: 26px 18px;
       border-radius: var(--radius-2xl);
@@ -407,6 +409,7 @@
       font-size: 28px;
       margin-bottom: 6px;
     }
+
     .garden-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -427,9 +430,7 @@
       text-align: center;
       padding: 4px;
     }
-    .garden-cell span {
-      display: block;
-    }
+    .garden-cell span { display: block; }
     .garden-cell-label {
       font-weight: 600;
       color: var(--text-main);
@@ -439,6 +440,7 @@
       font-size: 10px;
       margin-top: 2px;
     }
+
     .dialog-backdrop {
       position: fixed;
       inset: 0;
@@ -448,11 +450,9 @@
       justify-content: center;
       z-index: 50;
     }
-    .dialog-backdrop.active {
-      display: flex;
-    }
+    .dialog-backdrop.active { display: flex; }
     .dialog {
-      width: min(360px, 100% - 32px);
+      width: min(380px, 100% - 32px);
       border-radius: 22px;
       padding: 16px 16px 14px;
       background: radial-gradient(circle at top left, rgba(34,197,94,0.2) 0, #020617 50%);
@@ -469,7 +469,9 @@
       display: block;
       margin-bottom: 5px;
     }
-    .dialog select, .dialog input, .dialog textarea {
+    .dialog select,
+    .dialog input,
+    .dialog textarea {
       width: 100%;
       border-radius: 12px;
       border: 1px solid rgba(148,163,184,0.8);
@@ -481,9 +483,7 @@
       font-family: inherit;
       resize: vertical;
     }
-    .dialog textarea {
-      min-height: 60px;
-    }
+    .dialog textarea { min-height: 60px; }
     .dialog-footer {
       display: flex;
       justify-content: flex-end;
@@ -509,9 +509,8 @@
       font-weight: 600;
       box-shadow: 0 12px 32px rgba(34,197,94,0.8);
     }
-    .btn-ghost {
-      background: transparent;
-    }
+    .btn-ghost { background: transparent; }
+
     .diary-list {
       display: flex;
       flex-direction: column;
@@ -537,9 +536,7 @@
       align-items: center;
       gap: 8px;
     }
-    .diary-type {
-      font-weight: 600;
-    }
+    .diary-type { font-weight: 600; }
     .diary-date {
       font-size: 11px;
       color: var(--text-soft);
@@ -548,6 +545,68 @@
       color: var(--text-soft);
       font-size: 12px;
     }
+
+    /* Ficha detallada del cultivo */
+    .dialog.dialog-crop {
+      width: min(430px, 100% - 24px);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 10px;
+    }
+    .crop-dialog-img-wrap {
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      height: 160px;
+      background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
+    }
+    .crop-dialog-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .crop-dialog-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .crop-dialog-name {
+      font-size: 17px;
+      font-weight: 650;
+    }
+    .crop-dialog-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .crop-dialog-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--text-soft);
+    }
+    .crop-dialog-body {
+      font-size: 13px;
+      color: var(--text-soft);
+      overflow-y: auto;
+      padding-right: 2px;
+      margin-bottom: 6px;
+    }
+    .crop-dialog-body p {
+      margin: 4px 0 6px;
+    }
+    .crop-dialog-body strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
     footer {
       margin-top: 8px;
       padding: 6px 4px 2px;
@@ -559,6 +618,7 @@
       color: var(--accent);
       text-decoration: none;
     }
+
     @media (min-width: 768px) {
       .app-shell {
         padding: 18px 8px 28px;
@@ -640,7 +700,7 @@
         </div>
       </section>
 
-      <!-- CALENDARIO / QUÉ SEMBRAR -->
+      <!-- CALENDARIO -->
       <section id="calendarView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -661,7 +721,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Catálogo visual de cultivos</div>
-              <div class="section-subtitle">Cultivos y frutales con fotos representativas y datos rápidos.</div>
+              <div class="section-subtitle">Primeros cultivos con fotos representativas y datos rápidos.</div>
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
@@ -681,7 +741,9 @@
             <button class="small-btn" id="resetGarden"><span class="emoji">🧹</span><span>Limpiar</span></button>
           </div>
           <div class="garden-grid" id="gardenGrid"></div>
-          <div class="section-subtitle" style="margin-top:10px;">Sugerencia: puedes usar el plano como referencia de tu cama de siembra real o de tiestos.</div>
+          <div class="section-subtitle" style="margin-top:10px;">
+            Sugerencia: puedes usar el plano como referencia de tu cama de siembra real o de tiestos.
+          </div>
         </div>
       </section>
 
@@ -804,7 +866,7 @@
         </div>
       </section>
 
-      <!-- MÁS (ATAJOS) -->
+      <!-- MÁS -->
       <section id="moreView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -840,11 +902,11 @@
     </main>
 
     <footer>
-      Mi Siembra Inteligente (v13) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      Mi Siembra Inteligente (v14) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
 
-  <!-- Diálogo para huerto -->
+  <!-- DIÁLOGO HUERTO -->
   <div class="dialog-backdrop" id="gardenDialog">
     <div class="dialog">
       <h3>Asignar cultivo</h3>
@@ -858,7 +920,7 @@
     </div>
   </div>
 
-  <!-- Diálogo para diario -->
+  <!-- DIÁLOGO DIARIO -->
   <div class="dialog-backdrop" id="diaryDialog">
     <div class="dialog">
       <h3>Nueva entrada</h3>
@@ -881,63 +943,348 @@
     </div>
   </div>
 
+  <!-- DIÁLOGO FICHA DEL CULTIVO -->
+  <div class="dialog-backdrop" id="cropDialog">
+    <div class="dialog dialog-crop">
+      <div class="crop-dialog-img-wrap">
+        <img id="cropDialogImg" src="" alt="Cultivo" />
+      </div>
+      <div class="crop-dialog-header-line">
+        <div class="crop-dialog-name" id="cropDialogName">Cultivo</div>
+        <button class="btn btn-ghost" type="button" data-dialog-close>✕</button>
+      </div>
+      <div class="crop-dialog-tags">
+        <span class="crop-dialog-tag" id="cropDialogTipo"></span>
+        <span class="crop-dialog-tag" id="cropDialogDias"></span>
+        <span class="crop-dialog-tag" id="cropDialogSol"></span>
+      </div>
+      <div class="crop-dialog-body">
+        <p><strong>Siembra:</strong> <span id="cropDialogSiembra"></span></p>
+        <p><strong>Distancia entre plantas:</strong> <span id="cropDialogDistancia"></span></p>
+        <p><strong>Profundidad de siembra:</strong> <span id="cropDialogProfundidad"></span></p>
+        <p><strong>Tiesto recomendado:</strong> <span id="cropDialogTiesto"></span></p>
+        <p><strong>Riego:</strong> <span id="cropDialogRiego"></span></p>
+        <p><strong>Notas útiles:</strong> <span id="cropDialogNotas"></span></p>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn btn-primary" type="button" data-dialog-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const VIEWS = ['homeView','calendarView','catalogView','gardenView','diaryView','pestsView','fertView','moreView'];
-
-    // RUTA BASE FIJA A LAS IMÁGENES EN GITHUB PAGES
     const IMAGE_BASE = 'https://eldespertarpr.github.io/MI-Siembra-Inteligente/img/';
 
-    // ⚠️ id = NOMBRE EXACTO del archivo .jpg en /img (minúsculas, sin espacios, sin tildes)
+    // Lista de cultivos: hortalizas + frutales
     const crops = [
       // Hortalizas y aromáticas
-      { id:'aji',          nombre:'Ajíes',        tipo:'Fruto', sol:'Sol pleno',      dias:'90-120 días',  meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'pimiento',     nombre:'Pimiento',     tipo:'Fruto', sol:'Sol pleno',      dias:'90 días',      meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'tomate',       nombre:'Tomate',       tipo:'Fruto', sol:'Sol pleno',      dias:'75-90 días',   meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
-      { id:'lechuga',      nombre:'Lechuga',      tipo:'Hoja',  sol:'Sol suave',      dias:'45 días',      meses:['Enero','Febrero','Noviembre','Diciembre'] },
-      { id:'cebolla',      nombre:'Cebolla',      tipo:'Bulbo', sol:'Sol pleno',      dias:'110 días',     meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-      { id:'cilantro',     nombre:'Cilantro',     tipo:'Hoja',  sol:'Media sombra',   dias:'30-45 días',   meses:['Todo el año'] },
-      { id:'recao',        nombre:'Recao',        tipo:'Hoja',  sol:'Media sombra',   dias:'8-10 semanas', meses:['Todo el año'] },
-      { id:'menta',        nombre:'Menta',        tipo:'Hoja',  sol:'Media sombra',   dias:'60-90 días',   meses:['Todo el año'] },
-      { id:'albahaca',     nombre:'Albahaca',     tipo:'Hoja',  sol:'Sol pleno',      dias:'45-60 días',   meses:['Todo el año'] },
-      { id:'oregano_brujo',nombre:'Orégano brujo',tipo:'Hoja',  sol:'Sol pleno',      dias:'60-90 días',   meses:['Todo el año'] },
-      { id:'espinaca',     nombre:'Espinaca',     tipo:'Hoja',  sol:'Sol suave',      dias:'40-50 días',   meses:['Enero','Febrero','Noviembre','Diciembre'] },
+      { id:'aji',        nombre:'Ajíes',        tipo:'Fruto',         sol:'Sol pleno',    dias:'90-120 días',
+        meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'],
+        siembra:'Desde semilla o plántula, mejor en época cálida y estable.',
+        distancia:'40-60 cm entre plantas.',
+        profundidad:'0.5-1 cm la semilla.',
+        tiesto:'5 galones por planta.',
+        riego:'Regular, manteniendo el sustrato ligeramente húmedo.',
+        notas:'Agradece algo de tutor; evitar exceso de viento fuerte.' },
 
-      // Raíces y tubérculos
-      { id:'zanahoria',    nombre:'Zanahoria',    tipo:'Raíz',  sol:'Sol pleno',      dias:'80-100 días',  meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
-      { id:'papa',         nombre:'Papa',         tipo:'Tubérculo', sol:'Sol pleno',  dias:'90-120 días',  meses:['Enero','Febrero','Marzo'] },
-      { id:'batata',       nombre:'Batata',       tipo:'Tubérculo', sol:'Sol pleno',  dias:'90-120 días',  meses:['Todo el año'] },
-      { id:'yuca',         nombre:'Yuca',         tipo:'Raíz',  sol:'Sol pleno',      dias:'8-12 meses',   meses:['Todo el año'] },
-      { id:'ajo',          nombre:'Ajo',          tipo:'Bulbo', sol:'Sol pleno',      dias:'90-120 días',  meses:['Enero','Febrero','Marzo','Octubre','Noviembre'] },
-      { id:'apio',         nombre:'Apio',         tipo:'Tallo', sol:'Sol suave',      dias:'90-120 días',  meses:['Todo el año'] },
+      { id:'pimiento',   nombre:'Pimiento',     tipo:'Fruto',         sol:'Sol pleno',    dias:'90 días',
+        meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'],
+        siembra:'Sembrar en semilleros y trasplantar cuando tenga varias hojas.',
+        distancia:'40-50 cm entre plantas.',
+        profundidad:'0.5-1 cm la semilla.',
+        tiesto:'5 galones por planta.',
+        riego:'Constante sin encharcar; sufre mucho por sequía larga.',
+        notas:'Mejor con tutor; retirar hojas muy bajas para mejorar ventilación.' },
 
-      // Curcubitáceas y otras hortícolas
-      { id:'calabaza',     nombre:'Calabaza',     tipo:'Fruto', sol:'Sol pleno',      dias:'90-120 días',  meses:['Febrero','Marzo','Abril','Agosto','Septiembre'] },
-      { id:'pepinillo',    nombre:'Pepinillo',    tipo:'Fruto', sol:'Sol pleno',      dias:'50-60 días',   meses:['Febrero','Marzo','Abril','Agosto','Septiembre'] },
-      { id:'berenjena',    nombre:'Berenjena',    tipo:'Fruto', sol:'Sol pleno',      dias:'80-100 días',  meses:['Enero','Febrero','Marzo','Septiembre','Octubre'] },
-      { id:'habichuelas',  nombre:'Habichuelas',  tipo:'Leguminosa', sol:'Sol pleno', dias:'60-75 días',   meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
+      { id:'tomate',     nombre:'Tomate',       tipo:'Fruto',         sol:'Sol pleno',    dias:'75-90 días',
+        meses:['Enero','Febrero','Marzo','Agosto','Septiembre'],
+        siembra:'Semilla en bandeja y trasplante cuando la planta esté firme.',
+        distancia:'50-70 cm entre plantas.',
+        profundidad:'0.5-1 cm la semilla.',
+        tiesto:'5-7 galones por planta.',
+        riego:'Profundo y regular, evitando mojar las hojas.',
+        notas:'Usar tutor o jaula; podar brotes laterales si se desea planta más ordenada.' },
 
-      // Frutales y tropicales
-      { id:'aguacate',     nombre:'Aguacate',     tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
-      { id:'acerola',      nombre:'Acerola',      tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
-      { id:'limon',        nombre:'Limón',        tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
-      { id:'toronja',      nombre:'Toronja',      tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
-      { id:'naranja',      nombre:'Naranja',      tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
-      { id:'mandarina',    nombre:'Mandarina',    tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
-      { id:'mango',        nombre:'Mango',        tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
-      { id:'papaya',       nombre:'Papaya',       tipo:'Frutal', sol:'Sol pleno',     dias:'6-9 meses',    meses:['Todo el año'] },
-      { id:'guayaba',      nombre:'Guayaba',      tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
-      { id:'parcha',       nombre:'Parcha (maracuyá)', tipo:'Enredadera', sol:'Sol pleno', dias:'6-9 meses', meses:['Todo el año'] },
-      { id:'melon',        nombre:'Melón',        tipo:'Fruto', sol:'Sol pleno',      dias:'80-90 días',   meses:['Febrero','Marzo','Abril'] },
-      { id:'sandia',       nombre:'Sandía',       tipo:'Fruto', sol:'Sol pleno',      dias:'80-90 días',   meses:['Febrero','Marzo','Abril'] },
-      { id:'tamarindo',    nombre:'Tamarindo',    tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
-      { id:'carambola',    nombre:'Carambola',    tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
+      { id:'lechuga',    nombre:'Lechuga',      tipo:'Hoja',          sol:'Sol suave',    dias:'45 días',
+        meses:['Enero','Febrero','Noviembre','Diciembre'],
+        siembra:'Se puede sembrar directo o en semillero.',
+        distancia:'20-30 cm entre plantas.',
+        profundidad:'0.5 cm la semilla.',
+        tiesto:'Macetas de 3-5 litros por planta.',
+        riego:'Frecuente, sustrato siempre fresco pero no encharcado.',
+        notas:'Agradece algo de sombra ligera en calor fuerte.' },
 
-      // Musa y otros
-      { id:'platano',      nombre:'Plátano',      tipo:'Musa',  sol:'Sol pleno',      dias:'9-12 meses',   meses:['Todo el año'] },
-      { id:'guineo',       nombre:'Guineo',       tipo:'Musa',  sol:'Sol pleno',      dias:'9-12 meses',   meses:['Todo el año'] },
+      { id:'cebolla',    nombre:'Cebolla',      tipo:'Bulbo',         sol:'Sol pleno',    dias:'110 días',
+        meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'],
+        siembra:'Con semilla o plantines de cebolla.',
+        distancia:'10-15 cm entre plantas.',
+        profundidad:'1-2 cm.',
+        tiesto:'Tiestos alargados de al menos 20 cm de profundidad.',
+        riego:'Ligero pero regular, reducir riego al final para que seque el bulbo.',
+        notas:'No enterrar demasiado el bulbo; prefiere suelos sueltos.' },
 
-      // Extra
-      { id:'repollo',      nombre:'Repollo',      tipo:'Hoja',  sol:'Sol suave',      dias:'70-90 días',   meses:['Enero','Febrero','Noviembre','Diciembre'] }
+      { id:'cilantro',   nombre:'Cilantro',     tipo:'Hoja',          sol:'Media sombra', dias:'30-45 días',
+        meses:['Todo el año'],
+        siembra:'Directo en el lugar definitivo.',
+        distancia:'10-15 cm entre plantas.',
+        profundidad:'0.5-1 cm.',
+        tiesto:'Macetas de 3-5 litros.',
+        riego:'Regular; no dejar que se seque del todo.',
+        notas:'Si sube a flor muy rápido, es por exceso de calor.' },
+
+      { id:'recao',      nombre:'Recao',        tipo:'Hoja',          sol:'Media sombra', dias:'8-10 semanas',
+        meses:['Todo el año'],
+        siembra:'Por esquejes o comprando plantitas.',
+        distancia:'20-25 cm entre plantas.',
+        profundidad:'Cubrir levemente la raíz.',
+        tiesto:'Macetas anchas de 5-7 litros.',
+        riego:'Frecuente; no le gusta secarse.',
+        notas:'Ideal en sitios algo húmedos y sombreados.' },
+
+      { id:'menta',      nombre:'Menta',        tipo:'Hoja',          sol:'Media sombra', dias:'60-90 días',
+        meses:['Todo el año'],
+        siembra:'Por esquejes o plantitas.',
+        distancia:'15-20 cm entre plantas.',
+        profundidad:'Cubrir la raíz apenas.',
+        tiesto:'Maceta de 5-7 litros (crece mucho).',
+        riego:'Constante; no permitir sequía prolongada.',
+        notas:'Mejor en tiesto separado, se expande rápido.' },
+
+      { id:'albahaca',   nombre:'Albahaca',     tipo:'Hoja',          sol:'Sol pleno',    dias:'50-60 días',
+        meses:['Todo el año'],
+        siembra:'Semilla directa o en pequeños semilleros.',
+        distancia:'25-30 cm entre plantas.',
+        profundidad:'0.5 cm.',
+        tiesto:'Maceta de 3-5 litros.',
+        riego:'Moderado; evitar exceso de agua.',
+        notas:'Cortar flores para prolongar la producción de hojas.' },
+
+      { id:'oregano',    nombre:'Orégano brujo',tipo:'Hoja',          sol:'Sol pleno',    dias:'60-90 días',
+        meses:['Todo el año'],
+        siembra:'Por esquejes o comprando planta.',
+        distancia:'25-40 cm.',
+        profundidad:'Cubrir ligeramente la raíz.',
+        tiesto:'Maceta de 5 litros o más.',
+        riego:'Poco a moderado, tolera sequía ligera.',
+        notas:'Muy rústico; perfecto para bordes y tiestos.' },
+
+      { id:'espinaca',   nombre:'Espinaca',     tipo:'Hoja',          sol:'Sol suave',    dias:'40-50 días',
+        meses:['Enero','Febrero','Noviembre','Diciembre'],
+        siembra:'Semilla directa en el lugar definitivo.',
+        distancia:'20 cm entre plantas.',
+        profundidad:'1-2 cm.',
+        tiesto:'Macetas de 3-5 litros.',
+        riego:'Frecuente, suelo siempre fresco.',
+        notas:'Prefiere clima más fresco; en calor se estresa.' },
+
+      { id:'zanahoria',  nombre:'Zanahoria',    tipo:'Raíz',          sol:'Sol pleno',    dias:'80-100 días',
+        meses:['Enero','Febrero','Marzo','Agosto','Septiembre'],
+        siembra:'Siempre directa, no le gusta trasplante.',
+        distancia:'5-10 cm entre plantas.',
+        profundidad:'0.5-1 cm.',
+        tiesto:'Macetas profundas (25-30 cm).',
+        riego:'Regular, evitar suelos muy compactos.',
+        notas:'Suelos sueltos para raíces rectas.' },
+
+      { id:'papa',       nombre:'Papa',         tipo:'Tubérculo',     sol:'Sol pleno',    dias:'90-120 días',
+        meses:['Enero','Febrero','Marzo','Agosto','Septiembre'],
+        siembra:'Con trozos de papa-semilla con “ojo”.',
+        distancia:'30-40 cm entre plantas.',
+        profundidad:'10-15 cm.',
+        tiesto:'Tiestos altos o sacos, 40 cm mínimo.',
+        riego:'Regular, sin encharcar.',
+        notas:'Aporcar tierra alrededor del tallo a medida que crece.' },
+
+      { id:'batata',     nombre:'Batata',       tipo:'Tubérculo',     sol:'Sol pleno',    dias:'90-120 días',
+        meses:['Todo el año'],
+        siembra:'Con guías o esquejes de batata.',
+        distancia:'40-60 cm entre plantas.',
+        profundidad:'Enterrar parte del tallo con nudos.',
+        tiesto:'Tiestos muy grandes o bancales.',
+        riego:'Moderado; tolera algo de sequía.',
+        notas:'Planta rastrera; ideal para bordes y camas amplias.' },
+
+      { id:'yuca',       nombre:'Yuca',         tipo:'Raíz',          sol:'Sol pleno',    dias:'8-12 meses',
+        meses:['Todo el año'],
+        siembra:'Con estacas de tallo leñoso.',
+        distancia:'80-100 cm entre plantas.',
+        profundidad:'Enterrar parte de la estaca.',
+        tiesto:'Mejor en suelo directo por su tamaño.',
+        riego:'Moderado; rústica y resistente.',
+        notas:'Cosechar cuando la planta esté bien desarrollada y el tallo engrosado.' },
+
+      { id:'apio',       nombre:'Apio',         tipo:'Tallo',         sol:'Sol suave',    dias:'90-120 días',
+        meses:['Enero','Febrero','Noviembre','Diciembre'],
+        siembra:'En semillero y trasplantar.',
+        distancia:'25-30 cm entre plantas.',
+        profundidad:'0.5 cm.',
+        tiesto:'Maceta profunda de 10 litros o más.',
+        riego:'Constante, no dejar secar.',
+        notas:'Agradece suelos ricos en materia orgánica.' },
+
+      { id:'ajo',        nombre:'Ajo',          tipo:'Bulbo',         sol:'Sol pleno',    dias:'120-150 días',
+        meses:['Noviembre','Diciembre','Enero'],
+        siembra:'Dientes de ajo enterrados con la punta hacia arriba.',
+        distancia:'10 cm entre plantas.',
+        profundidad:'3-4 cm.',
+        tiesto:'Macetas profundas de 20 cm.',
+        riego:'Ligero; no le gusta el exceso de humedad.',
+        notas:'Reducir riego al final para un mejor curado del bulbo.' },
+
+      { id:'repollo',    nombre:'Repollo',      tipo:'Hoja',          sol:'Sol suave',    dias:'70-90 días',
+        meses:['Enero','Febrero','Noviembre','Diciembre'],
+        siembra:'En semillero y trasplante cuando tenga varias hojas.',
+        distancia:'40-50 cm entre plantas.',
+        profundidad:'1 cm.',
+        tiesto:'Maceta de 10-15 litros.',
+        riego:'Regular, mantener el suelo fresco.',
+        notas:'Evitar exceso de calor para que cierre bien la cabeza.' },
+
+      // Frutales y cítricos
+      { id:'acerola',    nombre:'Acerola',      tipo:'Frutal',        sol:'Sol pleno',    dias:'8-12 meses',
+        meses:['Todo el año'],
+        siembra:'Generalmente por plantín de vivero.',
+        distancia:'2-3 m en suelo.',
+        profundidad:'Cubrir bien el cepellón.',
+        tiesto:'Tiestos grandes (mínimo 40-60 litros).',
+        riego:'Regular, más frecuente en sequía.',
+        notas:'Frutal rico en vitamina C, ideal para patio o tiesto grande.' },
+
+      { id:'aguacate',   nombre:'Aguacate',     tipo:'Frutal',        sol:'Sol pleno',    dias:'3-4 años a producción',
+        meses:['Todo el año'],
+        siembra:'Por injerto o árbol joven de vivero.',
+        distancia:'3-5 m en suelo.',
+        profundidad:'Hueco amplio para el cepellón.',
+        tiesto:'Solo en macetones muy grandes, mejor en suelo.',
+        riego:'Profundo y espaciado.',
+        notas:'Proteger de vientos fuertes en los primeros años.' },
+
+      { id:'limon',      nombre:'Limón',        tipo:'Frutal cítrico',sol:'Sol pleno',    dias:'2-3 años a plena producción',
+        meses:['Todo el año'],
+        siembra:'Plantín injertado de vivero.',
+        distancia:'3 m entre árboles.',
+        profundidad:'Cubrir el cepellón sin tapar el injerto.',
+        tiesto:'Macetón de 60 litros o más.',
+        riego:'Regular; no tolera encharcamientos prolongados.',
+        notas:'Ideal para formar en tiesto grande cerca de la casa.' },
+
+      { id:'naranja',    nombre:'Naranja',      tipo:'Frutal cítrico',sol:'Sol pleno',    dias:'2-3 años a producción',
+        meses:['Todo el año'],
+        siembra:'Plantín injertado.',
+        distancia:'3-4 m en suelo.',
+        profundidad:'Cubrir bien raíces sin enterrar el injerto.',
+        tiesto:'Maceta muy grande; mejor suelo directo.',
+        riego:'Constante, especialmente en época seca.',
+        notas:'Requiere algo de poda de formación y limpieza.' },
+
+      { id:'mandarina',  nombre:'Mandarina',    tipo:'Frutal cítrico',sol:'Sol pleno',    dias:'2-3 años a producción',
+        meses:['Todo el año'],
+        siembra:'Plantín injertado de vivero.',
+        distancia:'3 m.',
+        profundidad:'Cepellón al nivel del suelo.',
+        tiesto:'Macetón grande, buen drenaje.',
+        riego:'Regular sin encharcar.',
+        notas:'Fruto dulce, perfecto para patio familiar.' },
+
+      { id:'toronja',    nombre:'Toronja',      tipo:'Frutal cítrico',sol:'Sol pleno',    dias:'2-4 años a producción',
+        meses:['Todo el año'],
+        siembra:'Plantín injertado.',
+        distancia:'4-5 m en suelo.',
+        profundidad:'Hueco amplio con buen drenaje.',
+        tiesto:'Maceta grande solo en etapas jóvenes.',
+        riego:'Profundo, dejando secar ligeramente entre riegos.',
+        notas:'Árbol grande; mejor planificar bien su ubicación.' },
+
+      { id:'mango',      nombre:'Mango',        tipo:'Frutal',        sol:'Sol pleno',    dias:'2-4 años a producción',
+        meses:['Todo el año'],
+        siembra:'Mejor injertado para asegurar variedad.',
+        distancia:'4-6 m en suelo.',
+        profundidad:'Hueco amplio y profundo.',
+        tiesto:'Solo primeras etapas, luego al suelo.',
+        riego:'Moderado; bastante resistente una vez establecido.',
+        notas:'Evitar ubicar muy cerca de estructuras por el tamaño futuro.' },
+
+      { id:'papaya',     nombre:'Papaya',       tipo:'Frutal',        sol:'Sol pleno',    dias:'6-9 meses',
+        meses:['Todo el año'],
+        siembra:'Directo con varias semillas y luego aclarar.',
+        distancia:'1.5-2 m entre plantas.',
+        profundidad:'1-2 cm.',
+        tiesto:'Macetón profundo, aunque prefiere suelo.',
+        riego:'Regular; no tolera encharcamientos fuertes.',
+        notas:'Tronco hueco y sensible a vientos fuertes.' },
+
+      { id:'guayaba',    nombre:'Guayaba',      tipo:'Frutal',        sol:'Sol pleno',    dias:'1-2 años a producción',
+        meses:['Todo el año'],
+        siembra:'Plantín de vivero o estaca enraizada.',
+        distancia:'3-4 m.',
+        profundidad:'Cubrir raíces con buen drenaje.',
+        tiesto:'Macetón grande.',
+        riego:'Moderado; árbol resistente.',
+        notas:'Poda ligera para mantener tamaño cómodo.' },
+
+      { id:'parcha',     nombre:'Parcha (maracuyá)', tipo:'Enredadera',sol:'Sol pleno',    dias:'6-9 meses',
+        meses:['Todo el año'],
+        siembra:'Semilla o plantín; necesita estructura para trepar.',
+        distancia:'2-3 m entre plantas.',
+        profundidad:'1-2 cm la semilla.',
+        tiesto:'Maceta grande con tutor o cerca.',
+        riego:'Regular; agradece humedad constante.',
+        notas:'Ideal para pérgolas y verjas.' },
+
+      { id:'melon',      nombre:'Melón',        tipo:'Fruto',         sol:'Sol pleno',    dias:'80-90 días',
+        meses:['Enero','Febrero','Marzo','Agosto','Septiembre'],
+        siembra:'Directo o en semillero, luego trasplante.',
+        distancia:'60-80 cm entre plantas.',
+        profundidad:'2-3 cm.',
+        tiesto:'Tiestos muy grandes; mejor en suelo.',
+        riego:'Regular, reducir riego al madurar el fruto.',
+        notas:'Colocar algo bajo el fruto para que no toque suelo húmedo.' },
+
+      { id:'sandia',     nombre:'Sandía',       tipo:'Fruto',         sol:'Sol pleno',    dias:'80-90 días',
+        meses:['Enero','Febrero','Marzo','Agosto','Septiembre'],
+        siembra:'Semilla directa en montículos.',
+        distancia:'1-1.5 m entre plantas.',
+        profundidad:'2-3 cm.',
+        tiesto:'Necesita mucho espacio, mejor en suelo.',
+        riego:'Abundante al principio, reducir al final.',
+        notas:'Planta rastrera de gran desarrollo.' },
+
+      { id:'tamarindo',  nombre:'Tamarindo',    tipo:'Frutal',        sol:'Sol pleno',    dias:'Varios años',
+        meses:['Todo el año'],
+        siembra:'Por semilla o plantín de vivero.',
+        distancia:'5-8 m; árbol grande.',
+        profundidad:'Hueco amplio.',
+        tiesto:'No recomendado a largo plazo.',
+        riego:'Poco a moderado; árbol muy rústico.',
+        notas:'Ideal para fincas o patios amplios.' },
+
+      { id:'carambola',  nombre:'Carambola',    tipo:'Frutal',        sol:'Sol pleno',    dias:'2-3 años',
+        meses:['Todo el año'],
+        siembra:'Plantín de vivero.',
+        distancia:'3-4 m.',
+        profundidad:'Cubrir bien el cepellón.',
+        tiesto:'Macetón grande posible los primeros años.',
+        riego:'Regular, no encharcado.',
+        notas:'Fruto con forma de estrella, decorativo y productivo.' },
+
+      { id:'platano',    nombre:'Plátano',      tipo:'Musa',          sol:'Sol pleno',    dias:'9-12 meses',
+        meses:['Todo el año'],
+        siembra:'Con hijos (retoños) de plantas sanas.',
+        distancia:'2-3 m entre matas.',
+        profundidad:'Enterrar bien el rizoma.',
+        tiesto:'Solo macetones grandes; mejor en suelo.',
+        riego:'Abundante y frecuente.',
+        notas:'Agradece suelos ricos y buen drenaje.' },
+
+      { id:'guineo',     nombre:'Guineo',       tipo:'Musa',          sol:'Sol pleno',    dias:'9-12 meses',
+        meses:['Todo el año'],
+        siembra:'Hijos de guineo bien desarrollados.',
+        distancia:'2-3 m.',
+        profundidad:'Cubrir rizoma con buena tierra.',
+        tiesto:'Mejor suelo directo.',
+        riego:'Frecuente; no dejar secar demasiado.',
+        notas:'Perfecto para crear sombra ligera en el huerto.' }
     ];
 
     const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -949,7 +1296,7 @@
         el.classList.toggle('active', v === id);
       });
       document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.view === id || (id === 'homeView' && btn.dataset.view === 'homeView'));
+        btn.classList.toggle('active', btn.dataset.view === id);
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -967,7 +1314,7 @@
       });
     });
 
-    // --- CALENDARIO ---
+    // CALENDARIO
     const monthButtonsContainer = document.getElementById('monthButtons');
     const monthResultsContainer = document.getElementById('monthResults');
     let activeMonth = null;
@@ -1019,21 +1366,26 @@
         title.textContent = c.nombre;
         const meta = document.createElement('div');
         meta.className = 'list-meta';
+
         const pillDias = document.createElement('span');
         pillDias.className = 'meta-pill';
         pillDias.textContent = c.dias;
         meta.appendChild(pillDias);
+
         const pillTipo = document.createElement('span');
         pillTipo.className = 'meta-pill';
         pillTipo.textContent = c.tipo;
         meta.appendChild(pillTipo);
+
         const pillSol = document.createElement('span');
         pillSol.className = 'meta-pill';
         pillSol.textContent = c.sol;
         meta.appendChild(pillSol);
+
         const subt = document.createElement('div');
         subt.className = 'section-subtitle';
         subt.textContent = 'Mes recomendado: ' + activeMonth;
+
         main.appendChild(title);
         main.appendChild(meta);
         main.appendChild(subt);
@@ -1042,7 +1394,7 @@
       });
     }
 
-    // --- CATÁLOGO ---
+    // CATÁLOGO
     const catalogGrid = document.getElementById('catalogGrid');
     const catalogFilters = document.getElementById('catalogFilters');
     let activeTypeFilter = 'Todos';
@@ -1062,6 +1414,35 @@
         });
         catalogFilters.appendChild(chip);
       });
+    }
+
+    const cropDialog = document.getElementById('cropDialog');
+    const cropDialogImg = document.getElementById('cropDialogImg');
+    const cropDialogName = document.getElementById('cropDialogName');
+    const cropDialogTipo = document.getElementById('cropDialogTipo');
+    const cropDialogDias = document.getElementById('cropDialogDias');
+    const cropDialogSol = document.getElementById('cropDialogSol');
+    const cropDialogSiembra = document.getElementById('cropDialogSiembra');
+    const cropDialogDistancia = document.getElementById('cropDialogDistancia');
+    const cropDialogProfundidad = document.getElementById('cropDialogProfundidad');
+    const cropDialogTiesto = document.getElementById('cropDialogTiesto');
+    const cropDialogRiego = document.getElementById('cropDialogRiego');
+    const cropDialogNotas = document.getElementById('cropDialogNotas');
+
+    function openCropDialog(cultivo) {
+      cropDialogImg.src = IMAGE_BASE + cultivo.id + '.jpg';
+      cropDialogImg.alt = cultivo.nombre;
+      cropDialogName.textContent = cultivo.nombre;
+      cropDialogTipo.textContent = cultivo.tipo;
+      cropDialogDias.textContent = cultivo.dias;
+      cropDialogSol.textContent = cultivo.sol;
+      cropDialogSiembra.textContent = cultivo.siembra || '—';
+      cropDialogDistancia.textContent = cultivo.distancia || '—';
+      cropDialogProfundidad.textContent = cultivo.profundidad || '—';
+      cropDialogTiesto.textContent = cultivo.tiesto || '—';
+      cropDialogRiego.textContent = cultivo.riego || '—';
+      cropDialogNotas.textContent = cultivo.notas || '—';
+      cropDialog.classList.add('active');
     }
 
     function renderCatalog() {
@@ -1087,14 +1468,17 @@
 
         const tags = document.createElement('div');
         tags.className = 'crop-tags';
+
         const tagDias = document.createElement('span');
         tagDias.className = 'crop-tag';
         tagDias.textContent = c.dias;
         tags.appendChild(tagDias);
+
         const tagSol = document.createElement('span');
         tagSol.className = 'crop-tag';
         tagSol.textContent = c.sol;
         tags.appendChild(tagSol);
+
         const tagTipo = document.createElement('span');
         tagTipo.className = 'crop-tag';
         tagTipo.textContent = c.tipo;
@@ -1105,18 +1489,21 @@
 
         card.appendChild(photo);
         card.appendChild(body);
+
+        card.addEventListener('click', () => openCropDialog(c));
+
         catalogGrid.appendChild(card);
       });
     }
 
-    // --- MI HUERTO ---
+    // HUERTO
     const gardenSize = 4;
     const gardenGridEl = document.getElementById('gardenGrid');
     const gardenDialog = document.getElementById('gardenDialog');
     const gardenCropSelect = document.getElementById('gardenCropSelect');
     const gardenDialogPosition = document.getElementById('gardenDialogPosition');
     let gardenSelectedCell = null;
-    const GARDEN_KEY = 'mi_siembra_garden_v13';
+    const GARDEN_KEY = 'mi_siembra_garden_v14';
 
     function loadGarden() {
       const raw = localStorage.getItem(GARDEN_KEY);
@@ -1201,14 +1588,14 @@
       renderGardenGrid();
     });
 
-    // --- DIARIO ---
+    // DIARIO
     const diaryListEl = document.getElementById('diaryList');
     const diaryEmptyEl = document.getElementById('diaryEmpty');
     const diaryDialog = document.getElementById('diaryDialog');
     const diaryType = document.getElementById('diaryType');
     const diaryDate = document.getElementById('diaryDate');
     const diaryNotes = document.getElementById('diaryNotes');
-    const DIARY_KEY = 'mi_siembra_diary_v13';
+    const DIARY_KEY = 'mi_siembra_diary_v14';
     let diaryEntries = [];
 
     function loadDiary() {
@@ -1235,6 +1622,7 @@
       diaryEntries.slice().reverse().forEach(entry => {
         const div = document.createElement('div');
         div.className = 'diary-entry';
+
         const meta = document.createElement('div');
         meta.className = 'diary-meta';
         const typeSpan = document.createElement('span');
@@ -1245,9 +1633,11 @@
         dateSpan.textContent = entry.date || '';
         meta.appendChild(typeSpan);
         meta.appendChild(dateSpan);
+
         const notes = document.createElement('div');
         notes.className = 'diary-notes';
         notes.textContent = entry.notes || '';
+
         div.appendChild(meta);
         div.appendChild(notes);
         diaryListEl.appendChild(div);
@@ -1272,7 +1662,7 @@
       closeDialogs();
     });
 
-    // --- INIT ---
+    // INICIALIZAR
     function init() {
       renderMonthButtons();
       renderCatalogFilters();
@@ -1284,7 +1674,7 @@
     }
     init();
 
-    // Service worker PWA
+    // PWA service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js').catch(() => {});
