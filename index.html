@@ -879,7 +879,6 @@
     // Cultivos con nombre de archivo de imagen explícito
 // id = nombre EXACTO del archivo en /img sin .jpg
 const crops = [
-  // EXISTENTES
   { id:'aji',       nombre:'Ajíes',      tipo:'Fruto',  sol:'Sol pleno',    dias:'90-120 días',
     meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
 
@@ -904,8 +903,6 @@ const crops = [
   { id:'menta',     nombre:'Menta',      tipo:'Hoja',   sol:'Media sombra', dias:'60-90 días',
     meses:['Todo el año'] },
 
-  // NUEVOS
-
   { id:'espinaca',  nombre:'Espinaca',   tipo:'Hoja',   sol:'Sol suave',    dias:'35-45 días',
     meses:['Enero','Febrero','Noviembre','Diciembre'] },
 
@@ -924,9 +921,7 @@ const crops = [
   { id:'albahaca',  nombre:'Albahaca',   tipo:'Hoja',   sol:'Sol pleno',    dias:'50-70 días',
     meses:['Todo el año'] }
 ];
-
-
-    const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+ const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
     function showView(id) {
       VIEWS.forEach(v => {
