@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mi Siembra Inteligente (v12)</title>
+  <title>Mi Siembra Inteligente (v13)</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#22c55e" />
   <style>
@@ -640,7 +640,7 @@
         </div>
       </section>
 
-      <!-- CALENDARIO -->
+      <!-- CALENDARIO / QUÉ SEMBRAR -->
       <section id="calendarView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -661,7 +661,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Catálogo visual de cultivos</div>
-              <div class="section-subtitle">Primeros cultivos con fotos representativas y datos rápidos.</div>
+              <div class="section-subtitle">Cultivos y frutales con fotos representativas y datos rápidos.</div>
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
@@ -721,7 +721,9 @@
                   <span class="meta-pill">🪲 Chupan savia</span>
                   <span class="meta-pill">🌿 Brotes tiernos</span>
                 </div>
-                <div class="section-subtitle">Solución simple: rociar con agua jabonosa suave (jabón potásico o de lavar platos bien diluido) cada 2–3 días.</div>
+                <div class="section-subtitle">
+                  Solución simple: rociar con agua jabonosa suave (jabón potásico o de lavar platos bien diluido) cada 2–3 días.
+                </div>
               </div>
             </div>
             <div class="list-item">
@@ -731,7 +733,9 @@
                   <span class="meta-pill">🍃 Manchas</span>
                   <span class="meta-pill">💧 Exceso de humedad</span>
                 </div>
-                <div class="section-subtitle">Mejora la ventilación, evita mojar las hojas al regar y retira hojas muy afectadas.</div>
+                <div class="section-subtitle">
+                  Mejora la ventilación, evita mojar las hojas al regar y retira hojas muy afectadas.
+                </div>
               </div>
             </div>
             <div class="list-item">
@@ -741,7 +745,9 @@
                   <span class="meta-pill">🪱 Hojas comidas</span>
                   <span class="meta-pill">🌱 Plántulas</span>
                 </div>
-                <div class="section-subtitle">Revísalas a mano, especialmente por la tarde, y retíralas. Puedes proteger brotes con mallas ligeras.</div>
+                <div class="section-subtitle">
+                  Revísalas a mano, especialmente por la tarde, y retíralas. Puedes proteger brotes con mallas ligeras.
+                </div>
               </div>
             </div>
           </div>
@@ -766,7 +772,9 @@
                   <span class="meta-pill">🗑️ Restos de cocina</span>
                   <span class="meta-pill">🌱 Aporta de todo un poco</span>
                 </div>
-                <div class="section-subtitle">Ideal para mezclar con la tierra antes de sembrar o para mejorar camas ya usadas.</div>
+                <div class="section-subtitle">
+                  Ideal para mezclar con la tierra antes de sembrar o para mejorar camas ya usadas.
+                </div>
               </div>
             </div>
             <div class="list-item">
@@ -776,7 +784,9 @@
                   <span class="meta-pill">💧 Líquido</span>
                   <span class="meta-pill">🚿 Se aplica al riego</span>
                 </div>
-                <div class="section-subtitle">Útil para dar un empujón extra a plantas en crecimiento sin exagerar la dosis.</div>
+                <div class="section-subtitle">
+                  Útil para dar un empujón extra a plantas en crecimiento sin exagerar la dosis.
+                </div>
               </div>
             </div>
             <div class="list-item">
@@ -785,14 +795,16 @@
                 <div class="list-meta">
                   <span class="meta-pill">⚠️ Leer etiqueta</span>
                 </div>
-                <div class="section-subtitle">Siempre respeta las dosis indicadas. Es mejor menos cantidad y más frecuente que pasarse.</div>
+                <div class="section-subtitle">
+                  Siempre respeta las dosis indicadas. Es mejor menos cantidad y más frecuente que pasarse.
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- MÁS -->
+      <!-- MÁS (ATAJOS) -->
       <section id="moreView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -828,7 +840,7 @@
     </main>
 
     <footer>
-      Mi Siembra Inteligente (v12) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      Mi Siembra Inteligente (v13) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
 
@@ -872,38 +884,60 @@
   <script>
     const VIEWS = ['homeView','calendarView','catalogView','gardenView','diaryView','pestsView','fertView','moreView'];
 
-    // LISTA DE CULTIVOS (ids = nombre de archivo sin extensión)
-    // Si alguna imagen NO es .jpg, especifica "archivo" (ej. guayaba.png)
+    // RUTA BASE FIJA A LAS IMÁGENES EN GITHUB PAGES
+    const IMAGE_BASE = 'https://eldespertarpr.github.io/MI-Siembra-Inteligente/img/';
+
+    // ⚠️ id = NOMBRE EXACTO del archivo .jpg en /img (minúsculas, sin espacios, sin tildes)
     const crops = [
-      // Hortalizas básicas
-      { id:'aji',        nombre:'Ajíes',        tipo:'Fruto',          sol:'Sol pleno',    dias:'90-120 días', meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'pimiento',   nombre:'Pimiento',     tipo:'Fruto',          sol:'Sol pleno',    dias:'90 días',     meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'cilantro',   nombre:'Cilantro',     tipo:'Hoja',           sol:'Media sombra', dias:'30-45 días',  meses:['Todo el año'] },
-      { id:'recao',      nombre:'Recao',        tipo:'Hoja',           sol:'Media sombra', dias:'8-10 semanas',meses:['Todo el año'] },
-      { id:'tomate',     nombre:'Tomate',       tipo:'Fruto',          sol:'Sol pleno',    dias:'75 días',     meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
-      { id:'lechuga',    nombre:'Lechuga',      tipo:'Hoja',           sol:'Sol suave',    dias:'45 días',     meses:['Enero','Febrero','Noviembre','Diciembre'] },
-      { id:'cebolla',    nombre:'Cebolla',      tipo:'Bulbo',          sol:'Sol pleno',    dias:'110 días',    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-      { id:'menta',      nombre:'Menta',        tipo:'Hoja',           sol:'Media sombra', dias:'60-90 días',  meses:['Todo el año'] },
+      // Hortalizas y aromáticas
+      { id:'aji',          nombre:'Ajíes',        tipo:'Fruto', sol:'Sol pleno',      dias:'90-120 días',  meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      { id:'pimiento',     nombre:'Pimiento',     tipo:'Fruto', sol:'Sol pleno',      dias:'90 días',      meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+      { id:'tomate',       nombre:'Tomate',       tipo:'Fruto', sol:'Sol pleno',      dias:'75-90 días',   meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
+      { id:'lechuga',      nombre:'Lechuga',      tipo:'Hoja',  sol:'Sol suave',      dias:'45 días',      meses:['Enero','Febrero','Noviembre','Diciembre'] },
+      { id:'cebolla',      nombre:'Cebolla',      tipo:'Bulbo', sol:'Sol pleno',      dias:'110 días',     meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
+      { id:'cilantro',     nombre:'Cilantro',     tipo:'Hoja',  sol:'Media sombra',   dias:'30-45 días',   meses:['Todo el año'] },
+      { id:'recao',        nombre:'Recao',        tipo:'Hoja',  sol:'Media sombra',   dias:'8-10 semanas', meses:['Todo el año'] },
+      { id:'menta',        nombre:'Menta',        tipo:'Hoja',  sol:'Media sombra',   dias:'60-90 días',   meses:['Todo el año'] },
+      { id:'albahaca',     nombre:'Albahaca',     tipo:'Hoja',  sol:'Sol pleno',      dias:'45-60 días',   meses:['Todo el año'] },
+      { id:'oregano_brujo',nombre:'Orégano brujo',tipo:'Hoja',  sol:'Sol pleno',      dias:'60-90 días',   meses:['Todo el año'] },
+      { id:'espinaca',     nombre:'Espinaca',     tipo:'Hoja',  sol:'Sol suave',      dias:'40-50 días',   meses:['Enero','Febrero','Noviembre','Diciembre'] },
 
-      // Hojas y aromáticas extra
-      { id:'albahaca',   nombre:'Albahaca',     tipo:'Hoja',           sol:'Sol pleno',    dias:'50-60 días',  meses:['Todo el año'] },
-      { id:'espinaca',   nombre:'Espinaca',     tipo:'Hoja',           sol:'Sol suave',    dias:'40-50 días',  meses:['Noviembre','Diciembre','Enero','Febrero'] },
+      // Raíces y tubérculos
+      { id:'zanahoria',    nombre:'Zanahoria',    tipo:'Raíz',  sol:'Sol pleno',      dias:'80-100 días',  meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
+      { id:'papa',         nombre:'Papa',         tipo:'Tubérculo', sol:'Sol pleno',  dias:'90-120 días',  meses:['Enero','Febrero','Marzo'] },
+      { id:'batata',       nombre:'Batata',       tipo:'Tubérculo', sol:'Sol pleno',  dias:'90-120 días',  meses:['Todo el año'] },
+      { id:'yuca',         nombre:'Yuca',         tipo:'Raíz',  sol:'Sol pleno',      dias:'8-12 meses',   meses:['Todo el año'] },
+      { id:'ajo',          nombre:'Ajo',          tipo:'Bulbo', sol:'Sol pleno',      dias:'90-120 días',  meses:['Enero','Febrero','Marzo','Octubre','Noviembre'] },
+      { id:'apio',         nombre:'Apio',         tipo:'Tallo', sol:'Sol suave',      dias:'90-120 días',  meses:['Todo el año'] },
 
-      // Legumbres y raíces
-      { id:'habichuelas',nombre:'Habichuelas',  tipo:'Leguminosa',     sol:'Sol pleno',    dias:'60-75 días',  meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-      { id:'batata',     nombre:'Batata',       tipo:'Raíz',           sol:'Sol pleno',    dias:'90-120 días', meses:['Marzo','Abril','Mayo','Junio','Julio'] },
-      { id:'apio',       nombre:'Apio',         tipo:'Tallo',          sol:'Sol suave',    dias:'90-120 días', meses:['Agosto','Septiembre','Octubre','Noviembre'] },
+      // Curcubitáceas y otras hortícolas
+      { id:'calabaza',     nombre:'Calabaza',     tipo:'Fruto', sol:'Sol pleno',      dias:'90-120 días',  meses:['Febrero','Marzo','Abril','Agosto','Septiembre'] },
+      { id:'pepinillo',    nombre:'Pepinillo',    tipo:'Fruto', sol:'Sol pleno',      dias:'50-60 días',   meses:['Febrero','Marzo','Abril','Agosto','Septiembre'] },
+      { id:'berenjena',    nombre:'Berenjena',    tipo:'Fruto', sol:'Sol pleno',      dias:'80-100 días',  meses:['Enero','Febrero','Marzo','Septiembre','Octubre'] },
+      { id:'habichuelas',  nombre:'Habichuelas',  tipo:'Leguminosa', sol:'Sol pleno', dias:'60-75 días',   meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
 
-      // Bulbos adicionales
-      { id:'ajo',        nombre:'Ajo',          tipo:'Bulbo',          sol:'Sol pleno',    dias:'120-150 días',meses:['Octubre','Noviembre','Diciembre'] },
+      // Frutales y tropicales
+      { id:'aguacate',     nombre:'Aguacate',     tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
+      { id:'acerola',      nombre:'Acerola',      tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
+      { id:'limon',        nombre:'Limón',        tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
+      { id:'toronja',      nombre:'Toronja',      tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
+      { id:'naranja',      nombre:'Naranja',      tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
+      { id:'mandarina',    nombre:'Mandarina',    tipo:'Frutal cítrico', sol:'Sol pleno', dias:'Árbol perenne', meses:['Todo el año'] },
+      { id:'mango',        nombre:'Mango',        tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
+      { id:'papaya',       nombre:'Papaya',       tipo:'Frutal', sol:'Sol pleno',     dias:'6-9 meses',    meses:['Todo el año'] },
+      { id:'guayaba',      nombre:'Guayaba',      tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
+      { id:'parcha',       nombre:'Parcha (maracuyá)', tipo:'Enredadera', sol:'Sol pleno', dias:'6-9 meses', meses:['Todo el año'] },
+      { id:'melon',        nombre:'Melón',        tipo:'Fruto', sol:'Sol pleno',      dias:'80-90 días',   meses:['Febrero','Marzo','Abril'] },
+      { id:'sandia',       nombre:'Sandía',       tipo:'Fruto', sol:'Sol pleno',      dias:'80-90 días',   meses:['Febrero','Marzo','Abril'] },
+      { id:'tamarindo',    nombre:'Tamarindo',    tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
+      { id:'carambola',    nombre:'Carambola',    tipo:'Frutal', sol:'Sol pleno',     dias:'Árbol perenne',meses:['Todo el año'] },
 
-      // Árboles frutales
-      { id:'acerola',    nombre:'Acerola',      tipo:'Frutal',         sol:'Sol pleno',    dias:'8-12 meses',  meses:['Todo el año'] },
-      { id:'aguacate',   nombre:'Aguacate',     tipo:'Frutal',         sol:'Sol pleno',    dias:'2-3 años',    meses:['Todo el año'] },
-      { id:'guayaba',    nombre:'Guayaba',      tipo:'Frutal',         sol:'Sol pleno',    dias:'8-12 meses',  meses:['Todo el año'], archivo:'guayaba.png' },
-      { id:'limon',      nombre:'Limón',        tipo:'Frutal',         sol:'Sol pleno',    dias:'1-2 años',    meses:['Todo el año'] },
-      { id:'mandarina',  nombre:'Mandarina',    tipo:'Frutal',         sol:'Sol pleno',    dias:'1-2 años',    meses:['Todo el año'] }
-      // Si añades más imágenes, solo agrega aquí otro objeto usando el mismo id del archivo.
+      // Musa y otros
+      { id:'platano',      nombre:'Plátano',      tipo:'Musa',  sol:'Sol pleno',      dias:'9-12 meses',   meses:['Todo el año'] },
+      { id:'guineo',       nombre:'Guineo',       tipo:'Musa',  sol:'Sol pleno',      dias:'9-12 meses',   meses:['Todo el año'] },
+
+      // Extra
+      { id:'repollo',      nombre:'Repollo',      tipo:'Hoja',  sol:'Sol suave',      dias:'70-90 días',   meses:['Enero','Febrero','Noviembre','Diciembre'] }
     ];
 
     const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -933,7 +967,7 @@
       });
     });
 
-    // --- Calendario ---
+    // --- CALENDARIO ---
     const monthButtonsContainer = document.getElementById('monthButtons');
     const monthResultsContainer = document.getElementById('monthResults');
     let activeMonth = null;
@@ -1008,7 +1042,7 @@
       });
     }
 
-    // --- Catálogo ---
+    // --- CATÁLOGO ---
     const catalogGrid = document.getElementById('catalogGrid');
     const catalogFilters = document.getElementById('catalogFilters');
     let activeTypeFilter = 'Todos';
@@ -1040,8 +1074,7 @@
         const photo = document.createElement('div');
         photo.className = 'crop-photo';
         const img = document.createElement('img');
-        const fileName = c.archivo || (c.id + '.jpg');
-        img.src = 'img/' + fileName;
+        img.src = IMAGE_BASE + c.id + '.jpg';
         img.alt = c.nombre;
         photo.appendChild(img);
 
@@ -1076,14 +1109,14 @@
       });
     }
 
-    // --- Mi huerto ---
+    // --- MI HUERTO ---
     const gardenSize = 4;
     const gardenGridEl = document.getElementById('gardenGrid');
     const gardenDialog = document.getElementById('gardenDialog');
     const gardenCropSelect = document.getElementById('gardenCropSelect');
     const gardenDialogPosition = document.getElementById('gardenDialogPosition');
     let gardenSelectedCell = null;
-    const GARDEN_KEY = 'mi_siembra_garden_v12';
+    const GARDEN_KEY = 'mi_siembra_garden_v13';
 
     function loadGarden() {
       const raw = localStorage.getItem(GARDEN_KEY);
@@ -1168,14 +1201,14 @@
       renderGardenGrid();
     });
 
-    // --- Diario ---
+    // --- DIARIO ---
     const diaryListEl = document.getElementById('diaryList');
     const diaryEmptyEl = document.getElementById('diaryEmpty');
     const diaryDialog = document.getElementById('diaryDialog');
     const diaryType = document.getElementById('diaryType');
     const diaryDate = document.getElementById('diaryDate');
     const diaryNotes = document.getElementById('diaryNotes');
-    const DIARY_KEY = 'mi_siembra_diary_v12';
+    const DIARY_KEY = 'mi_siembra_diary_v13';
     let diaryEntries = [];
 
     function loadDiary() {
@@ -1239,7 +1272,7 @@
       closeDialogs();
     });
 
-    // --- Inicializar ---
+    // --- INIT ---
     function init() {
       renderMonthButtons();
       renderCatalogFilters();
@@ -1251,7 +1284,7 @@
     }
     init();
 
-    // --- Service worker PWA ---
+    // Service worker PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js').catch(() => {});
