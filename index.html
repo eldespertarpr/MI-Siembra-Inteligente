@@ -876,16 +876,55 @@
     const IMAGE_BASE = 'https://eldespertarpr.github.io/MI-Siembra-Inteligente/img/';
 
     // Cultivos (id = nombre del archivo sin .jpg)
-    const crops = [
-      { id:'aji',       nombre:'Ajíes',    tipo:'Fruto', sol:'Sol pleno',    dias:'90-120 días', meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'pimiento',  nombre:'Pimiento', tipo:'Fruto', sol:'Sol pleno',    dias:'90 días',     meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
-      { id:'cilantro',  nombre:'Cilantro', tipo:'Hoja',  sol:'Media sombra', dias:'30-45 días',  meses:['Todo el año'] },
-      { id:'recao',     nombre:'Recao',    tipo:'Hoja',  sol:'Media sombra', dias:'8-10 semanas',meses:['Todo el año'] },
-      { id:'tomate',    nombre:'Tomate',   tipo:'Fruto', sol:'Sol pleno',    dias:'75 días',     meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
-      { id:'lechuga',   nombre:'Lechuga',  tipo:'Hoja',  sol:'Sol suave',    dias:'45 días',     meses:['Enero','Febrero','Noviembre','Diciembre'] },
-      { id:'cebolla',   nombre:'Cebolla',  tipo:'Bulbo', sol:'Sol pleno',    dias:'110 días',    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
-      { id:'menta',     nombre:'Menta',    tipo:'Hoja',  sol:'Media sombra', dias:'60-90 días',  meses:['Todo el año'] }
-    ];
+    // Cultivos con nombre de archivo de imagen explícito
+// id = nombre EXACTO del archivo en /img sin .jpg
+const crops = [
+  // EXISTENTES
+  { id:'aji',       nombre:'Ajíes',      tipo:'Fruto',  sol:'Sol pleno',    dias:'90-120 días',
+    meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+
+  { id:'pimiento',  nombre:'Pimiento',   tipo:'Fruto',  sol:'Sol pleno',    dias:'90 días',
+    meses:['Enero','Febrero','Marzo','Septiembre','Octubre','Noviembre'] },
+
+  { id:'cilantro',  nombre:'Cilantro',   tipo:'Hoja',   sol:'Media sombra', dias:'30-45 días',
+    meses:['Todo el año'] },
+
+  { id:'recao',     nombre:'Recao',      tipo:'Hoja',   sol:'Media sombra', dias:'8-10 semanas',
+    meses:['Todo el año'] },
+
+  { id:'tomate',    nombre:'Tomate',     tipo:'Fruto',  sol:'Sol pleno',    dias:'75 días',
+    meses:['Enero','Febrero','Marzo','Agosto','Septiembre'] },
+
+  { id:'lechuga',   nombre:'Lechuga',    tipo:'Hoja',   sol:'Sol suave',    dias:'45 días',
+    meses:['Enero','Febrero','Noviembre','Diciembre'] },
+
+  { id:'cebolla',   nombre:'Cebolla',    tipo:'Bulbo',  sol:'Sol pleno',    dias:'110 días',
+    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
+
+  { id:'menta',     nombre:'Menta',      tipo:'Hoja',   sol:'Media sombra', dias:'60-90 días',
+    meses:['Todo el año'] },
+
+  // NUEVOS
+
+  { id:'espinaca',  nombre:'Espinaca',   tipo:'Hoja',   sol:'Sol suave',    dias:'35-45 días',
+    meses:['Enero','Febrero','Noviembre','Diciembre'] },
+
+  { id:'habichuelas', nombre:'Habichuelas', tipo:'Leguminosa', sol:'Sol pleno', dias:'60-75 días',
+    meses:['Enero','Febrero','Marzo','Abril','Agosto','Septiembre','Octubre'] },
+
+  { id:'apio',      nombre:'Apio',       tipo:'Hoja',   sol:'Sol suave',    dias:'90-120 días',
+    meses:['Enero','Febrero','Noviembre','Diciembre'] },
+
+  { id:'batata',    nombre:'Batata',     tipo:'Raíz',   sol:'Sol pleno',    dias:'90-150 días',
+    meses:['Todo el año'] },
+
+  { id:'calabaza',  nombre:'Calabaza',   tipo:'Fruto',  sol:'Sol pleno',    dias:'90-120 días',
+    meses:['Enero','Febrero','Marzo','Agosto','Septiembre','Octubre'] },
+
+  { id:'albahaca',  nombre:'Albahaca',   tipo:'Hoja',   sol:'Sol pleno',    dias:'50-70 días',
+    meses:['Todo el año'] }
+];
+
 
     const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
