@@ -1,26 +1,43 @@
-const CACHE = 'siembra-v14';
-const FILES = [
+const CACHE_NAME = 'mi-siembra-v14';
+const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './icons/icon-72.png',
   './icons/icon-192.png',
-  './icons/icon-512.png',
-  './img/aji.jpg',
-  './img/pimiento.jpg',
-  './img/cilantro.jpg',
-  './img/recao.jpg',
-  './img/tomate.jpg',
-  './img/lechuga.jpg',
-  './img/cebolla.jpg',
-  './img/menta.jpg'
+  './icons/icon-512.png'
 ];
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+  );
+  self.skipWaiting();
 });
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', event => {
+  const req = event.request;
+
+  // Solo GET
+  if (req.method !== 'GET') return;
+
+  event.respondWith(
+    caches.match(req).then(cached => {
+      if (cached) return cached;
+      return fetch(req).catch(() => caches.match('./index.html'));
+    })
   );
 });
