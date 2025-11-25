@@ -5,14 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mi Siembra Inteligente (v14)</title>
 
-  <!-- Manifest con versión para forzar actualización -->
-  <link rel="manifest" href="manifest.json?v=14" />
-
-  <!-- Icono principal de la app -->
-  <link rel="icon" type="image/png" href="img/icon/icon-192.png" />
-
-  <!-- Mismo color que en el manifest -->
-  <meta name="theme-color" content="#0f351e" />
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#22c55e" />
 
   <style>
     :root {
@@ -20,626 +15,298 @@
       --bg: #020617;
       --bg-elevated: #02081f;
       --card: #02081f;
-      --card-soft: #030919;
       --accent: #22c55e;
       --accent-soft: rgba(34,197,94,0.12);
-      --accent-strong: rgba(34,197,94,0.4);
       --text-main: #f9fafb;
       --text-soft: #9ca3af;
-      --border-subtle: rgba(148,163,184,0.4);
-      --chip-bg: rgba(15,23,42,0.9);
-      --chip-border: rgba(148,163,184,0.7);
-      --danger: #fb7185;
-      --shadow-soft: 0 18px 45px rgba(15,23,42,0.85);
-      --radius-xl: 20px;
-      --radius-2xl: 26px;
-      --transition-fast: 0.18s ease-out;
+      --border-subtle: rgba(148,163,184,0.35);
     }
-    * { box-sizing: border-box; }
 
-    html, body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 16px;
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 50%, #000 100%);
-      color: var(--text-main);
-      min-height: 100%;
     }
+
     body {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .app-shell {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Roboto", sans-serif;
+      background: radial-gradient(circle at top, #020617 0, #020617 30%, #000 100%);
+      color: var(--text-main);
       min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
       max-width: 960px;
       margin: 0 auto;
-      padding: 16px 12px 24px;
-    }
-
-    header.app-header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      padding: 4px 4px 10px;
-      backdrop-filter: blur(26px);
-      -webkit-backdrop-filter: blur(26px);
-    }
-    .header-inner {
-      border-radius: 999px;
-      padding: 10px 16px;
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.15) 0, rgba(15,23,42,0.9) 45%, rgba(15,23,42,0.96) 100%);
-      box-shadow: 0 20px 60px rgba(15,23,42,0.9);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 14px;
-      background: radial-gradient(circle at 30% 0, #bbf7d0 0, #22c55e 30%, #15803d 70%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.55);
-    }
-    .brand-icon span { font-size: 18px; }
-    .brand-text {
+      padding: 1.5rem 1rem 2.5rem;
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-    }
-    .brand-title {
-      font-weight: 650;
-      letter-spacing: 0.01em;
-      font-size: 17px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-    .brand-sub {
-      font-size: 11px;
-      color: var(--text-soft);
+      gap: 1.25rem;
     }
 
-    .pill-nav {
-      display: flex;
-      gap: 6px;
-      padding: 2px;
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0.85rem;
       border-radius: 999px;
-      background: rgba(15,23,42,0.85);
       border: 1px solid rgba(148,163,184,0.55);
-    }
-    .pill-nav button {
-      border: none;
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 11px;
-      background: transparent;
+      background: linear-gradient(
+        120deg,
+        rgba(15,23,42,0.96),
+        rgba(15,23,42,0.7)
+      );
+      backdrop-filter: blur(18px);
+      font-size: 0.78rem;
       color: var(--text-soft);
+      align-self: flex-start;
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.18);
+    }
+
+    header {
       display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-    }
-    .pill-nav button span.emoji { font-size: 13px; }
-    .pill-nav button.active {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #022c22;
-      font-weight: 600;
-      box-shadow: 0 8px 20px rgba(34,197,94,0.6);
-      transform: translateY(-0.5px);
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
-    main { padding: 8px 2px 24px; }
-    section.view {
-      display: none;
-      animation: fadeIn 0.2s ease-out;
-    }
-    section.view.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-card {
-      background: radial-gradient(circle at top left, rgba(148,163,184,0.14) 0, var(--card-soft) 42%, #020617 100%);
-      border-radius: var(--radius-2xl);
-      padding: 18px 18px 18px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(51,65,85,0.9);
-      margin-bottom: 18px;
-    }
-    .section-header {
+    .title-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 0.75rem;
     }
-    .section-title {
-      font-size: 21px;
-      font-weight: 650;
+
+    .title-group h1 {
+      font-size: 1.45rem;
+      letter-spacing: 0.03em;
     }
-    .section-subtitle {
-      font-size: 13px;
+
+    .title-group p {
+      font-size: 0.78rem;
       color: var(--text-soft);
-      margin-top: 4px;
+      margin-top: 0.20rem;
     }
+
     .badge {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 3px 8px;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
       border-radius: 999px;
-      background: rgba(34,197,94,0.18);
-      border: 1px solid rgba(34,197,94,0.6);
-      color: #bbf7d0;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .badge span.emoji { font-size: 12px; }
-
-    .grid-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 8px;
-    }
-    .home-card {
-      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.38) 0, rgba(15,23,42,0.98) 45%, rgba(15,23,42,1) 100%);
-      border-radius: 20px;
-      padding: 12px 12px 13px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(34,197,94,0.62);
-      box-shadow: 0 12px 32px rgba(22,163,74,0.7);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      min-height: 90px;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
-    }
-    .home-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(22,163,74,0.85);
-      border-color: rgba(190,242,100,0.95);
-    }
-    .home-card-title {
-      font-size: 15px;
-      font-weight: 650;
-    }
-    .home-card-desc {
-      font-size: 12px;
-      color: #d1fae5;
-      max-width: 85%;
-    }
-    .home-card-icon {
-      position: absolute;
-      right: -6px;
-      bottom: -4px;
-      font-size: 46px;
-      opacity: 0.18;
-      transform: rotate(-8deg);
-    }
-
-    .chips-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
-    .chip {
-      font-size: 11px;
-      padding: 4px 9px;
-      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
       background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.7);
       color: var(--text-soft);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      white-space: nowrap;
     }
-    .chip span.emoji { font-size: 12px; }
 
-    .month-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
-      margin-top: 8px;
-      margin-bottom: 10px;
+      grid-template-columns: 1.2fr 0.95fr;
+      gap: 1rem;
     }
-    .month-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      background: var(--chip-bg);
+
+    .card {
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top left, #020617, #02081f 50%, #000 120%);
+      padding: 1rem;
+      box-shadow:
+        0 18px 45px rgba(15,23,42,0.9),
+        0 0 0 1px rgba(15,23,42,0.8);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.7rem;
+    }
+
+    .card-header h2 {
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: var(--text-soft);
-      font-size: 12px;
-      padding: 6px 4px;
-      text-align: center;
-      cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
     }
-    .month-btn.active {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #022c22;
-      font-weight: 600;
-      border-color: rgba(190,242,100,0.95);
-      box-shadow: 0 10px 28px rgba(34,197,94,0.85);
-      transform: translateY(-1px);
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.4);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-soft);
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
     }
 
     .list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 0.45rem;
+      font-size: 0.8rem;
     }
-    .list-item {
-      border-radius: 18px;
-      padding: 10px 11px;
-      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,1));
-      border: 1px solid rgba(51,65,85,0.95);
+
+    .list-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 0.75rem;
     }
-    .list-main {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .list-title {
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .list-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      font-size: 11px;
-    }
-    .meta-pill {
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.7);
+
+    .list-label {
       color: var(--text-soft);
     }
 
-    .small-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.9);
-      background: rgba(15,23,42,0.95);
-      color: var(--text-main);
-      padding: 5px 8px;
-      font-size: 11px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+    .list-value {
+      font-weight: 500;
     }
-    .small-btn span.emoji { font-size: 13px; }
 
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-    }
-    .crop-card {
-      border-radius: 22px;
-      overflow: hidden;
-      background: radial-gradient(circle at top, rgba(22,163,74,0.3) 0, #020617 55%);
-      border: 1px solid rgba(51,65,85,0.95);
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      min-height: 190px;
-      cursor: pointer;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
-    }
-    .crop-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(22,163,74,0.85);
-      border-color: rgba(190,242,100,0.95);
-    }
-    .crop-photo {
-      height: 90px;
-      position: relative;
-      overflow: hidden;
-      background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
-    }
-    .crop-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      opacity: 0.88;
-    }
-    .crop-photo::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(2,6,23,0.82));
-    }
-    .crop-body {
-      padding: 9px 10px 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-    }
-    .crop-name {
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .crop-tags {
+    .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 4px;
-    }
-    .crop-tag {
-      font-size: 11px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.96);
-      border: 1px solid rgba(148,163,184,0.7);
-      color: var(--text-soft);
+      gap: 0.4rem;
+      margin-top: 0.35rem;
     }
 
-    .empty-state {
-      padding: 26px 18px;
-      border-radius: var(--radius-2xl);
-      border: 1px dashed rgba(148,163,184,0.7);
+    .pill-small {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      color: var(--text-soft);
       background: rgba(15,23,42,0.8);
+    }
+
+    .footer-text {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      margin-top: 0.75rem;
       text-align: center;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-    .empty-state span.emoji {
-      display: block;
-      font-size: 28px;
-      margin-bottom: 6px;
+      opacity: 0.7;
     }
 
-    .garden-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .garden-cell {
-      border-radius: 14px;
-      border: 1px solid rgba(51,65,85,0.9);
-      background: radial-gradient(circle at top, rgba(34,197,94,0.25) 0, rgba(15,23,42,1) 60%);
-      aspect-ratio: 1/1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: var(--text-soft);
-      cursor: pointer;
-      text-align: center;
-      padding: 4px;
-    }
-    .garden-cell span { display: block; }
-    .garden-cell-label {
-      font-weight: 600;
-      color: var(--text-main);
-      font-size: 11px;
-    }
-    .garden-cell-plant {
-      font-size: 10px;
-      margin-top: 2px;
-    }
-
-    .dialog-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-    .dialog-backdrop.active { display: flex; }
-    .dialog {
-      width: min(380px, 100% - 32px);
-      border-radius: 22px;
-      padding: 16px 16px 14px;
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.2) 0, #020617 50%);
-      border: 1px solid rgba(148,163,184,0.9);
-      box-shadow: 0 24px 70px rgba(0,0,0,0.95);
-    }
-    .dialog h3 {
-      margin: 0 0 8px;
-      font-size: 16px;
-    }
-    .dialog label {
-      font-size: 12px;
-      color: var(--text-soft);
-      display: block;
-      margin-bottom: 5px;
-    }
-    .dialog select,
-    .dialog input,
-    .dialog textarea {
-      width: 100%;
-      border-radius: 12px;
-      border: 1px solid rgba(148,163,184,0.8);
-      background: rgba(15,23,42,0.9);
-      color: var(--text-main);
-      font-size: 13px;
-      padding: 7px 9px;
-      margin-bottom: 10px;
-      font-family: inherit;
-      resize: vertical;
-    }
-    .dialog textarea { min-height: 60px; }
-    .dialog-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .btn {
-      border-radius: 999px;
-      padding: 6px 12px;
-      border: 1px solid rgba(148,163,184,0.9);
-      background: rgba(15,23,42,0.95);
-      color: var(--text-main);
-      font-size: 12px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      border-color: rgba(190,242,100,0.95);
-      color: #022c22;
-      font-weight: 600;
-      box-shadow: 0 12px 32px rgba(34,197,94,0.8);
-    }
-    .btn-ghost { background: transparent; }
-
-    .diary-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-      max-height: 260px;
-      overflow-y: auto;
-      padding-right: 2px;
-    }
-    .diary-entry {
-      border-radius: 16px;
-      padding: 8px 10px;
-      background: rgba(15,23,42,0.95);
-      border: 1px solid rgba(51,65,85,0.95);
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .diary-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .diary-type { font-weight: 600; }
-    .diary-date {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-    .diary-notes {
-      color: var(--text-soft);
-      font-size: 12px;
-    }
-
-    /* Ficha detallada del cultivo */
-    .dialog.dialog-crop {
-      width: min(430px, 100% - 24px);
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      padding-bottom: 10px;
-    }
-    .crop-dialog-img-wrap {
-      border-radius: 18px;
-      overflow: hidden;
-      margin-bottom: 10px;
-      height: 160px;
-      background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
-    }
-    .crop-dialog-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .crop-dialog-header-line {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-    .crop-dialog-name {
-      font-size: 17px;
-      font-weight: 650;
-    }
-    .crop-dialog-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-    .crop-dialog-tag {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.96);
-      border: 1px solid rgba(148,163,184,0.7);
-      color: var(--text-soft);
-    }
-    .crop-dialog-body {
-      font-size: 13px;
-      color: var(--text-soft);
-      overflow-y: auto;
-      padding-right: 2px;
-      margin-bottom: 6px;
-    }
-    .crop-dialog-body p {
-      margin: 4px 0 6px;
-    }
-    .crop-dialog-body strong {
-      color: var(--text-main);
-      font-weight: 600;
-    }
-
-    footer {
-      margin-top: 8px;
-      padding: 6px 4px 2px;
-      font-size: 10px;
-      color: var(--text-soft);
-      text-align: center;
-    }
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    @media (min-width: 768px) {
+    @media (max-width: 768px) {
       .app-shell {
-        padding: 18px 8px 28px;
+        padding: 1.1rem 0.9rem 1.8rem;
       }
-      .section-card {
-        padding: 20px 20px 20px;
+      .grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <!-- (el resto del archivo permanece igual que el tuyo) -->
-  <!-- … -->
-  <!-- Aquí va todo tu cuerpo HTML y el <script> tal como lo tenías -->
+  <main class="app-shell">
+    <div class="pill">
+      <span class="pill-dot"></span>
+      <span>Mi Siembra Inteligente · v14 · PWA</span>
+    </div>
+
+    <header>
+      <div class="title-row">
+        <div class="title-group">
+          <h1>Panel de tu huerto</h1>
+          <p>Registra siembras, controla riego y lleva notas de fertilizantes y plagas.</p>
+        </div>
+        <div class="badge">Modo offline listo</div>
+      </div>
+    </header>
+
+    <section class="grid">
+      <!-- Columna izquierda -->
+      <section class="card">
+        <div class="card-header">
+          <h2>TU SIEMBRA HOY</h2>
+          <span class="chip">Resumen rápido</span>
+        </div>
+
+        <h3 class="section-title">Cómo usar la app</h3>
+        <p class="section-subtitle">
+          Desde el menú podrás añadir nuevos cultivos, registrar riegos, fertilizantes,
+          control de plagas y ver estadísticas de tu huerto.
+        </p>
+
+        <div class="list">
+          <div class="list-row">
+            <span class="list-label">Estado</span>
+            <span class="list-value">Configurando tu primera siembra</span>
+          </div>
+          <div class="list-row">
+            <span class="list-label">Modo</span>
+            <span class="list-value">PWA instalada o en navegador</span>
+          </div>
+        </div>
+
+        <div class="pill-row">
+          <span class="pill-small">➕ Añade cultivos</span>
+          <span class="pill-small">💧 Controla riegos</span>
+          <span class="pill-small">🌱 Ciclo de siembra</span>
+          <span class="pill-small">🪲 Plagas &amp; enfermedades</span>
+        </div>
+      </section>
+
+      <!-- Columna derecha -->
+      <section class="card">
+        <div class="card-header">
+          <h2>INSTALACIÓN</h2>
+          <span class="chip">Chrome / Edge / Android</span>
+        </div>
+
+        <h3 class="section-title">Convertir en app</h3>
+        <p class="section-subtitle">
+          En Chrome: menú ⋮ &gt; "Añadir a pantalla de inicio".  
+          En Edge: menú ⋯ &gt; "Instalar aplicación".
+        </p>
+
+        <div class="list">
+          <div class="list-row">
+            <span class="list-label">Versión actual</span>
+            <span class="list-value">v14</span>
+          </div>
+          <div class="list-row">
+            <span class="list-label">Modo offline</span>
+            <span class="list-value">Activado con Service Worker</span>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <p class="footer-text">
+      Si ves esta pantalla, la app se está cargando correctamente.  
+      Los próximos pasos serán añadir las pantallas de cultivos, riego y estadísticas.
+    </p>
+  </main>
+
+  <script>
+    // Registro del Service Worker con manejo de errores
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .catch(err => {
+            console.log('SW error:', err);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
