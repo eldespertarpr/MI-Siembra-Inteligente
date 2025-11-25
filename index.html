@@ -64,4 +64,908 @@
       );
       backdrop-filter: blur(18px);
       font-size: 0.78rem;
-      color: var(--text-soft
+      color: var(--text-soft);
+      align-self: flex-start;
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.18);
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .title-group h1 {
+      font-size: 1.45rem;
+      letter-spacing: 0.03em;
+    }
+
+    .title-group p {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      margin-top: 0.20rem;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-soft);
+      white-space: nowrap;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 0.5rem;
+      padding-bottom: 0.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      font-size: 0.78rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.85);
+      color: var(--text-soft);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      border-color: var(--accent-strong);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .views {
+      margin-top: 0.5rem;
+    }
+
+    .view {
+      display: none;
+      animation: fadeIn 0.18s ease-out;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.95fr;
+      gap: 1rem;
+    }
+
+    .card {
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top left, #020617, #02081f 50%, #000 120%);
+      padding: 1rem;
+      box-shadow:
+        0 18px 45px rgba(15,23,42,0.9),
+        0 0 0 1px rgba(15,23,42,0.8);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.7rem;
+    }
+
+    .card-header h2 {
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.4);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.76rem;
+      color: var(--text-soft);
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.8rem;
+    }
+
+    .list-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .list-label {
+      color: var(--text-soft);
+    }
+
+    .list-value {
+      font-weight: 500;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.35rem;
+    }
+
+    .pill-small {
+      font-size: 0.7rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      color: var(--text-soft);
+      background: rgba(15,23,42,0.8);
+    }
+
+    .footer-text {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      margin-top: 0.75rem;
+      text-align: center;
+      opacity: 0.7;
+    }
+
+    /* Formularios y tablas */
+
+    form {
+      display: grid;
+      gap: 0.55rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.8rem;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+
+    input,
+    select,
+    textarea {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(31,41,55,0.95);
+      background: rgba(15,23,42,0.95);
+      color: var(--text-main);
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    button.primary {
+      border-radius: 999px;
+      border: none;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #0b1120;
+      cursor: pointer;
+      justify-self: flex-start;
+    }
+
+    button.primary:active {
+      transform: translateY(1px);
+      filter: brightness(0.95);
+    }
+
+    .table-wrapper {
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      background: rgba(15,23,42,0.9);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.74rem;
+    }
+
+    thead {
+      background: rgba(15,23,42,0.98);
+    }
+
+    th, td {
+      padding: 0.4rem 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(30,41,59,0.9);
+    }
+
+    th {
+      font-weight: 500;
+      color: var(--text-soft);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-empty {
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    .badge-soft {
+      display: inline-block;
+      padding: 0.12rem 0.38rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      background: rgba(15,118,110,0.45);
+      color: #ccfbf1;
+    }
+
+    .tag-frutal { background: rgba(250,204,21,0.27); color: #fef9c3; }
+    .tag-hortaliza { background: rgba(56,189,248,0.2); color: #e0f2fe; }
+    .tag-tiesto { background: rgba(248,250,252,0.14); color: #e5e7eb; }
+
+    @media (max-width: 768px) {
+      .app-shell {
+        padding: 1.1rem 0.9rem 1.8rem;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <div class="pill">
+      <span class="pill-dot"></span>
+      <span>Mi Siembra Inteligente · v14 · PWA</span>
+    </div>
+
+    <header>
+      <div class="title-row">
+        <div class="title-group">
+          <h1>Panel de tu huerto</h1>
+          <p>Registra siembras, controla riego y lleva notas de fertilizantes y plagas.</p>
+        </div>
+        <div class="badge">Modo offline listo</div>
+      </div>
+
+      <nav class="tabs">
+        <button class="tab active" data-view="resumen">Inicio</button>
+        <button class="tab" data-view="cultivos">Cultivos</button>
+        <button class="tab" data-view="riego">Riegos</button>
+        <button class="tab" data-view="fertilizantes">Fertilizantes</button>
+        <button class="tab" data-view="plagas">Plagas</button>
+        <button class="tab" data-view="estadisticas">Estadísticas</button>
+      </nav>
+    </header>
+
+    <section class="views">
+      <!-- INICIO -->
+      <section id="view-resumen" class="view active">
+        <section class="grid">
+          <!-- Columna izquierda -->
+          <section class="card">
+            <div class="card-header">
+              <h2>TU SIEMBRA HOY</h2>
+              <span class="chip">Resumen rápido</span>
+            </div>
+
+            <h3 class="section-title">Cómo usar la app</h3>
+            <p class="section-subtitle">
+              Desde las pestañas superiores puedes añadir nuevos cultivos, registrar riegos,
+              fertilizantes, control de plagas y ver estadísticas de tu huerto.
+            </p>
+
+            <div class="list">
+              <div class="list-row">
+                <span class="list-label">Estado</span>
+                <span class="list-value" id="resumen-estado">Sin cultivos registrados aún</span>
+              </div>
+              <div class="list-row">
+                <span class="list-label">Cultivos activos</span>
+                <span class="list-value" id="resumen-cultivos">0</span>
+              </div>
+              <div class="list-row">
+                <span class="list-label">Próximas cosechas</span>
+                <span class="list-value" id="resumen-cosechas">0 en los próximos 14 días</span>
+              </div>
+            </div>
+
+            <div class="pill-row">
+              <span class="pill-small">➕ Añade cultivos</span>
+              <span class="pill-small">💧 Controla riegos</span>
+              <span class="pill-small">🌱 Ciclo de siembra</span>
+              <span class="pill-small">🪲 Plagas &amp; enfermedades</span>
+            </div>
+          </section>
+
+          <!-- Columna derecha -->
+          <section class="card">
+            <div class="card-header">
+              <h2>INSTALACIÓN</h2>
+              <span class="chip">Chrome / Edge / Android</span>
+            </div>
+
+            <h3 class="section-title">Convertir en app</h3>
+            <p class="section-subtitle">
+              En Chrome: menú ⋮ &gt; "Añadir a pantalla de inicio".  
+              En Edge: menú ⋯ &gt; "Instalar aplicación".
+            </p>
+
+            <div class="list">
+              <div class="list-row">
+                <span class="list-label">Versión actual</span>
+                <span class="list-value">v14</span>
+              </div>
+              <div class="list-row">
+                <span class="list-label">Modo offline</span>
+                <span class="list-value">Activado con Service Worker</span>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <p class="footer-text">
+          Tus datos se guardan localmente en este dispositivo.  
+          Si borras la caché del navegador, se perderán los registros.
+        </p>
+      </section>
+
+      <!-- CULTIVOS -->
+      <section id="view-cultivos" class="view">
+        <section class="card">
+          <div class="card-header">
+            <h2>CULTIVOS</h2>
+            <span class="chip">Registro principal</span>
+          </div>
+
+          <h3 class="section-title">Nuevo cultivo</h3>
+          <form id="form-cultivo">
+            <label>
+              Nombre del cultivo
+              <input name="nombre" required placeholder="Ej. Tomate cherry, Plátano, Cilantro">
+            </label>
+            <label>
+              Tipo
+              <select name="tipo">
+                <option value="hortaliza">Hortaliza / Huerto</option>
+                <option value="frutal">Árbol frutal</option>
+                <option value="tiesto">En tiesto / maceta</option>
+              </select>
+            </label>
+            <label>
+              Fecha de siembra
+              <input type="date" name="fecha" required>
+            </label>
+            <label>
+              Días estimados hasta cosecha
+              <input type="number" name="dias" min="0" placeholder="Ej. 90">
+            </label>
+            <label>
+              Notas
+              <textarea name="notas" placeholder="Variedad, tipo de suelo, ubicación, etc."></textarea>
+            </label>
+            <button class="primary" type="submit">Guardar cultivo</button>
+          </form>
+
+          <h3 class="section-title">Cultivos registrados</h3>
+          <div class="table-wrapper" id="contenedor-tabla-cultivos">
+            <div class="table-empty">Todavía no has registrado ningún cultivo.</div>
+          </div>
+        </section>
+      </section>
+
+      <!-- RIEGOS -->
+      <section id="view-riego" class="view">
+        <section class="card">
+          <div class="card-header">
+            <h2>RIEGOS</h2>
+            <span class="chip">Control diario</span>
+          </div>
+
+          <h3 class="section-title">Registrar riego</h3>
+          <form id="form-riego">
+            <label>
+              Cultivo (texto libre)
+              <input name="cultivo" placeholder="Ej. Tomate cama 1" required>
+            </label>
+            <label>
+              Fecha
+              <input type="date" name="fecha" required>
+            </label>
+            <label>
+              Tipo de riego
+              <select name="tipo">
+                <option value="manual">Manual</option>
+                <option value="goteo">Goteo</option>
+                <option value="lluvia">Lluvia</option>
+              </select>
+            </label>
+            <label>
+              Notas
+              <textarea name="notas" placeholder="Cantidad aproximada, observaciones..."></textarea>
+            </label>
+            <button class="primary" type="submit">Guardar riego</button>
+          </form>
+
+          <h3 class="section-title">Historial reciente</h3>
+          <div class="table-wrapper" id="contenedor-tabla-riegos">
+            <div class="table-empty">Aún no se han registrado riegos.</div>
+          </div>
+        </section>
+      </section>
+
+      <!-- FERTILIZANTES -->
+      <section id="view-fertilizantes" class="view">
+        <section class="card">
+          <div class="card-header">
+            <h2>FERTILIZANTES</h2>
+            <span class="chip">Aplicaciones y dosis</span>
+          </div>
+
+          <h3 class="section-title">Nueva aplicación</h3>
+          <form id="form-fertil">
+            <label>
+              Cultivo
+              <input name="cultivo" required placeholder="Ej. Guayaba, cama 2">
+            </label>
+            <label>
+              Fecha
+              <input type="date" name="fecha" required>
+            </label>
+            <label>
+              Producto / tipo
+              <input name="producto" placeholder="Ej. 10-10-10, orgánico, compost">
+            </label>
+            <label>
+              Notas
+              <textarea name="notas" placeholder="Dosis, forma de aplicación, etc."></textarea>
+            </label>
+            <button class="primary" type="submit">Guardar fertilización</button>
+          </form>
+
+          <h3 class="section-title">Historial</h3>
+          <div class="table-wrapper" id="contenedor-tabla-fertil">
+            <div class="table-empty">No hay fertilizaciones registradas.</div>
+          </div>
+        </section>
+      </section>
+
+      <!-- PLAGAS -->
+      <section id="view-plagas" class="view">
+        <section class="card">
+          <div class="card-header">
+            <h2>PLAGAS Y ENFERMEDADES</h2>
+            <span class="chip">Seguimiento</span>
+          </div>
+
+          <h3 class="section-title">Nuevo evento</h3>
+          <form id="form-plaga">
+            <label>
+              Cultivo
+              <input name="cultivo" required placeholder="Ej. Tomate, fila 1">
+            </label>
+            <label>
+              Fecha
+              <input type="date" name="fecha" required>
+            </label>
+            <label>
+              Plaga / enfermedad
+              <input name="tipo" placeholder="Ej. Pulgones, hongos, roya">
+            </label>
+            <label>
+              Tratamiento aplicado
+              <textarea name="tratamiento" placeholder="Producto o manejo aplicado."></textarea>
+            </label>
+            <button class="primary" type="submit">Guardar evento</button>
+          </form>
+
+          <h3 class="section-title">Historial</h3>
+          <div class="table-wrapper" id="contenedor-tabla-plagas">
+            <div class="table-empty">No hay eventos registrados.</div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ESTADÍSTICAS -->
+      <section id="view-estadisticas" class="view">
+        <section class="card">
+          <div class="card-header">
+            <h2>ESTADÍSTICAS</h2>
+            <span class="chip">Vista general</span>
+          </div>
+
+          <h3 class="section-title">Resumen de tu huerto</h3>
+          <div class="list" id="estadisticas-resumen">
+            <div class="list-row">
+              <span class="list-label">Cultivos totales</span>
+              <span class="list-value" id="estat-cultivos">0</span>
+            </div>
+            <div class="list-row">
+              <span class="list-label">Riegos registrados</span>
+              <span class="list-value" id="estat-riegos">0</span>
+            </div>
+            <div class="list-row">
+              <span class="list-label">Fertilizaciones</span>
+              <span class="list-value" id="estat-fertil">0</span>
+            </div>
+            <div class="list-row">
+              <span class="list-label">Eventos de plagas</span>
+              <span class="list-value" id="estat-plagas">0</span>
+            </div>
+          </div>
+
+          <h3 class="section-title" style="margin-top:0.8rem;">Próximas cosechas (14 días)</h3>
+          <div class="table-wrapper" id="contenedor-tabla-cosechas">
+            <div class="table-empty">Aún no hay cosechas próximas.</div>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    // --- Estado y almacenamiento ---
+    const STORAGE_KEY = 'miSiembra_v14';
+    const state = {
+      cultivos: [],
+      riegos: [],
+      fertilizantes: [],
+      plagas: []
+    };
+
+    function cargarEstado() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (Array.isArray(data.cultivos)) state.cultivos = data.cultivos;
+        if (Array.isArray(data.riegos)) state.riegos = data.riegos;
+        if (Array.isArray(data.fertilizantes)) state.fertilizantes = data.fertilizantes;
+        if (Array.isArray(data.plagas)) state.plagas = data.plagas;
+      } catch (e) {
+        console.log('Error cargando estado:', e);
+      }
+    }
+
+    function guardarEstado() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.log('Error guardando estado:', e);
+      }
+    }
+
+    // --- Navegación de vistas ---
+    function initTabs() {
+      const tabs = document.querySelectorAll('.tab');
+      const views = document.querySelectorAll('.view');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.dataset.view;
+
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          views.forEach(v => {
+            if (v.id === 'view-' + target) {
+              v.classList.add('active');
+            } else {
+              v.classList.remove('active');
+            }
+          });
+        });
+      });
+    }
+
+    // --- Renderizado de tablas ---
+    function crearTabla(selectorContenedor, encabezados, filas) {
+      const cont = document.querySelector(selectorContenedor);
+      if (!cont) return;
+
+      if (!filas.length) {
+        cont.innerHTML = '<div class="table-empty">No hay datos registrados.</div>';
+        return;
+      }
+
+      let thead = '<thead><tr>' +
+        encabezados.map(h => '<th>' + h + '</th>').join('') +
+        '</tr></thead>';
+
+      let tbody = '<tbody>' + filas.map(row => {
+        return '<tr>' + row.map(col => '<td>' + (col ?? '') + '</td>').join('') + '</tr>';
+      }).join('') + '</tbody>';
+
+      cont.innerHTML = '<table>' + thead + tbody + '</table>';
+    }
+
+    // Cultivos
+    function etiquetaTipo(tipo) {
+      const base = 'badge-soft ';
+      if (tipo === 'frutal') return '<span class="' + base + 'tag-frutal">Frutal</span>';
+      if (tipo === 'tiesto') return '<span class="' + base + 'tag-tiesto">En tiesto</span>';
+      return '<span class="' + base + 'tag-hortaliza">Hortaliza</span>';
+    }
+
+    function renderCultivos() {
+      const filas = state.cultivos.map(c => {
+        let cosecha = '';
+        if (c.fecha && c.dias) {
+          try {
+            const d = new Date(c.fecha);
+            d.setDate(d.getDate() + Number(c.dias || 0));
+            cosecha = d.toLocaleDateString();
+          } catch (e) { cosecha = ''; }
+        }
+        return [
+          c.nombre || '',
+          etiquetaTipo(c.tipo),
+          c.fecha || '',
+          c.dias || '',
+          cosecha,
+          c.notas || ''
+        ];
+      });
+
+      crearTabla('#contenedor-tabla-cultivos',
+        ['Cultivo', 'Tipo', 'Siembra', 'Días', 'Cosecha est.', 'Notas'],
+        filas
+      );
+    }
+
+    // Riegos
+    function renderRiegos() {
+      const filas = state.riegos
+        .slice()
+        .reverse()
+        .map(r => [
+          r.fecha || '',
+          r.cultivo || '',
+          r.tipo || '',
+          r.notas || ''
+        ]);
+
+      crearTabla('#contenedor-tabla-riegos',
+        ['Fecha', 'Cultivo', 'Tipo', 'Notas'],
+        filas
+      );
+    }
+
+    // Fertilizantes
+    function renderFertil() {
+      const filas = state.fertilizantes
+        .slice()
+        .reverse()
+        .map(f => [
+          f.fecha || '',
+          f.cultivo || '',
+          f.producto || '',
+          f.notas || ''
+        ]);
+
+      crearTabla('#contenedor-tabla-fertil',
+        ['Fecha', 'Cultivo', 'Producto', 'Notas'],
+        filas
+      );
+    }
+
+    // Plagas
+    function renderPlagas() {
+      const filas = state.plagas
+        .slice()
+        .reverse()
+        .map(p => [
+          p.fecha || '',
+          p.cultivo || '',
+          p.tipo || '',
+          p.tratamiento || ''
+        ]);
+
+      crearTabla('#contenedor-tabla-plagas',
+        ['Fecha', 'Cultivo', 'Plaga / enf.', 'Tratamiento'],
+        filas
+      );
+    }
+
+    // Estadísticas y resumen
+    function renderEstadisticas() {
+      const totalCultivos = state.cultivos.length;
+      const totalRiegos = state.riegos.length;
+      const totalFertil = state.fertilizantes.length;
+      const totalPlagas = state.plagas.length;
+
+      document.getElementById('estat-cultivos').textContent = totalCultivos;
+      document.getElementById('estat-riegos').textContent = totalRiegos;
+      document.getElementById('estat-fertil').textContent = totalFertil;
+      document.getElementById('estat-plagas').textContent = totalPlagas;
+
+      // Próximas cosechas 14 días
+      const hoy = new Date();
+      const limite = new Date();
+      limite.setDate(hoy.getDate() + 14);
+
+      const proximas = state.cultivos
+        .map(c => {
+          if (!c.fecha || !c.dias) return null;
+          const d = new Date(c.fecha);
+          d.setDate(d.getDate() + Number(c.dias || 0));
+          return { ...c, fechaCosecha: d };
+        })
+        .filter(c => c && c.fechaCosecha >= hoy && c.fechaCosecha <= limite)
+        .sort((a, b) => a.fechaCosecha - b.fechaCosecha);
+
+      const filas = proximas.map(c => [
+        c.nombre,
+        c.fechaCosecha.toLocaleDateString(),
+        c.tipo,
+        c.notas || ''
+      ]);
+
+      crearTabla('#contenedor-tabla-cosechas',
+        ['Cultivo', 'Fecha cosecha', 'Tipo', 'Notas'],
+        filas
+      );
+
+      // Resumen en pantalla de inicio
+      document.getElementById('resumen-cultivos').textContent = totalCultivos;
+      document.getElementById('resumen-cosechas').textContent =
+        proximas.length + ' en los próximos 14 días';
+      document.getElementById('resumen-estado').textContent =
+        totalCultivos
+          ? 'Tienes ' + totalCultivos + ' cultivo(s) en seguimiento.'
+          : 'Sin cultivos registrados aún';
+    }
+
+    // --- Formularios ---
+    function initForms() {
+      const formCultivo = document.getElementById('form-cultivo');
+      formCultivo.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const nuevo = {
+          id: Date.now(),
+          nombre: f.nombre.value.trim(),
+          tipo: f.tipo.value,
+          fecha: f.fecha.value,
+          dias: f.dias.value ? Number(f.dias.value) : null,
+          notas: f.notas.value.trim()
+        };
+        state.cultivos.push(nuevo);
+        guardarEstado();
+        f.reset();
+        renderCultivos();
+        renderEstadisticas();
+      });
+
+      const formRiego = document.getElementById('form-riego');
+      formRiego.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const r = {
+          id: Date.now(),
+          cultivo: f.cultivo.value.trim(),
+          fecha: f.fecha.value,
+          tipo: f.tipo.value,
+          notas: f.notas.value.trim()
+        };
+        state.riegos.push(r);
+        guardarEstado();
+        f.reset();
+        renderRiegos();
+        renderEstadisticas();
+      });
+
+      const formFertil = document.getElementById('form-fertil');
+      formFertil.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const reg = {
+          id: Date.now(),
+          cultivo: f.cultivo.value.trim(),
+          fecha: f.fecha.value,
+          producto: f.producto.value.trim(),
+          notas: f.notas.value.trim()
+        };
+        state.fertilizantes.push(reg);
+        guardarEstado();
+        f.reset();
+        renderFertil();
+        renderEstadisticas();
+      });
+
+      const formPlaga = document.getElementById('form-plaga');
+      formPlaga.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const f = e.target;
+        const p = {
+          id: Date.now(),
+          cultivo: f.cultivo.value.trim(),
+          fecha: f.fecha.value,
+          tipo: f.tipo.value.trim(),
+          tratamiento: f.tratamiento.value.trim()
+        };
+        state.plagas.push(p);
+        guardarEstado();
+        f.reset();
+        renderPlagas();
+        renderEstadisticas();
+      });
+    }
+
+    // --- Inicialización ---
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarEstado();
+      initTabs();
+      initForms();
+      renderCultivos();
+      renderRiegos();
+      renderFertil();
+      renderPlagas();
+      renderEstadisticas();
+    });
+  </script>
+
+  <script>
+    // Registro del Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .catch(err => {
+            console.log('SW error:', err);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
