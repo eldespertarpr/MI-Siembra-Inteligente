@@ -1,12 +1,14 @@
 const CACHE_NAME = 'mi-siembra-v14';
+const BASE = '/MI-Siembra-Inteligente/';
+
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './sw.js',
-  './img/icon-192.png',
-  './img/icon-512.png',
-  './img/icon-1024.png'
+  BASE,
+  BASE + 'index.html',
+  BASE + 'manifest.json',
+  BASE + 'sw.js',
+  BASE + 'img/icon-192.png',
+  BASE + 'img/icon-512.png',
+  BASE + 'img/icon-1024.png'
 ];
 
 self.addEventListener('install', event => {
@@ -31,8 +33,8 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(respuesta => {
-      return respuesta || fetch(event.request);
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
     })
   );
 });
