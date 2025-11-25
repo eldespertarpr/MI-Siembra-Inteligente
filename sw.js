@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mi-siembra-v14';
-const ASSETS = [
+const CACHE = 'siembra-v14';
+const FILES = [
   './',
   './index.html',
   './manifest.json',
@@ -7,33 +7,32 @@ const ASSETS = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-1024.png'
-  // Si quieres, luego añadimos aquí las imágenes de los cultivos
 ];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+// Instalar
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(FILES))
   );
   self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil(
+// Activar
+self.addEventListener('activate', e => {
+  e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
+        keys.filter(k => k !== CACHE)
+            .map(k => caches.delete(k))
       )
     )
   );
   self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
+// Interceptar peticiones
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(resp => resp || fetch(e.request))
   );
 });
