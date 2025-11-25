@@ -1,4 +1,4 @@
-const CACHE = 'siembra-v13';
+const CACHE = 'siembra-v14';
 const FILES = [
   './',
   './index.html',
