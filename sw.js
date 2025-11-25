@@ -1,15 +1,13 @@
-const CACHE = 'siembra-v14';
+const CACHE = 'siembra-v15';
 const FILES = [
   './',
   './index.html',
   './manifest.json',
-  './sw.js',
   './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-1024.png'
+  './icons/icon-512.png'
 ];
 
-// Instalar
+// Instalar: precarga el “shell” de la app
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(FILES))
@@ -17,22 +15,23 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// Activar
+// Activar: borra cachés viejos
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== CACHE)
-            .map(k => caches.delete(k))
+        keys
+          .filter(key => key !== CACHE)
+          .map(key => caches.delete(key))
       )
     )
   );
   self.clients.claim();
 });
 
-// Interceptar peticiones
+// Fetch: intenta primero caché, luego red
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(resp => resp || fetch(e.request))
+    caches.match(e.request).then(r => r || fetch(e.request))
   );
 });
