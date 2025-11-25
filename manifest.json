@@ -3,8 +3,9 @@
   "short_name": "Mi siembra",
   "description": "Planifica, registra y cuida tu huerto paso a paso, incluso sin conexión.",
   "lang": "es",
-  "start_url": "./index.html",
-  "scope": "./",
+  "id": "/MI-Siembra-Inteligente/",
+  "start_url": "/MI-Siembra-Inteligente/",
+  "scope": "/MI-Siembra-Inteligente/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#22c55e",
@@ -24,7 +25,7 @@
       "src": "icons/icon-1024.png",
       "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
