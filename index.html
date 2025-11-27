@@ -946,23 +946,66 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO FICHA DEL CULTIVO -->
-  <div class="dialog-backdrop" id="cropDialog">
-    <div class="dialog dialog-crop">
-      <div class="crop-dialog-img-wrap">
-        <img id="cropDialogImg" src="" alt="Cultivo" />
+ <!-- DIÁLOGO FICHA DEL CULTIVO -->
+      <div class="dialog-backdrop" id="cropDialog">
+        <div class="dialog dialog-crop">
+          <div class="crop-dialog-img-wrap">
+            <img id="cropDialogImg" src="" alt="Cultivo" />
+          </div>
+          <div class="crop-dialog-header-line">
+            <div class="crop-dialog-name" id="cropDialogName">Cultivo</div>
+            <button class="btn btn-ghost" type="button" data-dialog-close>✕</button>
+          </div>
+          <div class="crop-dialog-tags">
+            <span class="crop-dialog-tag" id="cropDialogTipo"></span>
+            <span class="crop-dialog-tag" id="cropDialogDias"></span>
+            <span class="crop-dialog-tag" id="cropDialogSol"></span>
+          </div>
+          <div class="crop-dialog-body">
+            <p><strong>Siembra:</strong> <span id="cropDialogSiembra"></span></p>
+            <p><strong>Distancia entre plantas:</strong> <span id="cropDialogDistancia"></span></p>
+            <p><strong>Profundidad de siembra:</strong> <span id="cropDialogProfundidad"></span></p>
+            <p><strong>Tiesto recomendado:</strong> <span id="cropDialogTiesto"></span></p>
+          </div>
+        </div>
       </div>
-      <div class="crop-dialog-header-line">
-        <div class="crop-dialog-name" id="cropDialogName">Cultivo</div>
-        <button class="btn btn-ghost" type="button" data-dialog-close>✕</button>
-      </div>
-      <div class="crop-dialog-tags">
-        <span class="crop-dialog-tag" id="cropDialogTipo"></span>
-        <span class="crop-dialog-tag" id="cropDialogDias"></span>
-        <span class="crop-dialog-tag" id="cropDialogSol"></span>
-      </div>
-      <div class="crop-dialog-body">
-        <p><strong>Siembra:</strong> <span id="cropDialogSiembra"></span></p>
-        <p><strong>Distancia entre plantas:</strong> <span id="cropDialogDistancia"></span></p>
-        <p><strong>Profundidad de siembra:</strong> <span id="cropDialogProfundidad"></span></p>
-        <p><strong>Tiesto recomendado:</strong
+
+      <script>
+        // --- Datos base de cultivos (versión corta, funcional) ---
+        const cultivos = [
+          {
+            id: 'tomate',
+            nombre: 'Tomate',
+            tipo: 'Hortaliza',
+            imagen: 'img/tomate.jpg',
+            meses: [1,2,3,8,9,10,11,12],
+            diasCosecha: '70–90 días',
+            sol: 'Pleno sol',
+            siembra: 'Semilleros o plántulas',
+            distancia: '40–60 cm entre plantas',
+            profundidad: '0.5–1 cm',
+            tiesto: '10–20 L'
+          },
+          {
+            id: 'lechuga',
+            nombre: 'Lechuga',
+            tipo: 'Hortaliza',
+            imagen: 'img/lechuga.jpg',
+            meses: [1,2,3,4,8,9,10,11,12],
+            diasCosecha: '45–60 días',
+            sol: 'Sol suave o media sombra',
+            siembra: 'Semilleros o directo',
+            distancia: '25–30 cm',
+            profundidad: '0.5 cm',
+            tiesto: '5–10 L'
+          },
+          {
+            id: 'cilantro',
+            nombre: 'Cilantro',
+            tipo: 'Aromática',
+            imagen: 'img/cilantro.jpg',
+            meses: [1,2,3,4,5,8,9,10,11,12],
+            diasCosecha: '30–45 días',
+            sol: 'Sol suave / media sombra',
+            siembra: 'Siembra directa',
+            distancia: '15–20 cm',
