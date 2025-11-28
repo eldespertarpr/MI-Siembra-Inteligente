@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mi Siembra Inteligente (v15)</title>
+  <title>Mi Siembra Inteligente (v16)</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#22c55e" />
   <style>
@@ -912,7 +912,7 @@
     </main>
 
     <footer>
-      Mi Siembra Inteligente (v15) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      Mi Siembra Inteligente (v16) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
 
@@ -970,6 +970,7 @@
       </div>
       <div class="crop-dialog-body">
         <p><strong>Siembra:</strong> <span id="cropDialogSiembra"></span></p>
+        <p><strong>Mejores meses de siembra:</strong> <span id="cropDialogMeses"></span></p>
         <p><strong>Distancia entre plantas:</strong> <span id="cropDialogDistancia"></span></p>
         <p><strong>Profundidad de siembra:</strong> <span id="cropDialogProfundidad"></span></p>
         <p><strong>Tiesto recomendado:</strong> <span id="cropDialogTiesto"></span></p>
@@ -1009,7 +1010,7 @@
       { id: 'fresas', nombre: 'Fresas', tipo: 'Frutal pequeño', imagen: 'img/fresas.jpg', diasCosecha: '4–5 meses', sol: 'Sol suave', siembra: 'Plántulas', distancia: '25–30 cm', profundidad: 'Cubrir raíces', tiesto: '15–20 L' },
       { id: 'gandules', nombre: 'Gandules', tipo: 'Leguminosa', imagen: 'img/gandules.jpg', diasCosecha: '4–6 meses', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '50–80 cm', profundidad: '2–3 cm', tiesto: '30–40 L' },
       { id: 'guayaba', nombre: 'Guayaba', tipo: 'Frutal', imagen: 'img/guayaba.jpg', diasCosecha: '1–2 años', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
-      { id: 'guineo', nombre: 'Guineo', tipo: 'Frutal', imagen: 'img/guineo.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'C hijuelos', distancia: '2–3 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'guineo', nombre: 'Guineo', tipo: 'Frutal', imagen: 'img/guineo.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Hijuelos (retoños)', distancia: '2–3 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
       { id: 'habichuelas', nombre: 'Habichuelas', tipo: 'Leguminosa', imagen: 'img/habichuelas.jpg', diasCosecha: '60–70 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '25–30 cm', profundidad: '2–3 cm', tiesto: '15–20 L' },
       { id: 'kale', nombre: 'Kale', tipo: 'Hortaliza de hoja', imagen: 'img/kale.jpg', diasCosecha: '60–80 días', sol: 'Sol suave', siembra: 'Semilleros y trasplante', distancia: '30–40 cm', profundidad: '1 cm', tiesto: '15–20 L' },
       { id: 'lechuga', nombre: 'Lechuga', tipo: 'Hortaliza de hoja', imagen: 'img/lechuga.jpg', diasCosecha: '40–60 días', sol: 'Sol suave', siembra: 'Semilleros o directa', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
@@ -1061,101 +1062,114 @@
       { id: 12, nombre: 'Dic' }
     ];
 
-    // Qué recomendar por mes (no todos los cultivos están en todos los meses)
     // Qué recomendar por mes (ajustado a clima tropical Puerto Rico)
-const siembrasPorMes = {
-  // ENERO – más fresco, muy bueno para hojas y raíces suaves
-  1: [
-    'lechuga','espinaca','acelga','cilantro','recao',
-    'kale','col_risada','repollo','zanahoria','rabano',
-    'remolacha','remolacha_blanca','berro','apio'
-  ],
+    const siembrasPorMes = {
+      // ENERO – más fresco, muy bueno para hojas y raíces suaves
+      1: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','repollo','zanahoria','rabano',
+        'remolacha','remolacha_blanca','berro','apio'
+      ],
 
-  // FEBRERO – sigue fresco, aún bueno para hojas y brassicas
-  2: [
-    'lechuga','espinaca','acelga','cilantro','kale',
-    'col_risada','col_roja','repollo','broccoli','coliflor',
-    'zanahoria','rabano','remolacha','remolacha_blanca','cebolla'
-  ],
+      // FEBRERO – sigue fresco, aún bueno para hojas y brassicas
+      2: [
+        'lechuga','espinaca','acelga','cilantro','kale',
+        'col_risada','col_roja','repollo','broccoli','coliflor',
+        'zanahoria','rabano','remolacha','remolacha_blanca','cebolla'
+      ],
 
-  // MARZO – transición: empiezan solanas y más calor
-  3: [
-    'tomate','pimiento','pimiento_morron','aji','berenjena',
-    'pepinillo','calabaza','cantalope','melon',
-    'habichuelas','maiz','quimbombo',
-    'lechuga','espinaca','cilantro','albahaca','menta'
-  ],
+      // MARZO – transición: empiezan solanáceas y más calor
+      3: [
+        'tomate','pimiento','pimiento_morron','aji','berenjena',
+        'pepinillo','calabaza','cantalope','melon',
+        'habichuelas','maiz','quimbombo',
+        'lechuga','espinaca','cilantro','albahaca','menta'
+      ],
 
-  // ABRIL – fuerte de calor, ideal para frutos y leguminosas
-  4: [
-    'tomate','pimiento','pimiento_morron','aji','berenjena',
-    'pepinillo','calabaza','cantalope','melon',
-    'habichuelas','maiz','quimbombo','gandules',
-    'batata','yuca','yautia','papa'
-  ],
+      // ABRIL – fuerte de calor, ideal para frutos y leguminosas
+      4: [
+        'tomate','pimiento','pimiento_morron','aji','berenjena',
+        'pepinillo','calabaza','cantalope','melon',
+        'habichuelas','maiz','quimbombo','gandules',
+        'batata','yuca','yautia','papa'
+      ],
 
-  // MAYO – pleno calor y lluvias, raíces y leguminosas
-  5: [
-    'calabaza','cantalope','melon',
-    'maiz','quimbombo','gandules','habichuelas',
-    'batata','yuca','yautia','papa','malanga',
-    'platano','guineo','papaya','parcha'
-  ],
+      // MAYO – pleno calor y lluvias, raíces y leguminosas
+      5: [
+        'calabaza','cantalope','melon',
+        'maiz','quimbombo','gandules','habichuelas',
+        'batata','yuca','yautia','papa','malanga',
+        'platano','guineo','papaya','parcha'
+      ],
 
-  // JUNIO – lluvias fuertes, perennes y raíces resistentes
-  6: [
-    'batata','yuca','yautia','malanga',
-    'platano','guineo','papaya','parcha','gandules',
-    'calabaza','quimbombo','maiz'
-  ],
+      // JUNIO – lluvias fuertes, perennes y raíces resistentes
+      6: [
+        'batata','yuca','yautia','malanga',
+        'platano','guineo','papaya','parcha','gandules',
+        'calabaza','quimbombo','maiz'
+      ],
 
-  // JULIO – calor fuerte, aún se pueden frutos de verano
-  7: [
-    'tomate','pimiento','pimiento_morron','berenjena',
-    'quimbombo','gandules','habichuelas',
-    'batata','yuca','yautia',
-    'albahaca','menta','oregano','oregano_brujo'
-  ],
+      // JULIO – calor fuerte, aún se pueden frutos de verano
+      7: [
+        'tomate','pimiento','pimiento_morron','berenjena',
+        'quimbombo','gandules','habichuelas',
+        'batata','yuca','yautia',
+        'albahaca','menta','oregano','oregano_brujo'
+      ],
 
-  // AGOSTO – se puede empezar transición a algunas hojas otra vez
-  8: [
-    'tomate','pimiento','berenjena',
-    'habichuelas','gandules',
-    'lechuga','espinaca','cilantro','recao',
-    'albahaca','menta','oregano','oregano_brujo'
-  ],
+      // AGOSTO – transición, se pueden reintroducir algunas hojas
+      8: [
+        'tomate','pimiento','berenjena',
+        'habichuelas','gandules',
+        'lechuga','espinaca','cilantro','recao',
+        'albahaca','menta','oregano','oregano_brujo'
+      ],
 
-  // SEPTIEMBRE – buen momento para reiniciar hojas y raíces
-  9: [
-    'lechuga','espinaca','acelga','cilantro','recao',
-    'kale','col_risada','col_roja','repollo',
-    'broccoli','coliflor','zanahoria','rabano',
-    'remolacha','remolacha_blanca','apio','escarolas'
-  ],
+      // SEPTIEMBRE – buen momento para reiniciar hojas y raíces
+      9: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','col_roja','repollo',
+        'broccoli','coliflor','zanahoria','rabano',
+        'remolacha','remolacha_blanca','apio','escarolas'
+      ],
 
-  // OCTUBRE – muy bueno para hojas, brassicas y raíces
-  10: [
-    'lechuga','espinaca','acelga','cilantro','recao',
-    'kale','col_risada','col_roja','repollo',
-    'broccoli','coliflor','zanahoria','rabano',
-    'remolacha','remolacha_blanca','apio','berro'
-  ],
+      // OCTUBRE – muy bueno para hojas, brassicas y raíces
+      10: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','col_roja','repollo',
+        'broccoli','coliflor','zanahoria','rabano',
+        'remolacha','remolacha_blanca','apio','berro'
+      ],
 
-  // NOVIEMBRE – sigue clima más fresco, parecido a enero
-  11: [
-    'lechuga','espinaca','acelga','cilantro','recao',
-    'kale','col_risada','repollo',
-    'zanahoria','rabano','remolacha','remolacha_blanca',
-    'habichuelas','apio'
-  ],
+      // NOVIEMBRE – sigue clima más fresco, parecido a enero
+      11: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','repollo',
+        'zanahoria','rabano','remolacha','remolacha_blanca',
+        'habichuelas','apio'
+      ],
 
-  // DICIEMBRE – inicio de temporada fresca otra vez
-  12: [
-    'lechuga','espinaca','acelga','cilantro','recao',
-    'berro','kale','col_risada','repollo',
-    'zanahoria','rabano','remolacha'
-  ]
-};
+      // DICIEMBRE – inicio de temporada fresca otra vez
+      12: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'berro','kale','col_risada','repollo',
+        'zanahoria','rabano','remolacha'
+      ]
+    };
+
+    // Construir un mapa de meses recomendados por cultivo, basado en siembrasPorMes
+    const cultivoMeses = {};
+    Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
+      const mesNum = parseInt(mesStr, 10);
+      lista.forEach(id => {
+        if (!cultivoMeses[id]) cultivoMeses[id] = [];
+        if (!cultivoMeses[id].includes(mesNum)) {
+          cultivoMeses[id].push(mesNum);
+        }
+      });
+    });
+    // Ordenar los meses para que salgan en orden Ene–Dic
+    Object.values(cultivoMeses).forEach(arr => arr.sort((a, b) => a - b));
 
     // --- Lógica de la app ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -1237,7 +1251,9 @@ const siembrasPorMes = {
       // Seleccionar automáticamente el mes actual
       const hoy = new Date();
       const mesActual = hoy.getMonth() + 1;
-      const btnMesActual = monthButtonsContainer.querySelector(`.month-btn[data-mes-id="${mesActual}"]`) || monthButtonsContainer.querySelector('.month-btn');
+      const btnMesActual =
+        monthButtonsContainer.querySelector(`.month-btn[data-mes-id="${mesActual}"]`) ||
+        monthButtonsContainer.querySelector('.month-btn');
       if (btnMesActual) {
         btnMesActual.classList.add('active');
         mostrarSiembrasDeMes(parseInt(btnMesActual.dataset.mesId, 10));
@@ -1322,6 +1338,7 @@ const siembrasPorMes = {
       const cropDialogDias = document.getElementById('cropDialogDias');
       const cropDialogSol = document.getElementById('cropDialogSol');
       const cropDialogSiembra = document.getElementById('cropDialogSiembra');
+      const cropDialogMeses = document.getElementById('cropDialogMeses');
       const cropDialogDistancia = document.getElementById('cropDialogDistancia');
       const cropDialogProfundidad = document.getElementById('cropDialogProfundidad');
       const cropDialogTiesto = document.getElementById('cropDialogTiesto');
@@ -1334,6 +1351,21 @@ const siembrasPorMes = {
         cropDialogDias.textContent = `⏱️ ${c.diasCosecha}`;
         cropDialogSol.textContent = `☀️ ${c.sol}`;
         cropDialogSiembra.textContent = c.siembra;
+
+        // Calcular y mostrar los mejores meses de siembra
+        const mesesCultivo = cultivoMeses[c.id] || [];
+        if (mesesCultivo.length) {
+          const nombresMeses = mesesCultivo
+            .map(num => {
+              const m = mesesInfo.find(mm => mm.id === num);
+              return m ? m.nombre : '';
+            })
+            .filter(Boolean);
+          cropDialogMeses.textContent = nombresMeses.join(', ');
+        } else {
+          cropDialogMeses.textContent = 'Todo el año (con buen manejo)';
+        }
+
         cropDialogDistancia.textContent = c.distancia;
         cropDialogProfundidad.textContent = c.profundidad;
         cropDialogTiesto.textContent = c.tiesto;
@@ -1410,7 +1442,8 @@ const siembrasPorMes = {
 
       function abrirDialogoHuerto(index) {
         gardenDialog.dataset.index = String(index);
-        gardenDialogPosition.textContent = `Cuadro #${index + 1} (fila ${Math.floor(index / gardenSize) + 1}, columna ${(index % gardenSize) + 1})`;
+        gardenDialogPosition.textContent =
+          `Cuadro #${index + 1} (fila ${Math.floor(index / gardenSize) + 1}, columna ${(index % gardenSize) + 1})`;
         gardenCropSelect.innerHTML = '<option value="">Vacío</option>';
         cultivos.forEach(c => {
           const opt = document.createElement('option');
@@ -1523,4 +1556,4 @@ const siembrasPorMes = {
     });
   </script>
 </body>
-</html>
+                </html>
