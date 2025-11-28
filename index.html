@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mi Siembra Inteligente (v16)</title>
+  <title>Mi Siembra Inteligente (v17)</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#22c55e" />
   <style>
@@ -477,7 +477,7 @@
       margin-bottom: 5px;
     }
     .dialog select,
-    .dialog input,
+    . .dialog input,
     .dialog textarea {
       width: 100%;
       border-radius: 12px;
@@ -705,7 +705,7 @@
           <div class="chips-row">
             <span class="chip"><span class="emoji">📱</span><span>PWA offline</span></span>
             <span class="chip"><span class="emoji">☕</span><span>Hecho para planificar tranquilo</span></span>
-            <span class="chip"><span class="emoji">🇵🇷</span><span>Clima tropical adaptable</span></span>
+            <span class="chip"><span class="emoji">🌍</span><span>Clima tropical/subtropical</span></span>
           </div>
         </div>
       </section>
@@ -912,7 +912,7 @@
     </main>
 
     <footer>
-      Mi Siembra Inteligente (v16) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      Mi Siembra Inteligente (v17) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
 
@@ -982,7 +982,7 @@
   </div>
 
   <script>
-    // --- Datos de cultivos (se corresponden con tus imágenes en /img) ---
+    // --- Datos de cultivos (coinciden con tus imágenes en /img) ---
     const cultivos = [
       { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
       { id: 'acerola', nombre: 'Acerola', tipo: 'Frutal', imagen: 'img/acerola.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
@@ -1062,7 +1062,7 @@
       { id: 12, nombre: 'Dic' }
     ];
 
-    // Qué recomendar por mes (ajustado a clima tropical Puerto Rico)
+    // Qué recomendar por mes (clima tropical/subtropical)
     const siembrasPorMes = {
       // ENERO – más fresco, muy bueno para hojas y raíces suaves
       1: [
@@ -1133,7 +1133,7 @@
         'remolacha','remolacha_blanca','apio','escarolas'
       ],
 
-      // OCTUBRE – muy bueno para hojas, brassicas y raíces
+      // OCTUBRE – similar a septiembre, clima más fresco
       10: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','col_roja','repollo',
@@ -1141,7 +1141,7 @@
         'remolacha','remolacha_blanca','apio','berro'
       ],
 
-      // NOVIEMBRE – sigue clima más fresco, parecido a enero
+      // NOVIEMBRE – fresquito, parecido a enero
       11: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','repollo',
@@ -1157,18 +1157,15 @@
       ]
     };
 
-    // Construir un mapa de meses recomendados por cultivo, basado en siembrasPorMes
+    // A partir de siembrasPorMes, construir mapa por cultivo
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
       lista.forEach(id => {
         if (!cultivoMeses[id]) cultivoMeses[id] = [];
-        if (!cultivoMeses[id].includes(mesNum)) {
-          cultivoMeses[id].push(mesNum);
-        }
+        if (!cultivoMeses[id].includes(mesNum)) cultivoMeses[id].push(mesNum);
       });
     });
-    // Ordenar los meses para que salgan en orden Ene–Dic
     Object.values(cultivoMeses).forEach(arr => arr.sort((a, b) => a - b));
 
     // --- Lógica de la app ---
@@ -1363,7 +1360,7 @@
             .filter(Boolean);
           cropDialogMeses.textContent = nombresMeses.join(', ');
         } else {
-          cropDialogMeses.textContent = 'Todo el año (con buen manejo)';
+          cropDialogMeses.textContent = 'Todo el año (según clima y manejo)';
         }
 
         cropDialogDistancia.textContent = c.distancia;
@@ -1556,4 +1553,4 @@
     });
   </script>
 </body>
-                                                         </html>
+</html>
