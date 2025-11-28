@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mi Siembra Inteligente (v17)</title>
+  <title>Mi Siembra Inteligente (v18)</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#22c55e" />
   <style>
@@ -254,6 +254,21 @@
       box-shadow: 0 10px 28px rgba(34,197,94,0.85);
     }
 
+    .search-input {
+      flex: 1;
+      min-width: 0;
+      border-radius: 999px;
+      border: 1px solid var(--chip-border);
+      background: var(--chip-bg);
+      color: var(--text-main);
+      font-size: 13px;
+      padding: 6px 10px;
+      outline: none;
+    }
+    .search-input::placeholder {
+      color: var(--text-soft);
+    }
+
     .month-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -477,7 +492,7 @@
       margin-bottom: 5px;
     }
     .dialog select,
-    . .dialog input,
+    .dialog input,
     .dialog textarea {
       width: 100%;
       border-radius: 12px;
@@ -731,11 +746,26 @@
           <div class="section-header">
             <div>
               <div class="section-title">Catálogo visual de cultivos</div>
-              <div class="section-subtitle">Cultivos con fotos representativas y datos rápidos.</div>
+              <div class="section-subtitle">Busca por nombre, tipo o cantidad de sol.</div>
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
-          <div class="chips-row" id="catalogFilters"></div>
+
+          <!-- Buscador -->
+          <div class="chips-row">
+            <input
+              id="catalogSearch"
+              class="search-input"
+              type="search"
+              placeholder="Buscar por nombre (ej. tomate, lechuga, cilantro…)">
+          </div>
+
+          <!-- Filtros por tipo -->
+          <div class="chips-row" id="catalogTypeFilters"></div>
+
+          <!-- Filtros por sol -->
+          <div class="chips-row" id="catalogSunFilters"></div>
+
           <div class="catalog-grid" id="catalogGrid"></div>
         </div>
       </section>
@@ -912,7 +942,7 @@
     </main>
 
     <footer>
-      Mi Siembra Inteligente (v17) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      Mi Siembra Inteligente (v18) · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
 
@@ -1064,92 +1094,81 @@
 
     // Qué recomendar por mes (clima tropical/subtropical)
     const siembrasPorMes = {
-      // ENERO – más fresco, muy bueno para hojas y raíces suaves
+      // ENERO
       1: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','repollo','zanahoria','rabano',
         'remolacha','remolacha_blanca','berro','apio'
       ],
-
-      // FEBRERO – sigue fresco, aún bueno para hojas y brassicas
+      // FEBRERO
       2: [
         'lechuga','espinaca','acelga','cilantro','kale',
         'col_risada','col_roja','repollo','broccoli','coliflor',
         'zanahoria','rabano','remolacha','remolacha_blanca','cebolla'
       ],
-
-      // MARZO – transición: empiezan solanáceas y más calor
+      // MARZO
       3: [
         'tomate','pimiento','pimiento_morron','aji','berenjena',
         'pepinillo','calabaza','cantalope','melon',
         'habichuelas','maiz','quimbombo',
         'lechuga','espinaca','cilantro','albahaca','menta'
       ],
-
-      // ABRIL – fuerte de calor, ideal para frutos y leguminosas
+      // ABRIL
       4: [
         'tomate','pimiento','pimiento_morron','aji','berenjena',
         'pepinillo','calabaza','cantalope','melon',
         'habichuelas','maiz','quimbombo','gandules',
         'batata','yuca','yautia','papa'
       ],
-
-      // MAYO – pleno calor y lluvias, raíces y leguminosas
+      // MAYO
       5: [
         'calabaza','cantalope','melon',
         'maiz','quimbombo','gandules','habichuelas',
         'batata','yuca','yautia','papa','malanga',
         'platano','guineo','papaya','parcha'
       ],
-
-      // JUNIO – lluvias fuertes, perennes y raíces resistentes
+      // JUNIO
       6: [
         'batata','yuca','yautia','malanga',
         'platano','guineo','papaya','parcha','gandules',
         'calabaza','quimbombo','maiz'
       ],
-
-      // JULIO – calor fuerte, aún se pueden frutos de verano
+      // JULIO
       7: [
         'tomate','pimiento','pimiento_morron','berenjena',
         'quimbombo','gandules','habichuelas',
         'batata','yuca','yautia',
         'albahaca','menta','oregano','oregano_brujo'
       ],
-
-      // AGOSTO – transición, se pueden reintroducir algunas hojas
+      // AGOSTO
       8: [
         'tomate','pimiento','berenjena',
         'habichuelas','gandules',
         'lechuga','espinaca','cilantro','recao',
         'albahaca','menta','oregano','oregano_brujo'
       ],
-
-      // SEPTIEMBRE – buen momento para reiniciar hojas y raíces
+      // SEPTIEMBRE
       9: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','col_roja','repollo',
         'broccoli','coliflor','zanahoria','rabano',
         'remolacha','remolacha_blanca','apio','escarolas'
       ],
-
-      // OCTUBRE – similar a septiembre, clima más fresco
+      // OCTUBRE
       10: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','col_roja','repollo',
         'broccoli','coliflor','zanahoria','rabano',
         'remolacha','remolacha_blanca','apio','berro'
       ],
-
-      // NOVIEMBRE – fresquito, parecido a enero
+      // NOVIEMBRE
       11: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','repollo',
         'zanahoria','rabano','remolacha','remolacha_blanca',
         'habichuelas','apio'
       ],
-
-      // DICIEMBRE – inicio de temporada fresca otra vez
+      // DICIEMBRE
       12: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'berro','kale','col_risada','repollo',
@@ -1168,7 +1187,13 @@
     });
     Object.values(cultivoMeses).forEach(arr => arr.sort((a, b) => a - b));
 
-    // --- Lógica de la app ---
+    function obtenerCategoriaSol(solStr) {
+      const s = (solStr || '').toLowerCase();
+      if (s.includes('media sombra')) return 'Media sombra';
+      if (s.includes('sol suave')) return 'Sol suave';
+      return 'Pleno sol';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       // Navegación entre vistas
       const views = document.querySelectorAll('section.view');
@@ -1245,7 +1270,6 @@
         });
       }
 
-      // Seleccionar automáticamente el mes actual
       const hoy = new Date();
       const mesActual = hoy.getMonth() + 1;
       const btnMesActual =
@@ -1256,64 +1280,116 @@
         mostrarSiembrasDeMes(parseInt(btnMesActual.dataset.mesId, 10));
       }
 
-      // --- Catálogo ---
-      const catalogFilters = document.getElementById('catalogFilters');
+      // --- Catálogo (Paquete 2) ---
+      const catalogSearch = document.getElementById('catalogSearch');
+      const catalogTypeFilters = document.getElementById('catalogTypeFilters');
+      const catalogSunFilters = document.getElementById('catalogSunFilters');
       const catalogGrid = document.getElementById('catalogGrid');
 
-      const tiposUnicos = Array.from(new Set(cultivos.map(c => c.tipo))).sort();
-      const filtros = ['Todos'].concat(tiposUnicos);
+      let filtroTipoActual = 'Todos';
+      let filtroSolActual = 'Todos';
+      let textoBusqueda = '';
 
-      filtros.forEach(tipo => {
+      // Tipos únicos
+      const tiposUnicos = Array.from(new Set(cultivos.map(c => c.tipo))).sort();
+
+      // Categorías de sol únicas
+      const solSet = new Set();
+      cultivos.forEach(c => solSet.add(obtenerCategoriaSol(c.sol)));
+      const solesUnicos = Array.from(solSet).sort();
+
+      // Chips de tipo
+      const tiposFiltro = ['Todos', ...tiposUnicos];
+      tiposFiltro.forEach(tipo => {
         const chip = document.createElement('button');
         chip.type = 'button';
         chip.className = 'chip';
-        chip.textContent = tipo === 'Todos' ? 'Todos los tipos' : tipo;
         chip.dataset.tipo = tipo;
+        chip.textContent = tipo === 'Todos' ? 'Todos los tipos' : tipo;
         chip.addEventListener('click', () => {
-          document.querySelectorAll('#catalogFilters .chip').forEach(c => c.classList.remove('active'));
+          document.querySelectorAll('#catalogTypeFilters .chip').forEach(c => c.classList.remove('active'));
           chip.classList.add('active');
-          renderCatalog(tipo);
+          filtroTipoActual = tipo;
+          renderCatalog();
         });
-        catalogFilters.appendChild(chip);
+        catalogTypeFilters.appendChild(chip);
       });
-      const primerChip = catalogFilters.querySelector('.chip');
-      if (primerChip) primerChip.classList.add('active');
+      const primerChipTipo = catalogTypeFilters.querySelector('.chip');
+      if (primerChipTipo) primerChipTipo.classList.add('active');
 
-      function renderCatalog(filtroTipo) {
+      // Chips de sol
+      const solesFiltro = ['Todos', ...solesUnicos];
+      solesFiltro.forEach(cat => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip';
+        chip.dataset.sol = cat;
+        chip.textContent = cat === 'Todos' ? 'Todo tipo de sol' : `☀️ ${cat}`;
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('#catalogSunFilters .chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          filtroSolActual = cat;
+          renderCatalog();
+        });
+        catalogSunFilters.appendChild(chip);
+      });
+      const primerChipSol = catalogSunFilters.querySelector('.chip');
+      if (primerChipSol) primerChipSol.classList.add('active');
+
+      // Buscador
+      catalogSearch.addEventListener('input', () => {
+        textoBusqueda = (catalogSearch.value || '').toLowerCase();
+        renderCatalog();
+      });
+
+      function renderCatalog() {
         catalogGrid.innerHTML = '';
-        cultivos
-          .filter(c => !filtroTipo || filtroTipo === 'Todos' || c.tipo === filtroTipo)
-          .forEach(cultivo => {
-            const card = document.createElement('article');
-            card.className = 'crop-card';
-            card.innerHTML = `
-              <div class="crop-photo">
-                <img src="${cultivo.imagen}" alt="${cultivo.nombre}">
-              </div>
-              <div class="crop-body">
-                <div class="crop-name">${cultivo.nombre}</div>
-                <div class="crop-tags">
-                  <span class="crop-tag">${cultivo.tipo}</span>
-                  <span class="crop-tag">⏱️ ${cultivo.diasCosecha}</span>
-                  <span class="crop-tag">☀️ ${cultivo.sol}</span>
-                </div>
-              </div>
-            `;
-            card.addEventListener('click', () => abrirFichaCultivo(cultivo));
-            catalogGrid.appendChild(card);
-          });
+        const texto = textoBusqueda.trim();
 
-        if (!catalogGrid.children.length) {
+        const listaFiltrada = cultivos.filter(c => {
+          const coincideTipo = filtroTipoActual === 'Todos' || c.tipo === filtroTipoActual;
+          const catSol = obtenerCategoriaSol(c.sol);
+          const coincideSol = filtroSolActual === 'Todos' || catSol === filtroSolActual;
+          const coincideBusqueda =
+            !texto ||
+            c.nombre.toLowerCase().includes(texto) ||
+            c.id.toLowerCase().includes(texto);
+
+          return coincideTipo && coincideSol && coincideBusqueda;
+        });
+
+        if (!listaFiltrada.length) {
           catalogGrid.innerHTML = `
             <div class="empty-state">
               <span class="emoji">🔍</span>
-              No hay cultivos para este filtro.
+              No se encontraron cultivos con estos filtros. Prueba cambiando el tipo, el sol o el texto de búsqueda.
             </div>`;
+          return;
         }
-      }
-      renderCatalog('Todos');
 
-      // --- Diálogos genéricos (cerrar) ---
+        listaFiltrada.forEach(cultivo => {
+          const card = document.createElement('article');
+          card.className = 'crop-card';
+          card.innerHTML = `
+            <div class="crop-photo">
+              <img src="${cultivo.imagen}" alt="${cultivo.nombre}">
+            </div>
+            <div class="crop-body">
+              <div class="crop-name">${cultivo.nombre}</div>
+              <div class="crop-tags">
+                <span class="crop-tag">${cultivo.tipo}</span>
+                <span class="crop-tag">⏱️ ${cultivo.diasCosecha}</span>
+                <span class="crop-tag">☀️ ${cultivo.sol}</span>
+              </div>
+            </div>
+          `;
+          card.addEventListener('click', () => abrirFichaCultivo(cultivo));
+          catalogGrid.appendChild(card);
+        });
+      }
+      renderCatalog();
+
+      // Diálogos genéricos
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1327,7 +1403,7 @@
         });
       });
 
-      // --- Ficha de cultivo ---
+      // Ficha de cultivo
       const cropDialog = document.getElementById('cropDialog');
       const cropDialogImg = document.getElementById('cropDialogImg');
       const cropDialogName = document.getElementById('cropDialogName');
@@ -1349,7 +1425,6 @@
         cropDialogSol.textContent = `☀️ ${c.sol}`;
         cropDialogSiembra.textContent = c.siembra;
 
-        // Calcular y mostrar los mejores meses de siembra
         const mesesCultivo = cultivoMeses[c.id] || [];
         if (mesesCultivo.length) {
           const nombresMeses = mesesCultivo
@@ -1369,7 +1444,6 @@
         cropDialog.classList.add('active');
       }
 
-      // Desde el calendario, botón "Ver ficha"
       monthResults.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-crop-id]');
         if (!btn) return;
@@ -1378,7 +1452,7 @@
         if (cultivo) abrirFichaCultivo(cultivo);
       });
 
-      // --- Mi huerto (4x4) ---
+      // Mi huerto (4x4)
       const gardenGrid = document.getElementById('gardenGrid');
       const gardenDialog = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
@@ -1472,7 +1546,7 @@
       cargarGarden();
       renderGarden();
 
-      // --- Diario ---
+      // Diario
       const diaryList = document.getElementById('diaryList');
       const diaryEmpty = document.getElementById('diaryEmpty');
       const addDiaryEntryBtn = document.getElementById('addDiaryEntry');
@@ -1544,7 +1618,7 @@
       cargarDiario();
       renderDiario();
 
-      // --- Service Worker ---
+      // Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
           console.warn('SW error', err);
