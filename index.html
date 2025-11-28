@@ -1062,20 +1062,100 @@
     ];
 
     // Qué recomendar por mes (no todos los cultivos están en todos los meses)
-    const siembrasPorMes = {
-      1: ['lechuga','espinaca','cilantro','recao','rabano','zanahoria','habichuelas'],
-      2: ['lechuga','espinaca','cilantro','kale','repollo','rabano','zanahoria'],
-      3: ['tomate','pimiento','aji','berenjena','pepiniilo','pepinillo','broccoli','coliflor','habichuelas','maiz'],
-      4: ['tomate','pimiento','aji','pepino','pepinillo','calabaza','cantalope','melon','gandules','habichuelas'],
-      5: ['calabaza','cantalope','melon','maiz','quimbombo','batata','yuca','yautia','papa'],
-      6: ['calabaza','cantalope','melon','quimbombo','gandules','batata','yuca','yautia','papa'],
-      7: ['tomate','pimiento','berenjena','quimbombo','gandules','habichuelas'],
-      8: ['tomate','pimiento','berenjena','lechuga','espinaca','cilantro'],
-      9: ['lechuga','espinaca','kale','col_risada','repollo','zanahoria','rabano','remolacha'],
-      10: ['lechuga','espinaca','kale','col_roja','repollo','zanahoria','remolacha','remolacha_blanca'],
-      11: ['lechuga','espinaca','cilantro','apio','acelga','habichuelas'],
-      12: ['lechuga','espinaca','cilantro','recao','berro','acelga']
-    };
+    // Qué recomendar por mes (ajustado a clima tropical Puerto Rico)
+const siembrasPorMes = {
+  // ENERO – más fresco, muy bueno para hojas y raíces suaves
+  1: [
+    'lechuga','espinaca','acelga','cilantro','recao',
+    'kale','col_risada','repollo','zanahoria','rabano',
+    'remolacha','remolacha_blanca','berro','apio'
+  ],
+
+  // FEBRERO – sigue fresco, aún bueno para hojas y brassicas
+  2: [
+    'lechuga','espinaca','acelga','cilantro','kale',
+    'col_risada','col_roja','repollo','broccoli','coliflor',
+    'zanahoria','rabano','remolacha','remolacha_blanca','cebolla'
+  ],
+
+  // MARZO – transición: empiezan solanas y más calor
+  3: [
+    'tomate','pimiento','pimiento_morron','aji','berenjena',
+    'pepinillo','calabaza','cantalope','melon',
+    'habichuelas','maiz','quimbombo',
+    'lechuga','espinaca','cilantro','albahaca','menta'
+  ],
+
+  // ABRIL – fuerte de calor, ideal para frutos y leguminosas
+  4: [
+    'tomate','pimiento','pimiento_morron','aji','berenjena',
+    'pepinillo','calabaza','cantalope','melon',
+    'habichuelas','maiz','quimbombo','gandules',
+    'batata','yuca','yautia','papa'
+  ],
+
+  // MAYO – pleno calor y lluvias, raíces y leguminosas
+  5: [
+    'calabaza','cantalope','melon',
+    'maiz','quimbombo','gandules','habichuelas',
+    'batata','yuca','yautia','papa','malanga',
+    'platano','guineo','papaya','parcha'
+  ],
+
+  // JUNIO – lluvias fuertes, perennes y raíces resistentes
+  6: [
+    'batata','yuca','yautia','malanga',
+    'platano','guineo','papaya','parcha','gandules',
+    'calabaza','quimbombo','maiz'
+  ],
+
+  // JULIO – calor fuerte, aún se pueden frutos de verano
+  7: [
+    'tomate','pimiento','pimiento_morron','berenjena',
+    'quimbombo','gandules','habichuelas',
+    'batata','yuca','yautia',
+    'albahaca','menta','oregano','oregano_brujo'
+  ],
+
+  // AGOSTO – se puede empezar transición a algunas hojas otra vez
+  8: [
+    'tomate','pimiento','berenjena',
+    'habichuelas','gandules',
+    'lechuga','espinaca','cilantro','recao',
+    'albahaca','menta','oregano','oregano_brujo'
+  ],
+
+  // SEPTIEMBRE – buen momento para reiniciar hojas y raíces
+  9: [
+    'lechuga','espinaca','acelga','cilantro','recao',
+    'kale','col_risada','col_roja','repollo',
+    'broccoli','coliflor','zanahoria','rabano',
+    'remolacha','remolacha_blanca','apio','escarolas'
+  ],
+
+  // OCTUBRE – muy bueno para hojas, brassicas y raíces
+  10: [
+    'lechuga','espinaca','acelga','cilantro','recao',
+    'kale','col_risada','col_roja','repollo',
+    'broccoli','coliflor','zanahoria','rabano',
+    'remolacha','remolacha_blanca','apio','berro'
+  ],
+
+  // NOVIEMBRE – sigue clima más fresco, parecido a enero
+  11: [
+    'lechuga','espinaca','acelga','cilantro','recao',
+    'kale','col_risada','repollo',
+    'zanahoria','rabano','remolacha','remolacha_blanca',
+    'habichuelas','apio'
+  ],
+
+  // DICIEMBRE – inicio de temporada fresca otra vez
+  12: [
+    'lechuga','espinaca','acelga','cilantro','recao',
+    'berro','kale','col_risada','repollo',
+    'zanahoria','rabano','remolacha'
+  ]
+};
 
     // --- Lógica de la app ---
     document.addEventListener('DOMContentLoaded', () => {
