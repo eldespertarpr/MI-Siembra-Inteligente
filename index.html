@@ -1572,7 +1572,17 @@
       }
 
       function renderDiario() {
-        diaryList.innerHTML = '';
+        diaryList.innerHTML =diaryEntries.forEach((entrada, index) => {
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <!-- contenido que ya tienes, NO lo borres -->
+    ...
+    <button class="diary-delete" data-index="${index}">
+      Borrar
+    </button>
+  `;
+  diaryList.appendChild(li);
+}); '';
         if (!diaryEntries.length) {
           diaryEmpty.style.display = 'block';
           return;
