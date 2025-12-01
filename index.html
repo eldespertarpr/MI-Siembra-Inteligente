@@ -1732,6 +1732,96 @@
         diaryDialogEl.classList.add('active');
       });
 
+     // --- Diario ---
+      const diaryList = document.getElementById('diaryList');
+      const diaryEmpty = document.getElementById('diaryEmpty');
+      const addDiaryEntryBtn = document.getElementById('addDiaryEntry');
+      const diaryDialogEl = document.getElementById('diaryDialog');
+      const diaryType = document.getElementById('diaryType');
+      const diaryDate = document.getElementById('diaryDate');
+      const diaryNotes = document.getElementById('diaryNotes');
+      const diarySave = document.getElementById('diarySave');
+      const DIARY_KEY = 'mi_siembra_diario_v1';
+      let diaryEntries = [];
+
+      // Diálogo de confirmación propio
+      const confirmDialogEl = document.getElementById('confirmDialog');
+      const confirmMessageEl = document.getElementById('confirmMessage');
+      const confirmCancelBtn = document.getElementById('confirmCancel');
+      const confirmOkBtn = document.getElementById('confirmOk');
+      let confirmOkHandler = null;
+
+      function openConfirm(message, onOk) {
+        confirmMessageEl.textContent = message;
+        confirmOkHandler = onOk;
+        confirmDialogEl.classList.add('active');
+      }
+
+      confirmCancelBtn.addEventListener('click', () => {
+        confirmDialogEl.classList.remove('active');
+        confirmOkHandler = null;
+      });
+
+      confirmOkBtn.addEventListener('click', () => {
+        if (typeof confirmOkHandler === 'function') {
+          const fn = confirmOkHandler;
+          confirmOkHandler = null;
+          confirmDialogEl.classList.remove('active');
+          fn();
+        } else {
+          confirmDialogEl.classList.remove('active');
+        }
+      });
+
+      function cargarDiario() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
+          diaryEntries = Array.isArray(stored) ? stored : [];
+        } catch (e) {
+          diaryEntries = [];
+        }
+      }
+
+      function guardarDiario() {
+        localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+      }
+
+      function renderDiario() {
+        diaryList.innerHTML = '';
+        if (!diaryEntries.length) {
+          diaryEmpty.style.display = 'block';
+          return;
+        }
+        diaryEmpty.style.display = 'none';
+
+        const items = diaryEntries
+          .map((entry, index) => ({ entry, index }))
+          .slice()
+          .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
+
+        items.forEach(({ entry, index }) => {
+          const div = document.createElement('div');
+          div.className = 'diary-entry';
+          div.dataset.index = String(index);
+          div.innerHTML = `
+            <div class="diary-meta">
+              <div class="diary-type">${entry.tipo || 'Actividad'}</div>
+              <div class="diary-date">${entry.fecha || ''}</div>
+            </div>
+            <div class="diary-notes">${entry.notas || ''}</div>
+          `;
+          diaryList.appendChild(div);
+        });
+      }
+
+      addDiaryEntryBtn.addEventListener('click', () => {
+        const hoyISO = new Date().toISOString().slice(0, 10);
+        diaryDate.value = hoyISO;
+        diaryNotes.value = '';
+        diaryType.value = 'Siembra';
+        diaryDialogEl.classList.add('active');
+      });
+
       diarySave.addEventListener('click', () => {
         const entrada = {
           tipo: diaryType.value || 'Actividad',
@@ -1744,7 +1834,7 @@
         diaryDialogEl.classList.remove('active');
       });
 
-      // Borrar entrada tocando sobre ella (ahora con nuestro diálogo)
+      // Borrar entrada tocando sobre ella (con nuestro diálogo)
       diaryList.addEventListener('click', (event) => {
         const item = event.target.closest('.diary-entry');
         if (!item) return;
@@ -1761,7 +1851,11 @@
 
         openConfirm(textoConfirm, () => {
           diaryEntries.splice(index, 1);
-          
+          guardarDiario();
+          renderDiario();
+        });
+      });
+
       cargarDiario();
       renderDiario();
 
