@@ -569,6 +569,7 @@
       font-size: 12px;
     }
 
+    /* Ficha detallada del cultivo */
     .dialog.dialog-crop {
       width: min(430px, 100% - 24px);
       max-height: 90vh;
@@ -639,10 +640,6 @@
       color: var(--text-soft);
       text-align: center;
     }
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
 
     @media (min-width: 768px) {
       .app-shell {
@@ -698,22 +695,22 @@
             </article>
             <article class="home-card" data-view-target="gardenView">
               <div class="home-card-title">Mi huerto</div>
-              <div class="home-card-desc">Diseña un plano 4×4 y marca qué hay sembrado.</div>
+              <div class="home-card-desc">Diseña un pequeño plano de 4×4 y marca qué hay sembrado en cada cuadro.</div>
               <div class="home-card-icon">🧩</div>
             </article>
             <article class="home-card" data-view-target="diaryView">
               <div class="home-card-title">Diario de siembra</div>
-              <div class="home-card-desc">Registra siembras, riegos, abonos y cosechas.</div>
+              <div class="home-card-desc">Registra siembras, riegos, abonos y cosechas para no olvidar ningún detalle.</div>
               <div class="home-card-icon">📓</div>
             </article>
             <article class="home-card" data-view-target="pestsView">
               <div class="home-card-title">Plagas y cuidados</div>
-              <div class="home-card-desc">Problemas comunes y qué hacer.</div>
+              <div class="home-card-desc">Identifica problemas comunes y qué hacer de forma sencilla.</div>
               <div class="home-card-icon">🪲</div>
             </article>
             <article class="home-card" data-view-target="fertView">
               <div class="home-card-title">Abonos y fertilizantes</div>
-              <div class="home-card-desc">Ideas de compost y cuándo aplicarlos.</div>
+              <div class="home-card-desc">Ideas de compost, abonos caseros y cuándo aplicarlos.</div>
               <div class="home-card-icon">🧪</div>
             </article>
           </div>
@@ -731,7 +728,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">¿Qué puedo sembrar este mes?</div>
-              <div class="section-subtitle">Toca un mes para ver cultivos recomendados.</div>
+              <div class="section-subtitle">Toca un mes para ver cultivos recomendados y tiempo aproximado de cosecha.</div>
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
@@ -751,6 +748,7 @@
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
 
+          <!-- Buscador -->
           <div class="chips-row">
             <input
               id="catalogSearch"
@@ -759,7 +757,10 @@
               placeholder="Buscar por nombre (ej. tomate, lechuga, cilantro…)">
           </div>
 
+          <!-- Filtros por tipo -->
           <div class="chips-row" id="catalogTypeFilters"></div>
+
+          <!-- Filtros por sol -->
           <div class="chips-row" id="catalogSunFilters"></div>
 
           <div class="catalog-grid" id="catalogGrid"></div>
@@ -772,7 +773,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Mi huerto</div>
-              <div class="section-subtitle">Toca un cuadro para asignar qué estás sembrando.</div>
+              <div class="section-subtitle">Toca un cuadro para asignar qué estás sembrando en esa área.</div>
             </div>
             <button class="small-btn" id="resetGarden"><span class="emoji">🧹</span><span>Limpiar</span></button>
           </div>
@@ -789,7 +790,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Diario de siembra</div>
-              <div class="section-subtitle">Registra actividades importantes.</div>
+              <div class="section-subtitle">Registra actividades importantes para no perder el hilo de tu huerto.</div>
             </div>
             <button class="small-btn" id="addDiaryEntry"><span class="emoji">➕</span><span>Nuevo</span></button>
           </div>
@@ -807,7 +808,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Plagas y cuidados básicos</div>
-              <div class="section-subtitle">Guía rápida para problemas frecuentes.</div>
+              <div class="section-subtitle">Guía rápida para problemas frecuentes y acciones sencillas.</div>
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
@@ -820,7 +821,7 @@
                   <span class="meta-pill">🌿 Brotes tiernos</span>
                 </div>
                 <div class="section-subtitle">
-                  Solución simple: agua jabonosa suave cada 2–3 días.
+                  Solución simple: rociar con agua jabonosa suave (jabón potásico o de lavar platos bien diluido) cada 2–3 días.
                 </div>
               </div>
             </div>
@@ -832,7 +833,7 @@
                   <span class="meta-pill">💧 Exceso de humedad</span>
                 </div>
                 <div class="section-subtitle">
-                  Mejora ventilación, evita mojar hojas y retira las muy afectadas.
+                  Mejora la ventilación, evita mojar las hojas al regar y retira hojas muy afectadas.
                 </div>
               </div>
             </div>
@@ -844,7 +845,7 @@
                   <span class="meta-pill">🌱 Plántulas</span>
                 </div>
                 <div class="section-subtitle">
-                  Revísalas a mano (tarde) y retíralas; puedes usar malla ligera.
+                  Revísalas a mano, especialmente por la tarde, y retíralas. Puedes proteger brotes con mallas ligeras.
                 </div>
               </div>
             </div>
@@ -858,7 +859,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Abonos y fertilizantes</div>
-              <div class="section-subtitle">Abonos caseros y cuándo aplicarlos.</div>
+              <div class="section-subtitle">Ideas prácticas de abonos caseros y cuándo aplicarlos.</div>
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
@@ -871,7 +872,7 @@
                   <span class="meta-pill">🌱 Aporta de todo un poco</span>
                 </div>
                 <div class="section-subtitle">
-                  Ideal para mezclar con la tierra antes de sembrar o mejorar camas.
+                  Ideal para mezclar con la tierra antes de sembrar o para mejorar camas ya usadas.
                 </div>
               </div>
             </div>
@@ -883,7 +884,7 @@
                   <span class="meta-pill">🚿 Se aplica al riego</span>
                 </div>
                 <div class="section-subtitle">
-                  Útil para dar un empujón extra a plantas en crecimiento.
+                  Útil para dar un empujón extra a plantas en crecimiento sin exagerar la dosis.
                 </div>
               </div>
             </div>
@@ -894,7 +895,7 @@
                   <span class="meta-pill">⚠️ Leer etiqueta</span>
                 </div>
                 <div class="section-subtitle">
-                  Mejor poca cantidad y más frecuente que pasarse.
+                  Siempre respeta las dosis indicadas. Es mejor menos cantidad y más frecuente que pasarse.
                 </div>
               </div>
             </div>
@@ -932,11 +933,17 @@
               <div class="home-card-desc">Cuándo y cómo abonar sin excesos.</div>
               <div class="home-card-icon">🧪</div>
             </article>
-            <!-- NUEVO: respaldo de datos -->
+            <!-- Respaldo -->
             <article class="home-card" id="backupCard">
               <div class="home-card-title">Respaldo de datos</div>
               <div class="home-card-desc">Descarga un archivo con tu huerto y diario.</div>
               <div class="home-card-icon">💾</div>
+            </article>
+            <!-- Restaurar -->
+            <article class="home-card" id="restoreCard">
+              <div class="home-card-title">Restaurar datos</div>
+              <div class="home-card-desc">Cargar un archivo de respaldo guardado.</div>
+              <div class="home-card-icon">📂</div>
             </article>
           </div>
         </div>
@@ -944,7 +951,7 @@
     </main>
 
     <footer>
-      Mi Siembra Inteligente · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      Mi Siembra Inteligente — versión 1.0 (PWA) · Guarda datos solo en este dispositivo · Desarrollado por Ricardo Díaz
     </footer>
   </div>
 
@@ -1013,7 +1020,7 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO DE CONFIRMACIÓN GENÉRICO -->
+  <!-- DIÁLOGO DE CONFIRMACIÓN -->
   <div class="dialog-backdrop" id="confirmDialog">
     <div class="dialog">
       <h3>Confirmar</h3>
@@ -1025,8 +1032,11 @@
     </div>
   </div>
 
+  <!-- Input oculto para restaurar respaldo -->
+  <input type="file" id="backupFileInput" accept="application/json" style="display:none" />
+
   <script>
-    // --- Datos de cultivos ---
+    // --- Datos de cultivos (coinciden con tus imágenes en /img) ---
     const cultivos = [
       { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
       { id: 'acerola', nombre: 'Acerola', tipo: 'Frutal', imagen: 'img/acerola.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
@@ -1090,7 +1100,7 @@
       { id: 'zanahoria', nombre: 'Zanahoria', tipo: 'Raíz', imagen: 'img/zanahoria.jpg', diasCosecha: '70–90 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–8 cm', profundidad: '1–2 cm', tiesto: '10–12 L' }
     ];
 
-    // Meses y recomendaciones
+    // Meses
     const mesesInfo = [
       { id: 1, nombre: 'Ene' },
       { id: 2, nombre: 'Feb' },
@@ -1106,6 +1116,7 @@
       { id: 12, nombre: 'Dic' }
     ];
 
+    // Qué recomendar por mes
     const siembrasPorMes = {
       1: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','berro','apio'],
       2: ['lechuga','espinaca','acelga','cilantro','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','cebolla'],
@@ -1121,6 +1132,7 @@
       12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
     };
 
+    // Mapa cultivo -> meses
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
@@ -1139,7 +1151,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // --- Navegación ---
+      // Navegación entre vistas
       const views = document.querySelectorAll('section.view');
       const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
       const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
@@ -1299,7 +1311,7 @@
           catalogGrid.innerHTML = `
             <div class="empty-state">
               <span class="emoji">🔍</span>
-              No se encontraron cultivos con estos filtros.
+              No se encontraron cultivos con estos filtros. Prueba cambiando el tipo, el sol o el texto de búsqueda.
             </div>`;
           return;
         }
@@ -1326,7 +1338,7 @@
       }
       renderCatalog();
 
-      // --- Cierre de diálogos por fondo / botón genérico ---
+      // Diálogos genéricos (cerrar al tocar fuera o botones con data-dialog-close)
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1340,7 +1352,7 @@
         });
       });
 
-      // --- Ficha de cultivo ---
+      // Ficha de cultivo
       const cropDialog = document.getElementById('cropDialog');
       const cropDialogImg = document.getElementById('cropDialogImg');
       const cropDialogName = document.getElementById('cropDialogName');
@@ -1387,6 +1399,35 @@
         const id = btn.dataset.cropId;
         const cultivo = cultivos.find(c => c.id === id);
         if (cultivo) abrirFichaCultivo(cultivo);
+      });
+
+      // --- Diálogo de confirmación ---
+      const confirmDialogEl = document.getElementById('confirmDialog');
+      const confirmMessageEl = document.getElementById('confirmMessage');
+      const confirmCancelBtn = document.getElementById('confirmCancel');
+      const confirmOkBtn = document.getElementById('confirmOk');
+      let confirmOkHandler = null;
+
+      function openConfirm(message, onOk) {
+        confirmMessageEl.textContent = message;
+        confirmOkHandler = onOk;
+        confirmDialogEl.classList.add('active');
+      }
+
+      confirmCancelBtn.addEventListener('click', () => {
+        confirmDialogEl.classList.remove('active');
+        confirmOkHandler = null;
+      });
+
+      confirmOkBtn.addEventListener('click', () => {
+        if (typeof confirmOkHandler === 'function') {
+          const fn = confirmOkHandler;
+          confirmOkHandler = null;
+          confirmDialogEl.classList.remove('active');
+          fn();
+        } else {
+          confirmDialogEl.classList.remove('active');
+        }
       });
 
       // --- Mi huerto (4x4) ---
@@ -1473,35 +1514,6 @@
         gardenDialogEl.classList.remove('active');
       });
 
-      // --- Confirmación genérica ---
-      const confirmDialogEl = document.getElementById('confirmDialog');
-      const confirmMessageEl = document.getElementById('confirmMessage');
-      const confirmCancelBtn = document.getElementById('confirmCancel');
-      const confirmOkBtn = document.getElementById('confirmOk');
-      let confirmOkHandler = null;
-
-      function openConfirm(message, onOk) {
-        confirmMessageEl.textContent = message;
-        confirmOkHandler = onOk;
-        confirmDialogEl.classList.add('active');
-      }
-
-      confirmCancelBtn.addEventListener('click', () => {
-        confirmDialogEl.classList.remove('active');
-        confirmOkHandler = null;
-      });
-
-      confirmOkBtn.addEventListener('click', () => {
-        if (typeof confirmOkHandler === 'function') {
-          const fn = confirmOkHandler;
-          confirmOkHandler = null;
-          confirmDialogEl.classList.remove('active');
-          fn();
-        } else {
-          confirmDialogEl.classList.remove('active');
-        }
-      });
-
       resetGardenBtn.addEventListener('click', () => {
         openConfirm('¿Seguro que quieres limpiar todo el plano del huerto?', () => {
           gardenState = Array(gardenSize * gardenSize).fill(null);
@@ -1529,7 +1541,7 @@
         try {
           const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
           diaryEntries = Array.isArray(stored) ? stored : [];
-        } catch {
+        } catch (e) {
           diaryEntries = [];
         }
       }
@@ -1610,8 +1622,12 @@
       cargarDiario();
       renderDiario();
 
-      // --- Respaldo de datos ---
+      // --- Respaldo y restauración de datos ---
       const backupCard = document.getElementById('backupCard');
+      const restoreCard = document.getElementById('restoreCard');
+      const backupFileInput = document.getElementById('backupFileInput');
+
+      // Descargar respaldo
       if (backupCard) {
         backupCard.addEventListener('click', () => {
           const backup = {
@@ -1637,7 +1653,55 @@
         });
       }
 
-      // --- Service Worker ---
+      // Restaurar respaldo desde archivo
+      if (restoreCard && backupFileInput) {
+        restoreCard.addEventListener('click', () => {
+          backupFileInput.value = '';
+          backupFileInput.click();
+        });
+
+        backupFileInput.addEventListener('change', (event) => {
+          const file = event.target.files && event.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const data = JSON.parse(reader.result);
+
+              if (!data || !Array.isArray(data.huerto) || !Array.isArray(data.diario)) {
+                throw new Error('Formato no válido');
+              }
+
+              const aplicarBackup = () => {
+                const esperado = gardenSize * gardenSize;
+                const huerto = data.huerto.slice(0, esperado);
+                while (huerto.length < esperado) huerto.push(null);
+
+                gardenState = huerto;
+                diaryEntries = data.diario;
+
+                guardarGarden();
+                guardarDiario();
+                renderGarden();
+                renderDiario();
+              };
+
+              const nombreArchivo = file.name || 'respaldo';
+              openConfirm(
+                `¿Quieres restaurar el huerto y el diario desde "${nombreArchivo}"? Se reemplazarán los datos actuales.`,
+                aplicarBackup
+              );
+            } catch (err) {
+              console.warn('Error al leer respaldo', err);
+              alert('El archivo no parece ser un respaldo válido de Mi Siembra Inteligente.');
+            }
+          };
+          reader.readAsText(file);
+        });
+      }
+
+      // Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
           console.warn('SW error', err);
@@ -1645,10 +1709,5 @@
       }
     });
   </script>
-
-  <footer style="margin-top: 2rem; padding: 1rem; text-align: center; font-size: 0.8rem; color: #9ca3af;">
-    <div>Mi Siembra Inteligente — versión 1.0 (PWA)</div>
-    <div>Desarrollado por Ricardo Díaz</div>
-  </footer>
 </body>
   </html>
