@@ -1617,7 +1617,26 @@
 
       cargarDiario();
       renderDiario();
+// Permitir borrar entradas del diario tocando sobre ellas
+diaryList.addEventListener('click', (event) => {
+  const item = event.target.closest('li');
+  if (!item) return;
 
+  // posición del <li> dentro de la lista
+  const index = Array.from(diaryList.children).indexOf(item);
+  if (index === -1) return;
+
+  const entrada = diaryEntries[index];
+  const textoConfirm = entrada && entrada.tipo
+    ? `¿Borrar la entrada "${entrada.tipo}" del diario?`
+    : '¿Borrar esta entrada del diario?';
+
+  if (!confirm(textoConfirm)) return;
+
+  diaryEntries.splice(index, 1);
+  guardarDiario();
+  renderDiario();
+});
       // Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
