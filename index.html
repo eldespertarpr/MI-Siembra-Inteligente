@@ -33,7 +33,7 @@
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 18px;
+      font-size: 17px; /* 👈 Letra un poco más grande */
       background: radial-gradient(circle at top left, #0f172a 0, #020617 50%, #000 100%);
       color: var(--text-main);
       min-height: 100%;
@@ -61,7 +61,12 @@
     .header-inner {
       border-radius: 999px;
       padding: 10px 16px;
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.15) 0, rgba(15,23,42,0.9) 45%, rgba(15,23,42,0.96) 100%);
+      background: radial-gradient(
+        circle at top left,
+        rgba(34,197,94,0.15) 0,
+        rgba(15,23,42,0.9) 45%,
+        rgba(15,23,42,0.96) 100%
+      );
       box-shadow: 0 20px 60px rgba(15,23,42,0.9);
       display: flex;
       align-items: center;
@@ -75,8 +80,8 @@
       min-width: 0;
     }
     .brand-icon {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 14px;
       background: radial-gradient(circle at 30% 0, #bbf7d0 0, #22c55e 30%, #15803d 70%);
       display: flex;
@@ -84,7 +89,7 @@
       justify-content: center;
       box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.55);
     }
-    .brand-icon span { font-size: 18px; }
+    .brand-icon span { font-size: 20px; }
     .brand-text {
       display: flex;
       flex-direction: column;
@@ -94,13 +99,13 @@
     .brand-title {
       font-weight: 650;
       letter-spacing: 0.01em;
-      font-size: 17px;
+      font-size: 18px;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
     }
     .brand-sub {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-soft);
     }
 
@@ -115,8 +120,8 @@
     .pill-nav button {
       border: none;
       border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 11px;
+      padding: 5px 11px;
+      font-size: 12px;
       background: transparent;
       color: var(--text-soft);
       display: flex;
@@ -125,7 +130,7 @@
       cursor: pointer;
       transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
     }
-    .pill-nav button span.emoji { font-size: 13px; }
+    .pill-nav button span.emoji { font-size: 14px; }
     .pill-nav button.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
@@ -148,7 +153,7 @@
     .section-card {
       background: radial-gradient(circle at top left, rgba(148,163,184,0.14) 0, var(--card-soft) 42%, #020617 100%);
       border-radius: var(--radius-2xl);
-      padding: 18px 18px 18px;
+      padding: 20px 18px 18px;
       box-shadow: var(--shadow-soft);
       border: 1px solid rgba(51,65,85,0.9);
       margin-bottom: 18px;
@@ -170,10 +175,10 @@
       margin-top: 4px;
     }
     .badge {
-      font-size: 10px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      padding: 3px 8px;
+      padding: 4px 9px;
       border-radius: 999px;
       background: rgba(34,197,94,0.18);
       border: 1px solid rgba(34,197,94,0.6);
@@ -182,7 +187,7 @@
       align-items: center;
       gap: 4px;
     }
-    .badge span.emoji { font-size: 12px; }
+    .badge span.emoji { font-size: 13px; }
 
     .grid-cards {
       display: flex;
@@ -193,7 +198,7 @@
     .home-card {
       background: radial-gradient(circle at 0 0, rgba(34,197,94,0.38) 0, rgba(15,23,42,0.98) 45%, rgba(15,23,42,1) 100%);
       border-radius: 20px;
-      padding: 12px 12px 13px;
+      padding: 13px 12px 13px;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(34,197,94,0.62);
@@ -201,8 +206,8 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      min-height: 90px;
+      gap: 6px;
+      min-height: 92px;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
     .home-card:hover {
@@ -211,11 +216,11 @@
       border-color: rgba(190,242,100,0.95);
     }
     .home-card-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 650;
     }
     .home-card-desc {
-      font-size: 12px;
+      font-size: 13px;
       color: #d1fae5;
       max-width: 85%;
     }
@@ -223,7 +228,7 @@
       position: absolute;
       right: -6px;
       bottom: -4px;
-      font-size: 46px;
+      font-size: 48px;
       opacity: 0.18;
       transform: rotate(-8deg);
     }
@@ -235,7 +240,7 @@
       margin-top: 8px;
     }
     .chip {
-      font-size: 11px;
+      font-size: 12px;
       padding: 4px 9px;
       border-radius: 999px;
       background: rgba(15,23,42,0.9);
@@ -246,7 +251,7 @@
       gap: 5px;
       cursor: pointer;
     }
-    .chip span.emoji { font-size: 12px; }
+    .chip span.emoji { font-size: 13px; }
     .chip.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
@@ -261,8 +266,8 @@
       border: 1px solid var(--chip-border);
       background: var(--chip-bg);
       color: var(--text-main);
-      font-size: 13px;
-      padding: 6px 10px;
+      font-size: 14px;
+      padding: 7px 11px;
       outline: none;
     }
     .search-input::placeholder {
@@ -281,8 +286,8 @@
       border: 1px solid rgba(148,163,184,0.6);
       background: var(--chip-bg);
       color: var(--text-soft);
-      font-size: 12px;
-      padding: 6px 4px;
+      font-size: 13px;
+      padding: 7px 4px;
       text-align: center;
       cursor: pointer;
       transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
@@ -304,7 +309,7 @@
     }
     .list-item {
       border-radius: 18px;
-      padding: 10px 11px;
+      padding: 11px 11px;
       background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,1));
       border: 1px solid rgba(51,65,85,0.95);
       display: flex;
@@ -325,7 +330,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
-      font-size: 11px;
+      font-size: 12px;
     }
     .meta-pill {
       padding: 2px 7px;
@@ -340,14 +345,14 @@
       border: 1px solid rgba(148,163,184,0.9);
       background: rgba(15,23,42,0.95);
       color: var(--text-main);
-      padding: 5px 8px;
-      font-size: 11px;
+      padding: 6px 9px;
+      font-size: 12px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
-    .small-btn span.emoji { font-size: 13px; }
+    .small-btn span.emoji { font-size: 14px; }
 
     .catalog-grid {
       display: grid;
@@ -373,7 +378,7 @@
       border-color: rgba(190,242,100,0.95);
     }
     .crop-photo {
-      height: 90px;
+      height: 96px;
       position: relative;
       overflow: hidden;
       background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
@@ -399,7 +404,7 @@
       flex: 1;
     }
     .crop-name {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
     }
     .crop-tags {
@@ -409,7 +414,7 @@
       margin-top: 4px;
     }
     .crop-tag {
-      font-size: 11px;
+      font-size: 12px;
       padding: 2px 7px;
       border-radius: 999px;
       background: rgba(15,23,42,0.96);
@@ -423,12 +428,12 @@
       border: 1px dashed rgba(148,163,184,0.7);
       background: rgba(15,23,42,0.8);
       text-align: center;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-soft);
     }
     .empty-state span.emoji {
       display: block;
-      font-size: 28px;
+      font-size: 30px;
       margin-bottom: 6px;
     }
 
@@ -447,7 +452,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-soft);
       cursor: pointer;
       text-align: center;
@@ -456,16 +461,11 @@
     .garden-cell-label {
       font-weight: 600;
       color: var(--text-main);
-      font-size: 11px;
+      font-size: 12px;
     }
     .garden-cell-plant {
-      font-size: 10px;
-      margin-top: 2px;
-    }
-    .garden-cell-extra {
-      font-size: 9px;
-      margin-top: 2px;
-      opacity: 0.9;
+      font-size: 11px;
+      margin-top: 3px;
     }
 
     .dialog-backdrop {
@@ -488,10 +488,10 @@
     }
     .dialog h3 {
       margin: 0 0 8px;
-      font-size: 16px;
+      font-size: 18px;
     }
     .dialog label {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-soft);
       display: block;
       margin-bottom: 5px;
@@ -504,7 +504,7 @@
       border: 1px solid rgba(148,163,184,0.8);
       background: rgba(15,23,42,0.9);
       color: var(--text-main);
-      font-size: 13px;
+      font-size: 14px;
       padding: 7px 9px;
       margin-bottom: 10px;
       font-family: inherit;
@@ -523,7 +523,7 @@
       border: 1px solid rgba(148,163,184,0.9);
       background: rgba(15,23,42,0.95);
       color: var(--text-main);
-      font-size: 12px;
+      font-size: 13px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -549,10 +549,10 @@
     }
     .diary-entry {
       border-radius: 16px;
-      padding: 8px 10px;
+      padding: 9px 10px;
       background: rgba(15,23,42,0.95);
       border: 1px solid rgba(51,65,85,0.95);
-      font-size: 12px;
+      font-size: 13px;
       display: flex;
       flex-direction: column;
       gap: 3px;
@@ -564,50 +564,16 @@
       align-items: center;
       gap: 8px;
     }
+    .diary-type { font-weight: 600; }
     .diary-date {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-soft);
     }
     .diary-notes {
       color: var(--text-soft);
-      font-size: 12px;
-    }
-    .diary-type-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.9);
-    }
-    .diary-type-siembra {
-      background: rgba(34,197,94,0.18);
-      border-color: rgba(34,197,94,0.8);
-      color: #bbf7d0;
-    }
-    .diary-type-riego {
-      background: rgba(56,189,248,0.18);
-      border-color: rgba(56,189,248,0.8);
-    }
-    .diary-type-abono {
-      background: rgba(250,204,21,0.18);
-      border-color: rgba(250,204,21,0.8);
-    }
-    .diary-type-cosecha {
-      background: rgba(251,146,60,0.18);
-      border-color: rgba(251,146,60,0.8);
-    }
-    .diary-type-otro {
-      background: rgba(148,163,184,0.18);
-      border-color: rgba(148,163,184,0.8);
-    }
-    .diary-type-pill .emoji {
       font-size: 13px;
     }
 
-    /* Ficha detallada del cultivo */
     .dialog.dialog-crop {
       width: min(430px, 100% - 24px);
       max-height: 90vh;
@@ -639,7 +605,7 @@
       margin-bottom: 4px;
     }
     .crop-dialog-name {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 650;
     }
     .crop-dialog-tags {
@@ -649,7 +615,7 @@
       margin-bottom: 8px;
     }
     .crop-dialog-tag {
-      font-size: 11px;
+      font-size: 12px;
       padding: 3px 8px;
       border-radius: 999px;
       background: rgba(15,23,42,0.96);
@@ -657,7 +623,7 @@
       color: var(--text-soft);
     }
     .crop-dialog-body {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-soft);
       overflow-y: auto;
       padding-right: 2px;
@@ -674,7 +640,7 @@
     footer {
       margin-top: 8px;
       padding: 6px 4px 2px;
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text-soft);
       text-align: center;
     }
@@ -688,7 +654,7 @@
         padding: 18px 8px 28px;
       }
       .section-card {
-        padding: 20px 20px 20px;
+        padding: 22px 20px 20px;
       }
     }
   </style>
@@ -951,7 +917,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Más opciones</div>
-              <div class="section-subtitle">Atajos y respaldo de datos.</div>
+              <div class="section-subtitle">Atajos a secciones clave de la app.</div>
             </div>
           </div>
           <div class="grid-cards">
@@ -976,19 +942,14 @@
               <div class="home-card-icon">🧪</div>
             </article>
           </div>
-
-          <div class="section-subtitle" style="margin-top:12px;">Respaldo de tu información</div>
-          <div class="chips-row">
-            <button class="chip" id="backupBtn"><span class="emoji">💾</span><span>Guardar copia (JSON)</span></button>
-            <button class="chip" id="restoreBtn"><span class="emoji">📂</span><span>Restaurar copia</span></button>
-            <input id="restoreInput" type="file" accept="application/json" style="display:none" />
-          </div>
         </div>
       </section>
     </main>
 
     <footer>
-      Mi Siembra Inteligente — versión 1.0 (PWA) · Guarda datos solo en este dispositivo · Desarrollado por Ricardo Díaz
+      Mi Siembra Inteligente · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      <br />
+      Versión 1.0 PWA · Desarrollado por Ricardo Díaz
     </footer>
   </div>
 
@@ -999,10 +960,6 @@
       <div id="gardenDialogPosition" class="section-subtitle" style="margin-bottom:8px;"></div>
       <label for="gardenCropSelect">Cultivo</label>
       <select id="gardenCropSelect"></select>
-      <label for="gardenDate">Fecha de siembra (opcional)</label>
-      <input id="gardenDate" type="date" />
-      <label for="gardenNotes">Notas (opcional)</label>
-      <textarea id="gardenNotes" placeholder="Ej. 3 plantas en tiesto de 5 galones."></textarea>
       <div class="dialog-footer">
         <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
         <button class="btn btn-primary" type="button" id="gardenSave">Guardar</button>
@@ -1061,7 +1018,7 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO CONFIRMACIÓN GENÉRICO -->
+  <!-- DIÁLOGO DE CONFIRMACIÓN GENÉRICO -->
   <div class="dialog-backdrop" id="confirmDialog">
     <div class="dialog">
       <h3>Confirmar</h3>
@@ -1074,11 +1031,6 @@
   </div>
 
   <script>
-    const STORAGE_VERSION = '1.1';
-    const GARDEN_KEY = 'mi_siembra_huerto_v2';
-    const DIARY_KEY = 'mi_siembra_diario_v1';
-    const BACKUP_FILENAME = 'mi-siembra-respaldo.json';
-
     // --- Datos de cultivos (coinciden con tus imágenes en /img) ---
     const cultivos = [
       { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
@@ -1143,12 +1095,23 @@
       { id: 'zanahoria', nombre: 'Zanahoria', tipo: 'Raíz', imagen: 'img/zanahoria.jpg', diasCosecha: '70–90 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–8 cm', profundidad: '1–2 cm', tiesto: '10–12 L' }
     ];
 
+    // Meses para el calendario
     const mesesInfo = [
-      { id: 1, nombre: 'Ene' }, { id: 2, nombre: 'Feb' }, { id: 3, nombre: 'Mar' }, { id: 4, nombre: 'Abr' },
-      { id: 5, nombre: 'May' }, { id: 6, nombre: 'Jun' }, { id: 7, nombre: 'Jul' }, { id: 8, nombre: 'Ago' },
-      { id: 9, nombre: 'Sep' }, { id: 10, nombre: 'Oct' }, { id: 11, nombre: 'Nov' }, { id: 12, nombre: 'Dic' }
+      { id: 1, nombre: 'Ene' },
+      { id: 2, nombre: 'Feb' },
+      { id: 3, nombre: 'Mar' },
+      { id: 4, nombre: 'Abr' },
+      { id: 5, nombre: 'May' },
+      { id: 6, nombre: 'Jun' },
+      { id: 7, nombre: 'Jul' },
+      { id: 8, nombre: 'Ago' },
+      { id: 9, nombre: 'Sep' },
+      { id: 10, nombre: 'Oct' },
+      { id: 11, nombre: 'Nov' },
+      { id: 12, nombre: 'Dic' }
     ];
 
+    // Qué recomendar por mes (clima tropical/subtropical)
     const siembrasPorMes = {
       1: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','berro','apio'],
       2: ['lechuga','espinaca','acelga','cilantro','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','cebolla'],
@@ -1164,6 +1127,7 @@
       12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
     };
 
+    // Mapa cultivo -> meses
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
@@ -1182,6 +1146,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Navegación entre vistas
       const views = document.querySelectorAll('section.view');
       const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
       const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
@@ -1198,9 +1163,9 @@
       }
 
       allViewButtons.forEach(btn => {
-        const target = btn.dataset.viewTarget || btn.dataset.view;
-        if (!target) return;
         btn.addEventListener('click', () => {
+          const target = btn.dataset.viewTarget || btn.dataset.view;
+          if (!target) return;
           setView(target);
           setActivePill(target);
         });
@@ -1369,7 +1334,7 @@
       }
       renderCatalog();
 
-      // Diálogos genéricos (cerrar al tocar fondo)
+      // Diálogos básicos: cerrar al tocar afuera o botones con data-dialog-close
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1432,54 +1397,26 @@
         if (cultivo) abrirFichaCultivo(cultivo);
       });
 
-      // --- Mi huerto (4x4) con notas y fecha ---
+      // --- Mi huerto (4x4) ---
       const gardenGrid = document.getElementById('gardenGrid');
       const gardenDialogEl = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
       const gardenCropSelect = document.getElementById('gardenCropSelect');
-      const gardenDate = document.getElementById('gardenDate');
-      const gardenNotes = document.getElementById('gardenNotes');
       const gardenSave = document.getElementById('gardenSave');
       const resetGardenBtn = document.getElementById('resetGarden');
+      const GARDEN_KEY = 'mi_siembra_huerto_v1';
       const gardenSize = 4;
       let gardenState = [];
 
-      function normalizarGardenArray(arr) {
-        if (!Array.isArray(arr)) {
-          return Array(gardenSize * gardenSize).fill(null);
-        }
-        return arr.map(cell => {
-          if (cell === null || typeof cell === 'undefined') return null;
-          if (typeof cell === 'string') {
-            return { cultivoId: cell, fecha: '', notas: '' };
-          }
-          if (typeof cell === 'object') {
-            return {
-              cultivoId: cell.cultivoId || null,
-              fecha: cell.fecha || '',
-              notas: cell.notas || ''
-            };
-          }
-          return null;
-        });
-      }
-
       function cargarGarden() {
         try {
-          const storedRaw = localStorage.getItem(GARDEN_KEY);
-          if (!storedRaw) {
-            // intentar compatibilidad con versión anterior
-            const oldRaw = localStorage.getItem('mi_siembra_huerto_v1');
-            const parsedOld = oldRaw ? JSON.parse(oldRaw) : null;
-            gardenState = normalizarGardenArray(parsedOld);
+          const stored = JSON.parse(localStorage.getItem(GARDEN_KEY) || 'null');
+          if (Array.isArray(stored) && stored.length === gardenSize * gardenSize) {
+            gardenState = stored;
           } else {
-            const parsed = JSON.parse(storedRaw);
-            gardenState = normalizarGardenArray(parsed);
+            gardenState = Array(gardenSize * gardenSize).fill(null);
           }
         } catch {
-          gardenState = Array(gardenSize * gardenSize).fill(null);
-        }
-        if (gardenState.length !== gardenSize * gardenSize) {
           gardenState = Array(gardenSize * gardenSize).fill(null);
         }
       }
@@ -1490,36 +1427,24 @@
 
       function renderGarden() {
         gardenGrid.innerHTML = '';
-        gardenState.forEach((cellData, index) => {
+        gardenState.forEach((cultivoId, index) => {
           const cell = document.createElement('button');
           cell.type = 'button';
           cell.className = 'garden-cell';
           cell.dataset.index = String(index);
-
           const label = document.createElement('div');
           label.className = 'garden-cell-label';
           label.textContent = `#${index + 1}`;
-
           const plant = document.createElement('div');
           plant.className = 'garden-cell-plant';
-
-          const extra = document.createElement('div');
-          extra.className = 'garden-cell-extra';
-
-          if (cellData && cellData.cultivoId) {
-            const cultivo = cultivos.find(c => c.id === cellData.cultivoId);
-            plant.textContent = cultivo ? cultivo.nombre : cellData.cultivoId;
-            extra.textContent = cellData.fecha
-              ? `📅 ${cellData.fecha}`
-              : (cellData.notas ? cellData.notas.slice(0, 20) + (cellData.notas.length > 20 ? '…' : '') : '');
+          if (cultivoId) {
+            const cultivo = cultivos.find(c => c.id === cultivoId);
+            plant.textContent = cultivo ? cultivo.nombre : cultivoId;
           } else {
             plant.textContent = 'Vacío';
-            extra.textContent = '';
           }
-
           cell.appendChild(label);
           cell.appendChild(plant);
-          if (extra.textContent) cell.appendChild(extra);
           gardenGrid.appendChild(cell);
         });
       }
@@ -1535,7 +1460,6 @@
         gardenDialogEl.dataset.index = String(index);
         gardenDialogPosition.textContent =
           `Cuadro #${index + 1} (fila ${Math.floor(index / gardenSize) + 1}, columna ${(index % gardenSize) + 1})`;
-
         gardenCropSelect.innerHTML = '<option value="">Vacío</option>';
         cultivos.forEach(c => {
           const opt = document.createElement('option');
@@ -1543,26 +1467,15 @@
           opt.textContent = c.nombre;
           gardenCropSelect.appendChild(opt);
         });
-
-        const actual = gardenState[index] || null;
-        gardenCropSelect.value = actual && actual.cultivoId ? actual.cultivoId : '';
-        gardenDate.value = actual && actual.fecha ? actual.fecha : '';
-        gardenNotes.value = actual && actual.notas ? actual.notas : '';
-
+        const actual = gardenState[index];
+        gardenCropSelect.value = actual || '';
         gardenDialogEl.classList.add('active');
       }
 
       gardenSave.addEventListener('click', () => {
         const index = parseInt(gardenDialogEl.dataset.index || '0', 10);
-        const cultivoId = gardenCropSelect.value || null;
-        const fecha = gardenDate.value || '';
-        const notas = gardenNotes.value.trim();
-
-        if (!cultivoId && !fecha && !notas) {
-          gardenState[index] = null;
-        } else {
-          gardenState[index] = { cultivoId, fecha, notas };
-        }
+        const val = gardenCropSelect.value || null;
+        gardenState[index] = val;
         guardarGarden();
         renderGarden();
         gardenDialogEl.classList.remove('active');
@@ -1588,21 +1501,14 @@
       const diaryDate = document.getElementById('diaryDate');
       const diaryNotes = document.getElementById('diaryNotes');
       const diarySave = document.getElementById('diarySave');
+      const DIARY_KEY = 'mi_siembra_diario_v1';
       let diaryEntries = [];
-
-      const DIARY_TYPE_INFO = {
-        'Siembra': { emoji: '🌱', cls: 'diary-type-siembra' },
-        'Riego':   { emoji: '💧', cls: 'diary-type-riego' },
-        'Abono':   { emoji: '🧪', cls: 'diary-type-abono' },
-        'Cosecha': { emoji: '🥕', cls: 'diary-type-cosecha' },
-        'Otro':    { emoji: '📌', cls: 'diary-type-otro' }
-      };
 
       function cargarDiario() {
         try {
           const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
           diaryEntries = Array.isArray(stored) ? stored : [];
-        } catch {
+        } catch (e) {
           diaryEntries = [];
         }
       }
@@ -1625,18 +1531,12 @@
           .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
 
         items.forEach(({ entry, index }) => {
-          const info = DIARY_TYPE_INFO[entry.tipo] || DIARY_TYPE_INFO['Otro'];
           const div = document.createElement('div');
           div.className = 'diary-entry';
           div.dataset.index = String(index);
           div.innerHTML = `
             <div class="diary-meta">
-              <div class="diary-type">
-                <span class="diary-type-pill ${info.cls}">
-                  <span class="emoji">${info.emoji}</span>
-                  <span>${entry.tipo || 'Actividad'}</span>
-                </span>
-              </div>
+              <div class="diary-type">${entry.tipo || 'Actividad'}</div>
               <div class="diary-date">${entry.fecha || ''}</div>
             </div>
             <div class="diary-notes">${entry.notas || ''}</div>
@@ -1664,31 +1564,6 @@
         renderDiario();
         diaryDialogEl.classList.remove('active');
       });
-
-      // Borrar entrada tocando sobre ella
-      diaryList.addEventListener('click', (event) => {
-        const item = event.target.closest('.diary-entry');
-        if (!item) return;
-
-        const idxStr = item.dataset.index;
-        if (typeof idxStr === 'undefined') return;
-        const index = parseInt(idxStr, 10);
-        if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) return;
-
-        const entrada = diaryEntries[index];
-        const textoConfirm = entrada && entrada.tipo
-          ? `¿Borrar la entrada "${entrada.tipo}" del diario?`
-          : '¿Borrar esta entrada del diario?';
-
-        openConfirm(textoConfirm, () => {
-          diaryEntries.splice(index, 1);
-          guardarDiario();
-          renderDiario();
-        });
-      });
-
-      cargarDiario();
-      renderDiario();
 
       // --- Diálogo de confirmación genérico ---
       const confirmDialogEl = document.getElementById('confirmDialog');
@@ -1719,59 +1594,30 @@
         }
       });
 
-      // --- Respaldo y restauración ---
-      const backupBtn = document.getElementById('backupBtn');
-      const restoreBtn = document.getElementById('restoreBtn');
-      const restoreInput = document.getElementById('restoreInput');
+      // Borrar entrada tocando sobre ella
+      diaryList.addEventListener('click', (event) => {
+        const item = event.target.closest('.diary-entry');
+        if (!item) return;
 
-      backupBtn.addEventListener('click', () => {
-        const data = {
-          version: STORAGE_VERSION,
-          fecha: new Date().toISOString(),
-          huerto: gardenState,
-          diario: diaryEntries
-        };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = BACKUP_FILENAME;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+        const idxStr = item.dataset.index;
+        if (typeof idxStr === 'undefined') return;
+        const index = parseInt(idxStr, 10);
+        if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) return;
+
+        const entrada = diaryEntries[index];
+        const textoConfirm = entrada && entrada.tipo
+          ? `¿Borrar la entrada "${entrada.tipo}" del diario?`
+          : '¿Borrar esta entrada del diario?';
+
+        openConfirm(textoConfirm, () => {
+          diaryEntries.splice(index, 1);
+          guardarDiario();
+          renderDiario();
+        });
       });
 
-      restoreBtn.addEventListener('click', () => {
-        restoreInput.click();
-      });
-
-      restoreInput.addEventListener('change', (event) => {
-        const file = event.target.files && event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const parsed = JSON.parse(e.target.result);
-            if (parsed && Array.isArray(parsed.huerto)) {
-              gardenState = normalizarGardenArray(parsed.huerto);
-              guardarGarden();
-              renderGarden();
-            }
-            if (parsed && Array.isArray(parsed.diario)) {
-              diaryEntries = parsed.diario;
-              guardarDiario();
-              renderDiario();
-            }
-            openConfirm('Datos restaurados correctamente.', () => {});
-          } catch (err) {
-            openConfirm('Hubo un problema al leer el archivo de respaldo.', () => {});
-          } finally {
-            restoreInput.value = '';
-          }
-        };
-        reader.readAsText(file, 'utf-8');
-      });
+      cargarDiario();
+      renderDiario();
 
       // Service Worker
       if ('serviceWorker' in navigator) {
@@ -1782,4 +1628,4 @@
     });
   </script>
 </body>
-          </html>
+  </html>
