@@ -1578,21 +1578,23 @@
           return;
         }
         diaryEmpty.style.display = 'none';
-        diaryEntries
-          .slice()
-          .sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''))
-          .forEach(entry => {
-            const div = document.createElement('div');
-            div.className = 'diary-entry';
-            div.innerHTML = `
-              <div class="diary-meta">
-                <div class="diary-type">${entry.tipo || 'Actividad'}</div>
-                <div class="diary-date">${entry.fecha || ''}</div>
-              </div>
-              <div class="diary-notes">${entry.notas || ''}</div>
-            `;
-            diaryList.appendChild(div);
-          });
+
+        // Ordenar el arreglo original por fecha (más reciente primero)
+        diaryEntries.sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+
+        diaryEntries.forEach((entry) => {
+          const div = document.createElement('div');
+          div.className = 'diary-entry';
+          div.innerHTML = `
+            <div class="diary-meta">
+              <div class="diary-type">${entry.tipo || 'Actividad'}</div>
+              <div class="diary-date">${entry.fecha || ''}</div>
+            </div>
+            <div class="diary-notes">${entry.notas || ''}</div>
+          `;
+          diaryList.appendChild(div);
+        });
+      }
       }
 
       addDiaryEntryBtn.addEventListener('click', () => {
