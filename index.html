@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mi Siembra Inteligente </title>
+  <title>Mi Siembra Inteligente</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#22c55e" />
+
   <style>
     :root {
       color-scheme: dark;
@@ -635,7 +636,7 @@
 
     footer {
       margin-top: 8px;
-      padding: 6px 4px 2px;
+      padding: 10px 4px 4px;
       font-size: 10px;
       color: var(--text-soft);
       text-align: center;
@@ -655,6 +656,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app-shell">
     <header class="app-header">
@@ -720,7 +722,7 @@
           </div>
           <div class="chips-row">
             <span class="chip"><span class="emoji">📱</span><span>PWA offline</span></span>
-            <span class="chip"><span class="emoji">☕</span><span>Hecho para planificar tranquilo</span></span>
+            <span class="chip"><span class="emoji">☕</span><span>Hecha para planificar tranquilo</span></span>
             <span class="chip"><span class="emoji">🌍</span><span>Clima tropical/subtropical</span></span>
           </div>
         </div>
@@ -752,7 +754,6 @@
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
 
-          <!-- Buscador -->
           <div class="chips-row">
             <input
               id="catalogSearch"
@@ -761,10 +762,7 @@
               placeholder="Buscar por nombre (ej. tomate, lechuga, cilantro…)">
           </div>
 
-          <!-- Filtros por tipo -->
           <div class="chips-row" id="catalogTypeFilters"></div>
-
-          <!-- Filtros por sol -->
           <div class="chips-row" id="catalogSunFilters"></div>
 
           <div class="catalog-grid" id="catalogGrid"></div>
@@ -943,22 +941,9 @@
     </main>
 
     <footer>
-      Mi Siembra Inteligente · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
+      <div>Mi Siembra Inteligente — versión 1.0 (PWA)</div>
+      <div>Guarda datos solo en este dispositivo · Desarrollado por Ricardo Díaz</div>
     </footer>
-  </div>
-
-  <!-- DIÁLOGO HUERTO -->
-  <div class="dialog-backdrop" id="gardenDialog">
-    <div class="dialog">
-      <h3>Asignar cultivo</h3>
-      <div id="gardenDialogPosition" class="section-subtitle" style="margin-bottom:8px;"></div>
-      <label for="gardenCropSelect">Cultivo</label>
-      <select id="gardenCropSelect"></select>
-      <div class="dialog-footer">
-        <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
-        <button class="btn btn-primary" type="button" id="gardenSave">Guardar</button>
-      </div>
-    </div>
   </div>
 
   <!-- DIÁLOGO HUERTO -->
@@ -998,11 +983,11 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO DE CONFIRMACIÓN (GENÉRICO) -->
+  <!-- DIÁLOGO DE CONFIRMACIÓN GENÉRICO -->
   <div class="dialog-backdrop" id="confirmDialog">
     <div class="dialog">
       <h3>Confirmar</h3>
-      <p id="confirmMessage" class="section-subtitle" style="margin-bottom: 12px;"></p>
+      <p id="confirmMessage" class="section-subtitle" style="margin-bottom:12px;"></p>
       <div class="dialog-footer">
         <button class="btn btn-ghost" type="button" id="confirmCancel">Cancelar</button>
         <button class="btn btn-primary" type="button" id="confirmOk">Aceptar</button>
@@ -1210,7 +1195,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Navegación entre vistas
+      // --- Navegación entre vistas ---
       const views = document.querySelectorAll('section.view');
       const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
       const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
@@ -1227,9 +1212,9 @@
       }
 
       allViewButtons.forEach(btn => {
-        const target = btn.dataset.viewTarget || btn.dataset.view;
-        if (!target) return;
         btn.addEventListener('click', () => {
+          const target = btn.dataset.viewTarget || btn.dataset.view;
+          if (!target) return;
           setView(target);
           setActivePill(target);
         });
@@ -1364,7 +1349,7 @@
             c.nombre.toLowerCase().includes(texto) ||
             c.id.toLowerCase().includes(texto);
 
-        return coincideTipo && coincideSol && coincideBusqueda;
+          return coincideTipo && coincideSol && coincideBusqueda;
         });
 
         if (!listaFiltrada.length) {
@@ -1398,7 +1383,7 @@
       }
       renderCatalog();
 
-      // Diálogos genéricos
+      // --- Cierre genérico de diálogos al tocar fuera o botones data-dialog-close ---
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1412,7 +1397,7 @@
         });
       });
 
-      // Ficha de cultivo
+      // --- Ficha de cultivo ---
       const cropDialog = document.getElementById('cropDialog');
       const cropDialogImg = document.getElementById('cropDialogImg');
       const cropDialogName = document.getElementById('cropDialogName');
@@ -1461,7 +1446,36 @@
         if (cultivo) abrirFichaCultivo(cultivo);
       });
 
-      // Mi huerto (4x4)
+      // --- Diálogo de confirmación genérico ---
+      const confirmDialogEl = document.getElementById('confirmDialog');
+      const confirmMessageEl = document.getElementById('confirmMessage');
+      const confirmCancelBtn = document.getElementById('confirmCancel');
+      const confirmOkBtn = document.getElementById('confirmOk');
+      let confirmOkHandler = null;
+
+      function openConfirm(message, onOk) {
+        confirmMessageEl.textContent = message;
+        confirmOkHandler = onOk;
+        confirmDialogEl.classList.add('active');
+      }
+
+      confirmCancelBtn.addEventListener('click', () => {
+        confirmDialogEl.classList.remove('active');
+        confirmOkHandler = null;
+      });
+
+      confirmOkBtn.addEventListener('click', () => {
+        if (typeof confirmOkHandler === 'function') {
+          const fn = confirmOkHandler;
+          confirmOkHandler = null;
+          confirmDialogEl.classList.remove('active');
+          fn();
+        } else {
+          confirmDialogEl.classList.remove('active');
+        }
+      });
+
+      // --- Mi huerto (4x4) ---
       const gardenGrid = document.getElementById('gardenGrid');
       const gardenDialogEl = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
@@ -1546,10 +1560,11 @@
       });
 
       resetGardenBtn.addEventListener('click', () => {
-        if (!confirm('¿Seguro que quieres limpiar todo el plano del huerto?')) return;
-        gardenState = Array(gardenSize * gardenSize).fill(null);
-        guardarGarden();
-        renderGarden();
+        openConfirm('¿Seguro que quieres limpiar todo el plano del huerto?', () => {
+          gardenState = Array(gardenSize * gardenSize).fill(null);
+          guardarGarden();
+          renderGarden();
+        });
       });
 
       cargarGarden();
@@ -1628,213 +1643,7 @@
         diaryDialogEl.classList.remove('active');
       });
 
-      // Borrar entrada tocando sobre ella
-      diaryList.addEventListener('click', (event) => {
-        const item = event.target.closest('.diary-entry');
-        if (!item) return;
-
-        const idxStr = item.dataset.index;
-        if (typeof idxStr === 'undefined') return;
-        const index = parseInt(idxStr, 10);
-        if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) return;
-
-        const entrada = diaryEntries[index];
-        const textoConfirm = entrada && entrada.tipo
-          ? `¿Borrar la entrada "${entrada.tipo}" del diario?`
-          : '¿Borrar esta entrada del diario?';
-// --- Diario ---
-      const diaryList = document.getElementById('diaryList');
-      const diaryEmpty = document.getElementById('diaryEmpty');
-      const addDiaryEntryBtn = document.getElementById('addDiaryEntry');
-      const diaryDialogEl = document.getElementById('diaryDialog');
-      const diaryType = document.getElementById('diaryType');
-      const diaryDate = document.getElementById('diaryDate');
-      const diaryNotes = document.getElementById('diaryNotes');
-      const diarySave = document.getElementById('diarySave');
-      const DIARY_KEY = 'mi_siembra_diario_v1';
-      let diaryEntries = [];
-
-      // Diálogo de confirmación propio
-      const confirmDialogEl = document.getElementById('confirmDialog');
-      const confirmMessageEl = document.getElementById('confirmMessage');
-      const confirmCancelBtn = document.getElementById('confirmCancel');
-      const confirmOkBtn = document.getElementById('confirmOk');
-      let confirmOkHandler = null;
-
-      function openConfirm(message, onOk) {
-        confirmMessageEl.textContent = message;
-        confirmOkHandler = onOk;
-        confirmDialogEl.classList.add('active');
-      }
-
-      confirmCancelBtn.addEventListener('click', () => {
-        confirmDialogEl.classList.remove('active');
-        confirmOkHandler = null;
-      });
-
-      confirmOkBtn.addEventListener('click', () => {
-        if (typeof confirmOkHandler === 'function') {
-          const fn = confirmOkHandler;
-          confirmOkHandler = null;
-          confirmDialogEl.classList.remove('active');
-          fn();
-        } else {
-          confirmDialogEl.classList.remove('active');
-        }
-      });
-
-      function cargarDiario() {
-        try {
-          const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
-          diaryEntries = Array.isArray(stored) ? stored : [];
-        } catch (e) {
-          diaryEntries = [];
-        }
-      }
-
-      function guardarDiario() {
-        localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
-      }
-
-      function renderDiario() {
-        diaryList.innerHTML = '';
-        if (!diaryEntries.length) {
-          diaryEmpty.style.display = 'block';
-          return;
-        }
-        diaryEmpty.style.display = 'none';
-
-        const items = diaryEntries
-          .map((entry, index) => ({ entry, index }))
-          .slice()
-          .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
-
-        items.forEach(({ entry, index }) => {
-          const div = document.createElement('div');
-          div.className = 'diary-entry';
-          div.dataset.index = String(index);
-          div.innerHTML = `
-            <div class="diary-meta">
-              <div class="diary-type">${entry.tipo || 'Actividad'}</div>
-              <div class="diary-date">${entry.fecha || ''}</div>
-            </div>
-            <div class="diary-notes">${entry.notas || ''}</div>
-          `;
-          diaryList.appendChild(div);
-        });
-      }
-
-      addDiaryEntryBtn.addEventListener('click', () => {
-        const hoyISO = new Date().toISOString().slice(0, 10);
-        diaryDate.value = hoyISO;
-        diaryNotes.value = '';
-        diaryType.value = 'Siembra';
-        diaryDialogEl.classList.add('active');
-      });
-
-     // --- Diario ---
-      const diaryList = document.getElementById('diaryList');
-      const diaryEmpty = document.getElementById('diaryEmpty');
-      const addDiaryEntryBtn = document.getElementById('addDiaryEntry');
-      const diaryDialogEl = document.getElementById('diaryDialog');
-      const diaryType = document.getElementById('diaryType');
-      const diaryDate = document.getElementById('diaryDate');
-      const diaryNotes = document.getElementById('diaryNotes');
-      const diarySave = document.getElementById('diarySave');
-      const DIARY_KEY = 'mi_siembra_diario_v1';
-      let diaryEntries = [];
-
-      // Diálogo de confirmación propio
-      const confirmDialogEl = document.getElementById('confirmDialog');
-      const confirmMessageEl = document.getElementById('confirmMessage');
-      const confirmCancelBtn = document.getElementById('confirmCancel');
-      const confirmOkBtn = document.getElementById('confirmOk');
-      let confirmOkHandler = null;
-
-      function openConfirm(message, onOk) {
-        confirmMessageEl.textContent = message;
-        confirmOkHandler = onOk;
-        confirmDialogEl.classList.add('active');
-      }
-
-      confirmCancelBtn.addEventListener('click', () => {
-        confirmDialogEl.classList.remove('active');
-        confirmOkHandler = null;
-      });
-
-      confirmOkBtn.addEventListener('click', () => {
-        if (typeof confirmOkHandler === 'function') {
-          const fn = confirmOkHandler;
-          confirmOkHandler = null;
-          confirmDialogEl.classList.remove('active');
-          fn();
-        } else {
-          confirmDialogEl.classList.remove('active');
-        }
-      });
-
-      function cargarDiario() {
-        try {
-          const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
-          diaryEntries = Array.isArray(stored) ? stored : [];
-        } catch (e) {
-          diaryEntries = [];
-        }
-      }
-
-      function guardarDiario() {
-        localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
-      }
-
-      function renderDiario() {
-        diaryList.innerHTML = '';
-        if (!diaryEntries.length) {
-          diaryEmpty.style.display = 'block';
-          return;
-        }
-        diaryEmpty.style.display = 'none';
-
-        const items = diaryEntries
-          .map((entry, index) => ({ entry, index }))
-          .slice()
-          .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
-
-        items.forEach(({ entry, index }) => {
-          const div = document.createElement('div');
-          div.className = 'diary-entry';
-          div.dataset.index = String(index);
-          div.innerHTML = `
-            <div class="diary-meta">
-              <div class="diary-type">${entry.tipo || 'Actividad'}</div>
-              <div class="diary-date">${entry.fecha || ''}</div>
-            </div>
-            <div class="diary-notes">${entry.notas || ''}</div>
-          `;
-          diaryList.appendChild(div);
-        });
-      }
-
-      addDiaryEntryBtn.addEventListener('click', () => {
-        const hoyISO = new Date().toISOString().slice(0, 10);
-        diaryDate.value = hoyISO;
-        diaryNotes.value = '';
-        diaryType.value = 'Siembra';
-        diaryDialogEl.classList.add('active');
-      });
-
-      diarySave.addEventListener('click', () => {
-        const entrada = {
-          tipo: diaryType.value || 'Actividad',
-          fecha: diaryDate.value || new Date().toISOString().slice(0, 10),
-          notas: diaryNotes.value.trim()
-        };
-        diaryEntries.push(entrada);
-        guardarDiario();
-        renderDiario();
-        diaryDialogEl.classList.remove('active');
-      });
-
-      // Borrar entrada tocando sobre ella (con nuestro diálogo)
+      // Borrar entrada tocando sobre ella (con diálogo propio)
       diaryList.addEventListener('click', (event) => {
         const item = event.target.closest('.diary-entry');
         if (!item) return;
@@ -1859,7 +1668,7 @@
       cargarDiario();
       renderDiario();
 
-      // Service Worker
+      // --- Service Worker ---
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
           console.warn('SW error', err);
@@ -1867,10 +1676,5 @@
       }
     });
   </script>
-
-  <footer style="margin-top: 2rem; padding: 1rem; text-align: center; font-size: 0.8rem; color: #9ca3af;">
-    <div>Mi Siembra Inteligente — versión 1.0 (PWA)</div>
-    <div>Desarrollado por Ricardo Díaz</div>
-  </footer>
 </body>
-  </html>
+</html>
