@@ -462,6 +462,11 @@
       font-size: 10px;
       margin-top: 2px;
     }
+    .garden-cell-extra {
+      font-size: 9px;
+      margin-top: 2px;
+      opacity: 0.9;
+    }
 
     .dialog-backdrop {
       position: fixed;
@@ -559,7 +564,6 @@
       align-items: center;
       gap: 8px;
     }
-    .diary-type { font-weight: 600; }
     .diary-date {
       font-size: 11px;
       color: var(--text-soft);
@@ -567,6 +571,40 @@
     .diary-notes {
       color: var(--text-soft);
       font-size: 12px;
+    }
+    .diary-type-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+    }
+    .diary-type-siembra {
+      background: rgba(34,197,94,0.18);
+      border-color: rgba(34,197,94,0.8);
+      color: #bbf7d0;
+    }
+    .diary-type-riego {
+      background: rgba(56,189,248,0.18);
+      border-color: rgba(56,189,248,0.8);
+    }
+    .diary-type-abono {
+      background: rgba(250,204,21,0.18);
+      border-color: rgba(250,204,21,0.8);
+    }
+    .diary-type-cosecha {
+      background: rgba(251,146,60,0.18);
+      border-color: rgba(251,146,60,0.8);
+    }
+    .diary-type-otro {
+      background: rgba(148,163,184,0.18);
+      border-color: rgba(148,163,184,0.8);
+    }
+    .diary-type-pill .emoji {
+      font-size: 13px;
     }
 
     /* Ficha detallada del cultivo */
@@ -639,6 +677,10 @@
       font-size: 10px;
       color: var(--text-soft);
       text-align: center;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
     }
 
     @media (min-width: 768px) {
@@ -933,18 +975,13 @@
               <div class="home-card-desc">Cuándo y cómo abonar sin excesos.</div>
               <div class="home-card-icon">🧪</div>
             </article>
-            <!-- Respaldo -->
-            <article class="home-card" id="backupCard">
-              <div class="home-card-title">Respaldo de datos</div>
-              <div class="home-card-desc">Descarga un archivo con tu huerto y diario.</div>
-              <div class="home-card-icon">💾</div>
-            </article>
-            <!-- Restaurar -->
-            <article class="home-card" id="restoreCard">
-              <div class="home-card-title">Restaurar datos</div>
-              <div class="home-card-desc">Cargar un archivo de respaldo guardado.</div>
-              <div class="home-card-icon">📂</div>
-            </article>
+          </div>
+
+          <div class="section-subtitle" style="margin-top:12px;">Respaldo de tu información</div>
+          <div class="chips-row">
+            <button class="chip" id="backupBtn"><span class="emoji">💾</span><span>Guardar copia (JSON)</span></button>
+            <button class="chip" id="restoreBtn"><span class="emoji">📂</span><span>Restaurar copia</span></button>
+            <input id="restoreInput" type="file" accept="application/json" style="display:none" />
           </div>
         </div>
       </section>
@@ -962,6 +999,10 @@
       <div id="gardenDialogPosition" class="section-subtitle" style="margin-bottom:8px;"></div>
       <label for="gardenCropSelect">Cultivo</label>
       <select id="gardenCropSelect"></select>
+      <label for="gardenDate">Fecha de siembra (opcional)</label>
+      <input id="gardenDate" type="date" />
+      <label for="gardenNotes">Notas (opcional)</label>
+      <textarea id="gardenNotes" placeholder="Ej. 3 plantas en tiesto de 5 galones."></textarea>
       <div class="dialog-footer">
         <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
         <button class="btn btn-primary" type="button" id="gardenSave">Guardar</button>
@@ -1020,7 +1061,7 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO DE CONFIRMACIÓN -->
+  <!-- DIÁLOGO CONFIRMACIÓN GENÉRICO -->
   <div class="dialog-backdrop" id="confirmDialog">
     <div class="dialog">
       <h3>Confirmar</h3>
@@ -1032,10 +1073,12 @@
     </div>
   </div>
 
-  <!-- Input oculto para restaurar respaldo -->
-  <input type="file" id="backupFileInput" accept="application/json" style="display:none" />
-
   <script>
+    const STORAGE_VERSION = '1.1';
+    const GARDEN_KEY = 'mi_siembra_huerto_v2';
+    const DIARY_KEY = 'mi_siembra_diario_v1';
+    const BACKUP_FILENAME = 'mi-siembra-respaldo.json';
+
     // --- Datos de cultivos (coinciden con tus imágenes en /img) ---
     const cultivos = [
       { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
@@ -1100,23 +1143,12 @@
       { id: 'zanahoria', nombre: 'Zanahoria', tipo: 'Raíz', imagen: 'img/zanahoria.jpg', diasCosecha: '70–90 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–8 cm', profundidad: '1–2 cm', tiesto: '10–12 L' }
     ];
 
-    // Meses
     const mesesInfo = [
-      { id: 1, nombre: 'Ene' },
-      { id: 2, nombre: 'Feb' },
-      { id: 3, nombre: 'Mar' },
-      { id: 4, nombre: 'Abr' },
-      { id: 5, nombre: 'May' },
-      { id: 6, nombre: 'Jun' },
-      { id: 7, nombre: 'Jul' },
-      { id: 8, nombre: 'Ago' },
-      { id: 9, nombre: 'Sep' },
-      { id: 10, nombre: 'Oct' },
-      { id: 11, nombre: 'Nov' },
-      { id: 12, nombre: 'Dic' }
+      { id: 1, nombre: 'Ene' }, { id: 2, nombre: 'Feb' }, { id: 3, nombre: 'Mar' }, { id: 4, nombre: 'Abr' },
+      { id: 5, nombre: 'May' }, { id: 6, nombre: 'Jun' }, { id: 7, nombre: 'Jul' }, { id: 8, nombre: 'Ago' },
+      { id: 9, nombre: 'Sep' }, { id: 10, nombre: 'Oct' }, { id: 11, nombre: 'Nov' }, { id: 12, nombre: 'Dic' }
     ];
 
-    // Qué recomendar por mes
     const siembrasPorMes = {
       1: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','berro','apio'],
       2: ['lechuga','espinaca','acelga','cilantro','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','cebolla'],
@@ -1132,7 +1164,6 @@
       12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
     };
 
-    // Mapa cultivo -> meses
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
@@ -1151,7 +1182,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Navegación entre vistas
       const views = document.querySelectorAll('section.view');
       const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
       const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
@@ -1304,6 +1334,7 @@
             !texto ||
             c.nombre.toLowerCase().includes(texto) ||
             c.id.toLowerCase().includes(texto);
+
           return coincideTipo && coincideSol && coincideBusqueda;
         });
 
@@ -1338,7 +1369,7 @@
       }
       renderCatalog();
 
-      // Diálogos genéricos (cerrar al tocar fuera o botones con data-dialog-close)
+      // Diálogos genéricos (cerrar al tocar fondo)
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1401,55 +1432,54 @@
         if (cultivo) abrirFichaCultivo(cultivo);
       });
 
-      // --- Diálogo de confirmación ---
-      const confirmDialogEl = document.getElementById('confirmDialog');
-      const confirmMessageEl = document.getElementById('confirmMessage');
-      const confirmCancelBtn = document.getElementById('confirmCancel');
-      const confirmOkBtn = document.getElementById('confirmOk');
-      let confirmOkHandler = null;
-
-      function openConfirm(message, onOk) {
-        confirmMessageEl.textContent = message;
-        confirmOkHandler = onOk;
-        confirmDialogEl.classList.add('active');
-      }
-
-      confirmCancelBtn.addEventListener('click', () => {
-        confirmDialogEl.classList.remove('active');
-        confirmOkHandler = null;
-      });
-
-      confirmOkBtn.addEventListener('click', () => {
-        if (typeof confirmOkHandler === 'function') {
-          const fn = confirmOkHandler;
-          confirmOkHandler = null;
-          confirmDialogEl.classList.remove('active');
-          fn();
-        } else {
-          confirmDialogEl.classList.remove('active');
-        }
-      });
-
-      // --- Mi huerto (4x4) ---
+      // --- Mi huerto (4x4) con notas y fecha ---
       const gardenGrid = document.getElementById('gardenGrid');
       const gardenDialogEl = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
       const gardenCropSelect = document.getElementById('gardenCropSelect');
+      const gardenDate = document.getElementById('gardenDate');
+      const gardenNotes = document.getElementById('gardenNotes');
       const gardenSave = document.getElementById('gardenSave');
       const resetGardenBtn = document.getElementById('resetGarden');
-      const GARDEN_KEY = 'mi_siembra_huerto_v1';
       const gardenSize = 4;
       let gardenState = [];
 
+      function normalizarGardenArray(arr) {
+        if (!Array.isArray(arr)) {
+          return Array(gardenSize * gardenSize).fill(null);
+        }
+        return arr.map(cell => {
+          if (cell === null || typeof cell === 'undefined') return null;
+          if (typeof cell === 'string') {
+            return { cultivoId: cell, fecha: '', notas: '' };
+          }
+          if (typeof cell === 'object') {
+            return {
+              cultivoId: cell.cultivoId || null,
+              fecha: cell.fecha || '',
+              notas: cell.notas || ''
+            };
+          }
+          return null;
+        });
+      }
+
       function cargarGarden() {
         try {
-          const stored = JSON.parse(localStorage.getItem(GARDEN_KEY) || 'null');
-          if (Array.isArray(stored) && stored.length === gardenSize * gardenSize) {
-            gardenState = stored;
+          const storedRaw = localStorage.getItem(GARDEN_KEY);
+          if (!storedRaw) {
+            // intentar compatibilidad con versión anterior
+            const oldRaw = localStorage.getItem('mi_siembra_huerto_v1');
+            const parsedOld = oldRaw ? JSON.parse(oldRaw) : null;
+            gardenState = normalizarGardenArray(parsedOld);
           } else {
-            gardenState = Array(gardenSize * gardenSize).fill(null);
+            const parsed = JSON.parse(storedRaw);
+            gardenState = normalizarGardenArray(parsed);
           }
         } catch {
+          gardenState = Array(gardenSize * gardenSize).fill(null);
+        }
+        if (gardenState.length !== gardenSize * gardenSize) {
           gardenState = Array(gardenSize * gardenSize).fill(null);
         }
       }
@@ -1460,24 +1490,36 @@
 
       function renderGarden() {
         gardenGrid.innerHTML = '';
-        gardenState.forEach((cultivoId, index) => {
+        gardenState.forEach((cellData, index) => {
           const cell = document.createElement('button');
           cell.type = 'button';
           cell.className = 'garden-cell';
           cell.dataset.index = String(index);
+
           const label = document.createElement('div');
           label.className = 'garden-cell-label';
           label.textContent = `#${index + 1}`;
+
           const plant = document.createElement('div');
           plant.className = 'garden-cell-plant';
-          if (cultivoId) {
-            const cultivo = cultivos.find(c => c.id === cultivoId);
-            plant.textContent = cultivo ? cultivo.nombre : cultivoId;
+
+          const extra = document.createElement('div');
+          extra.className = 'garden-cell-extra';
+
+          if (cellData && cellData.cultivoId) {
+            const cultivo = cultivos.find(c => c.id === cellData.cultivoId);
+            plant.textContent = cultivo ? cultivo.nombre : cellData.cultivoId;
+            extra.textContent = cellData.fecha
+              ? `📅 ${cellData.fecha}`
+              : (cellData.notas ? cellData.notas.slice(0, 20) + (cellData.notas.length > 20 ? '…' : '') : '');
           } else {
             plant.textContent = 'Vacío';
+            extra.textContent = '';
           }
+
           cell.appendChild(label);
           cell.appendChild(plant);
+          if (extra.textContent) cell.appendChild(extra);
           gardenGrid.appendChild(cell);
         });
       }
@@ -1493,6 +1535,7 @@
         gardenDialogEl.dataset.index = String(index);
         gardenDialogPosition.textContent =
           `Cuadro #${index + 1} (fila ${Math.floor(index / gardenSize) + 1}, columna ${(index % gardenSize) + 1})`;
+
         gardenCropSelect.innerHTML = '<option value="">Vacío</option>';
         cultivos.forEach(c => {
           const opt = document.createElement('option');
@@ -1500,15 +1543,26 @@
           opt.textContent = c.nombre;
           gardenCropSelect.appendChild(opt);
         });
-        const actual = gardenState[index];
-        gardenCropSelect.value = actual || '';
+
+        const actual = gardenState[index] || null;
+        gardenCropSelect.value = actual && actual.cultivoId ? actual.cultivoId : '';
+        gardenDate.value = actual && actual.fecha ? actual.fecha : '';
+        gardenNotes.value = actual && actual.notas ? actual.notas : '';
+
         gardenDialogEl.classList.add('active');
       }
 
       gardenSave.addEventListener('click', () => {
         const index = parseInt(gardenDialogEl.dataset.index || '0', 10);
-        const val = gardenCropSelect.value || null;
-        gardenState[index] = val;
+        const cultivoId = gardenCropSelect.value || null;
+        const fecha = gardenDate.value || '';
+        const notas = gardenNotes.value.trim();
+
+        if (!cultivoId && !fecha && !notas) {
+          gardenState[index] = null;
+        } else {
+          gardenState[index] = { cultivoId, fecha, notas };
+        }
         guardarGarden();
         renderGarden();
         gardenDialogEl.classList.remove('active');
@@ -1534,14 +1588,21 @@
       const diaryDate = document.getElementById('diaryDate');
       const diaryNotes = document.getElementById('diaryNotes');
       const diarySave = document.getElementById('diarySave');
-      const DIARY_KEY = 'mi_siembra_diario_v1';
       let diaryEntries = [];
+
+      const DIARY_TYPE_INFO = {
+        'Siembra': { emoji: '🌱', cls: 'diary-type-siembra' },
+        'Riego':   { emoji: '💧', cls: 'diary-type-riego' },
+        'Abono':   { emoji: '🧪', cls: 'diary-type-abono' },
+        'Cosecha': { emoji: '🥕', cls: 'diary-type-cosecha' },
+        'Otro':    { emoji: '📌', cls: 'diary-type-otro' }
+      };
 
       function cargarDiario() {
         try {
           const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
           diaryEntries = Array.isArray(stored) ? stored : [];
-        } catch (e) {
+        } catch {
           diaryEntries = [];
         }
       }
@@ -1564,12 +1625,18 @@
           .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
 
         items.forEach(({ entry, index }) => {
+          const info = DIARY_TYPE_INFO[entry.tipo] || DIARY_TYPE_INFO['Otro'];
           const div = document.createElement('div');
           div.className = 'diary-entry';
           div.dataset.index = String(index);
           div.innerHTML = `
             <div class="diary-meta">
-              <div class="diary-type">${entry.tipo || 'Actividad'}</div>
+              <div class="diary-type">
+                <span class="diary-type-pill ${info.cls}">
+                  <span class="emoji">${info.emoji}</span>
+                  <span>${entry.tipo || 'Actividad'}</span>
+                </span>
+              </div>
               <div class="diary-date">${entry.fecha || ''}</div>
             </div>
             <div class="diary-notes">${entry.notas || ''}</div>
@@ -1598,6 +1665,7 @@
         diaryDialogEl.classList.remove('active');
       });
 
+      // Borrar entrada tocando sobre ella
       diaryList.addEventListener('click', (event) => {
         const item = event.target.closest('.diary-entry');
         if (!item) return;
@@ -1622,84 +1690,88 @@
       cargarDiario();
       renderDiario();
 
-      // --- Respaldo y restauración de datos ---
-      const backupCard = document.getElementById('backupCard');
-      const restoreCard = document.getElementById('restoreCard');
-      const backupFileInput = document.getElementById('backupFileInput');
+      // --- Diálogo de confirmación genérico ---
+      const confirmDialogEl = document.getElementById('confirmDialog');
+      const confirmMessageEl = document.getElementById('confirmMessage');
+      const confirmCancelBtn = document.getElementById('confirmCancel');
+      const confirmOkBtn = document.getElementById('confirmOk');
+      let confirmOkHandler = null;
 
-      // Descargar respaldo
-      if (backupCard) {
-        backupCard.addEventListener('click', () => {
-          const backup = {
-            version: '1.0',
-            fecha: new Date().toISOString(),
-            huerto: gardenState,
-            diario: diaryEntries
-          };
+      function openConfirm(message, onOk) {
+        confirmMessageEl.textContent = message;
+        confirmOkHandler = onOk;
+        confirmDialogEl.classList.add('active');
+      }
+
+      confirmCancelBtn.addEventListener('click', () => {
+        confirmDialogEl.classList.remove('active');
+        confirmOkHandler = null;
+      });
+
+      confirmOkBtn.addEventListener('click', () => {
+        if (typeof confirmOkHandler === 'function') {
+          const fn = confirmOkHandler;
+          confirmOkHandler = null;
+          confirmDialogEl.classList.remove('active');
+          fn();
+        } else {
+          confirmDialogEl.classList.remove('active');
+        }
+      });
+
+      // --- Respaldo y restauración ---
+      const backupBtn = document.getElementById('backupBtn');
+      const restoreBtn = document.getElementById('restoreBtn');
+      const restoreInput = document.getElementById('restoreInput');
+
+      backupBtn.addEventListener('click', () => {
+        const data = {
+          version: STORAGE_VERSION,
+          fecha: new Date().toISOString(),
+          huerto: gardenState,
+          diario: diaryEntries
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = BACKUP_FILENAME;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      restoreBtn.addEventListener('click', () => {
+        restoreInput.click();
+      });
+
+      restoreInput.addEventListener('change', (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
           try {
-            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'mi-siembra-respaldo.json';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-          } catch (err) {
-            console.warn('No se pudo crear el respaldo', err);
-            alert('No se pudo crear el archivo de respaldo. Intenta nuevamente.');
-          }
-        });
-      }
-
-      // Restaurar respaldo desde archivo
-      if (restoreCard && backupFileInput) {
-        restoreCard.addEventListener('click', () => {
-          backupFileInput.value = '';
-          backupFileInput.click();
-        });
-
-        backupFileInput.addEventListener('change', (event) => {
-          const file = event.target.files && event.target.files[0];
-          if (!file) return;
-
-          const reader = new FileReader();
-          reader.onload = () => {
-            try {
-              const data = JSON.parse(reader.result);
-
-              if (!data || !Array.isArray(data.huerto) || !Array.isArray(data.diario)) {
-                throw new Error('Formato no válido');
-              }
-
-              const aplicarBackup = () => {
-                const esperado = gardenSize * gardenSize;
-                const huerto = data.huerto.slice(0, esperado);
-                while (huerto.length < esperado) huerto.push(null);
-
-                gardenState = huerto;
-                diaryEntries = data.diario;
-
-                guardarGarden();
-                guardarDiario();
-                renderGarden();
-                renderDiario();
-              };
-
-              const nombreArchivo = file.name || 'respaldo';
-              openConfirm(
-                `¿Quieres restaurar el huerto y el diario desde "${nombreArchivo}"? Se reemplazarán los datos actuales.`,
-                aplicarBackup
-              );
-            } catch (err) {
-              console.warn('Error al leer respaldo', err);
-              alert('El archivo no parece ser un respaldo válido de Mi Siembra Inteligente.');
+            const parsed = JSON.parse(e.target.result);
+            if (parsed && Array.isArray(parsed.huerto)) {
+              gardenState = normalizarGardenArray(parsed.huerto);
+              guardarGarden();
+              renderGarden();
             }
-          };
-          reader.readAsText(file);
-        });
-      }
+            if (parsed && Array.isArray(parsed.diario)) {
+              diaryEntries = parsed.diario;
+              guardarDiario();
+              renderDiario();
+            }
+            openConfirm('Datos restaurados correctamente.', () => {});
+          } catch (err) {
+            openConfirm('Hubo un problema al leer el archivo de respaldo.', () => {});
+          } finally {
+            restoreInput.value = '';
+          }
+        };
+        reader.readAsText(file, 'utf-8');
+      });
 
       // Service Worker
       if ('serviceWorker' in navigator) {
@@ -1710,4 +1782,4 @@
     });
   </script>
 </body>
-  </html>
+          </html>
