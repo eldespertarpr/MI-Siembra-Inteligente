@@ -1614,7 +1614,16 @@
       });
 
       diarySave.addEventListener('click', () => {
-        const entrada = {
+        const entrada = {// Borrar entradas del diario
+diaryList.addEventListener('click', (event) => {
+  if (event.target.matches('.diary-delete')) {
+    const index = event.target.getAttribute('data-index');
+    if (index === null) return;
+    diaryEntries.splice(Number(index), 1);
+    guardarDiario();
+    renderDiario();
+  }
+});
           tipo: diaryType.value || 'Actividad',
           fecha: diaryDate.value || new Date().toISOString().slice(0, 10),
           notas: diaryNotes.value.trim()
