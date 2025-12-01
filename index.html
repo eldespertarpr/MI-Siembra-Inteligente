@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mi Siembra Inteligente </title>
   <link rel="manifest" href="manifest.json" />
@@ -551,6 +551,7 @@
       display: flex;
       flex-direction: column;
       gap: 3px;
+      cursor: pointer;
     }
     .diary-meta {
       display: flex;
@@ -1094,81 +1095,69 @@
 
     // Qué recomendar por mes (clima tropical/subtropical)
     const siembrasPorMes = {
-      // ENERO
       1: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','repollo','zanahoria','rabano',
         'remolacha','remolacha_blanca','berro','apio'
       ],
-      // FEBRERO
       2: [
         'lechuga','espinaca','acelga','cilantro','kale',
         'col_risada','col_roja','repollo','broccoli','coliflor',
         'zanahoria','rabano','remolacha','remolacha_blanca','cebolla'
       ],
-      // MARZO
       3: [
         'tomate','pimiento','pimiento_morron','aji','berenjena',
         'pepinillo','calabaza','cantalope','melon',
         'habichuelas','maiz','quimbombo',
         'lechuga','espinaca','cilantro','albahaca','menta'
       ],
-      // ABRIL
       4: [
         'tomate','pimiento','pimiento_morron','aji','berenjena',
         'pepinillo','calabaza','cantalope','melon',
         'habichuelas','maiz','quimbombo','gandules',
         'batata','yuca','yautia','papa'
       ],
-      // MAYO
       5: [
         'calabaza','cantalope','melon',
         'maiz','quimbombo','gandules','habichuelas',
         'batata','yuca','yautia','papa','malanga',
         'platano','guineo','papaya','parcha'
       ],
-      // JUNIO
       6: [
         'batata','yuca','yautia','malanga',
         'platano','guineo','papaya','parcha','gandules',
         'calabaza','quimbombo','maiz'
       ],
-      // JULIO
       7: [
         'tomate','pimiento','pimiento_morron','berenjena',
         'quimbombo','gandules','habichuelas',
         'batata','yuca','yautia',
         'albahaca','menta','oregano','oregano_brujo'
       ],
-      // AGOSTO
       8: [
         'tomate','pimiento','berenjena',
         'habichuelas','gandules',
         'lechuga','espinaca','cilantro','recao',
         'albahaca','menta','oregano','oregano_brujo'
       ],
-      // SEPTIEMBRE
       9: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','col_roja','repollo',
         'broccoli','coliflor','zanahoria','rabano',
         'remolacha','remolacha_blanca','apio','escarolas'
       ],
-      // OCTUBRE
       10: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','col_roja','repollo',
         'broccoli','coliflor','zanahoria','rabano',
         'remolacha','remolacha_blanca','apio','berro'
       ],
-      // NOVIEMBRE
       11: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'kale','col_risada','repollo',
         'zanahoria','rabano','remolacha','remolacha_blanca',
         'habichuelas','apio'
       ],
-      // DICIEMBRE
       12: [
         'lechuga','espinaca','acelga','cilantro','recao',
         'berro','kale','col_risada','repollo',
@@ -1176,7 +1165,7 @@
       ]
     };
 
-    // A partir de siembrasPorMes, construir mapa por cultivo
+    // Mapa cultivo -> meses
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
@@ -1280,7 +1269,7 @@
         mostrarSiembrasDeMes(parseInt(btnMesActual.dataset.mesId, 10));
       }
 
-      // --- Catálogo (Paquete 2) ---
+      // --- Catálogo ---
       const catalogSearch = document.getElementById('catalogSearch');
       const catalogTypeFilters = document.getElementById('catalogTypeFilters');
       const catalogSunFilters = document.getElementById('catalogSunFilters');
@@ -1290,15 +1279,11 @@
       let filtroSolActual = 'Todos';
       let textoBusqueda = '';
 
-      // Tipos únicos
       const tiposUnicos = Array.from(new Set(cultivos.map(c => c.tipo))).sort();
-
-      // Categorías de sol únicas
       const solSet = new Set();
       cultivos.forEach(c => solSet.add(obtenerCategoriaSol(c.sol)));
       const solesUnicos = Array.from(solSet).sort();
 
-      // Chips de tipo
       const tiposFiltro = ['Todos', ...tiposUnicos];
       tiposFiltro.forEach(tipo => {
         const chip = document.createElement('button');
@@ -1317,7 +1302,6 @@
       const primerChipTipo = catalogTypeFilters.querySelector('.chip');
       if (primerChipTipo) primerChipTipo.classList.add('active');
 
-      // Chips de sol
       const solesFiltro = ['Todos', ...solesUnicos];
       solesFiltro.forEach(cat => {
         const chip = document.createElement('button');
@@ -1336,7 +1320,6 @@
       const primerChipSol = catalogSunFilters.querySelector('.chip');
       if (primerChipSol) primerChipSol.classList.add('active');
 
-      // Buscador
       catalogSearch.addEventListener('input', () => {
         textoBusqueda = (catalogSearch.value || '').toLowerCase();
         renderCatalog();
@@ -1355,7 +1338,7 @@
             c.nombre.toLowerCase().includes(texto) ||
             c.id.toLowerCase().includes(texto);
 
-          return coincideTipo && coincideSol && coincideBusqueda;
+        return coincideTipo && coincideSol && coincideBusqueda;
         });
 
         if (!listaFiltrada.length) {
@@ -1454,7 +1437,7 @@
 
       // Mi huerto (4x4)
       const gardenGrid = document.getElementById('gardenGrid');
-      const gardenDialog = document.getElementById('gardenDialog');
+      const gardenDialogEl = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
       const gardenCropSelect = document.getElementById('gardenCropSelect');
       const gardenSave = document.getElementById('gardenSave');
@@ -1512,7 +1495,7 @@
       });
 
       function abrirDialogoHuerto(index) {
-        gardenDialog.dataset.index = String(index);
+        gardenDialogEl.dataset.index = String(index);
         gardenDialogPosition.textContent =
           `Cuadro #${index + 1} (fila ${Math.floor(index / gardenSize) + 1}, columna ${(index % gardenSize) + 1})`;
         gardenCropSelect.innerHTML = '<option value="">Vacío</option>';
@@ -1524,16 +1507,16 @@
         });
         const actual = gardenState[index];
         gardenCropSelect.value = actual || '';
-        gardenDialog.classList.add('active');
+        gardenDialogEl.classList.add('active');
       }
 
       gardenSave.addEventListener('click', () => {
-        const index = parseInt(gardenDialog.dataset.index || '0', 10);
+        const index = parseInt(gardenDialogEl.dataset.index || '0', 10);
         const val = gardenCropSelect.value || null;
         gardenState[index] = val;
         guardarGarden();
         renderGarden();
-        gardenDialog.classList.remove('active');
+        gardenDialogEl.classList.remove('active');
       });
 
       resetGardenBtn.addEventListener('click', () => {
@@ -1546,11 +1529,11 @@
       cargarGarden();
       renderGarden();
 
-      // Diario
+      // --- Diario ---
       const diaryList = document.getElementById('diaryList');
       const diaryEmpty = document.getElementById('diaryEmpty');
       const addDiaryEntryBtn = document.getElementById('addDiaryEntry');
-      const diaryDialog = document.getElementById('diaryDialog');
+      const diaryDialogEl = document.getElementById('diaryDialog');
       const diaryType = document.getElementById('diaryType');
       const diaryDate = document.getElementById('diaryDate');
       const diaryNotes = document.getElementById('diaryNotes');
@@ -1562,7 +1545,7 @@
         try {
           const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
           diaryEntries = Array.isArray(stored) ? stored : [];
-        } catch {
+        } catch (e) {
           diaryEntries = [];
         }
       }
@@ -1579,12 +1562,15 @@
         }
         diaryEmpty.style.display = 'none';
 
-        // Ordenar el arreglo original por fecha (más reciente primero)
-        diaryEntries.sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+        const items = diaryEntries
+          .map((entry, index) => ({ entry, index }))
+          .slice()
+          .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
 
-        diaryEntries.forEach((entry) => {
+        items.forEach(({ entry, index }) => {
           const div = document.createElement('div');
           div.className = 'diary-entry';
+          div.dataset.index = String(index);
           div.innerHTML = `
             <div class="diary-meta">
               <div class="diary-type">${entry.tipo || 'Actividad'}</div>
@@ -1595,14 +1581,13 @@
           diaryList.appendChild(div);
         });
       }
-      }
 
       addDiaryEntryBtn.addEventListener('click', () => {
         const hoyISO = new Date().toISOString().slice(0, 10);
         diaryDate.value = hoyISO;
         diaryNotes.value = '';
         diaryType.value = 'Siembra';
-        diaryDialog.classList.add('active');
+        diaryDialogEl.classList.add('active');
       });
 
       diarySave.addEventListener('click', () => {
@@ -1614,31 +1599,34 @@
         diaryEntries.push(entrada);
         guardarDiario();
         renderDiario();
-        diaryDialog.classList.remove('active');
+        diaryDialogEl.classList.remove('active');
+      });
+
+      // Borrar entrada tocando sobre ella
+      diaryList.addEventListener('click', (event) => {
+        const item = event.target.closest('.diary-entry');
+        if (!item) return;
+
+        const idxStr = item.dataset.index;
+        if (typeof idxStr === 'undefined') return;
+        const index = parseInt(idxStr, 10);
+        if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) return;
+
+        const entrada = diaryEntries[index];
+        const textoConfirm = entrada && entrada.tipo
+          ? `¿Borrar la entrada "${entrada.tipo}" del diario?`
+          : '¿Borrar esta entrada del diario?';
+
+        if (!confirm(textoConfirm)) return;
+
+        diaryEntries.splice(index, 1);
+        guardarDiario();
+        renderDiario();
       });
 
       cargarDiario();
       renderDiario();
-// Permitir borrar entradas del diario tocando sobre ellas
-diaryList.addEventListener('click', (event) => {
-  const item = event.target.closest('li');
-  if (!item) return;
 
-  // posición del <li> dentro de la lista
-  const index = Array.from(diaryList.children).indexOf(item);
-  if (index === -1) return;
-
-  const entrada = diaryEntries[index];
-  const textoConfirm = entrada && entrada.tipo
-    ? `¿Borrar la entrada "${entrada.tipo}" del diario?`
-    : '¿Borrar esta entrada del diario?';
-
-  if (!confirm(textoConfirm)) return;
-
-  diaryEntries.splice(index, 1);
-  guardarDiario();
-  renderDiario();
-});
       // Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
@@ -1647,9 +1635,10 @@ diaryList.addEventListener('click', (event) => {
       }
     });
   </script>
+
   <footer style="margin-top: 2rem; padding: 1rem; text-align: center; font-size: 0.8rem; color: #9ca3af;">
-  <div>Mi Siembra Inteligente — versión 1.0 (PWA)</div>
-  <div>Desarrollado por Ricardo Díaz</div>
+    <div>Mi Siembra Inteligente — versión 1.0 (PWA)</div>
+    <div>Desarrollado por Ricardo Díaz</div>
   </footer>
 </body>
   </html>
