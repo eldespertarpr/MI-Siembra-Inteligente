@@ -961,20 +961,23 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO DIARIO -->
-  <div class="dialog-backdrop" id="diaryDialog">
+  <!-- DIÁLOGO HUERTO -->
+  <div class="dialog-backdrop" id="gardenDialog">
     <div class="dialog">
-      <!-- DIÁLOGO DE CONFIRMACIÓN (GENÉRICO) -->
-  <div class="dialog-backdrop" id="confirmDialog">
-    <div class="dialog">
-      <h3>Confirmar</h3>
-      <p id="confirmMessage" class="section-subtitle" style="margin-bottom: 12px;"></p>
+      <h3>Asignar cultivo</h3>
+      <div id="gardenDialogPosition" class="section-subtitle" style="margin-bottom:8px;"></div>
+      <label for="gardenCropSelect">Cultivo</label>
+      <select id="gardenCropSelect"></select>
       <div class="dialog-footer">
-        <button class="btn btn-ghost" type="button" id="confirmCancel">Cancelar</button>
-        <button class="btn btn-primary" type="button" id="confirmOk">Aceptar</button>
+        <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
+        <button class="btn btn-primary" type="button" id="gardenSave">Guardar</button>
       </div>
     </div>
   </div>
+
+  <!-- DIÁLOGO DIARIO -->
+  <div class="dialog-backdrop" id="diaryDialog">
+    <div class="dialog">
       <h3>Nueva entrada</h3>
       <label for="diaryType">Tipo de actividad</label>
       <select id="diaryType">
@@ -991,6 +994,18 @@
       <div class="dialog-footer">
         <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
         <button class="btn btn-primary" type="button" id="diarySave">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO DE CONFIRMACIÓN (GENÉRICO) -->
+  <div class="dialog-backdrop" id="confirmDialog">
+    <div class="dialog">
+      <h3>Confirmar</h3>
+      <p id="confirmMessage" class="section-subtitle" style="margin-bottom: 12px;"></p>
+      <div class="dialog-footer">
+        <button class="btn btn-ghost" type="button" id="confirmCancel">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmOk">Aceptar</button>
       </div>
     </div>
   </div>
@@ -1746,14 +1761,7 @@
 
         openConfirm(textoConfirm, () => {
           diaryEntries.splice(index, 1);
-          guardarDiario();
-          renderDiario();
-        });
-      });
-
-      cargarDiario();
-      renderDiario();
-
+          
       cargarDiario();
       renderDiario();
 
