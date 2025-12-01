@@ -964,6 +964,17 @@
   <!-- DIÁLOGO DIARIO -->
   <div class="dialog-backdrop" id="diaryDialog">
     <div class="dialog">
+      <!-- DIÁLOGO DE CONFIRMACIÓN (GENÉRICO) -->
+  <div class="dialog-backdrop" id="confirmDialog">
+    <div class="dialog">
+      <h3>Confirmar</h3>
+      <p id="confirmMessage" class="section-subtitle" style="margin-bottom: 12px;"></p>
+      <div class="dialog-footer">
+        <button class="btn btn-ghost" type="button" id="confirmCancel">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmOk">Aceptar</button>
+      </div>
+    </div>
+  </div>
       <h3>Nueva entrada</h3>
       <label for="diaryType">Tipo de actividad</label>
       <select id="diaryType">
