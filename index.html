@@ -33,7 +33,7 @@
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 17px; /* 👈 Letra un poco más grande */
+      font-size: 17px; /* un poco más grande */
       background: radial-gradient(circle at top left, #0f172a 0, #020617 50%, #000 100%);
       color: var(--text-main);
       min-height: 100%;
@@ -61,12 +61,7 @@
     .header-inner {
       border-radius: 999px;
       padding: 10px 16px;
-      background: radial-gradient(
-        circle at top left,
-        rgba(34,197,94,0.15) 0,
-        rgba(15,23,42,0.9) 45%,
-        rgba(15,23,42,0.96) 100%
-      );
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.15) 0, rgba(15,23,42,0.9) 45%, rgba(15,23,42,0.96) 100%);
       box-shadow: 0 20px 60px rgba(15,23,42,0.9);
       display: flex;
       align-items: center;
@@ -153,7 +148,7 @@
     .section-card {
       background: radial-gradient(circle at top left, rgba(148,163,184,0.14) 0, var(--card-soft) 42%, #020617 100%);
       border-radius: var(--radius-2xl);
-      padding: 20px 18px 18px;
+      padding: 18px 18px 18px;
       box-shadow: var(--shadow-soft);
       border: 1px solid rgba(51,65,85,0.9);
       margin-bottom: 18px;
@@ -170,7 +165,7 @@
       font-weight: 650;
     }
     .section-subtitle {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-soft);
       margin-top: 4px;
     }
@@ -178,7 +173,7 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      padding: 4px 9px;
+      padding: 3px 8px;
       border-radius: 999px;
       background: rgba(34,197,94,0.18);
       border: 1px solid rgba(34,197,94,0.6);
@@ -198,7 +193,7 @@
     .home-card {
       background: radial-gradient(circle at 0 0, rgba(34,197,94,0.38) 0, rgba(15,23,42,0.98) 45%, rgba(15,23,42,1) 100%);
       border-radius: 20px;
-      padding: 13px 12px 13px;
+      padding: 12px 12px 13px;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(34,197,94,0.62);
@@ -206,8 +201,8 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      min-height: 92px;
+      gap: 5px;
+      min-height: 90px;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
     .home-card:hover {
@@ -228,7 +223,7 @@
       position: absolute;
       right: -6px;
       bottom: -4px;
-      font-size: 48px;
+      font-size: 46px;
       opacity: 0.18;
       transform: rotate(-8deg);
     }
@@ -266,7 +261,7 @@
       border: 1px solid var(--chip-border);
       background: var(--chip-bg);
       color: var(--text-main);
-      font-size: 14px;
+      font-size: 13px;
       padding: 7px 11px;
       outline: none;
     }
@@ -287,7 +282,7 @@
       background: var(--chip-bg);
       color: var(--text-soft);
       font-size: 13px;
-      padding: 7px 4px;
+      padding: 6px 4px;
       text-align: center;
       cursor: pointer;
       transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
@@ -309,7 +304,7 @@
     }
     .list-item {
       border-radius: 18px;
-      padding: 11px 11px;
+      padding: 10px 11px;
       background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,1));
       border: 1px solid rgba(51,65,85,0.95);
       display: flex;
@@ -345,7 +340,7 @@
       border: 1px solid rgba(148,163,184,0.9);
       background: rgba(15,23,42,0.95);
       color: var(--text-main);
-      padding: 6px 9px;
+      padding: 5px 8px;
       font-size: 12px;
       cursor: pointer;
       display: inline-flex;
@@ -378,7 +373,7 @@
       border-color: rgba(190,242,100,0.95);
     }
     .crop-photo {
-      height: 96px;
+      height: 90px;
       position: relative;
       overflow: hidden;
       background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
@@ -414,7 +409,7 @@
       margin-top: 4px;
     }
     .crop-tag {
-      font-size: 12px;
+      font-size: 11px;
       padding: 2px 7px;
       border-radius: 999px;
       background: rgba(15,23,42,0.96);
@@ -428,12 +423,12 @@
       border: 1px dashed rgba(148,163,184,0.7);
       background: rgba(15,23,42,0.8);
       text-align: center;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-soft);
     }
     .empty-state span.emoji {
       display: block;
-      font-size: 30px;
+      font-size: 28px;
       margin-bottom: 6px;
     }
 
@@ -465,7 +460,7 @@
     }
     .garden-cell-plant {
       font-size: 11px;
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     .dialog-backdrop {
@@ -488,7 +483,7 @@
     }
     .dialog h3 {
       margin: 0 0 8px;
-      font-size: 18px;
+      font-size: 17px;
     }
     .dialog label {
       font-size: 13px;
@@ -504,7 +499,7 @@
       border: 1px solid rgba(148,163,184,0.8);
       background: rgba(15,23,42,0.9);
       color: var(--text-main);
-      font-size: 14px;
+      font-size: 13px;
       padding: 7px 9px;
       margin-bottom: 10px;
       font-family: inherit;
@@ -516,6 +511,7 @@
       justify-content: flex-end;
       gap: 8px;
       margin-top: 6px;
+      flex-wrap: wrap;
     }
     .btn {
       border-radius: 999px;
@@ -549,7 +545,7 @@
     }
     .diary-entry {
       border-radius: 16px;
-      padding: 9px 10px;
+      padding: 8px 10px;
       background: rgba(15,23,42,0.95);
       border: 1px solid rgba(51,65,85,0.95);
       font-size: 13px;
@@ -574,6 +570,7 @@
       font-size: 13px;
     }
 
+    /* Ficha detallada del cultivo */
     .dialog.dialog-crop {
       width: min(430px, 100% - 24px);
       max-height: 90vh;
@@ -615,7 +612,7 @@
       margin-bottom: 8px;
     }
     .crop-dialog-tag {
-      font-size: 12px;
+      font-size: 11px;
       padding: 3px 8px;
       border-radius: 999px;
       background: rgba(15,23,42,0.96);
@@ -623,7 +620,7 @@
       color: var(--text-soft);
     }
     .crop-dialog-body {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-soft);
       overflow-y: auto;
       padding-right: 2px;
@@ -654,7 +651,7 @@
         padding: 18px 8px 28px;
       }
       .section-card {
-        padding: 22px 20px 20px;
+        padding: 20px 20px 20px;
       }
     }
   </style>
@@ -703,12 +700,12 @@
             </article>
             <article class="home-card" data-view-target="gardenView">
               <div class="home-card-title">Mi huerto</div>
-              <div class="home-card-desc">Diseña un pequeño plano de 4×4 y marca qué hay sembrado en cada cuadro.</div>
+              <div class="home-card-desc">Diseña un plano de 4×4 y marca qué hay sembrado en cada cuadro.</div>
               <div class="home-card-icon">🧩</div>
             </article>
             <article class="home-card" data-view-target="diaryView">
               <div class="home-card-title">Diario de siembra</div>
-              <div class="home-card-desc">Registra siembras, riegos, abonos y cosechas para no olvidar ningún detalle.</div>
+              <div class="home-card-desc">Registra siembras, riegos, abonos y cosechas.</div>
               <div class="home-card-icon">📓</div>
             </article>
             <article class="home-card" data-view-target="pestsView">
@@ -738,7 +735,7 @@
               <div class="section-title">¿Qué puedo sembrar este mes?</div>
               <div class="section-subtitle">Toca un mes para ver cultivos recomendados y tiempo aproximado de cosecha.</div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
           <div class="month-grid" id="monthButtons"></div>
           <div class="list" id="monthResults"></div>
@@ -753,7 +750,7 @@
               <div class="section-title">Catálogo visual de cultivos</div>
               <div class="section-subtitle">Busca por nombre, tipo o cantidad de sol.</div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
 
           <!-- Buscador -->
@@ -818,7 +815,7 @@
               <div class="section-title">Plagas y cuidados básicos</div>
               <div class="section-subtitle">Guía rápida para problemas frecuentes y acciones sencillas.</div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
           <div class="list">
             <div class="list-item">
@@ -869,7 +866,7 @@
               <div class="section-title">Abonos y fertilizantes</div>
               <div class="section-subtitle">Ideas prácticas de abonos caseros y cuándo aplicarlos.</div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
           <div class="list">
             <div class="list-item">
@@ -917,7 +914,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Más opciones</div>
-              <div class="section-subtitle">Atajos a secciones clave de la app.</div>
+              <div class="section-subtitle">Atajos a secciones clave de la app y copia de seguridad.</div>
             </div>
           </div>
           <div class="grid-cards">
@@ -941,15 +938,19 @@
               <div class="home-card-desc">Cuándo y cómo abonar sin excesos.</div>
               <div class="home-card-icon">🧪</div>
             </article>
+            <!-- Nueva tarjeta de Copia de seguridad -->
+            <article class="home-card" id="backupCard">
+              <div class="home-card-title">Copia de seguridad</div>
+              <div class="home-card-desc">Guarda o restaura tu huerto y diario desde un archivo.</div>
+              <div class="home-card-icon">💾</div>
+            </article>
           </div>
         </div>
       </section>
     </main>
 
     <footer>
-      Mi Siembra Inteligente · Guarda datos solo en este dispositivo · Puedes instalarla como app desde el navegador.
-      <br />
-      Versión 1.0 PWA · Desarrollado por Ricardo Díaz
+      Mi Siembra Inteligente · Datos guardados solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
 
@@ -1018,7 +1019,7 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO DE CONFIRMACIÓN GENÉRICO -->
+  <!-- DIÁLOGO DE CONFIRMACIÓN -->
   <div class="dialog-backdrop" id="confirmDialog">
     <div class="dialog">
       <h3>Confirmar</h3>
@@ -1029,6 +1030,24 @@
       </div>
     </div>
   </div>
+
+  <!-- DIÁLOGO COPIA DE SEGURIDAD -->
+  <div class="dialog-backdrop" id="backupDialog">
+    <div class="dialog">
+      <h3>Copia de seguridad</h3>
+      <p class="section-subtitle" style="margin-bottom: 10px;">
+        Guarda un archivo con los datos de tu huerto (4×4) y tu diario de siembra.
+        Más adelante puedes restaurarlo si cambias de dispositivo o borras los datos del navegador.
+      </p>
+      <div class="dialog-footer" style="justify-content: space-between;">
+        <button class="btn" type="button" id="backupExport"><span class="emoji">⬇️</span><span>Guardar copia</span></button>
+        <button class="btn btn-primary" type="button" id="backupImport"><span class="emoji">⬆️</span><span>Restaurar</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT PARA RESTAURAR ARCHIVO -->
+  <input type="file" id="backupFileInput" accept="application/json" style="display:none;" />
 
   <script>
     // --- Datos de cultivos (coinciden con tus imágenes en /img) ---
@@ -1113,18 +1132,74 @@
 
     // Qué recomendar por mes (clima tropical/subtropical)
     const siembrasPorMes = {
-      1: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','berro','apio'],
-      2: ['lechuga','espinaca','acelga','cilantro','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','cebolla'],
-      3: ['tomate','pimiento','pimiento_morron','aji','berenjena','pepinillo','calabaza','cantalope','melon','habichuelas','maiz','quimbombo','lechuga','espinaca','cilantro','albahaca','menta'],
-      4: ['tomate','pimiento','pimiento_morron','aji','berenjena','pepinillo','calabaza','cantalope','melon','habichuelas','maiz','quimbombo','gandules','batata','yuca','yautia','papa'],
-      5: ['calabaza','cantalope','melon','maiz','quimbombo','gandules','habichuelas','batata','yuca','yautia','papa','malanga','platano','guineo','papaya','parcha'],
-      6: ['batata','yuca','yautia','malanga','platano','guineo','papaya','parcha','gandules','calabaza','quimbombo','maiz'],
-      7: ['tomate','pimiento','pimiento_morron','berenjena','quimbombo','gandules','habichuelas','batata','yuca','yautia','albahaca','menta','oregano','oregano_brujo'],
-      8: ['tomate','pimiento','berenjena','habichuelas','gandules','lechuga','espinaca','cilantro','recao','albahaca','menta','oregano','oregano_brujo'],
-      9: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','apio','escarolas'],
-      10: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','apio','berro'],
-      11: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','habichuelas','apio'],
-      12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
+      1: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','repollo','zanahoria','rabano',
+        'remolacha','remolacha_blanca','berro','apio'
+      ],
+      2: [
+        'lechuga','espinaca','acelga','cilantro','kale',
+        'col_risada','col_roja','repollo','broccoli','coliflor',
+        'zanahoria','rabano','remolacha','remolacha_blanca','cebolla'
+      ],
+      3: [
+        'tomate','pimiento','pimiento_morron','aji','berenjena',
+        'pepinillo','calabaza','cantalope','melon',
+        'habichuelas','maiz','quimbombo',
+        'lechuga','espinaca','cilantro','albahaca','menta'
+      ],
+      4: [
+        'tomate','pimiento','pimiento_morron','aji','berenjena',
+        'pepinillo','calabaza','cantalope','melon',
+        'habichuelas','maiz','quimbombo','gandules',
+        'batata','yuca','yautia','papa'
+      ],
+      5: [
+        'calabaza','cantalope','melon',
+        'maiz','quimbombo','gandules','habichuelas',
+        'batata','yuca','yautia','papa','malanga',
+        'platano','guineo','papaya','parcha'
+      ],
+      6: [
+        'batata','yuca','yautia','malanga',
+        'platano','guineo','papaya','parcha','gandules',
+        'calabaza','quimbombo','maiz'
+      ],
+      7: [
+        'tomate','pimiento','pimiento_morron','berenjena',
+        'quimbombo','gandules','habichuelas',
+        'batata','yuca','yautia',
+        'albahaca','menta','oregano','oregano_brujo'
+      ],
+      8: [
+        'tomate','pimiento','berenjena',
+        'habichuelas','gandules',
+        'lechuga','espinaca','cilantro','recao',
+        'albahaca','menta','oregano','oregano_brujo'
+      ],
+      9: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','col_roja','repollo',
+        'broccoli','coliflor','zanahoria','rabano',
+        'remolacha','remolacha_blanca','apio','escarolas'
+      ],
+      10: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','col_roja','repollo',
+        'broccoli','coliflor','zanahoria','rabano',
+        'remolacha','remolacha_blanca','apio','berro'
+      ],
+      11: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'kale','col_risada','repollo',
+        'zanahoria','rabano','remolacha','remolacha_blanca',
+        'habichuelas','apio'
+      ],
+      12: [
+        'lechuga','espinaca','acelga','cilantro','recao',
+        'berro','kale','col_risada','repollo',
+        'zanahoria','rabano','remolacha'
+      ]
     };
 
     // Mapa cultivo -> meses
@@ -1163,9 +1238,9 @@
       }
 
       allViewButtons.forEach(btn => {
+        const target = btn.dataset.viewTarget || btn.dataset.view;
+        if (!target) return;
         btn.addEventListener('click', () => {
-          const target = btn.dataset.viewTarget || btn.dataset.view;
-          if (!target) return;
           setView(target);
           setActivePill(target);
         });
@@ -1334,7 +1409,7 @@
       }
       renderCatalog();
 
-      // Diálogos básicos: cerrar al tocar afuera o botones con data-dialog-close
+      // Diálogos genéricos (cerrar al tocar fondo o botón)
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1504,6 +1579,35 @@
       const DIARY_KEY = 'mi_siembra_diario_v1';
       let diaryEntries = [];
 
+      // Diálogo de confirmación propio
+      const confirmDialogEl = document.getElementById('confirmDialog');
+      const confirmMessageEl = document.getElementById('confirmMessage');
+      const confirmCancelBtn = document.getElementById('confirmCancel');
+      const confirmOkBtn = document.getElementById('confirmOk');
+      let confirmOkHandler = null;
+
+      function openConfirm(message, onOk) {
+        confirmMessageEl.textContent = message;
+        confirmOkHandler = onOk;
+        confirmDialogEl.classList.add('active');
+      }
+
+      confirmCancelBtn.addEventListener('click', () => {
+        confirmDialogEl.classList.remove('active');
+        confirmOkHandler = null;
+      });
+
+      confirmOkBtn.addEventListener('click', () => {
+        if (typeof confirmOkHandler === 'function') {
+          const fn = confirmOkHandler;
+          confirmOkHandler = null;
+          confirmDialogEl.classList.remove('active');
+          fn();
+        } else {
+          confirmDialogEl.classList.remove('active');
+        }
+      });
+
       function cargarDiario() {
         try {
           const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
@@ -1565,35 +1669,6 @@
         diaryDialogEl.classList.remove('active');
       });
 
-      // --- Diálogo de confirmación genérico ---
-      const confirmDialogEl = document.getElementById('confirmDialog');
-      const confirmMessageEl = document.getElementById('confirmMessage');
-      const confirmCancelBtn = document.getElementById('confirmCancel');
-      const confirmOkBtn = document.getElementById('confirmOk');
-      let confirmOkHandler = null;
-
-      function openConfirm(message, onOk) {
-        confirmMessageEl.textContent = message;
-        confirmOkHandler = onOk;
-        confirmDialogEl.classList.add('active');
-      }
-
-      confirmCancelBtn.addEventListener('click', () => {
-        confirmDialogEl.classList.remove('active');
-        confirmOkHandler = null;
-      });
-
-      confirmOkBtn.addEventListener('click', () => {
-        if (typeof confirmOkHandler === 'function') {
-          const fn = confirmOkHandler;
-          confirmOkHandler = null;
-          confirmDialogEl.classList.remove('active');
-          fn();
-        } else {
-          confirmDialogEl.classList.remove('active');
-        }
-      });
-
       // Borrar entrada tocando sobre ella
       diaryList.addEventListener('click', (event) => {
         const item = event.target.closest('.diary-entry');
@@ -1619,6 +1694,71 @@
       cargarDiario();
       renderDiario();
 
+      // --- Copia de seguridad ---
+      const backupCard = document.getElementById('backupCard');
+      const backupDialogEl = document.getElementById('backupDialog');
+      const backupExportBtn = document.getElementById('backupExport');
+      const backupImportBtn = document.getElementById('backupImport');
+      const backupFileInput = document.getElementById('backupFileInput');
+      const BACKUP_VERSION = '1.0';
+
+      backupCard.addEventListener('click', () => {
+        backupDialogEl.classList.add('active');
+      });
+
+      backupExportBtn.addEventListener('click', () => {
+        const data = {
+          version: BACKUP_VERSION,
+          timestamp: new Date().toISOString(),
+          garden: gardenState,
+          diary: diaryEntries
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'mi-siembra-backup.json';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+
+      backupImportBtn.addEventListener('click', () => {
+        backupFileInput.click();
+      });
+
+      backupFileInput.addEventListener('change', (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const text = e.target.result;
+            const data = JSON.parse(text);
+
+            if (data && Array.isArray(data.garden)) {
+              gardenState = data.garden;
+              guardarGarden();
+              renderGarden();
+            }
+            if (data && Array.isArray(data.diary)) {
+              diaryEntries = data.diary;
+              guardarDiario();
+              renderDiario();
+            }
+            alert('Copia de seguridad restaurada correctamente.');
+            backupDialogEl.classList.remove('active');
+          } catch (err) {
+            console.error(err);
+            alert('No se pudo leer el archivo de copia. Asegúrate de que sea un backup generado por esta app.');
+          }
+          backupFileInput.value = '';
+        };
+        reader.readAsText(file);
+      });
+
       // Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
@@ -1628,4 +1768,4 @@
     });
   </script>
 </body>
-  </html>
+</html>
