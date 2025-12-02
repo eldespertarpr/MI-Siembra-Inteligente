@@ -1922,7 +1922,7 @@ function iniciarApp() {
               <div class="list-icon">${plaga.icon || '🪲'}</div>
               <div class="list-main">
                 <div class="list-title">${plaga.nombre}</div>
-                <div class="list-meta">
+                <div class="list-o">
                   <span class="meta-pill">${plaga.tipo}</span>
                   ${nombresCultivos ? `<span class="meta-pill">🌱 ${nombresCultivos}</span>` : ''}
                 </div>
@@ -2015,6 +2015,16 @@ function iniciarApp() {
         navigator.serviceWorker.register('./sw.js').catch(err => {
           console.warn('SW error', err);
         });
+      }
+    }
+
+    // Ejecutar inmediatamente la app
+    try {
+      iniciarApp();
+    } catch (e) {
+      console.error('Error iniciando Mi Siembra Inteligente:', e);
+      alert('Hubo un error al iniciar la app: ' + e.message);
+    }
       }
     });
   </script>
