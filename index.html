@@ -33,7 +33,7 @@
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 17px; /* un poco más grande */
+      font-size: 17px; /* un poco más grande para móvil */
       background: radial-gradient(circle at top left, #0f172a 0, #020617 50%, #000 100%);
       color: var(--text-main);
       min-height: 100%;
@@ -75,16 +75,16 @@
       min-width: 0;
     }
     .brand-icon {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 14px;
       background: radial-gradient(circle at 30% 0, #bbf7d0 0, #22c55e 30%, #15803d 70%);
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.55);
+      font-size: 20px;
     }
-    .brand-icon span { font-size: 20px; }
     .brand-text {
       display: flex;
       flex-direction: column;
@@ -104,6 +104,13 @@
       color: var(--text-soft);
     }
 
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
     .pill-nav {
       display: flex;
       gap: 6px;
@@ -115,7 +122,7 @@
     .pill-nav button {
       border: none;
       border-radius: 999px;
-      padding: 6px 12px;
+      padding: 4px 10px;
       font-size: 12px;
       background: transparent;
       color: var(--text-soft);
@@ -134,7 +141,23 @@
       transform: translateY(-0.5px);
     }
 
-    main { padding: 10px 2px 24px; }
+    .badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.18);
+      border: 1px solid rgba(34,197,94,0.6);
+      color: #bbf7d0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .badge span.emoji { font-size: 13px; }
+
+    main { padding: 8px 2px 24px; }
     section.view {
       display: none;
       animation: fadeIn 0.2s ease-out;
@@ -169,20 +192,6 @@
       color: var(--text-soft);
       margin-top: 4px;
     }
-    .badge {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(34,197,94,0.18);
-      border: 1px solid rgba(34,197,94,0.6);
-      color: #bbf7d0;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .badge span.emoji { font-size: 12px; }
 
     .grid-cards {
       display: flex;
@@ -244,15 +253,23 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      cursor: pointer;
+      cursor: default;
     }
     .chip span.emoji { font-size: 12px; }
-    .chip.active {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #022c22;
-      border-color: rgba(190,242,100,0.95);
-      box-shadow: 0 10px 28px rgba(34,197,94,0.85);
+
+    .small-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: rgba(15,23,42,0.95);
+      color: var(--text-main);
+      padding: 5px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
+    .small-btn span.emoji { font-size: 13px; }
 
     .search-input {
       flex: 1;
@@ -262,7 +279,7 @@
       background: var(--chip-bg);
       color: var(--text-main);
       font-size: 14px;
-      padding: 6px 10px;
+      padding: 7px 10px;
       outline: none;
     }
     .search-input::placeholder {
@@ -335,20 +352,6 @@
       color: var(--text-soft);
     }
 
-    .small-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.9);
-      background: rgba(15,23,42,0.95);
-      color: var(--text-main);
-      padding: 5px 8px;
-      font-size: 11px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .small-btn span.emoji { font-size: 13px; }
-
     .catalog-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -399,7 +402,7 @@
       flex: 1;
     }
     .crop-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
     }
     .crop-tags {
@@ -442,7 +445,7 @@
       border-radius: 14px;
       border: 1px solid rgba(51,65,85,0.9);
       background: radial-gradient(circle at top, rgba(34,197,94,0.25) 0, rgba(15,23,42,1) 60%);
-      aspect-ratio: 1/1;
+      aspect-ratio: 1 / 1;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -456,11 +459,11 @@
     .garden-cell-label {
       font-weight: 600;
       color: var(--text-main);
-      font-size: 12px;
+      font-size: 11px;
     }
     .garden-cell-plant {
-      font-size: 12px;
-      margin-top: 2px;
+      font-size: 11px;
+      margin-top: 3px;
     }
 
     .dialog-backdrop {
@@ -483,10 +486,10 @@
     }
     .dialog h3 {
       margin: 0 0 8px;
-      font-size: 17px;
+      font-size: 16px;
     }
     .dialog label {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-soft);
       display: block;
       margin-bottom: 5px;
@@ -499,7 +502,7 @@
       border: 1px solid rgba(148,163,184,0.8);
       background: rgba(15,23,42,0.9);
       color: var(--text-main);
-      font-size: 14px;
+      font-size: 13px;
       padding: 7px 9px;
       margin-bottom: 10px;
       font-family: inherit;
@@ -518,7 +521,7 @@
       border: 1px solid rgba(148,163,184,0.9);
       background: rgba(15,23,42,0.95);
       color: var(--text-main);
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -559,7 +562,12 @@
       align-items: center;
       gap: 8px;
     }
-    .diary-type { font-weight: 600; }
+    .diary-type {
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
     .diary-date {
       font-size: 12px;
       color: var(--text-soft);
@@ -569,16 +577,81 @@
       font-size: 13px;
     }
 
-    footer {
+    /* Ficha detallada del cultivo */
+    .dialog.dialog-crop {
+      width: min(430px, 100% - 24px);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 10px;
+    }
+    .crop-dialog-img-wrap {
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
+      max-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .crop-dialog-img-wrap img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+    .crop-dialog-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .crop-dialog-name {
+      font-size: 17px;
+      font-weight: 650;
+    }
+    .crop-dialog-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .crop-dialog-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.96);
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--text-soft);
+    }
+    .crop-dialog-body {
+      font-size: 13px;
+      color: var(--text-soft);
+      overflow-y: auto;
+      padding-right: 2px;
+      margin-bottom: 6px;
+    }
+    .crop-dialog-body p {
+      margin: 4px 0 6px;
+    }
+    .crop-dialog-body strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    footer.app-footer {
       margin-top: 8px;
-      padding: 6px 4px 2px;
+      padding: 10px 4px 4px;
       font-size: 11px;
       color: var(--text-soft);
       text-align: center;
+      line-height: 1.4;
     }
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
+    footer.app-footer span.app-name {
+      color: #bbf7d0;
+      font-weight: 600;
     }
 
     @media (min-width: 768px) {
@@ -596,18 +669,23 @@
     <header class="app-header">
       <div class="header-inner">
         <div class="brand">
-          <div class="brand-icon"><span>🌱</span></div>
+          <div class="brand-icon">🌱</div>
           <div class="brand-text">
             <div class="brand-title">Mi Siembra Inteligente</div>
             <div class="brand-sub">Planifica, registra y cuida tu huerto paso a paso.</div>
           </div>
         </div>
-        <nav class="pill-nav" aria-label="Secciones principales">
-          <button class="nav-btn active" data-view="homeView"><span class="emoji">🏠</span><span>Inicio</span></button>
-          <button class="nav-btn" data-view="calendarView"><span class="emoji">📅</span><span>Calendario</span></button>
-          <button class="nav-btn" data-view="catalogView"><span class="emoji">🌿</span><span>Catálogo</span></button>
-          <button class="nav-btn" data-view="moreView"><span class="emoji">⋯</span><span>Más</span></button>
-        </nav>
+        <div class="header-right">
+          <nav class="pill-nav" aria-label="Secciones principales">
+            <button class="nav-btn active" data-view="homeView"><span class="emoji">🏠</span><span>Inicio</span></button>
+            <button class="nav-btn" data-view="calendarView"><span class="emoji">📅</span><span>Calendario</span></button>
+            <button class="nav-btn" data-view="catalogView"><span class="emoji">🌿</span><span>Catálogo</span></button>
+            <button class="nav-btn" data-view="moreView"><span class="emoji">⋯</span><span>Más</span></button>
+          </nav>
+          <button id="quickActionsBtn" class="badge" type="button">
+            <span class="emoji">⚡</span><span>Modo rápido</span>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -620,7 +698,6 @@
               <div class="section-title">Inicio</div>
               <div class="section-subtitle">Elige qué quieres hacer hoy en tu siembra.</div>
             </div>
-            <div class="badge"><span class="emoji">⚡</span><span>Modo rápido</span></div>
           </div>
           <div class="grid-cards">
             <article class="home-card" data-view-target="calendarView">
@@ -630,33 +707,33 @@
             </article>
             <article class="home-card" data-view-target="catalogView">
               <div class="home-card-title">Catálogo de cultivos</div>
-              <div class="home-card-desc">Explora fichas visuales con fotos, tipo de cultivo y sol recomendado.</div>
+              <div class="home-card-desc">Fichas visuales con fotos, tipo de cultivo y sol recomendado.</div>
               <div class="home-card-icon">🌿</div>
             </article>
             <article class="home-card" data-view-target="gardenView">
-              <div class="home-card-title">Mi huerto</div>
-              <div class="home-card-desc">Plano 4×4 con resumen del cultivo en cada cuadro.</div>
+              <div class="home-card-title">Mi huerto 4×4</div>
+              <div class="home-card-desc">Plano sencillo para marcar qué hay sembrado en cada cuadro.</div>
               <div class="home-card-icon">🧩</div>
             </article>
             <article class="home-card" data-view-target="diaryView">
               <div class="home-card-title">Diario de siembra</div>
-              <div class="home-card-desc">Registra siembras, riegos, abonos y cosechas con iconos según actividad.</div>
+              <div class="home-card-desc">Registra siembras, riegos, abonos y cosechas.</div>
               <div class="home-card-icon">📓</div>
             </article>
             <article class="home-card" data-view-target="pestsView">
               <div class="home-card-title">Plagas y cuidados</div>
-              <div class="home-card-desc">Identifica problemas comunes y qué hacer de forma sencilla.</div>
+              <div class="home-card-desc">Problemas frecuentes, soluciones sencillas y uso responsable de productos.</div>
               <div class="home-card-icon">🪲</div>
             </article>
             <article class="home-card" data-view-target="fertView">
               <div class="home-card-title">Abonos y fertilizantes</div>
-              <div class="home-card-desc">Ideas de compost, abonos caseros y cuándo aplicarlos.</div>
+              <div class="home-card-desc">Compost, abonos caseros y cómo no excederse.</div>
               <div class="home-card-icon">🧪</div>
             </article>
           </div>
           <div class="chips-row">
             <span class="chip"><span class="emoji">📱</span><span>PWA offline</span></span>
-            <span class="chip"><span class="emoji">☕</span><span>Hecho para planificar tranquilo</span></span>
+            <span class="chip"><span class="emoji">☕</span><span>Hecha para planificar tranquilo</span></span>
             <span class="chip"><span class="emoji">🌍</span><span>Clima tropical/subtropical</span></span>
           </div>
         </div>
@@ -670,7 +747,7 @@
               <div class="section-title">¿Qué puedo sembrar este mes?</div>
               <div class="section-subtitle">Toca un mes para ver cultivos recomendados y tiempo aproximado de cosecha.</div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
           <div class="month-grid" id="monthButtons"></div>
           <div class="list" id="monthResults"></div>
@@ -685,7 +762,7 @@
               <div class="section-title">Catálogo visual de cultivos</div>
               <div class="section-subtitle">Busca por nombre, tipo o cantidad de sol.</div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
 
           <!-- Buscador -->
@@ -712,8 +789,8 @@
         <div class="section-card">
           <div class="section-header">
             <div>
-              <div class="section-title">Mi huerto</div>
-              <div class="section-subtitle">Toca un cuadro para ver o asignar el cultivo y sus datos básicos.</div>
+              <div class="section-title">Mi huerto 4×4</div>
+              <div class="section-subtitle">Toca un cuadro para asignar qué estás sembrando en esa área.</div>
             </div>
             <button class="small-btn" id="resetGarden"><span class="emoji">🧹</span><span>Limpiar</span></button>
           </div>
@@ -730,7 +807,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Diario de siembra</div>
-              <div class="section-subtitle">Cada entrada se muestra con un icono según el tipo de actividad.</div>
+              <div class="section-subtitle">Registra actividades importantes para no perder el hilo de tu huerto.</div>
             </div>
             <button class="small-btn" id="addDiaryEntry"><span class="emoji">➕</span><span>Nuevo</span></button>
           </div>
@@ -748,11 +825,14 @@
           <div class="section-header">
             <div>
               <div class="section-title">Plagas y cuidados básicos</div>
-              <div class="section-subtitle">Guía rápida para problemas frecuentes y acciones sencillas.</div>
+              <div class="section-subtitle">
+                Guía rápida para problemas frecuentes, remedios caseros y uso responsable de productos.
+              </div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
           <div class="list">
+            <!-- Las 3 que ya tenías -->
             <div class="list-item">
               <div class="list-main">
                 <div class="list-title">Pulgones</div>
@@ -789,6 +869,77 @@
                 </div>
               </div>
             </div>
+
+            <!-- Nuevas plagas / tabla resumida -->
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Mosca blanca</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🦟 Debajo de las hojas</span>
+                  <span class="meta-pill">🍃 Hoja amarilla</span>
+                </div>
+                <div class="section-subtitle">
+                  Sacude suavemente las plantas para detectarlas. Usa <b>jabón potásico</b> o <b>aceite de neem</b> en aplicaciones suaves y repetidas.
+                </div>
+              </div>
+            </div>
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Trips</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🔍 Rayas plateadas</span>
+                  <span class="meta-pill">🌸 Flores y hojas tiernas</span>
+                </div>
+                <div class="section-subtitle">
+                  Atraídos por el calor y la sequedad. Mantén buena humedad ambiental y aplica <b>jabón insecticida</b> o neem en la parte inferior de las hojas.
+                </div>
+              </div>
+            </div>
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Escarabajos y vaquitas</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🐞 Hojas agujereadas</span>
+                  <span class="meta-pill">🍅 Solanáceas (tomate, berenjena)</span>
+                </div>
+                <div class="section-subtitle">
+                  Recolecta a mano por la mañana temprano. Si la plaga es fuerte, considera <b>coberturas físicas</b> (mallas) y aplicaciones puntuales de productos biológicos.
+                </div>
+              </div>
+            </div>
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Caracoles y babosas</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🐌 Hojas mordidas</span>
+                  <span class="meta-pill">💧 Ambientes húmedos</span>
+                </div>
+                <div class="section-subtitle">
+                  Coloca <b>trampas</b> (tablitas, cartones húmedos) y retíralos a mano. Evita regar de noche; mejor al amanecer.
+                </div>
+              </div>
+            </div>
+
+            <!-- Bloque sobre tipos de “pesticidas” -->
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Opciones de control (en orden de prioridad)</div>
+                <div class="list-meta">
+                  <span class="meta-pill">✅ Primero lo más suave</span>
+                  <span class="meta-pill">⚠️ Evitar excesos</span>
+                </div>
+                <div class="section-subtitle">
+                  <b>1. Manejo cultural y físico</b>: retirar hojas enfermas, buenas distancias de siembra, rotación de cultivos, mallas y trampas.<br>
+                  <b>2. Preparados caseros</b>: agua jabonosa suave, infusiones de ajo o chile (siempre en pruebas pequeñas).<br>
+                  <b>3. Productos biológicos</b>: Bacillus thuringiensis (Bt) para orugas, neem, jabones insecticidas aprobados para huerto.<br>
+                  <b>4. Pesticidas químicos</b> (último recurso): solo si la plaga es muy fuerte, siguiendo estrictamente la etiqueta, con equipo de protección y respetando el tiempo de carencia antes de cosechar.
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -801,7 +952,7 @@
               <div class="section-title">Abonos y fertilizantes</div>
               <div class="section-subtitle">Ideas prácticas de abonos caseros y cuándo aplicarlos.</div>
             </div>
-            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
           <div class="list">
             <div class="list-item">
@@ -849,7 +1000,7 @@
           <div class="section-header">
             <div>
               <div class="section-title">Más opciones</div>
-              <div class="section-subtitle">Atajos a secciones clave de la app.</div>
+              <div class="section-subtitle">Atajos a secciones clave de la app y respaldo de datos.</div>
             </div>
           </div>
           <div class="grid-cards">
@@ -860,7 +1011,7 @@
             </article>
             <article class="home-card" data-view-target="diaryView">
               <div class="home-card-title">Diario</div>
-              <div class="home-card-desc">Historial de tareas y cosechas con iconos.</div>
+              <div class="home-card-desc">Historial de tareas y cosechas.</div>
               <div class="home-card-icon">📓</div>
             </article>
             <article class="home-card" data-view-target="pestsView">
@@ -874,30 +1025,52 @@
               <div class="home-card-icon">🧪</div>
             </article>
           </div>
-        </div>
 
-        <div class="section-card">
-          <div class="section-header">
-            <div>
-              <div class="section-title">Copias de seguridad</div>
-              <div class="section-subtitle">Exporta o importa tus datos de Mi huerto y Diario (archivo .json).</div>
+          <div class="section-card" style="margin-top:14px;">
+            <div class="section-header">
+              <div>
+                <div class="section-title" style="font-size:18px;">Copia de seguridad</div>
+                <div class="section-subtitle">
+                  Guarda o restaura tus datos de <b>Mi huerto</b> y <b>Diario</b> en un archivo.
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="chips-row">
-            <button class="btn btn-primary" id="backupExport">
-              💾 Guardar copia
-            </button>
-            <button class="btn" id="backupImport">
-              📂 Restaurar copia
-            </button>
-            <input type="file" id="backupFile" accept="application/json" style="display:none" />
+            <div class="list">
+              <div class="list-item">
+                <div class="list-main">
+                  <div class="list-title">Exportar respaldo</div>
+                  <div class="section-subtitle">
+                    Genera un archivo <code>.json</code> con tu plano y tu diario. Puedes guardarlo en el móvil o computadora.
+                  </div>
+                </div>
+                <button class="small-btn" type="button" id="backupExportBtn">
+                  <span class="emoji">💾</span><span>Guardar</span>
+                </button>
+              </div>
+              <div class="list-item">
+                <div class="list-main">
+                  <div class="list-title">Restaurar desde archivo</div>
+                  <div class="section-subtitle">
+                    Carga un respaldo previo para recuperar tus datos en este dispositivo.
+                  </div>
+                </div>
+                <button class="small-btn" type="button" id="backupImportBtn">
+                  <span class="emoji">📂</span><span>Restaurar</span>
+                </button>
+              </div>
+              <div class="section-subtitle">
+                Último respaldo conocido: <span id="backupInfo">—</span>
+              </div>
+            </div>
+            <input type="file" id="backupFileInput" accept="application/json" style="display:none;">
           </div>
         </div>
       </section>
     </main>
 
-    <footer>
-      Mi Siembra Inteligente · Datos guardados solo en este dispositivo · Puedes instalarla como app desde el navegador.
+    <footer class="app-footer">
+      <div><span class="app-name">Mi Siembra Inteligente</span> · Datos guardados solo en este dispositivo</div>
+      <div>Versión 1.0 (PWA) · Desarrollado por Ricardo Díaz</div>
     </footer>
   </div>
 
@@ -908,7 +1081,6 @@
       <div id="gardenDialogPosition" class="section-subtitle" style="margin-bottom:8px;"></div>
       <label for="gardenCropSelect">Cultivo</label>
       <select id="gardenCropSelect"></select>
-      <div id="gardenCropInfo" class="section-subtitle" style="margin-top:4px;"></div>
       <div class="dialog-footer">
         <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
         <button class="btn btn-primary" type="button" id="gardenSave">Guardar</button>
@@ -916,7 +1088,7 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO DIARIO (NUEVA ENTRADA) -->
+  <!-- DIÁLOGO DIARIO -->
   <div class="dialog-backdrop" id="diaryDialog">
     <div class="dialog">
       <h3>Nueva entrada</h3>
@@ -939,36 +1111,22 @@
     </div>
   </div>
 
-  <!-- DIÁLOGO DETALLE DIARIO -->
-  <div class="dialog-backdrop" id="diaryDetailDialog">
-    <div class="dialog">
-      <h3>Detalle de la entrada</h3>
-      <div id="diaryDetailType" style="font-weight:600; margin-bottom:4px;"></div>
-      <div id="diaryDetailDate" class="section-subtitle" style="margin-bottom:8px;"></div>
-      <div id="diaryDetailNotes" class="diary-notes" style="margin-bottom:8px;"></div>
-      <div class="dialog-footer">
-        <button class="btn btn-ghost" type="button" data-dialog-close>Cerrar</button>
-        <button class="btn btn-primary" type="button" id="diaryDeleteBtn">Borrar</button>
-      </div>
-    </div>
-  </div>
-
   <!-- DIÁLOGO FICHA DEL CULTIVO -->
   <div class="dialog-backdrop" id="cropDialog">
     <div class="dialog dialog-crop">
-      <div class="crop-dialog-img-wrap" style="border-radius:18px;overflow:hidden;margin-bottom:10px;background:radial-gradient(circle at 20% 0,#bbf7d0 0,#22c55e 35%,#15803d 70%,#166534 100%);max-height:260px;display:flex;align-items:center;justify-content:center;">
-        <img id="cropDialogImg" src="" alt="Cultivo" style="width:100%;height:auto;object-fit:contain;display:block;" />
+      <div class="crop-dialog-img-wrap">
+        <img id="cropDialogImg" src="" alt="Cultivo" />
       </div>
-      <div class="crop-dialog-header-line" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
-        <div class="crop-dialog-name" id="cropDialogName" style="font-size:17px;font-weight:650;">Cultivo</div>
+      <div class="crop-dialog-header-line">
+        <div class="crop-dialog-name" id="cropDialogName">Cultivo</div>
         <button class="btn btn-ghost" type="button" data-dialog-close>✕</button>
       </div>
-      <div class="crop-dialog-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+      <div class="crop-dialog-tags">
         <span class="crop-dialog-tag" id="cropDialogTipo"></span>
         <span class="crop-dialog-tag" id="cropDialogDias"></span>
         <span class="crop-dialog-tag" id="cropDialogSol"></span>
       </div>
-      <div class="crop-dialog-body" style="font-size:13px;color:var(--text-soft);overflow-y:auto;padding-right:2px;margin-bottom:6px;">
+      <div class="crop-dialog-body">
         <p><strong>Siembra:</strong> <span id="cropDialogSiembra"></span></p>
         <p><strong>Mejores meses de siembra:</strong> <span id="cropDialogMeses"></span></p>
         <p><strong>Distancia entre plantas:</strong> <span id="cropDialogDistancia"></span></p>
@@ -981,12 +1139,71 @@
     </div>
   </div>
 
-  <script>
-    // Claves de localStorage
-    const GARDEN_KEY = 'mi_siembra_huerto_v1';
-    const DIARY_KEY = 'mi_siembra_diario_v1';
+  <!-- DIÁLOGO CONFIRMACIÓN GENÉRICO -->
+  <div class="dialog-backdrop" id="confirmDialog">
+    <div class="dialog">
+      <h3>Confirmar</h3>
+      <p id="confirmMessage" class="section-subtitle" style="margin-bottom: 12px;"></p>
+      <div class="dialog-footer">
+        <button class="btn btn-ghost" type="button" id="confirmCancel">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="confirmOk">Aceptar</button>
+      </div>
+    </div>
+  </div>
 
-    // Datos de cultivos (igual que tus imágenes en /img)
+  <!-- DIÁLOGO MODO RÁPIDO -->
+  <div class="dialog-backdrop" id="quickDialog">
+    <div class="dialog">
+      <h3>Modo rápido</h3>
+      <div class="section-subtitle" style="margin-bottom:10px;">
+        Accesos directos para las tareas más frecuentes.
+      </div>
+      <div class="list">
+        <div class="list-item">
+          <div class="list-main">
+            <div class="list-title">Añadir entrada al diario (hoy)</div>
+            <div class="section-subtitle">Registrar rápidamente una siembra, riego, abono o cosecha.</div>
+          </div>
+          <button class="small-btn" type="button" id="quickDiaryBtn">
+            <span class="emoji">📓</span><span>Diario</span>
+          </button>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <div class="list-title">Ver qué sembrar este mes</div>
+            <div class="section-subtitle">Ir al calendario directamente al mes actual.</div>
+          </div>
+          <button class="small-btn" type="button" id="quickMonthBtn">
+            <span class="emoji">📅</span><span>Este mes</span>
+          </button>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <div class="list-title">Ver plano de mi huerto</div>
+            <div class="section-subtitle">Abrir el huerto 4×4 para actualizar qué tienes sembrado.</div>
+          </div>
+          <button class="small-btn" type="button" id="quickGardenBtn">
+            <span class="emoji">🧩</span><span>Huerto</span>
+          </button>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <div class="list-title">Copia de seguridad rápida</div>
+            <div class="section-subtitle">Guardar un archivo con tus datos actuales.</div>
+          </div>
+          <button class="small-btn" type="button" id="quickBackupBtn">
+            <span class="emoji">💾</span><span>Respaldo</span>
+          </button>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn btn-primary" type="button" data-dialog-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Datos de cultivos ---
     const cultivos = [
       { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
       { id: 'acerola', nombre: 'Acerola', tipo: 'Frutal', imagen: 'img/acerola.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
@@ -1080,7 +1297,6 @@
       12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
     };
 
-    // Mapa cultivo -> meses recomendados
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
@@ -1098,19 +1314,42 @@
       return 'Pleno sol';
     }
 
-    const TIPO_ICONOS = {
-      'Siembra': '🌱',
-      'Riego': '💧',
-      'Abono': '🧪',
-      'Cosecha': '🧺',
-      'Otro': '📌'
-    };
+    function emojiParaCultivo(c) {
+      if (!c) return '🌱';
+      if (c.tipo.includes('Frutal cítrico')) return '🍊';
+      if (c.tipo.includes('Frutal trepador')) return '🪴';
+      if (c.tipo.includes('Frutal')) return '🍉';
+      if (c.tipo.includes('Hierba')) return '🌿';
+      if (c.tipo.includes('Leguminosa')) return '🫘';
+      if (c.tipo.includes('Raíz/tubérculo')) return '🥔';
+      if (c.tipo === 'Raíz') return '🥕';
+      if (c.tipo.includes('Hortaliza de hoja')) return '🥬';
+      if (c.tipo.includes('Hortaliza de flor')) return '🥦';
+      if (c.tipo.includes('Bulbo')) return '🧄';
+      if (c.tipo.includes('Fruto')) return '🍅';
+      return '🌱';
+    }
+
+    function emojiParaTipoDiario(tipo) {
+      switch ((tipo || '').toLowerCase()) {
+        case 'siembra': return '🌱';
+        case 'riego': return '💧';
+        case 'abono': return '🧪';
+        case 'cosecha': return '🧺';
+        default: return '📌';
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Navegación entre vistas
       const views = document.querySelectorAll('section.view');
       const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
       const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
+      const quickActionsBtn = document.getElementById('quickActionsBtn');
+      const quickDialog = document.getElementById('quickDialog');
+      const quickDiaryBtn = document.getElementById('quickDiaryBtn');
+      const quickMonthBtn = document.getElementById('quickMonthBtn');
+      const quickGardenBtn = document.getElementById('quickGardenBtn');
+      const quickBackupBtn = document.getElementById('quickBackupBtn');
 
       function setView(viewId) {
         views.forEach(v => v.classList.toggle('active', v.id === viewId));
@@ -1132,19 +1371,11 @@
         });
       });
 
-      // Diálogos genéricos (cerrar al tocar fuera o botón con data-dialog-close)
-      const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
-      dialogBackdrops.forEach(backdrop => {
-        backdrop.addEventListener('click', (e) => {
-          if (e.target === backdrop) backdrop.classList.remove('active');
+      if (quickActionsBtn && quickDialog) {
+        quickActionsBtn.addEventListener('click', () => {
+          quickDialog.classList.add('active');
         });
-      });
-      document.querySelectorAll('[data-dialog-close]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const backdrop = btn.closest('.dialog-backdrop');
-          if (backdrop) backdrop.classList.remove('active');
-        });
-      });
+      }
 
       // --- Calendario ---
       const monthButtonsContainer = document.getElementById('monthButtons');
@@ -1199,12 +1430,20 @@
       const hoy = new Date();
       const mesActual = hoy.getMonth() + 1;
       const btnMesActual =
-        monthButtonsContainer.querySelector(`.month-btn[data-mes-id="${mesActual}"]`) ||
+        monthButtonsContainer.querySelector(\`.month-btn[data-mes-id="\${mesActual}"]\`) ||
         monthButtonsContainer.querySelector('.month-btn');
       if (btnMesActual) {
         btnMesActual.classList.add('active');
         mostrarSiembrasDeMes(parseInt(btnMesActual.dataset.mesId, 10));
       }
+
+      monthResults.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-crop-id]');
+        if (!btn) return;
+        const id = btn.dataset.cropId;
+        const cultivo = cultivos.find(c => c.id === id);
+        if (cultivo) abrirFichaCultivo(cultivo);
+      });
 
       // --- Catálogo ---
       const catalogSearch = document.getElementById('catalogSearch');
@@ -1245,7 +1484,7 @@
         chip.type = 'button';
         chip.className = 'chip';
         chip.dataset.sol = cat;
-        chip.textContent = cat === 'Todos' ? 'Todo tipo de sol' : `☀️ ${cat}`;
+        chip.textContent = cat === 'Todos' ? 'Todo tipo de sol' : \`☀️ \${cat}\`;
         chip.addEventListener('click', () => {
           document.querySelectorAll('#catalogSunFilters .chip').forEach(c => c.classList.remove('active'));
           chip.classList.add('active');
@@ -1308,7 +1547,21 @@
       }
       renderCatalog();
 
-      // Ficha de cultivo (diálogo)
+      // Diálogos genéricos (cerrar al tocar fuera o botón con data-dialog-close)
+      const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
+      dialogBackdrops.forEach(backdrop => {
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) backdrop.classList.remove('active');
+        });
+      });
+      document.querySelectorAll('[data-dialog-close]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const backdrop = btn.closest('.dialog-backdrop');
+          if (backdrop) backdrop.classList.remove('active');
+        });
+      });
+
+      // Ficha de cultivo
       const cropDialog = document.getElementById('cropDialog');
       const cropDialogImg = document.getElementById('cropDialogImg');
       const cropDialogName = document.getElementById('cropDialogName');
@@ -1349,22 +1602,14 @@
         cropDialog.classList.add('active');
       }
 
-      monthResults.addEventListener('click', (e) => {
-        const btn = e.target.closest('button[data-crop-id]');
-        if (!btn) return;
-        const id = btn.dataset.cropId;
-        const cultivo = cultivos.find(c => c.id === id);
-        if (cultivo) abrirFichaCultivo(cultivo);
-      });
-
-      // --- Mi huerto (4x4) ---
+      // Mi huerto (4x4)
       const gardenGrid = document.getElementById('gardenGrid');
       const gardenDialogEl = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
       const gardenCropSelect = document.getElementById('gardenCropSelect');
-      const gardenCropInfo = document.getElementById('gardenCropInfo');
       const gardenSave = document.getElementById('gardenSave');
       const resetGardenBtn = document.getElementById('resetGarden');
+      const GARDEN_KEY = 'mi_siembra_huerto_v1';
       const gardenSize = 4;
       let gardenState = [];
 
@@ -1399,7 +1644,8 @@
           plant.className = 'garden-cell-plant';
           if (cultivoId) {
             const cultivo = cultivos.find(c => c.id === cultivoId);
-            plant.textContent = cultivo ? `🌱 ${cultivo.nombre}` : `🌱 ${cultivoId}`;
+            const emoji = emojiParaCultivo(cultivo);
+            plant.textContent = cultivo ? `${emoji} ${cultivo.nombre}` : cultivoId;
           } else {
             plant.textContent = 'Vacío';
           }
@@ -1409,28 +1655,17 @@
         });
       }
 
-      function actualizarGardenCropInfo(id) {
-        if (!id) {
-          gardenCropInfo.textContent = 'Cuadro vacío. Puedes elegir un cultivo del listado.';
-          return;
-        }
-        const c = cultivos.find(c => c.id === id);
-        if (!c) {
-          gardenCropInfo.textContent = '';
-          return;
-        }
-        gardenCropInfo.textContent =
-          `${c.nombre} · ${c.tipo} · ⏱️ ${c.diasCosecha} · ☀️ ${c.sol}`;
-      }
-
       gardenGrid.addEventListener('click', (e) => {
         const cell = e.target.closest('.garden-cell');
         if (!cell) return;
         const index = parseInt(cell.dataset.index, 10);
+        abrirDialogoHuerto(index);
+      });
+
+      function abrirDialogoHuerto(index) {
         gardenDialogEl.dataset.index = String(index);
         gardenDialogPosition.textContent =
           `Cuadro #${index + 1} (fila ${Math.floor(index / gardenSize) + 1}, columna ${(index % gardenSize) + 1})`;
-
         gardenCropSelect.innerHTML = '<option value="">Vacío</option>';
         cultivos.forEach(c => {
           const opt = document.createElement('option');
@@ -1440,13 +1675,8 @@
         });
         const actual = gardenState[index];
         gardenCropSelect.value = actual || '';
-        actualizarGardenCropInfo(actual);
         gardenDialogEl.classList.add('active');
-      });
-
-      gardenCropSelect.addEventListener('change', () => {
-        actualizarGardenCropInfo(gardenCropSelect.value || '');
-      });
+      }
 
       gardenSave.addEventListener('click', () => {
         const index = parseInt(gardenDialogEl.dataset.index || '0', 10);
@@ -1458,10 +1688,11 @@
       });
 
       resetGardenBtn.addEventListener('click', () => {
-        if (!confirm('¿Seguro que quieres limpiar todo el plano del huerto?')) return;
-        gardenState = Array(gardenSize * gardenSize).fill(null);
-        guardarGarden();
-        renderGarden();
+        openConfirm('¿Seguro que quieres limpiar todo el plano del huerto?', () => {
+          gardenState = Array(gardenSize * gardenSize).fill(null);
+          guardarGarden();
+          renderGarden();
+        });
       });
 
       cargarGarden();
@@ -1476,13 +1707,36 @@
       const diaryDate = document.getElementById('diaryDate');
       const diaryNotes = document.getElementById('diaryNotes');
       const diarySave = document.getElementById('diarySave');
-      const diaryDetailDialog = document.getElementById('diaryDetailDialog');
-      const diaryDetailType = document.getElementById('diaryDetailType');
-      const diaryDetailDate = document.getElementById('diaryDetailDate');
-      const diaryDetailNotes = document.getElementById('diaryDetailNotes');
-      const diaryDeleteBtn = document.getElementById('diaryDeleteBtn');
-
+      const DIARY_KEY = 'mi_siembra_diario_v1';
       let diaryEntries = [];
+
+      const confirmDialogEl = document.getElementById('confirmDialog');
+      const confirmMessageEl = document.getElementById('confirmMessage');
+      const confirmCancelBtn = document.getElementById('confirmCancel');
+      const confirmOkBtn = document.getElementById('confirmOk');
+      let confirmOkHandler = null;
+
+      function openConfirm(message, onOk) {
+        confirmMessageEl.textContent = message;
+        confirmOkHandler = onOk;
+        confirmDialogEl.classList.add('active');
+      }
+
+      confirmCancelBtn.addEventListener('click', () => {
+        confirmDialogEl.classList.remove('active');
+        confirmOkHandler = null;
+      });
+
+      confirmOkBtn.addEventListener('click', () => {
+        if (typeof confirmOkHandler === 'function') {
+          const fn = confirmOkHandler;
+          confirmOkHandler = null;
+          confirmDialogEl.classList.remove('active');
+          fn();
+        } else {
+          confirmDialogEl.classList.remove('active');
+        }
+      });
 
       function cargarDiario() {
         try {
@@ -1514,10 +1768,10 @@
           const div = document.createElement('div');
           div.className = 'diary-entry';
           div.dataset.index = String(index);
-          const icono = TIPO_ICONOS[entry.tipo] || '📌';
+          const emoji = emojiParaTipoDiario(entry.tipo);
           div.innerHTML = `
             <div class="diary-meta">
-              <div class="diary-type">${icono} ${entry.tipo || 'Actividad'}</div>
+              <div class="diary-type"><span>${emoji}</span><span>${entry.tipo || 'Actividad'}</span></div>
               <div class="diary-date">${entry.fecha || ''}</div>
             </div>
             <div class="diary-notes">${entry.notas || ''}</div>
@@ -1546,7 +1800,6 @@
         diaryDialogEl.classList.remove('active');
       });
 
-      // Al tocar una entrada del diario, mostrar detalle con icono y más datos
       diaryList.addEventListener('click', (event) => {
         const item = event.target.closest('.diary-entry');
         if (!item) return;
@@ -1557,93 +1810,148 @@
         if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) return;
 
         const entrada = diaryEntries[index];
-        const icono = TIPO_ICONOS[entrada.tipo] || '📌';
+        const textoConfirm = entrada && entrada.tipo
+          ? `¿Borrar la entrada "${entrada.tipo}" del diario?`
+          : '¿Borrar esta entrada del diario?';
 
-        diaryDetailDialog.dataset.index = String(index);
-        diaryDetailType.textContent = `${icono} ${entrada.tipo || 'Actividad'}`;
-        diaryDetailDate.textContent = entrada.fecha || '';
-        diaryDetailNotes.textContent = entrada.notas || '';
-        diaryDetailDialog.classList.add('active');
-      });
-
-      diaryDeleteBtn.addEventListener('click', () => {
-        const idxStr = diaryDetailDialog.dataset.index;
-        const index = parseInt(idxStr || '-1', 10);
-        if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) {
-          diaryDetailDialog.classList.remove('active');
-          return;
-        }
-        if (!confirm('¿Seguro que quieres borrar esta entrada del diario?')) return;
-        diaryEntries.splice(index, 1);
-        guardarDiario();
-        renderDiario();
-        diaryDetailDialog.classList.remove('active');
+        openConfirm(textoConfirm, () => {
+          diaryEntries.splice(index, 1);
+          guardarDiario();
+          renderDiario();
+        });
       });
 
       cargarDiario();
       renderDiario();
 
-      // --- Copias de seguridad ---
-      const backupExportBtn = document.getElementById('backupExport');
-      const backupImportBtn = document.getElementById('backupImport');
-      const backupFileInput = document.getElementById('backupFile');
+      // --- Copia de seguridad ---
+      const backupExportBtn = document.getElementById('backupExportBtn');
+      const backupImportBtn = document.getElementById('backupImportBtn');
+      const backupFileInput = document.getElementById('backupFileInput');
+      const backupInfo = document.getElementById('backupInfo');
+      const BACKUP_META_KEY = 'mi_siembra_backup_fecha';
 
-      backupExportBtn.addEventListener('click', () => {
+      function actualizarBackupInfo() {
+        const iso = localStorage.getItem(BACKUP_META_KEY);
+        if (!iso) {
+          backupInfo.textContent = 'Aún no has creado un respaldo.';
+          return;
+        }
+        try {
+          const d = new Date(iso);
+          const texto = d.toLocaleString();
+          backupInfo.textContent = texto;
+        } catch {
+          backupInfo.textContent = 'Fecha de respaldo desconocida.';
+        }
+      }
+
+      function exportBackup() {
         const payload = {
           version: 1,
-          createdAt: new Date().toISOString(),
-          garden: gardenState,
-          diary: diaryEntries
+          exportedAt: new Date().toISOString(),
+          gardenSize,
+          gardenState,
+          diaryEntries
         };
-        const json = JSON.stringify(payload, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-
-        const now = new Date();
-        const pad = n => String(n).padStart(2, '0');
-        const fileName = `mi_siembra_backup_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}.json`;
-
         const a = document.createElement('a');
         a.href = url;
-        a.download = fileName;
+        a.download = 'mi-siembra-respaldo.json';
         document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
+        a.remove();
         URL.revokeObjectURL(url);
-      });
+        localStorage.setItem(BACKUP_META_KEY, payload.exportedAt);
+        actualizarBackupInfo();
+      }
 
-      backupImportBtn.addEventListener('click', () => {
-        backupFileInput.value = '';
-        backupFileInput.click();
-      });
-
-      backupFileInput.addEventListener('change', (e) => {
-        const file = e.target.files && e.target.files[0];
-        if (!file) return;
+      function importBackupFromFile(file) {
         const reader = new FileReader();
-        reader.onload = (ev) => {
+        reader.onload = (event) => {
           try {
-            const data = JSON.parse(ev.target.result);
+            const data = JSON.parse(event.target.result);
             if (!data || typeof data !== 'object') throw new Error('Formato inválido');
-
-            if (Array.isArray(data.garden) && data.garden.length === gardenSize * gardenSize) {
-              gardenState = data.garden;
-              guardarGarden();
-              renderGarden();
+            if (!Array.isArray(data.gardenState) || !Array.isArray(data.diaryEntries)) {
+              throw new Error('Faltan datos esperados');
             }
-            if (Array.isArray(data.diary)) {
-              diaryEntries = data.diary;
-              guardarDiario();
-              renderDiario();
+            gardenState = data.gardenState;
+            diaryEntries = data.diaryEntries;
+            guardarGarden();
+            guardarDiario();
+            renderGarden();
+            renderDiario();
+            if (data.exportedAt) {
+              localStorage.setItem(BACKUP_META_KEY, data.exportedAt);
+            } else {
+              localStorage.setItem(BACKUP_META_KEY, new Date().toISOString());
             }
-            alert('Copia de seguridad restaurada correctamente.');
+            actualizarBackupInfo();
+            alert('Respaldo restaurado correctamente.');
           } catch (err) {
-            console.warn(err);
-            alert('No se pudo leer el archivo de copia de seguridad.');
+            console.error(err);
+            alert('No se pudo importar el respaldo. Verifica que sea el archivo correcto.');
           }
         };
-        reader.readAsText(file, 'utf-8');
-      });
+        reader.readAsText(file);
+      }
+
+      if (backupExportBtn) {
+        backupExportBtn.addEventListener('click', exportBackup);
+      }
+
+      if (backupImportBtn && backupFileInput) {
+        backupImportBtn.addEventListener('click', () => backupFileInput.click());
+        backupFileInput.addEventListener('change', () => {
+          const file = backupFileInput.files && backupFileInput.files[0];
+          if (!file) return;
+          importBackupFromFile(file);
+          backupFileInput.value = '';
+        });
+      }
+
+      actualizarBackupInfo();
+
+      // --- Modo rápido acciones ---
+      if (quickDiaryBtn) {
+        quickDiaryBtn.addEventListener('click', () => {
+          setView('diaryView');
+          setActivePill('diaryView');
+          const hoyISO = new Date().toISOString().slice(0, 10);
+          diaryDate.value = hoyISO;
+          diaryNotes.value = '';
+          diaryType.value = 'Siembra';
+          diaryDialogEl.classList.add('active');
+        });
+      }
+
+      if (quickMonthBtn) {
+        quickMonthBtn.addEventListener('click', () => {
+          setView('calendarView');
+          setActivePill('calendarView');
+          const btn = monthButtonsContainer.querySelector(\`.month-btn[data-mes-id="\${mesActual}"]\`) ||
+                      monthButtonsContainer.querySelector('.month-btn');
+          if (btn) {
+            document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            mostrarSiembrasDeMes(parseInt(btn.dataset.mesId, 10));
+          }
+        });
+      }
+
+      if (quickGardenBtn) {
+        quickGardenBtn.addEventListener('click', () => {
+          setView('gardenView');
+          setActivePill('gardenView');
+        });
+      }
+
+      if (quickBackupBtn) {
+        quickBackupBtn.addEventListener('click', () => {
+          exportBackup();
+        });
+      }
 
       // Service Worker
       if ('serviceWorker' in navigator) {
@@ -1654,4 +1962,4 @@
     });
   </script>
 </body>
-      </html>
+            </html>
