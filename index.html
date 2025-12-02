@@ -5,82 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mi Siembra Inteligente</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#22c55e" />
+  <meta name="theme-color" content="#16a34a" />
   <style>
-    ::root {
-  color-scheme: light;
-  --bg: #f1f5f9;              /* fondo general casi blanco */
-  --bg-elevated: #ffffff;
-  --card: #ffffff;
-  --card-soft: #f8fafc;
-  --accent: #16a34a;          /* verde un poco más oscuro */
-  --accent-soft: rgba(22,163,74,0.16);
-  --accent-strong: rgba(22,163,74,0.40);
-  --text-main: #020617;       /* texto casi negro */
-  --text-soft: #475569;       /* gris más oscuro para mejor contraste */
-  --border-subtle: rgba(148,163,184,0.8);
-  --chip-bg: #f8fafc;
-  --chip-border: rgba(148,163,184,0.9);
-  --danger: #dc2626;
-  --shadow-soft: 0 10px 28px rgba(148,163,184,0.40);
-  --radius-xl: 20px;
-  --radius-2xl: 26px;
-  --transition-fast: 0.18s ease-out;
-}
-
+    :root {
+      color-scheme: light;
+      --bg: #f1f5f9;
+      --bg-elevated: #ffffff;
+      --card: #ffffff;
+      --card-soft: #f8fafc;
+      --accent: #16a34a;
+      --accent-soft: rgba(22,163,74,0.16);
+      --accent-strong: rgba(22,163,74,0.4);
+      --text-main: #020617;
+      --text-soft: #475569;
+      --border-subtle: rgba(148,163,184,0.8);
+      --chip-bg: #f8fafc;
+      --chip-border: rgba(148,163,184,0.9);
+      --danger: #dc2626;
+      --shadow-soft: 0 10px 28px rgba(148,163,184,0.4);
+      --radius-xl: 20px;
+      --radius-2xl: 26px;
+      --transition-fast: 0.18s ease-out;
+    }
     * { box-sizing: border-box; }
-
     html, body {
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      font-size: 17px; /* un poco más grande */
-      background: radial-gradient(circle at top left, #ecfdf3 0, #f9fafb 45%, #e5f5ec 100%);
+      font-size: 17px;
+      background: #f1f5f9;
       color: var(--text-main);
       min-height: 100%;
     }
-
     body {
       display: flex;
       flex-direction: column;
       align-items: stretch;
     }
-
     .app-shell {
       min-height: 100vh;
       max-width: 960px;
       margin: 0 auto;
       padding: 16px 12px 24px;
     }
-
     header.app-header {
       position: sticky;
       top: 0;
       z-index: 20;
       padding: 4px 4px 10px;
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
+      backdrop-filter: blur(26px);
+      -webkit-backdrop-filter: blur(26px);
     }
-
     .header-inner {
       border-radius: 999px;
       padding: 10px 16px;
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.20) 0, #ffffff 55%, #f1f5f9 100%);
-      box-shadow: 0 16px 40px rgba(148,163,184,0.55);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.2) 0, rgba(241,245,249,0.95) 40%, rgba(241,245,249,1) 100%);
+      box-shadow: 0 18px 40px rgba(148,163,184,0.7);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      border: 1px solid rgba(148,163,184,0.55);
     }
-
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
       min-width: 0;
     }
-
     .brand-icon {
       width: 32px;
       height: 32px;
@@ -89,18 +80,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 10px 24px rgba(34,197,94,0.55);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.6);
     }
-
     .brand-icon span { font-size: 20px; }
-
     .brand-text {
       display: flex;
       flex-direction: column;
       gap: 2px;
       min-width: 0;
     }
-
     .brand-title {
       font-weight: 650;
       letter-spacing: 0.01em;
@@ -109,21 +97,18 @@
       text-overflow: ellipsis;
       overflow: hidden;
     }
-
     .brand-sub {
       font-size: 12px;
       color: var(--text-soft);
     }
-
     .pill-nav {
       display: flex;
       gap: 6px;
       padding: 2px;
       border-radius: 999px;
-      background: rgba(248,250,252,0.95);
-      border: 1px solid rgba(148,163,184,0.7);
+      background: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.9);
     }
-
     .pill-nav button {
       border: none;
       border-radius: 999px;
@@ -135,42 +120,34 @@
       align-items: center;
       gap: 4px;
       cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
     }
-
     .pill-nav button span.emoji { font-size: 14px; }
-
     .pill-nav button.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
       font-weight: 600;
-      box-shadow: 0 6px 18px rgba(34,197,94,0.55);
+      box-shadow: 0 8px 20px rgba(34,197,94,0.6);
       transform: translateY(-0.5px);
     }
-
     main { padding: 10px 2px 24px; }
-
     section.view {
       display: none;
       animation: fadeIn 0.2s ease-out;
     }
-
     section.view.active { display: block; }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     .section-card {
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.10) 0, var(--card-soft) 42%, #ffffff 100%);
+      background: radial-gradient(circle at top left, rgba(148,163,184,0.25) 0, var(--card-soft) 45%, #ffffff 100%);
       border-radius: var(--radius-2xl);
       padding: 18px 18px 18px;
       box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148,163,184,0.7);
+      border: 1px solid rgba(148,163,184,0.9);
       margin-bottom: 18px;
     }
-
     .section-header {
       display: flex;
       align-items: center;
@@ -178,49 +155,43 @@
       gap: 10px;
       margin-bottom: 10px;
     }
-
     .section-title {
       font-size: 22px;
       font-weight: 650;
     }
-
     .section-subtitle {
       font-size: 13px;
       color: var(--text-soft);
       margin-top: 4px;
     }
-
     .badge {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       padding: 3px 8px;
       border-radius: 999px;
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.6);
-      color: #166534;
+      background: rgba(22,163,74,0.16);
+      border: 1px solid rgba(22,163,74,0.7);
+      color: #14532d;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
-
     .badge span.emoji { font-size: 12px; }
-
     .grid-cards {
       display: flex;
       flex-direction: column;
       gap: 12px;
       margin-top: 8px;
     }
-
     .home-card {
-      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.34) 0, #ffffff 45%, #f1f5f9 100%);
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.45) 0, rgba(241,245,249,0.98) 45%, rgba(241,245,249,1) 100%);
       border-radius: 20px;
       padding: 12px 12px 13px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(148,163,184,0.8);
-      box-shadow: 0 10px 24px rgba(148,163,184,0.6);
+      border: 1px solid rgba(148,163,184,0.9);
+      box-shadow: 0 12px 28px rgba(148,163,184,0.9);
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -228,40 +199,34 @@
       min-height: 90px;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
-
     .home-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 32px rgba(148,163,184,0.8);
-      border-color: rgba(34,197,94,0.9);
+      box-shadow: 0 18px 38px rgba(148,163,184,1);
+      border-color: rgba(22,163,74,0.9);
     }
-
     .home-card-title {
       font-size: 16px;
       font-weight: 650;
     }
-
     .home-card-desc {
       font-size: 13px;
       color: var(--text-soft);
       max-width: 85%;
     }
-
     .home-card-icon {
       position: absolute;
-      right: -4px;
+      right: -6px;
       bottom: -4px;
       font-size: 46px;
       opacity: 0.18;
       transform: rotate(-8deg);
     }
-
     .chips-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 8px;
     }
-
     .chip {
       font-size: 11px;
       padding: 4px 9px;
@@ -274,16 +239,13 @@
       gap: 5px;
       cursor: pointer;
     }
-
     .chip span.emoji { font-size: 12px; }
-
     .chip.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
-      border-color: rgba(34,197,94,0.9);
-      box-shadow: 0 10px 24px rgba(34,197,94,0.75);
+      border-color: rgba(22,163,74,0.9);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.9);
     }
-
     .search-input {
       flex: 1;
       min-width: 0;
@@ -295,11 +257,9 @@
       padding: 6px 10px;
       outline: none;
     }
-
     .search-input::placeholder {
       color: var(--text-soft);
     }
-
     .month-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -307,76 +267,75 @@
       margin-top: 8px;
       margin-bottom: 10px;
     }
-
     .month-btn {
       border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: #ffffff;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: var(--chip-bg);
       color: var(--text-soft);
       font-size: 13px;
       padding: 6px 4px;
       text-align: center;
       cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
     }
-
     .month-btn.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
       font-weight: 600;
-      border-color: rgba(34,197,94,0.9);
-      box-shadow: 0 10px 24px rgba(34,197,94,0.8);
+      border-color: rgba(22,163,74,0.9);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.9);
       transform: translateY(-1px);
     }
-
     .list {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-top: 4px;
     }
-
     .list-item {
       border-radius: 18px;
       padding: 10px 11px;
       background: #ffffff;
-      border: 1px solid rgba(203,213,225,0.9);
+      border: 1px solid rgba(148,163,184,0.9);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
     }
-
+    .list-item.with-media {
+      align-items: flex-start;
+    }
+    .list-icon {
+      margin-right: 8px;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
     .list-main {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-
     .list-title {
       font-size: 15px;
       font-weight: 600;
     }
-
     .list-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
       font-size: 11px;
     }
-
     .meta-pill {
       padding: 2px 7px;
       border-radius: 999px;
-      background: #f8fafc;
-      border: 1px solid rgba(148,163,184,0.8);
+      background: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.9);
       color: var(--text-soft);
     }
-
     .small-btn {
       border-radius: 999px;
       border: 1px solid rgba(148,163,184,0.9);
-      background: #f8fafc;
+      background: #eff6ff;
       color: var(--text-main);
       padding: 5px 8px;
       font-size: 11px;
@@ -385,21 +344,18 @@
       align-items: center;
       gap: 4px;
     }
-
     .small-btn span.emoji { font-size: 13px; }
-
     .catalog-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 12px;
       margin-top: 10px;
     }
-
     .crop-card {
       border-radius: 22px;
       overflow: hidden;
-      background: radial-gradient(circle at top, rgba(34,197,94,0.18) 0, #ffffff 55%);
-      border: 1px solid rgba(148,163,184,0.8);
+      background: radial-gradient(circle at top, rgba(22,163,74,0.3) 0, #ffffff 55%);
+      border: 1px solid rgba(148,163,184,0.9);
       box-shadow: var(--shadow-soft);
       display: flex;
       flex-direction: column;
@@ -407,35 +363,30 @@
       cursor: pointer;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
-
     .crop-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(148,163,184,0.9);
-      border-color: rgba(34,197,94,0.9);
+      box-shadow: 0 18px 40px rgba(148,163,184,1);
+      border-color: rgba(22,163,74,0.9);
     }
-
     .crop-photo {
       height: 90px;
       position: relative;
       overflow: hidden;
       background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
     }
-
     .crop-photo img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      opacity: 0.92;
+      opacity: 0.88;
     }
-
     .crop-photo::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(248,250,252,0.9));
+      background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(255,255,255,0.8));
     }
-
     .crop-body {
       padding: 9px 10px 11px;
       display: flex;
@@ -443,55 +394,48 @@
       gap: 4px;
       flex: 1;
     }
-
     .crop-name {
       font-size: 15px;
       font-weight: 600;
     }
-
     .crop-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
       margin-top: 4px;
     }
-
     .crop-tag {
       font-size: 11px;
       padding: 2px 7px;
       border-radius: 999px;
-      background: #f8fafc;
-      border: 1px solid rgba(148,163,184,0.8);
+      background: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.9);
       color: var(--text-soft);
     }
-
     .empty-state {
       padding: 26px 18px;
       border-radius: var(--radius-2xl);
-      border: 1px dashed rgba(148,163,184,0.8);
+      border: 1px dashed rgba(148,163,184,0.9);
       background: #f8fafc;
       text-align: center;
       font-size: 13px;
       color: var(--text-soft);
     }
-
     .empty-state span.emoji {
       display: block;
       font-size: 28px;
       margin-bottom: 6px;
     }
-
     .garden-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
       margin-top: 10px;
     }
-
     .garden-cell {
       border-radius: 14px;
       border: 1px solid rgba(148,163,184,0.9);
-      background: radial-gradient(circle at top, rgba(34,197,94,0.12) 0, #ffffff 60%);
+      background: radial-gradient(circle at top, rgba(22,163,74,0.25) 0, #ffffff 60%);
       aspect-ratio: 1/1;
       display: flex;
       flex-direction: column;
@@ -503,58 +447,50 @@
       text-align: center;
       padding: 4px;
     }
-
     .garden-cell-label {
       font-weight: 600;
       color: var(--text-main);
       font-size: 12px;
     }
-
     .garden-cell-plant {
       font-size: 12px;
       margin-top: 2px;
     }
-
     .dialog-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.20);
+      background: rgba(15,23,42,0.45);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 50;
     }
-
     .dialog-backdrop.active { display: flex; }
-
     .dialog {
       width: min(380px, 100% - 32px);
       border-radius: 22px;
       padding: 16px 16px 14px;
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.12) 0, #ffffff 50%);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.25) 0, #ffffff 50%);
       border: 1px solid rgba(148,163,184,0.9);
-      box-shadow: 0 24px 70px rgba(15,23,42,0.30);
+      box-shadow: 0 24px 70px rgba(15,23,42,0.35);
     }
-
     .dialog h3 {
       margin: 0 0 8px;
       font-size: 17px;
     }
-
     .dialog label {
       font-size: 13px;
       color: var(--text-soft);
       display: block;
       margin-bottom: 5px;
     }
-
     .dialog select,
     .dialog input,
     .dialog textarea {
       width: 100%;
       border-radius: 12px;
       border: 1px solid rgba(148,163,184,0.9);
-      background: #f9fafb;
+      background: #f8fafc;
       color: var(--text-main);
       font-size: 14px;
       padding: 7px 9px;
@@ -562,21 +498,18 @@
       font-family: inherit;
       resize: vertical;
     }
-
     .dialog textarea { min-height: 60px; }
-
     .dialog-footer {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
       margin-top: 6px;
     }
-
     .btn {
       border-radius: 999px;
       padding: 6px 12px;
       border: 1px solid rgba(148,163,184,0.9);
-      background: #f8fafc;
+      background: #eff6ff;
       color: var(--text-main);
       font-size: 13px;
       cursor: pointer;
@@ -584,17 +517,14 @@
       align-items: center;
       gap: 6px;
     }
-
     .btn-primary {
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      border-color: rgba(34,197,94,0.95);
+      border-color: rgba(22,163,74,0.9);
       color: #022c22;
       font-weight: 600;
-      box-shadow: 0 12px 28px rgba(34,197,94,0.75);
+      box-shadow: 0 12px 32px rgba(34,197,94,0.8);
     }
-
     .btn-ghost { background: transparent; }
-
     .diary-list {
       display: flex;
       flex-direction: column;
@@ -604,38 +534,32 @@
       overflow-y: auto;
       padding-right: 2px;
     }
-
     .diary-entry {
       border-radius: 16px;
       padding: 8px 10px;
       background: #ffffff;
-      border: 1px solid rgba(203,213,225,0.9);
+      border: 1px solid rgba(148,163,184,0.9);
       font-size: 13px;
       display: flex;
       flex-direction: column;
       gap: 3px;
       cursor: pointer;
     }
-
     .diary-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
     }
-
     .diary-type { font-weight: 600; }
-
     .diary-date {
       font-size: 12px;
       color: var(--text-soft);
     }
-
     .diary-notes {
       color: var(--text-soft);
       font-size: 13px;
     }
-
     footer {
       margin-top: 8px;
       padding: 6px 4px 2px;
@@ -643,12 +567,10 @@
       color: var(--text-soft);
       text-align: center;
     }
-
     footer a {
       color: var(--accent);
       text-decoration: none;
     }
-
     @media (min-width: 768px) {
       .app-shell {
         padding: 18px 8px 28px;
@@ -678,7 +600,6 @@
         </nav>
       </div>
     </header>
-
     <main>
       <!-- INICIO -->
       <section id="homeView" class="view active">
@@ -755,7 +676,6 @@
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
-
           <!-- Buscador -->
           <div class="chips-row">
             <input
@@ -764,12 +684,10 @@
               type="search"
               placeholder="Buscar por nombre (ej. tomate, lechuga, cilantro…)">
           </div>
-
           <!-- Filtros por tipo -->
           <div class="chips-row" id="catalogTypeFilters"></div>
           <!-- Filtros por sol -->
           <div class="chips-row" id="catalogSunFilters"></div>
-
           <div class="catalog-grid" id="catalogGrid"></div>
         </div>
       </section>
@@ -809,7 +727,7 @@
         </div>
       </section>
 
-      <!-- PLAGAS -->
+      <!-- PLAGAS (RESUMEN) -->
       <section id="pestsView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -857,10 +775,14 @@
               </div>
             </div>
           </div>
+          <div class="chips-row" style="margin-top:12px;">
+            <button class="btn" data-view-target="pestsCatalogView">📚 Ver catálogo de plagas</button>
+            <button class="btn" data-view-target="pesticidesView">🧴 Ver pesticidas caseros</button>
+          </div>
         </div>
       </section>
 
-      <!-- ABONOS -->
+      <!-- ABONOS (RESUMEN) -->
       <section id="fertView" class="view">
         <div class="section-card">
           <div class="section-header">
@@ -910,6 +832,42 @@
         </div>
       </section>
 
+      <!-- CATÁLOGO DE PLAGAS -->
+      <section id="pestsCatalogView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Catálogo de plagas</div>
+              <div class="section-subtitle">Busca por nombre o tipo y mira qué cultivos suelen afectar.</div>
+            </div>
+            <button class="small-btn" data-view-target="pestsView"><span class="emoji">⬅️</span><span>Volver</span></button>
+          </div>
+          <div class="chips-row">
+            <input id="pestSearch" class="search-input" type="search" placeholder="Nombre de plaga (ej. pulgón, caracol…)" />
+          </div>
+          <div class="chips-row" id="pestTypeFilters"></div>
+          <div class="list" id="pestsList"></div>
+        </div>
+      </section>
+
+      <!-- CATÁLOGO DE PESTICIDAS -->
+      <section id="pesticidesView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Pesticidas caseros</div>
+              <div class="section-subtitle">Opciones de bajo impacto para controlar plagas habituales.</div>
+            </div>
+            <button class="small-btn" data-view-target="pestsView"><span class="emoji">⬅️</span><span>Volver</span></button>
+          </div>
+          <div class="chips-row">
+            <input id="pesticideSearch" class="search-input" type="search" placeholder="Nombre del pesticida (ej. agua jabonosa…)" />
+          </div>
+          <div class="chips-row" id="pesticideTypeFilters"></div>
+          <div class="list" id="pesticidesList"></div>
+        </div>
+      </section>
+
       <!-- MÁS -->
       <section id="moreView" class="view">
         <div class="section-card">
@@ -940,6 +898,16 @@
               <div class="home-card-desc">Cuándo y cómo abonar sin excesos.</div>
               <div class="home-card-icon">🧪</div>
             </article>
+            <article class="home-card" data-view-target="pestsCatalogView">
+              <div class="home-card-title">Catálogo de plagas</div>
+              <div class="home-card-desc">Listado completo con síntomas y cultivos afectados.</div>
+              <div class="home-card-icon">📚</div>
+            </article>
+            <article class="home-card" data-view-target="pesticidesView">
+              <div class="home-card-title">Pesticidas caseros</div>
+              <div class="home-card-desc">Remedios suaves para cada tipo de plaga.</div>
+              <div class="home-card-icon">🧴</div>
+            </article>
           </div>
         </div>
 
@@ -962,7 +930,6 @@
         </div>
       </section>
     </main>
-
     <footer>
       Mi Siembra Inteligente · Datos guardados solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
@@ -1041,6 +1008,7 @@
         <p><strong>Distancia entre plantas:</strong> <span id="cropDialogDistancia"></span></p>
         <p><strong>Profundidad de siembra:</strong> <span id="cropDialogProfundidad"></span></p>
         <p><strong>Tiesto recomendado:</strong> <span id="cropDialogTiesto"></span></p>
+        <p><strong>Plagas frecuentes:</strong> <span id="cropDialogPlagas"></span></p>
       </div>
       <div class="dialog-footer">
         <button class="btn btn-primary" type="button" data-dialog-close>Cerrar</button>
@@ -1053,7 +1021,7 @@
     const GARDEN_KEY = 'mi_siembra_huerto_v1';
     const DIARY_KEY = 'mi_siembra_diario_v1';
 
-    // Datos de cultivos
+    // Datos de cultivos (igual que tus imágenes en /img)
     const cultivos = [
       { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
       { id: 'acerola', nombre: 'Acerola', tipo: 'Frutal', imagen: 'img/acerola.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
@@ -1117,6 +1085,195 @@
       { id: 'zanahoria', nombre: 'Zanahoria', tipo: 'Raíz', imagen: 'img/zanahoria.jpg', diasCosecha: '70–90 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–8 cm', profundidad: '1–2 cm', tiesto: '10–12 L' }
     ];
 
+    // Catálogo de plagas
+    const plagasCatalog = [
+      {
+        id: 'pulgon',
+        nombre: 'Pulgón',
+        tipo: 'Insecto chupador',
+        icon: '🪲',
+        sintomas: 'Brotes tiernos deformados, hojas rizadas y pegajosas por mielilla.',
+        cultivos: ['tomate','lechuga','cilantro','habichuelas'],
+        remedios: 'Rocíos de agua jabonosa suave o jabón potásico, enjuagar con agua limpia y favorecer mariquitas y crisopas.'
+      },
+      {
+        id: 'aranhuela_roja',
+        nombre: 'Arañuela roja',
+        tipo: 'Ácaro',
+        icon: '🕷️',
+        sintomas: 'Punteado amarillento en hojas y finas telarañas en el envés.',
+        cultivos: ['tomate','berenjena','pimiento'],
+        remedios: 'Aumentar humedad, duchas de agua en el envés y aplicaciones suaves de aceite de neem.'
+      },
+      {
+        id: 'mosca_blanca',
+        nombre: 'Mosca blanca',
+        tipo: 'Insecto chupador',
+        icon: '🦟',
+        sintomas: 'Nubes de insectos blancos al mover la planta, hojas amarillentas con mielilla.',
+        cultivos: ['tomate','pimiento','calabaza'],
+        remedios: 'Trampas cromáticas amarillas, agua jabonosa y limpieza de hojas afectadas.'
+      },
+      {
+        id: 'cochinilla',
+        nombre: 'Cochinilla',
+        tipo: 'Insecto chupador',
+        icon: '🐞',
+        sintomas: 'Bultitos algodonosos o con caparazón en tallos y hojas.',
+        cultivos: ['cítricos','guayaba','papaya'],
+        remedios: 'Algodón con alcohol en focos pequeños, jabón potásico y aceite de neem en infestaciones mayores.'
+      },
+      {
+        id: 'chinche_verde',
+        nombre: 'Chinche verde',
+        tipo: 'Insecto chupador',
+        icon: '🪳',
+        sintomas: 'Manchas y deformaciones en vainas y frutos tiernos.',
+        cultivos: ['gandules','habichuelas','tomate'],
+        remedios: 'Recolecta manual, mantas anti-insectos en etapas tempranas y diversificar con flores repelentes.'
+      },
+      {
+        id: 'minador',
+        nombre: 'Minador de hojas',
+        tipo: 'Insecto minador',
+        icon: '🐛',
+        sintomas: 'Caminos blanquecinos serpenteantes dentro de las hojas.',
+        cultivos: ['habichuelas','cucurbitáceas','tomate'],
+        remedios: 'Retirar hojas muy afectadas, fomentar enemigos naturales y usar trampas cromáticas.'
+      },
+      {
+        id: 'caracol',
+        nombre: 'Caracoles y babosas',
+        tipo: 'Otros animales',
+        icon: '🐌',
+        sintomas: 'Hojas con mordidas grandes e irregulares y rastros de baba brillante.',
+        cultivos: ['lechuga','coles','fresas'],
+        remedios: 'Recolecta manual al atardecer, trampas de cerveza y barreras de ceniza o cáscara de huevo triturada.'
+      },
+      {
+        id: 'oruga',
+        nombre: 'Orugas',
+        tipo: 'Insecto masticador',
+        icon: '🐛',
+        sintomas: 'Hojas perforadas o comidas desde los bordes, bolitas de excremento oscuro.',
+        cultivos: ['coles','lechuga','tomate'],
+        remedios: 'Revisión manual diaria, eliminación de huevos y uso de mallas ligeras sobre los cultivos.'
+      },
+      {
+        id: 'trips',
+        nombre: 'Trips',
+        tipo: 'Insecto chupador',
+        icon: '🦟',
+        sintomas: 'Hojas con aspecto plateado o bronceado y pequeños puntos negros.',
+        cultivos: ['flores','cebolla','papaya'],
+        remedios: 'Trampas azules, extractos suaves de ajo y jabón potásico.'
+      },
+      {
+        id: 'oidio',
+        nombre: 'Oídio',
+        tipo: 'Hongo',
+        icon: '🍄',
+        sintomas: 'Polvillo blanco sobre la superficie de las hojas y tallos.',
+        cultivos: ['calabaza','pepino','fresas'],
+        remedios: 'Leche diluida (1 parte de leche por 9 de agua), infusión de manzanilla o bicarbonato muy diluido.'
+      }
+    ];
+
+    // Catálogo de pesticidas caseros
+    const pesticidasCatalog = [
+      {
+        id: 'agua_jabonosa',
+        nombre: 'Agua jabonosa',
+        tipo: 'Insecticida suave',
+        icon: '🧼',
+        plagas: ['pulgon','mosca_blanca','cochinilla'],
+        uso: 'Mezclar jabón neutro o potásico en agua (siempre bien diluido) y aplicar sobre insectos pequeños.',
+        seguridad: 'No usar detergentes fuertes. Probar primero en una parte pequeña de la planta.'
+      },
+      {
+        id: 'jabon_potasico',
+        nombre: 'Jabón potásico',
+        tipo: 'Insecticida',
+        icon: '🧴',
+        plagas: ['pulgon','cochinilla','mosca_blanca'],
+        uso: 'Diluir según indicaciones del fabricante y rociar hojas por el envés y el haz.',
+        seguridad: 'Respetar dosis; repetir cada pocos días en infestaciones fuertes.'
+      },
+      {
+        id: 'aceite_neem',
+        nombre: 'Aceite de neem',
+        tipo: 'Insecticida y repelente',
+        icon: '🌿',
+        plagas: ['pulgon','aranhuela_roja','cochinilla','oruga'],
+        uso: 'Emulsionar en agua con unas gotas de jabón y aplicar al atardecer.',
+        seguridad: 'No usar a pleno sol para evitar quemaduras en hojas.'
+      },
+      {
+        id: 'repelente_ajo_picante',
+        nombre: 'Repelente de ajo picante',
+        tipo: 'Repelente',
+        icon: '🌶️',
+        plagas: ['pulgon','trips','oruga'],
+        uso: 'Licuar ajo, cebolla y chile en agua, colar y aplicar muy diluido sobre el follaje.',
+        seguridad: 'Probar primero en pocas hojas; puede ser fuerte en dosis altas.'
+      },
+      {
+        id: 'insecticida_tomate',
+        nombre: 'Insecticida de tomate',
+        tipo: 'Repelente',
+        icon: '🍅',
+        plagas: ['pulgon','oruga'],
+        uso: 'Hervir hojas de tomate en agua, dejar enfriar, colar y aplicar sobre hojas afectadas.',
+        seguridad: 'Usar en pequeñas cantidades y renovar la mezcla a menudo.'
+      },
+      {
+        id: 'insecticida_limon',
+        nombre: 'Insecticida de limón',
+        tipo: 'Repelente cítrico',
+        icon: '🍋',
+        plagas: ['pulgon','mosca_blanca'],
+        uso: 'Infusión de cáscaras de limón en agua caliente; una vez fría se rocía sobre la planta.',
+        seguridad: 'Evitar aplicaciones a pleno sol inmediato.'
+      },
+      {
+        id: 'tierra_diatomeas',
+        nombre: 'Tierra de diatomeas',
+        tipo: 'Polvo seco',
+        icon: '🪨',
+        plagas: ['caracol','babosa','oruga','hormiga'],
+        uso: 'Espolvorear en el suelo alrededor de las plantas, siempre en seco.',
+        seguridad: 'Usar mascarilla al aplicarla, no inhalar el polvo.'
+      },
+      {
+        id: 'trampa_cromatica',
+        nombre: 'Trampa cromática',
+        tipo: 'Trampa física',
+        icon: '🟨',
+        plagas: ['mosca_blanca','minador','trips'],
+        uso: 'Cartones amarillos o azules untados con pegamento especial colocados cerca de los cultivos.',
+        seguridad: 'Seguras para la planta; colocar fuera del alcance de niños pequeños.'
+      },
+      {
+        id: 'fungicida_manzanilla',
+        nombre: 'Fungicida de manzanilla',
+        tipo: 'Fungicida suave',
+        icon: '🌼',
+        plagas: ['oidio'],
+        uso: 'Preparar una infusión de manzanilla y pulverizar sobre hojas con hongos suaves.',
+        seguridad: 'Repetir cada pocos días; no mancha ni quema la planta.'
+      },
+      {
+        id: 'fungicida_canela',
+        nombre: 'Fungicida de canela',
+        tipo: 'Fungicida',
+        icon: '🥧',
+        plagas: ['hongos_suelo'],
+        uso: 'Espolvorear canela en la superficie del sustrato para prevenir hongos en semilleros.',
+        seguridad: 'No abusar en plantas adultas, se usa principalmente en semilleros.'
+      }
+    ];
+
+    // Meses y siembras
     const mesesInfo = [
       { id: 1, nombre: 'Ene' },
       { id: 2, nombre: 'Feb' },
@@ -1147,6 +1304,7 @@
       12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
     };
 
+    // Mapa cultivo -> meses recomendados
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
@@ -1156,6 +1314,19 @@
       });
     });
     Object.values(cultivoMeses).forEach(arr => arr.sort((a, b) => a - b));
+
+    // Plagas frecuentes por cultivo (para la ficha)
+    const plagasPorCultivo = {
+      tomate: ['pulgon','mosca_blanca','aranhuela_roja','minador'],
+      lechuga: ['pulgon','caracol','oruga'],
+      cilantro: ['pulgon','trips'],
+      habichuelas: ['pulgon','minador','chinche_verde'],
+      calabaza: ['caracol','oruga','oidio'],
+      fresas: ['caracol','oidio'],
+      gandules: ['chinche_verde'],
+      papaya: ['aranhuela_roja','trips'],
+      parcha: ['pulgon','oruga']
+    };
 
     function obtenerCategoriaSol(solStr) {
       const s = (solStr || '').toLowerCase();
@@ -1173,6 +1344,7 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Navegación entre vistas
       const views = document.querySelectorAll('section.view');
       const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
       const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
@@ -1180,14 +1352,12 @@
       function setView(viewId) {
         views.forEach(v => v.classList.toggle('active', v.id === viewId));
       }
-
       function setActivePill(viewId) {
         pillButtons.forEach(b => {
           const v = b.dataset.view;
           b.classList.toggle('active', v === viewId);
         });
       }
-
       allViewButtons.forEach(btn => {
         const target = btn.dataset.viewTarget || btn.dataset.view;
         if (!target) return;
@@ -1197,7 +1367,7 @@
         });
       });
 
-      // Cierre genérico de diálogos
+      // Diálogos genéricos
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1264,18 +1434,19 @@
       const hoy = new Date();
       const mesActual = hoy.getMonth() + 1;
       const btnMesActual =
-        monthButtonsContainer.querySelector(`.month-btn[data-mes-id="${mesActual}"]`) ||
+        monthButtonsContainer.querySelector(\`.month-btn[data-mes-id="\${mesActual}"]\`) ||
         monthButtonsContainer.querySelector('.month-btn');
       if (btnMesActual) {
         btnMesActual.classList.add('active');
         mostrarSiembrasDeMes(parseInt(btnMesActual.dataset.mesId, 10));
       }
 
-      // --- Catálogo ---
+      // --- Catálogo de cultivos ---
       const catalogSearch = document.getElementById('catalogSearch');
       const catalogTypeFilters = document.getElementById('catalogTypeFilters');
       const catalogSunFilters = document.getElementById('catalogSunFilters');
       const catalogGrid = document.getElementById('catalogGrid');
+
       let filtroTipoActual = 'Todos';
       let filtroSolActual = 'Todos';
       let textoBusqueda = '';
@@ -1309,7 +1480,7 @@
         chip.type = 'button';
         chip.className = 'chip';
         chip.dataset.sol = cat;
-        chip.textContent = cat === 'Todos' ? 'Todo tipo de sol' : `☀️ ${cat}`;
+        chip.textContent = cat === 'Todos' ? 'Todo tipo de sol' : \`☀️ \${cat}\`;
         chip.addEventListener('click', () => {
           document.querySelectorAll('#catalogSunFilters .chip').forEach(c => c.classList.remove('active'));
           chip.classList.add('active');
@@ -1339,7 +1510,6 @@
             c.id.toLowerCase().includes(texto);
           return coincideTipo && coincideSol && coincideBusqueda;
         });
-
         if (!listaFiltrada.length) {
           catalogGrid.innerHTML = `
             <div class="empty-state">
@@ -1348,7 +1518,6 @@
             </div>`;
           return;
         }
-
         listaFiltrada.forEach(cultivo => {
           const card = document.createElement('article');
           card.className = 'crop-card';
@@ -1369,10 +1538,9 @@
           catalogGrid.appendChild(card);
         });
       }
-
       renderCatalog();
 
-      // Ficha de cultivo
+      // Ficha de cultivo (diálogo)
       const cropDialog = document.getElementById('cropDialog');
       const cropDialogImg = document.getElementById('cropDialogImg');
       const cropDialogName = document.getElementById('cropDialogName');
@@ -1384,14 +1552,15 @@
       const cropDialogDistancia = document.getElementById('cropDialogDistancia');
       const cropDialogProfundidad = document.getElementById('cropDialogProfundidad');
       const cropDialogTiesto = document.getElementById('cropDialogTiesto');
+      const cropDialogPlagas = document.getElementById('cropDialogPlagas');
 
       function abrirFichaCultivo(c) {
         cropDialogImg.src = c.imagen;
         cropDialogImg.alt = c.nombre;
         cropDialogName.textContent = c.nombre;
         cropDialogTipo.textContent = c.tipo;
-        cropDialogDias.textContent = `⏱️ ${c.diasCosecha}`;
-        cropDialogSol.textContent = `☀️ ${c.sol}`;
+        cropDialogDias.textContent = \`⏱️ \${c.diasCosecha}\`;
+        cropDialogSol.textContent = \`☀️ \${c.sol}\`;
         cropDialogSiembra.textContent = c.siembra;
 
         const mesesCultivo = cultivoMeses[c.id] || [];
@@ -1406,10 +1575,21 @@
         } else {
           cropDialogMeses.textContent = 'Todo el año (según clima y manejo)';
         }
-
         cropDialogDistancia.textContent = c.distancia;
         cropDialogProfundidad.textContent = c.profundidad;
         cropDialogTiesto.textContent = c.tiesto;
+
+        const idsPlagasCultivo = plagasPorCultivo[c.id] || [];
+        if (idsPlagasCultivo.length) {
+          const nombresPlagas = idsPlagasCultivo.map(pid => {
+            const p = plagasCatalog.find(pp => pp.id === pid);
+            return p ? p.nombre : pid;
+          });
+          cropDialogPlagas.textContent = nombresPlagas.join(', ');
+        } else {
+          cropDialogPlagas.textContent = 'Sin datos específicos. Vigila pulgones, hongos en hojas y orugas de forma general.';
+        }
+
         cropDialog.classList.add('active');
       }
 
@@ -1421,7 +1601,7 @@
         if (cultivo) abrirFichaCultivo(cultivo);
       });
 
-      // --- Mi huerto ---
+      // --- Mi huerto (4x4) ---
       const gardenGrid = document.getElementById('gardenGrid');
       const gardenDialogEl = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
@@ -1444,11 +1624,9 @@
           gardenState = Array(gardenSize * gardenSize).fill(null);
         }
       }
-
       function guardarGarden() {
         localStorage.setItem(GARDEN_KEY, JSON.stringify(gardenState));
       }
-
       function renderGarden() {
         gardenGrid.innerHTML = '';
         gardenState.forEach((cultivoId, index) => {
@@ -1458,12 +1636,12 @@
           cell.dataset.index = String(index);
           const label = document.createElement('div');
           label.className = 'garden-cell-label';
-          label.textContent = `#${index + 1}`;
+          label.textContent = \`#\${index + 1}\`;
           const plant = document.createElement('div');
           plant.className = 'garden-cell-plant';
           if (cultivoId) {
             const cultivo = cultivos.find(c => c.id === cultivoId);
-            plant.textContent = cultivo ? `🌱 ${cultivo.nombre}` : `🌱 ${cultivoId}`;
+            plant.textContent = cultivo ? \`🌱 \${cultivo.nombre}\` : \`🌱 \${cultivoId}\`;
           } else {
             plant.textContent = 'Vacío';
           }
@@ -1472,7 +1650,6 @@
           gardenGrid.appendChild(cell);
         });
       }
-
       function actualizarGardenCropInfo(id) {
         if (!id) {
           gardenCropInfo.textContent = 'Cuadro vacío. Puedes elegir un cultivo del listado.';
@@ -1484,16 +1661,15 @@
           return;
         }
         gardenCropInfo.textContent =
-          `${c.nombre} · ${c.tipo} · ⏱️ ${c.diasCosecha} · ☀️ ${c.sol}`;
+          \`\${c.nombre} · \${c.tipo} · ⏱️ \${c.diasCosecha} · ☀️ \${c.sol}\`;
       }
-
       gardenGrid.addEventListener('click', (e) => {
         const cell = e.target.closest('.garden-cell');
         if (!cell) return;
         const index = parseInt(cell.dataset.index, 10);
         gardenDialogEl.dataset.index = String(index);
         gardenDialogPosition.textContent =
-          `Cuadro #${index + 1} (fila ${Math.floor(index / gardenSize) + 1}, columna ${(index % gardenSize) + 1})`;
+          \`Cuadro #\${index + 1} (fila \${Math.floor(index / gardenSize) + 1}, columna \${(index % gardenSize) + 1})\`;
         gardenCropSelect.innerHTML = '<option value="">Vacío</option>';
         cultivos.forEach(c => {
           const opt = document.createElement('option');
@@ -1506,11 +1682,9 @@
         actualizarGardenCropInfo(actual);
         gardenDialogEl.classList.add('active');
       });
-
       gardenCropSelect.addEventListener('change', () => {
         actualizarGardenCropInfo(gardenCropSelect.value || '');
       });
-
       gardenSave.addEventListener('click', () => {
         const index = parseInt(gardenDialogEl.dataset.index || '0', 10);
         const val = gardenCropSelect.value || null;
@@ -1519,14 +1693,12 @@
         renderGarden();
         gardenDialogEl.classList.remove('active');
       });
-
       resetGardenBtn.addEventListener('click', () => {
         if (!confirm('¿Seguro que quieres limpiar todo el plano del huerto?')) return;
         gardenState = Array(gardenSize * gardenSize).fill(null);
         guardarGarden();
         renderGarden();
       });
-
       cargarGarden();
       renderGarden();
 
@@ -1554,11 +1726,9 @@
           diaryEntries = [];
         }
       }
-
       function guardarDiario() {
         localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
       }
-
       function renderDiario() {
         diaryList.innerHTML = '';
         if (!diaryEntries.length) {
@@ -1566,12 +1736,10 @@
           return;
         }
         diaryEmpty.style.display = 'none';
-
         const items = diaryEntries
           .map((entry, index) => ({ entry, index }))
           .slice()
           .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
-
         items.forEach(({ entry, index }) => {
           const div = document.createElement('div');
           div.className = 'diary-entry';
@@ -1587,7 +1755,6 @@
           diaryList.appendChild(div);
         });
       }
-
       addDiaryEntryBtn.addEventListener('click', () => {
         const hoyISO = new Date().toISOString().slice(0, 10);
         diaryDate.value = hoyISO;
@@ -1595,7 +1762,6 @@
         diaryType.value = 'Siembra';
         diaryDialogEl.classList.add('active');
       });
-
       diarySave.addEventListener('click', () => {
         const entrada = {
           tipo: diaryType.value || 'Actividad',
@@ -1607,7 +1773,6 @@
         renderDiario();
         diaryDialogEl.classList.remove('active');
       });
-
       diaryList.addEventListener('click', (event) => {
         const item = event.target.closest('.diary-entry');
         if (!item) return;
@@ -1623,7 +1788,6 @@
         diaryDetailNotes.textContent = entrada.notas || '';
         diaryDetailDialog.classList.add('active');
       });
-
       diaryDeleteBtn.addEventListener('click', () => {
         const idxStr = diaryDetailDialog.dataset.index;
         const index = parseInt(idxStr || '-1', 10);
@@ -1637,7 +1801,6 @@
         renderDiario();
         diaryDetailDialog.classList.remove('active');
       });
-
       cargarDiario();
       renderDiario();
 
@@ -1700,6 +1863,154 @@
         reader.readAsText(file, 'utf-8');
       });
 
+      // --- Catálogo de plagas ---
+      const pestSearch = document.getElementById('pestSearch');
+      const pestTypeFilters = document.getElementById('pestTypeFilters');
+      const pestsList = document.getElementById('pestsList');
+
+      if (pestSearch && pestTypeFilters && pestsList) {
+        let pestTypeFilter = 'Todos';
+        const tiposPlaga = Array.from(new Set(plagasCatalog.map(p => p.tipo))).sort();
+        ['Todos', ...tiposPlaga].forEach(tipo => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'chip';
+          chip.dataset.tipo = tipo;
+          chip.textContent = tipo === 'Todos' ? 'Todas las plagas' : tipo;
+          chip.addEventListener('click', () => {
+            pestTypeFilter = tipo;
+            pestTypeFilters.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            renderPlagas();
+          });
+          pestTypeFilters.appendChild(chip);
+        });
+        const firstPChip = pestTypeFilters.querySelector('.chip');
+        if (firstPChip) firstPChip.classList.add('active');
+
+        pestSearch.addEventListener('input', renderPlagas);
+
+        function renderPlagas() {
+          const q = pestSearch.value.trim().toLowerCase();
+          pestsList.innerHTML = '';
+          let lista = plagasCatalog.filter(p => {
+            const matchTipo = pestTypeFilter === 'Todos' || p.tipo === pestTypeFilter;
+            const matchText = !q ||
+              p.nombre.toLowerCase().includes(q) ||
+              (p.sintomas && p.sintomas.toLowerCase().includes(q));
+            return matchTipo && matchText;
+          });
+          lista = lista.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+          if (!lista.length) {
+            pestsList.innerHTML = `
+              <div class="empty-state">
+                <span class="emoji">🔍</span>
+                No se encontraron plagas con estos filtros.
+              </div>`;
+            return;
+          }
+          lista.forEach(plaga => {
+            const nombresCultivos = (plaga.cultivos || [])
+              .map(cid => {
+                const cu = cultivos.find(c => c.id === cid);
+                return cu ? cu.nombre : null;
+              })
+              .filter(Boolean)
+              .join(', ');
+            const item = document.createElement('div');
+            item.className = 'list-item with-media';
+            item.innerHTML = `
+              <div class="list-icon">${plaga.icon || '🪲'}</div>
+              <div class="list-main">
+                <div class="list-title">${plaga.nombre}</div>
+                <div class="list-meta">
+                  <span class="meta-pill">${plaga.tipo}</span>
+                  ${nombresCultivos ? `<span class="meta-pill">🌱 ${nombresCultivos}</span>` : ''}
+                </div>
+                <div class="section-subtitle"><strong>Síntomas:</strong> ${plaga.sintomas}</div>
+                <div class="section-subtitle"><strong>Remedios suaves:</strong> ${plaga.remedios}</div>
+              </div>
+            `;
+            pestsList.appendChild(item);
+          });
+        }
+        renderPlagas();
+      }
+
+      // --- Catálogo de pesticidas ---
+      const pesticideSearch = document.getElementById('pesticideSearch');
+      const pesticideTypeFilters = document.getElementById('pesticideTypeFilters');
+      const pesticidesList = document.getElementById('pesticidesList');
+
+      if (pesticideSearch && pesticideTypeFilters && pesticidesList) {
+        let pestTypeFilter2 = 'Todos';
+        const tiposPesticida = Array.from(new Set(pesticidasCatalog.map(p => p.tipo))).sort();
+        ['Todos', ...tiposPesticida].forEach(tipo => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'chip';
+          chip.dataset.tipo = tipo;
+          chip.textContent = tipo === 'Todos' ? 'Todos los tipos' : tipo;
+          chip.addEventListener('click', () => {
+            pestTypeFilter2 = tipo;
+            pesticideTypeFilters.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            renderPesticidas();
+          });
+          pesticideTypeFilters.appendChild(chip);
+        });
+        const firstChipPest = pesticideTypeFilters.querySelector('.chip');
+        if (firstChipPest) firstChipPest.classList.add('active');
+
+        pesticideSearch.addEventListener('input', renderPesticidas);
+
+        function renderPesticidas() {
+          const q = pesticideSearch.value.trim().toLowerCase();
+          pesticidesList.innerHTML = '';
+          let lista = pesticidasCatalog.filter(p => {
+            const matchTipo = pestTypeFilter2 === 'Todos' || p.tipo === pestTypeFilter2;
+            const matchText = !q ||
+              p.nombre.toLowerCase().includes(q) ||
+              (p.uso && p.uso.toLowerCase().includes(q));
+            return matchTipo && matchText;
+          });
+          lista = lista.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+          if (!lista.length) {
+            pesticidesList.innerHTML = `
+              <div class="empty-state">
+                <span class="emoji">🔍</span>
+                No se encontraron pesticidas con estos filtros.
+              </div>`;
+            return;
+          }
+          lista.forEach(prod => {
+            const nombresPlagas = (prod.plagas || [])
+              .map(pid => {
+                const pl = plagasCatalog.find(p => p.id === pid);
+                return pl ? pl.nombre : null;
+              })
+              .filter(Boolean)
+              .join(', ');
+            const item = document.createElement('div');
+            item.className = 'list-item with-media';
+            item.innerHTML = `
+              <div class="list-icon">${prod.icon || '🧴'}</div>
+              <div class="list-main">
+                <div class="list-title">${prod.nombre}</div>
+                <div class="list-meta">
+                  <span class="meta-pill">${prod.tipo}</span>
+                  ${nombresPlagas ? `<span class="meta-pill">🪲 ${nombresPlagas}</span>` : ''}
+                </div>
+                <div class="section-subtitle"><strong>Uso:</strong> ${prod.uso}</div>
+                <div class="section-subtitle"><strong>Seguridad:</strong> ${prod.seguridad}</div>
+              </div>
+            `;
+            pesticidesList.appendChild(item);
+          });
+        }
+        renderPesticidas();
+      }
+
       // Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
@@ -1709,4 +2020,4 @@
     });
   </script>
 </body>
-</html>
+  </html>
