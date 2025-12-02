@@ -6,93 +6,81 @@
   <title>Mi Siembra Inteligente</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#22c55e" />
- /* ===== Tema claro / alta visibilidad ===== */
-    body.tema-claro {
-      /* Sobrescribimos solo las variables */
-      --bg: #f4f4f5;
-      --bg-elevated: #ffffff;
-      --card: #ffffff;
-      --card-soft: #f9fafb;
-      --accent: #16a34a;
-      --accent-soft: rgba(22,163,74,0.12);
-      --accent-strong: rgba(22,163,74,0.35);
-      --text-main: #020617;
-      --text-soft: #4b5563;
-      --border-subtle: rgba(148,163,184,0.6);
-      --chip-bg: #eef2ff;
-      --chip-border: rgba(148,163,184,0.8);
-      --shadow-soft: 0 12px 26px rgba(15,23,42,0.12);
-    }
-
-    body.tema-claro {
-      background: linear-gradient(180deg, #ecfdf5 0, #f4f4f5 40%, #e5e7eb 100%)
-    }
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #020617;
-      --bg-elevated: #02081f;
-      --card: #02081f;
-      --card-soft: #030919;
+      color-scheme: light;
+      --bg: #e5f5ec;
+      --bg-elevated: #f9fafb;
+      --card: #ffffff;
+      --card-soft: #f4f7fb;
       --accent: #22c55e;
       --accent-soft: rgba(34,197,94,0.12);
-      --accent-strong: rgba(34,197,94,0.4);
-      --text-main: #f9fafb;
-      --text-soft: #9ca3af;
-      --border-subtle: rgba(148,163,184,0.4);
-      --chip-bg: rgba(15,23,42,0.9);
+      --accent-strong: rgba(34,197,94,0.3);
+      --text-main: #0f172a;
+      --text-soft: #64748b;
+      --border-subtle: rgba(148,163,184,0.5);
+      --chip-bg: #f8fafc;
       --chip-border: rgba(148,163,184,0.7);
-      --danger: #fb7185;
-      --shadow-soft: 0 18px 45px rgba(15,23,42,0.85);
+      --danger: #dc2626;
+      --shadow-soft: 0 14px 35px rgba(148,163,184,0.45);
       --radius-xl: 20px;
       --radius-2xl: 26px;
       --transition-fast: 0.18s ease-out;
     }
+
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
       font-size: 17px; /* un poco más grande */
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 50%, #000 100%);
+      background: radial-gradient(circle at top left, #ecfdf3 0, #f9fafb 45%, #e5f5ec 100%);
       color: var(--text-main);
       min-height: 100%;
     }
+
     body {
       display: flex;
       flex-direction: column;
       align-items: stretch;
     }
+
     .app-shell {
       min-height: 100vh;
       max-width: 960px;
       margin: 0 auto;
       padding: 16px 12px 24px;
     }
+
     header.app-header {
       position: sticky;
       top: 0;
       z-index: 20;
       padding: 4px 4px 10px;
-      backdrop-filter: blur(26px);
-      -webkit-backdrop-filter: blur(26px);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
     }
+
     .header-inner {
       border-radius: 999px;
       padding: 10px 16px;
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.15) 0, rgba(15,23,42,0.9) 45%, rgba(15,23,42,0.96) 100%);
-      box-shadow: 0 20px 60px rgba(15,23,42,0.9);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.20) 0, #ffffff 55%, #f1f5f9 100%);
+      box-shadow: 0 16px 40px rgba(148,163,184,0.55);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      border: 1px solid rgba(148,163,184,0.55);
     }
+
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
       min-width: 0;
     }
+
     .brand-icon {
       width: 32px;
       height: 32px;
@@ -101,15 +89,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.55);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 10px 24px rgba(34,197,94,0.55);
     }
+
     .brand-icon span { font-size: 20px; }
+
     .brand-text {
       display: flex;
       flex-direction: column;
       gap: 2px;
       min-width: 0;
     }
+
     .brand-title {
       font-weight: 650;
       letter-spacing: 0.01em;
@@ -118,18 +109,21 @@
       text-overflow: ellipsis;
       overflow: hidden;
     }
+
     .brand-sub {
       font-size: 12px;
       color: var(--text-soft);
     }
+
     .pill-nav {
       display: flex;
       gap: 6px;
       padding: 2px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.85);
-      border: 1px solid rgba(148,163,184,0.55);
+      background: rgba(248,250,252,0.95);
+      border: 1px solid rgba(148,163,184,0.7);
     }
+
     .pill-nav button {
       border: none;
       border-radius: 999px;
@@ -141,34 +135,42 @@
       align-items: center;
       gap: 4px;
       cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
     }
+
     .pill-nav button span.emoji { font-size: 14px; }
+
     .pill-nav button.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
       font-weight: 600;
-      box-shadow: 0 8px 20px rgba(34,197,94,0.6);
+      box-shadow: 0 6px 18px rgba(34,197,94,0.55);
       transform: translateY(-0.5px);
     }
+
     main { padding: 10px 2px 24px; }
+
     section.view {
       display: none;
       animation: fadeIn 0.2s ease-out;
     }
+
     section.view.active { display: block; }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     .section-card {
-      background: radial-gradient(circle at top left, rgba(148,163,184,0.14) 0, var(--card-soft) 42%, #020617 100%);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.10) 0, var(--card-soft) 42%, #ffffff 100%);
       border-radius: var(--radius-2xl);
       padding: 18px 18px 18px;
       box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(51,65,85,0.9);
+      border: 1px solid rgba(148,163,184,0.7);
       margin-bottom: 18px;
     }
+
     .section-header {
       display: flex;
       align-items: center;
@@ -176,43 +178,49 @@
       gap: 10px;
       margin-bottom: 10px;
     }
+
     .section-title {
       font-size: 22px;
       font-weight: 650;
     }
+
     .section-subtitle {
       font-size: 13px;
       color: var(--text-soft);
       margin-top: 4px;
     }
+
     .badge {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       padding: 3px 8px;
       border-radius: 999px;
-      background: rgba(34,197,94,0.18);
+      background: rgba(34,197,94,0.12);
       border: 1px solid rgba(34,197,94,0.6);
-      color: #bbf7d0;
+      color: #166534;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
+
     .badge span.emoji { font-size: 12px; }
+
     .grid-cards {
       display: flex;
       flex-direction: column;
       gap: 12px;
       margin-top: 8px;
     }
+
     .home-card {
-      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.38) 0, rgba(15,23,42,0.98) 45%, rgba(15,23,42,1) 100%);
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.34) 0, #ffffff 45%, #f1f5f9 100%);
       border-radius: 20px;
       padding: 12px 12px 13px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(34,197,94,0.62);
-      box-shadow: 0 12px 32px rgba(22,163,74,0.7);
+      border: 1px solid rgba(148,163,184,0.8);
+      box-shadow: 0 10px 24px rgba(148,163,184,0.6);
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -220,53 +228,62 @@
       min-height: 90px;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
+
     .home-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(22,163,74,0.85);
-      border-color: rgba(190,242,100,0.95);
+      box-shadow: 0 16px 32px rgba(148,163,184,0.8);
+      border-color: rgba(34,197,94,0.9);
     }
+
     .home-card-title {
       font-size: 16px;
       font-weight: 650;
     }
+
     .home-card-desc {
       font-size: 13px;
-      color: #d1fae5;
+      color: var(--text-soft);
       max-width: 85%;
     }
+
     .home-card-icon {
       position: absolute;
-      right: -6px;
+      right: -4px;
       bottom: -4px;
       font-size: 46px;
       opacity: 0.18;
       transform: rotate(-8deg);
     }
+
     .chips-row {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 8px;
     }
+
     .chip {
       font-size: 11px;
       padding: 4px 9px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.7);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
       color: var(--text-soft);
       display: inline-flex;
       align-items: center;
       gap: 5px;
       cursor: pointer;
     }
+
     .chip span.emoji { font-size: 12px; }
+
     .chip.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
-      border-color: rgba(190,242,100,0.95);
-      box-shadow: 0 10px 28px rgba(34,197,94,0.85);
+      border-color: rgba(34,197,94,0.9);
+      box-shadow: 0 10px 24px rgba(34,197,94,0.75);
     }
+
     .search-input {
       flex: 1;
       min-width: 0;
@@ -278,9 +295,11 @@
       padding: 6px 10px;
       outline: none;
     }
+
     .search-input::placeholder {
       color: var(--text-soft);
     }
+
     .month-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -288,67 +307,76 @@
       margin-top: 8px;
       margin-bottom: 10px;
     }
+
     .month-btn {
       border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      background: var(--chip-bg);
+      border: 1px solid rgba(148,163,184,0.7);
+      background: #ffffff;
       color: var(--text-soft);
       font-size: 13px;
       padding: 6px 4px;
       text-align: center;
       cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
     }
+
     .month-btn.active {
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #022c22;
       font-weight: 600;
-      border-color: rgba(190,242,100,0.95);
-      box-shadow: 0 10px 28px rgba(34,197,94,0.85);
+      border-color: rgba(34,197,94,0.9);
+      box-shadow: 0 10px 24px rgba(34,197,94,0.8);
       transform: translateY(-1px);
     }
+
     .list {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-top: 4px;
     }
+
     .list-item {
       border-radius: 18px;
       padding: 10px 11px;
-      background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,1));
-      border: 1px solid rgba(51,65,85,0.95);
+      background: #ffffff;
+      border: 1px solid rgba(203,213,225,0.9);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
     }
+
     .list-main {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
+
     .list-title {
       font-size: 15px;
       font-weight: 600;
     }
+
     .list-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
       font-size: 11px;
     }
+
     .meta-pill {
       padding: 2px 7px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.7);
+      background: #f8fafc;
+      border: 1px solid rgba(148,163,184,0.8);
       color: var(--text-soft);
     }
+
     .small-btn {
       border-radius: 999px;
       border: 1px solid rgba(148,163,184,0.9);
-      background: rgba(15,23,42,0.95);
+      background: #f8fafc;
       color: var(--text-main);
       padding: 5px 8px;
       font-size: 11px;
@@ -357,18 +385,21 @@
       align-items: center;
       gap: 4px;
     }
+
     .small-btn span.emoji { font-size: 13px; }
+
     .catalog-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 12px;
       margin-top: 10px;
     }
+
     .crop-card {
       border-radius: 22px;
       overflow: hidden;
-      background: radial-gradient(circle at top, rgba(22,163,74,0.3) 0, #020617 55%);
-      border: 1px solid rgba(51,65,85,0.95);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.18) 0, #ffffff 55%);
+      border: 1px solid rgba(148,163,184,0.8);
       box-shadow: var(--shadow-soft);
       display: flex;
       flex-direction: column;
@@ -376,30 +407,35 @@
       cursor: pointer;
       transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
+
     .crop-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(22,163,74,0.85);
-      border-color: rgba(190,242,100,0.95);
+      box-shadow: 0 18px 40px rgba(148,163,184,0.9);
+      border-color: rgba(34,197,94,0.9);
     }
+
     .crop-photo {
       height: 90px;
       position: relative;
       overflow: hidden;
       background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
     }
+
     .crop-photo img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      opacity: 0.88;
+      opacity: 0.92;
     }
+
     .crop-photo::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(2,6,23,0.82));
+      background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(248,250,252,0.9));
     }
+
     .crop-body {
       padding: 9px 10px 11px;
       display: flex;
@@ -407,48 +443,55 @@
       gap: 4px;
       flex: 1;
     }
+
     .crop-name {
       font-size: 15px;
       font-weight: 600;
     }
+
     .crop-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
       margin-top: 4px;
     }
+
     .crop-tag {
       font-size: 11px;
       padding: 2px 7px;
       border-radius: 999px;
-      background: rgba(15,23,42,0.96);
-      border: 1px solid rgba(148,163,184,0.7);
+      background: #f8fafc;
+      border: 1px solid rgba(148,163,184,0.8);
       color: var(--text-soft);
     }
+
     .empty-state {
       padding: 26px 18px;
       border-radius: var(--radius-2xl);
-      border: 1px dashed rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.8);
+      border: 1px dashed rgba(148,163,184,0.8);
+      background: #f8fafc;
       text-align: center;
       font-size: 13px;
       color: var(--text-soft);
     }
+
     .empty-state span.emoji {
       display: block;
       font-size: 28px;
       margin-bottom: 6px;
     }
+
     .garden-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
       margin-top: 10px;
     }
+
     .garden-cell {
       border-radius: 14px;
-      border: 1px solid rgba(51,65,85,0.9);
-      background: radial-gradient(circle at top, rgba(34,197,94,0.25) 0, rgba(15,23,42,1) 60%);
+      border: 1px solid rgba(148,163,184,0.9);
+      background: radial-gradient(circle at top, rgba(34,197,94,0.12) 0, #ffffff 60%);
       aspect-ratio: 1/1;
       display: flex;
       flex-direction: column;
@@ -460,50 +503,58 @@
       text-align: center;
       padding: 4px;
     }
+
     .garden-cell-label {
       font-weight: 600;
       color: var(--text-main);
       font-size: 12px;
     }
+
     .garden-cell-plant {
       font-size: 12px;
       margin-top: 2px;
     }
+
     .dialog-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.85);
+      background: rgba(15,23,42,0.20);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 50;
     }
+
     .dialog-backdrop.active { display: flex; }
+
     .dialog {
       width: min(380px, 100% - 32px);
       border-radius: 22px;
       padding: 16px 16px 14px;
-      background: radial-gradient(circle at top left, rgba(34,197,94,0.2) 0, #020617 50%);
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.12) 0, #ffffff 50%);
       border: 1px solid rgba(148,163,184,0.9);
-      box-shadow: 0 24px 70px rgba(0,0,0,0.95);
+      box-shadow: 0 24px 70px rgba(15,23,42,0.30);
     }
+
     .dialog h3 {
       margin: 0 0 8px;
       font-size: 17px;
     }
+
     .dialog label {
       font-size: 13px;
       color: var(--text-soft);
       display: block;
       margin-bottom: 5px;
     }
+
     .dialog select,
     .dialog input,
     .dialog textarea {
       width: 100%;
       border-radius: 12px;
-      border: 1px solid rgba(148,163,184,0.8);
-      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #f9fafb;
       color: var(--text-main);
       font-size: 14px;
       padding: 7px 9px;
@@ -511,18 +562,21 @@
       font-family: inherit;
       resize: vertical;
     }
+
     .dialog textarea { min-height: 60px; }
+
     .dialog-footer {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
       margin-top: 6px;
     }
+
     .btn {
       border-radius: 999px;
       padding: 6px 12px;
       border: 1px solid rgba(148,163,184,0.9);
-      background: rgba(15,23,42,0.95);
+      background: #f8fafc;
       color: var(--text-main);
       font-size: 13px;
       cursor: pointer;
@@ -530,14 +584,17 @@
       align-items: center;
       gap: 6px;
     }
+
     .btn-primary {
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      border-color: rgba(190,242,100,0.95);
+      border-color: rgba(34,197,94,0.95);
       color: #022c22;
       font-weight: 600;
-      box-shadow: 0 12px 32px rgba(34,197,94,0.8);
+      box-shadow: 0 12px 28px rgba(34,197,94,0.75);
     }
+
     .btn-ghost { background: transparent; }
+
     .diary-list {
       display: flex;
       flex-direction: column;
@@ -547,32 +604,38 @@
       overflow-y: auto;
       padding-right: 2px;
     }
+
     .diary-entry {
       border-radius: 16px;
       padding: 8px 10px;
-      background: rgba(15,23,42,0.95);
-      border: 1px solid rgba(51,65,85,0.95);
+      background: #ffffff;
+      border: 1px solid rgba(203,213,225,0.9);
       font-size: 13px;
       display: flex;
       flex-direction: column;
       gap: 3px;
       cursor: pointer;
     }
+
     .diary-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 8px;
     }
+
     .diary-type { font-weight: 600; }
+
     .diary-date {
       font-size: 12px;
       color: var(--text-soft);
     }
+
     .diary-notes {
       color: var(--text-soft);
       font-size: 13px;
     }
+
     footer {
       margin-top: 8px;
       padding: 6px 4px 2px;
@@ -580,10 +643,12 @@
       color: var(--text-soft);
       text-align: center;
     }
+
     footer a {
       color: var(--accent);
       text-decoration: none;
     }
+
     @media (min-width: 768px) {
       .app-shell {
         padding: 18px 8px 28px;
@@ -613,6 +678,7 @@
         </nav>
       </div>
     </header>
+
     <main>
       <!-- INICIO -->
       <section id="homeView" class="view active">
@@ -663,6 +729,7 @@
           </div>
         </div>
       </section>
+
       <!-- CALENDARIO -->
       <section id="calendarView" class="view">
         <div class="section-card">
@@ -677,6 +744,7 @@
           <div class="list" id="monthResults"></div>
         </div>
       </section>
+
       <!-- CATÁLOGO -->
       <section id="catalogView" class="view">
         <div class="section-card">
@@ -687,6 +755,7 @@
             </div>
             <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
+
           <!-- Buscador -->
           <div class="chips-row">
             <input
@@ -695,13 +764,16 @@
               type="search"
               placeholder="Buscar por nombre (ej. tomate, lechuga, cilantro…)">
           </div>
+
           <!-- Filtros por tipo -->
           <div class="chips-row" id="catalogTypeFilters"></div>
           <!-- Filtros por sol -->
           <div class="chips-row" id="catalogSunFilters"></div>
+
           <div class="catalog-grid" id="catalogGrid"></div>
         </div>
       </section>
+
       <!-- MI HUERTO -->
       <section id="gardenView" class="view">
         <div class="section-card">
@@ -718,6 +790,7 @@
           </div>
         </div>
       </section>
+
       <!-- DIARIO -->
       <section id="diaryView" class="view">
         <div class="section-card">
@@ -735,6 +808,7 @@
           </div>
         </div>
       </section>
+
       <!-- PLAGAS -->
       <section id="pestsView" class="view">
         <div class="section-card">
@@ -785,6 +859,7 @@
           </div>
         </div>
       </section>
+
       <!-- ABONOS -->
       <section id="fertView" class="view">
         <div class="section-card">
@@ -834,6 +909,7 @@
           </div>
         </div>
       </section>
+
       <!-- MÁS -->
       <section id="moreView" class="view">
         <div class="section-card">
@@ -866,6 +942,7 @@
             </article>
           </div>
         </div>
+
         <div class="section-card">
           <div class="section-header">
             <div>
@@ -885,10 +962,12 @@
         </div>
       </section>
     </main>
+
     <footer>
       Mi Siembra Inteligente · Datos guardados solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
+
   <!-- DIÁLOGO HUERTO -->
   <div class="dialog-backdrop" id="gardenDialog">
     <div class="dialog">
@@ -903,6 +982,7 @@
       </div>
     </div>
   </div>
+
   <!-- DIÁLOGO DIARIO (NUEVA ENTRADA) -->
   <div class="dialog-backdrop" id="diaryDialog">
     <div class="dialog">
@@ -925,6 +1005,7 @@
       </div>
     </div>
   </div>
+
   <!-- DIÁLOGO DETALLE DIARIO -->
   <div class="dialog-backdrop" id="diaryDetailDialog">
     <div class="dialog">
@@ -938,6 +1019,7 @@
       </div>
     </div>
   </div>
+
   <!-- DIÁLOGO FICHA DEL CULTIVO -->
   <div class="dialog-backdrop" id="cropDialog">
     <div class="dialog dialog-crop">
@@ -965,11 +1047,13 @@
       </div>
     </div>
   </div>
+
   <script>
     // Claves de localStorage
     const GARDEN_KEY = 'mi_siembra_huerto_v1';
     const DIARY_KEY = 'mi_siembra_diario_v1';
-    // Datos de cultivos (igual que tus imágenes en /img)
+
+    // Datos de cultivos
     const cultivos = [
       { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
       { id: 'acerola', nombre: 'Acerola', tipo: 'Frutal', imagen: 'img/acerola.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
@@ -1032,6 +1116,7 @@
       { id: 'yuca', nombre: 'Yuca', tipo: 'Raíz/tubérculo', imagen: 'img/yuca.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Estacas de tallo', distancia: '80–100 cm', profundidad: '10–15 cm', tiesto: 'Suelo directo' },
       { id: 'zanahoria', nombre: 'Zanahoria', tipo: 'Raíz', imagen: 'img/zanahoria.jpg', diasCosecha: '70–90 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–8 cm', profundidad: '1–2 cm', tiesto: '10–12 L' }
     ];
+
     const mesesInfo = [
       { id: 1, nombre: 'Ene' },
       { id: 2, nombre: 'Feb' },
@@ -1046,6 +1131,7 @@
       { id: 11, nombre: 'Nov' },
       { id: 12, nombre: 'Dic' }
     ];
+
     const siembrasPorMes = {
       1: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','berro','apio'],
       2: ['lechuga','espinaca','acelga','cilantro','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','cebolla'],
@@ -1060,7 +1146,7 @@
       11: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','habichuelas','apio'],
       12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
     };
-    // Mapa cultivo -> meses recomendados
+
     const cultivoMeses = {};
     Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
       const mesNum = parseInt(mesStr, 10);
@@ -1070,12 +1156,14 @@
       });
     });
     Object.values(cultivoMeses).forEach(arr => arr.sort((a, b) => a - b));
+
     function obtenerCategoriaSol(solStr) {
       const s = (solStr || '').toLowerCase();
       if (s.includes('media sombra')) return 'Media sombra';
       if (s.includes('sol suave')) return 'Sol suave';
       return 'Pleno sol';
     }
+
     const TIPO_ICONOS = {
       'Siembra': '🌱',
       'Riego': '💧',
@@ -1083,20 +1171,23 @@
       'Cosecha': '🧺',
       'Otro': '📌'
     };
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Navegación entre vistas
       const views = document.querySelectorAll('section.view');
       const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
       const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
+
       function setView(viewId) {
         views.forEach(v => v.classList.toggle('active', v.id === viewId));
       }
+
       function setActivePill(viewId) {
         pillButtons.forEach(b => {
           const v = b.dataset.view;
           b.classList.toggle('active', v === viewId);
         });
       }
+
       allViewButtons.forEach(btn => {
         const target = btn.dataset.viewTarget || btn.dataset.view;
         if (!target) return;
@@ -1105,7 +1196,8 @@
           setActivePill(target);
         });
       });
-      // Diálogos genéricos (cerrar al tocar fuera o botón con data-dialog-close)
+
+      // Cierre genérico de diálogos
       const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
       dialogBackdrops.forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
@@ -1118,9 +1210,11 @@
           if (backdrop) backdrop.classList.remove('active');
         });
       });
+
       // --- Calendario ---
       const monthButtonsContainer = document.getElementById('monthButtons');
       const monthResults = document.getElementById('monthResults');
+
       mesesInfo.forEach(m => {
         const btn = document.createElement('button');
         btn.className = 'month-btn';
@@ -1133,6 +1227,7 @@
         });
         monthButtonsContainer.appendChild(btn);
       });
+
       function mostrarSiembrasDeMes(mesId) {
         monthResults.innerHTML = '';
         const ids = siembrasPorMes[mesId] || [];
@@ -1165,6 +1260,7 @@
           monthResults.appendChild(item);
         });
       }
+
       const hoy = new Date();
       const mesActual = hoy.getMonth() + 1;
       const btnMesActual =
@@ -1174,6 +1270,7 @@
         btnMesActual.classList.add('active');
         mostrarSiembrasDeMes(parseInt(btnMesActual.dataset.mesId, 10));
       }
+
       // --- Catálogo ---
       const catalogSearch = document.getElementById('catalogSearch');
       const catalogTypeFilters = document.getElementById('catalogTypeFilters');
@@ -1182,10 +1279,12 @@
       let filtroTipoActual = 'Todos';
       let filtroSolActual = 'Todos';
       let textoBusqueda = '';
+
       const tiposUnicos = Array.from(new Set(cultivos.map(c => c.tipo))).sort();
       const solSet = new Set();
       cultivos.forEach(c => solSet.add(obtenerCategoriaSol(c.sol)));
       const solesUnicos = Array.from(solSet).sort();
+
       const tiposFiltro = ['Todos', ...tiposUnicos];
       tiposFiltro.forEach(tipo => {
         const chip = document.createElement('button');
@@ -1203,6 +1302,7 @@
       });
       const primerChipTipo = catalogTypeFilters.querySelector('.chip');
       if (primerChipTipo) primerChipTipo.classList.add('active');
+
       const solesFiltro = ['Todos', ...solesUnicos];
       solesFiltro.forEach(cat => {
         const chip = document.createElement('button');
@@ -1220,10 +1320,12 @@
       });
       const primerChipSol = catalogSunFilters.querySelector('.chip');
       if (primerChipSol) primerChipSol.classList.add('active');
+
       catalogSearch.addEventListener('input', () => {
         textoBusqueda = (catalogSearch.value || '').toLowerCase();
         renderCatalog();
       });
+
       function renderCatalog() {
         catalogGrid.innerHTML = '';
         const texto = textoBusqueda.trim();
@@ -1237,6 +1339,7 @@
             c.id.toLowerCase().includes(texto);
           return coincideTipo && coincideSol && coincideBusqueda;
         });
+
         if (!listaFiltrada.length) {
           catalogGrid.innerHTML = `
             <div class="empty-state">
@@ -1245,6 +1348,7 @@
             </div>`;
           return;
         }
+
         listaFiltrada.forEach(cultivo => {
           const card = document.createElement('article');
           card.className = 'crop-card';
@@ -1265,8 +1369,10 @@
           catalogGrid.appendChild(card);
         });
       }
+
       renderCatalog();
-      // Ficha de cultivo (diálogo)
+
+      // Ficha de cultivo
       const cropDialog = document.getElementById('cropDialog');
       const cropDialogImg = document.getElementById('cropDialogImg');
       const cropDialogName = document.getElementById('cropDialogName');
@@ -1278,6 +1384,7 @@
       const cropDialogDistancia = document.getElementById('cropDialogDistancia');
       const cropDialogProfundidad = document.getElementById('cropDialogProfundidad');
       const cropDialogTiesto = document.getElementById('cropDialogTiesto');
+
       function abrirFichaCultivo(c) {
         cropDialogImg.src = c.imagen;
         cropDialogImg.alt = c.nombre;
@@ -1286,6 +1393,7 @@
         cropDialogDias.textContent = `⏱️ ${c.diasCosecha}`;
         cropDialogSol.textContent = `☀️ ${c.sol}`;
         cropDialogSiembra.textContent = c.siembra;
+
         const mesesCultivo = cultivoMeses[c.id] || [];
         if (mesesCultivo.length) {
           const nombresMeses = mesesCultivo
@@ -1298,11 +1406,13 @@
         } else {
           cropDialogMeses.textContent = 'Todo el año (según clima y manejo)';
         }
+
         cropDialogDistancia.textContent = c.distancia;
         cropDialogProfundidad.textContent = c.profundidad;
         cropDialogTiesto.textContent = c.tiesto;
         cropDialog.classList.add('active');
       }
+
       monthResults.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-crop-id]');
         if (!btn) return;
@@ -1310,7 +1420,8 @@
         const cultivo = cultivos.find(c => c.id === id);
         if (cultivo) abrirFichaCultivo(cultivo);
       });
-      // --- Mi huerto (4x4) ---
+
+      // --- Mi huerto ---
       const gardenGrid = document.getElementById('gardenGrid');
       const gardenDialogEl = document.getElementById('gardenDialog');
       const gardenDialogPosition = document.getElementById('gardenDialogPosition');
@@ -1320,6 +1431,7 @@
       const resetGardenBtn = document.getElementById('resetGarden');
       const gardenSize = 4;
       let gardenState = [];
+
       function cargarGarden() {
         try {
           const stored = JSON.parse(localStorage.getItem(GARDEN_KEY) || 'null');
@@ -1332,9 +1444,11 @@
           gardenState = Array(gardenSize * gardenSize).fill(null);
         }
       }
+
       function guardarGarden() {
         localStorage.setItem(GARDEN_KEY, JSON.stringify(gardenState));
       }
+
       function renderGarden() {
         gardenGrid.innerHTML = '';
         gardenState.forEach((cultivoId, index) => {
@@ -1358,6 +1472,7 @@
           gardenGrid.appendChild(cell);
         });
       }
+
       function actualizarGardenCropInfo(id) {
         if (!id) {
           gardenCropInfo.textContent = 'Cuadro vacío. Puedes elegir un cultivo del listado.';
@@ -1371,6 +1486,7 @@
         gardenCropInfo.textContent =
           `${c.nombre} · ${c.tipo} · ⏱️ ${c.diasCosecha} · ☀️ ${c.sol}`;
       }
+
       gardenGrid.addEventListener('click', (e) => {
         const cell = e.target.closest('.garden-cell');
         if (!cell) return;
@@ -1390,9 +1506,11 @@
         actualizarGardenCropInfo(actual);
         gardenDialogEl.classList.add('active');
       });
+
       gardenCropSelect.addEventListener('change', () => {
         actualizarGardenCropInfo(gardenCropSelect.value || '');
       });
+
       gardenSave.addEventListener('click', () => {
         const index = parseInt(gardenDialogEl.dataset.index || '0', 10);
         const val = gardenCropSelect.value || null;
@@ -1401,14 +1519,17 @@
         renderGarden();
         gardenDialogEl.classList.remove('active');
       });
+
       resetGardenBtn.addEventListener('click', () => {
         if (!confirm('¿Seguro que quieres limpiar todo el plano del huerto?')) return;
         gardenState = Array(gardenSize * gardenSize).fill(null);
         guardarGarden();
         renderGarden();
       });
+
       cargarGarden();
       renderGarden();
+
       // --- Diario ---
       const diaryList = document.getElementById('diaryList');
       const diaryEmpty = document.getElementById('diaryEmpty');
@@ -1424,6 +1545,7 @@
       const diaryDetailNotes = document.getElementById('diaryDetailNotes');
       const diaryDeleteBtn = document.getElementById('diaryDeleteBtn');
       let diaryEntries = [];
+
       function cargarDiario() {
         try {
           const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
@@ -1432,9 +1554,11 @@
           diaryEntries = [];
         }
       }
+
       function guardarDiario() {
         localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
       }
+
       function renderDiario() {
         diaryList.innerHTML = '';
         if (!diaryEntries.length) {
@@ -1442,10 +1566,12 @@
           return;
         }
         diaryEmpty.style.display = 'none';
+
         const items = diaryEntries
           .map((entry, index) => ({ entry, index }))
           .slice()
           .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
+
         items.forEach(({ entry, index }) => {
           const div = document.createElement('div');
           div.className = 'diary-entry';
@@ -1461,6 +1587,7 @@
           diaryList.appendChild(div);
         });
       }
+
       addDiaryEntryBtn.addEventListener('click', () => {
         const hoyISO = new Date().toISOString().slice(0, 10);
         diaryDate.value = hoyISO;
@@ -1468,6 +1595,7 @@
         diaryType.value = 'Siembra';
         diaryDialogEl.classList.add('active');
       });
+
       diarySave.addEventListener('click', () => {
         const entrada = {
           tipo: diaryType.value || 'Actividad',
@@ -1479,7 +1607,7 @@
         renderDiario();
         diaryDialogEl.classList.remove('active');
       });
-      // Al tocar una entrada del diario, mostrar detalle con icono y más datos
+
       diaryList.addEventListener('click', (event) => {
         const item = event.target.closest('.diary-entry');
         if (!item) return;
@@ -1495,6 +1623,7 @@
         diaryDetailNotes.textContent = entrada.notas || '';
         diaryDetailDialog.classList.add('active');
       });
+
       diaryDeleteBtn.addEventListener('click', () => {
         const idxStr = diaryDetailDialog.dataset.index;
         const index = parseInt(idxStr || '-1', 10);
@@ -1508,12 +1637,15 @@
         renderDiario();
         diaryDetailDialog.classList.remove('active');
       });
+
       cargarDiario();
       renderDiario();
+
       // --- Copias de seguridad ---
       const backupExportBtn = document.getElementById('backupExport');
       const backupImportBtn = document.getElementById('backupImport');
       const backupFileInput = document.getElementById('backupFile');
+
       backupExportBtn.addEventListener('click', () => {
         const payload = {
           version: 1,
@@ -1535,10 +1667,12 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       });
+
       backupImportBtn.addEventListener('click', () => {
         backupFileInput.value = '';
         backupFileInput.click();
       });
+
       backupFileInput.addEventListener('change', (e) => {
         const file = e.target.files && e.target.files[0];
         if (!file) return;
@@ -1565,6 +1699,7 @@
         };
         reader.readAsText(file, 'utf-8');
       });
+
       // Service Worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(err => {
@@ -1575,4 +1710,3 @@
   </script>
 </body>
 </html>
-```0
