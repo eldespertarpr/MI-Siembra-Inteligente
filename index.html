@@ -1079,30 +1079,58 @@
     }
 
     function renderChipsClima() {
-      var chipsClima = document.getElementById("chipsClima");
-      if (!chipsClima) return;
-      chipsClima.innerHTML = "";
+   // --- Catálogo de cultivos en forma de tarjetas ---
+    function renderCatalogoCultivos() {
+      var cont = document.getElementById("catalogoCultivos");
+      if (!cont) return;
+      cont.innerHTML = "";
 
-      var chip1 = document.createElement("div");
-      chip1.className = "chip";
-      chip1.innerHTML = "<strong>Clima:</strong> " + (
-        settings.clima === "tropical"
-          ? "Tropical"
-          : settings.clima === "subtropical"
-          ? "Subtropical / templado (N)"
-          : "Templado"
-      );
-      chipsClima.appendChild(chip1);
+      var climaKey = settings.clima || "tropical";
+      var base = CALENDARIO_POR_CLIMA[climaKey] || CALENDARIO_POR_CLIMA.tropical;
 
-      var chip2 = document.createElement("div");
-      chip2.className = "chip";
-      chip2.innerHTML = "<strong>Hemisferio:</strong> " + (settings.hemisferio === "norte" ? "Norte" : "Sur");
-      chipsClima.appendChild(chip2);
+      // pequeño título
+      var cardIntro = document.createElement("div");
+      cardIntro.className = "card tight";
+      cardIntro.innerHTML =
+        "<h3>Cultivos y épocas generales</h3>" +
+        '<p class="small">Tarjetas resumen según tu clima y hemisferio. Los meses son orientativos.</p>';
+      cont.appendChild(cardIntro);
 
-      var chip3 = document.createElement("div");
-      chip3.className = "chip";
-      chip3.innerHTML = "<strong>Huerto:</strong> " + settings.nombreHuerto;
-      chipsClima.appendChild(chip3);
+      base.forEach(function (c) {
+        var card = document.createElement("div");
+        card.className = "card tight";
+
+        var h3 = document.createElement("h3");
+        h3.textContent = c.nombre;
+        card.appendChild(h3);
+
+        // meses adaptados a hemisferio
+        var mesesAdaptados = mesesParaClimaYHemisferio(
+          c.meses,
+          climaKey,
+          settings.hemisferio
+        );
+        var nombresMeses = mesesAdaptados
+          .slice()
+          .sort(function (a, b) { return a - b; })
+          .map(function (m) { return MESES[m - 1]; });
+
+        var pMeses = document.createElement("p");
+        pMeses.innerHTML =
+          "<strong>Época sugerida:</strong> " +
+          (nombresMeses.length
+            ? nombresMeses.join(", ")
+            : "no definida");
+        card.appendChild(pMeses);
+
+        if (c.notas) {
+          var pNotas = document.createElement("p");
+          pNotas.innerHTML = "<strong>Notas:</strong> " + c.notas;
+          card.appendChild(pNotas);
+        }
+
+        cont.appendChild(card);
+      });
     }
 
     function renderCalendar() {
