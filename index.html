@@ -3,1783 +3,2136 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mi Siembra Inteligente (v17)</title>
-
-  <!-- PWA -->
+  <title>Mi Siembra Inteligente (v18)</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#22c55e" />
-
+  <meta name="theme-color" content="#16a34a" />
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #020617;
-      --bg-elevated: #02081f;
-      --card: #02081f;
-      --card-soft: #030919;
-      --accent: #22c55e;
-      --accent-soft: rgba(34,197,94,0.15);
-      --accent-strong: rgba(34,197,94,0.45);
-      --text-main: #f9fafb;
-      --text-soft: #9ca3af;
-      --border-subtle: rgba(148,163,184,0.3);
-      --danger: #f97373;
-      --chip-bg: rgba(15,23,42,0.9);
-      --chip-border: rgba(148,163,184,0.4);
-      --shadow-soft: 0 18px 45px rgba(15,23,42,0.7);
-      --radius-xl: 22px;
-      --radius-lg: 18px;
-      --radius-full: 999px;
+      color-scheme: light;
+      --bg: #f1f5f9;
+      --bg-elevated: #ffffff;
+      --card: #ffffff;
+      --card-soft: #f8fafc;
+      --accent: #16a34a;
+      --accent-soft: rgba(22,163,74,0.16);
+      --accent-strong: rgba(22,163,74,0.4);
+      --text-main: #020617;
+      --text-soft: #475569;
+      --border-subtle: rgba(148,163,184,0.8);
+      --chip-bg: #f8fafc;
+      --chip-border: rgba(148,163,184,0.9);
+      --danger: #dc2626;
+      --shadow-soft: 0 10px 28px rgba(148,163,184,0.4);
+      --radius-xl: 20px;
+      --radius-2xl: 26px;
+      --transition-fast: 0.18s ease-out;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
+    * { box-sizing: border-box; }
+    html, body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Roboto", "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #022c22 0, #020617 55%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      font-size: 17px;
+      background: #f1f5f9;
       color: var(--text-main);
-      min-height: 100vh;
+      min-height: 100%;
+    }
+    body {
       display: flex;
       flex-direction: column;
+      align-items: stretch;
     }
-
     .app-shell {
+      min-height: 100vh;
       max-width: 960px;
       margin: 0 auto;
-      padding: 16px 12px 28px;
+      padding: 16px 12px 24px;
     }
-
-    @media (min-width: 768px) {
-      .app-shell {
-        padding: 20px 16px 40px;
-      }
+    header.app-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 4px 4px 10px;
+      backdrop-filter: blur(26px);
+      -webkit-backdrop-filter: blur(26px);
     }
-
-    /* HEADER */
-
-    .app-header {
-      background: radial-gradient(circle at 0 0, #4ade80 0, #16a34a 28%, #052e16 85%);
-      border-radius: 28px;
-      padding: 18px 18px 16px;
+    .header-inner {
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.2) 0, rgba(241,245,249,0.95) 40%, rgba(241,245,249,1) 100%);
+      box-shadow: 0 18px 40px rgba(148,163,184,0.7);
       display: flex;
       align-items: center;
-      gap: 14px;
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 14px;
+      justify-content: space-between;
+      gap: 10px;
     }
-
-    .app-header::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 120% -10%, rgba(34,197,94,0.35) 0, transparent 55%);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .app-header-icon {
-      position: relative;
-      z-index: 1;
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      background: radial-gradient(circle at 30% 10%, #bbf7d0 0, #16a34a 35%, #052e16 90%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 14px 35px rgba(0,0,0,0.45);
-      flex-shrink: 0;
-    }
-
-    .app-header-icon span {
-      font-size: 32px;
-    }
-
-    .app-header-text {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .app-title-row {
+    .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
+      min-width: 0;
     }
-
-    .app-title {
-      font-size: 1.35rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .app-tag {
-      font-size: 0.72rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.45);
-      border: 1px solid rgba(15,23,42,0.8);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #e5e7eb;
-    }
-
-    .app-subtitle {
-      font-size: 0.80rem;
-      color: #e5e7eb;
-      opacity: 0.95;
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 30% 0, #bbf7d0 0, #22c55e 30%, #15803d 70%);
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
       align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.9), 0 12px 30px rgba(34,197,94,0.6);
     }
-
-    .app-subtitle span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .app-subtitle-dot {
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: rgba(226,232,240,0.7);
-    }
-
-    /* NAV */
-
-    .nav {
-      margin-top: 8px;
-      background: linear-gradient(135deg, var(--bg-elevated), #020617);
-      border-radius: 26px;
-      padding: 10px;
-      box-shadow: 0 18px 40px rgba(15,23,42,0.85);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(15,23,42,0.85);
-    }
-
-    @media (min-width: 660px) {
-      .nav {
-        grid-template-columns: repeat(8, minmax(0,1fr));
-      }
-    }
-
-    .nav-btn {
-      border: none;
-      border-radius: 999px;
-      padding: 7px 6px 6px;
-      font-size: 0.70rem;
-      color: var(--text-soft);
-      background: transparent;
+    .brand-icon span { font-size: 20px; }
+    .brand-text {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s, transform 0.12s;
-      position: relative;
-      min-height: 52px;
+      gap: 2px;
+      min-width: 0;
     }
-
-    .nav-btn span.nav-icon {
-      font-size: 1.1rem;
+    .brand-title {
+      font-weight: 650;
+      letter-spacing: 0.01em;
+      font-size: 18px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
-
-    .nav-btn span.nav-label {
-      line-height: 1.1;
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-soft);
     }
-
-    .nav-btn.nav-btn--active {
-      background: radial-gradient(circle at top, var(--accent) 0, var(--accent-soft) 45%, transparent 100%);
-      color: #ecfdf5;
-      box-shadow: 0 0 0 1px rgba(34,197,94,0.4), 0 14px 30px rgba(22,163,74,0.55);
-      transform: translateY(-1px);
-    }
-
-    .nav-btn.nav-btn--active::after {
-      content: "";
-      position: absolute;
-      inset: auto auto -3px 50%;
-      width: 32%;
-      max-width: 42px;
-      height: 3px;
+    .pill-nav {
+      display: flex;
+      gap: 6px;
+      padding: 2px;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(34,197,94,0.1), rgba(34,197,94,0.6), rgba(34,197,94,0.1));
-      transform: translateX(-50%);
+      background: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.9);
     }
-
-    /* SECTIONS */
-
-    main {
-      margin-top: 14px;
+    .pill-nav button {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      background: transparent;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
     }
-
-    .section {
+    .pill-nav button span.emoji { font-size: 14px; }
+    .pill-nav button.active {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(34,197,94,0.6);
+      transform: translateY(-0.5px);
+    }
+    main { padding: 10px 2px 24px; }
+    section.view {
       display: none;
-      animation: fadeIn 0.18s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
-
-    .section--active {
-      display: block;
-    }
-
+    section.view.active { display: block; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    .section > .section-title-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 14px 2px 8px;
-    }
-
-    .section-icon-pill {
-      width: 26px;
-      height: 26px;
-      border-radius: 13px;
-      background: radial-gradient(circle at 30% 15%, #fefce8 0, #fef9c3 25%, #0f172a 90%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-    }
-
-    .section-title-row h2 {
-      font-size: 1.05rem;
-      margin: 0;
-    }
-
-    .section-subtitle {
-      font-size: 0.82rem;
-      color: var(--text-soft);
-      margin: 2px 2px 10px;
-    }
-
-    .app-card {
-      background: radial-gradient(circle at top left, #020617 0, #020617 40%, #02081f 100%);
-      border-radius: var(--radius-xl);
-      padding: 14px 16px 14px;
-      border: 1px solid var(--border-subtle);
+    .section-card {
+      background: radial-gradient(circle at top left, rgba(148,163,184,0.25) 0, var(--card-soft) 45%, #ffffff 100%);
+      border-radius: var(--radius-2xl);
+      padding: 18px 18px 18px;
       box-shadow: var(--shadow-soft);
-      margin-bottom: 14px;
+      border: 1px solid rgba(148,163,184,0.9);
+      margin-bottom: 18px;
     }
-
-    .app-card-header {
+    .section-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
     }
-
-    .app-card-title {
-      font-size: 0.96rem;
-      font-weight: 600;
+    .section-title {
+      font-size: 22px;
+      font-weight: 650;
     }
-
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+    .badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(22,163,74,0.16);
+      border: 1px solid rgba(22,163,74,0.7);
+      color: #14532d;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge span.emoji { font-size: 12px; }
+    .grid-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .home-card {
+      background: radial-gradient(circle at 0 0, rgba(34,197,94,0.45) 0, rgba(241,245,249,0.98) 45%, rgba(241,245,249,1) 100%);
+      border-radius: 20px;
+      padding: 12px 12px 13px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148,163,184,0.9);
+      box-shadow: 0 12px 28px rgba(148,163,184,0.9);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-height: 90px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    }
+    .home-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(148,163,184,1);
+      border-color: rgba(22,163,74,0.9);
+    }
+    .home-card-title {
+      font-size: 16px;
+      font-weight: 650;
+    }
+    .home-card-desc {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 85%;
+    }
+    .home-card-icon {
+      position: absolute;
+      right: -6px;
+      bottom: -4px;
+      font-size: 46px;
+      opacity: 0.18;
+      transform: rotate(-8deg);
+    }
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
     .chip {
-      border-radius: var(--radius-full);
-      padding: 4px 10px;
-      font-size: 0.74rem;
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      max-width: 100%;
+      white-space: normal;
+    }
+    .chip span.emoji { font-size: 12px; }
+    .chip.active {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+      border-color: rgba(22,163,74,0.9);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.9);
+    }
+    .search-input {
+      flex: 1;
+      min-width: 0;
+      border-radius: 999px;
       border: 1px solid var(--chip-border);
       background: var(--chip-bg);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      white-space: nowrap;
-    }
-
-    .chip.badge {
-      background: rgba(34,197,94,0.12);
-      border-color: rgba(34,197,94,0.6);
-      color: #bbf7d0;
-    }
-
-    .chip-danger {
-      border-color: rgba(239,68,68,0.7);
-      color: #fecaca;
-      background: rgba(127,29,29,0.5);
-    }
-
-    .context-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 4px 0 10px;
-      font-size: 0.76rem;
-      color: var(--text-soft);
-    }
-
-    .divider-soft {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(148,163,184,0.4), transparent);
-      margin: 8px -2px 10px;
-    }
-
-    .muted {
-      color: var(--text-soft);
-      font-size: 0.80rem;
-    }
-
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 8px -1px 4px;
-    }
-
-    .pill {
-      border-radius: 999px;
-      padding: 5px 12px;
-      font-size: 0.78rem;
-      border: 1px solid rgba(148,163,184,0.55);
-      background: rgba(15,23,42,0.9);
-      cursor: pointer;
-    }
-
-    .pill--active {
-      background: var(--accent-soft);
-      border-color: rgba(34,197,94,0.85);
-      color: #bbf7d0;
-    }
-
-    .btn {
-      border-radius: 999px;
-      border: none;
-      padding: 9px 14px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, #16a34a, #22c55e);
-      color: #022c22;
-      box-shadow: 0 12px 30px rgba(22,163,74,0.55);
-      transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
-    }
-
-    .btn span {
-      font-size: 1rem;
-    }
-
-    .btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 7px 18px rgba(22,163,74,0.55);
-      filter: brightness(0.96);
-    }
-
-    .btn-secondary {
-      background: rgba(15,23,42,0.9);
       color: var(--text-main);
-      border: 1px solid var(--border-subtle);
-      box-shadow: none;
-    }
-
-    .btn-full {
-      width: 100%;
-      justify-content: center;
-    }
-
-    .btn-danger {
-      background: linear-gradient(135deg, #b91c1c, #ef4444);
-      color: #fee2e2;
-      box-shadow: 0 10px 26px rgba(248,113,113,0.45);
-    }
-
-    .grid-two {
-      display: grid;
-      grid-template-columns: repeat(2,minmax(0,1fr));
-      gap: 8px;
-    }
-
-    .small-label {
-      font-size: 0.78rem;
-      color: var(--text-soft);
-      margin-bottom: 2px;
-    }
-
-    .big-number {
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
-
-    /* FORMS */
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin: 8px 0 4px;
-    }
-
-    @media (min-width: 660px) {
-      .form-grid--2 {
-        grid-template-columns: repeat(2, minmax(0,1fr));
-      }
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .field label {
-      font-size: 0.78rem;
-      color: var(--text-soft);
-    }
-
-    input[type="text"],
-    input[type="date"],
-    select,
-    textarea {
-      background: rgba(15,23,42,0.95);
-      border-radius: 14px;
-      border: 1px solid rgba(51,65,85,0.9);
-      padding: 8px 10px;
-      color: var(--text-main);
-      font-size: 0.83rem;
-      font-family: inherit;
-      width: 100%;
-      max-width: 100%;
+      font-size: 14px;
+      padding: 6px 10px;
       outline: none;
-      transition: border 0.12s, box-shadow 0.12s, background 0.12s;
     }
-
-    select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding-right: 26px;
-      background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%),
-                        linear-gradient(135deg, #9ca3af 50%, transparent 50%);
-      background-position: calc(100% - 15px) 10px, calc(100% - 11px) 10px;
-      background-size: 6px 6px, 6px 6px;
-      background-repeat: no-repeat;
+    .search-input::placeholder {
+      color: var(--text-soft);
     }
-
-    textarea {
-      min-height: 72px;
-      resize: vertical;
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 10px;
     }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: rgba(34,197,94,0.9);
-      box-shadow: 0 0 0 1px rgba(34,197,94,0.5);
-      background: rgba(15,23,42,0.98);
+    .month-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: var(--chip-bg);
+      color: var(--text-soft);
+      font-size: 13px;
+      padding: 6px 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
     }
-
-    /* Mi huerto – tarjetas de cultivos */
-
-    .cultivos-list {
+    .month-btn.active {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+      font-weight: 600;
+      border-color: rgba(22,163,74,0.9);
+      box-shadow: 0 10px 28px rgba(34,197,94,0.9);
+      transform: translateY(-1px);
+    }
+    .list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       margin-top: 4px;
     }
-
-    .cultivo-card {
-      border-radius: var(--radius-lg);
+    .list-item {
+      border-radius: 18px;
       padding: 10px 11px;
-      background: radial-gradient(circle at top left, var(--card-soft) 0, #020617 60%);
-      border: 1px solid rgba(75,85,99,0.9);
+      background: #ffffff;
+      border: 1px solid rgba(148,163,184,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .list-item.with-media {
+      align-items: flex-start;
+    }
+    .list-icon {
+      margin-right: 8px;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .list-main {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-
-    .cultivo-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .cultivo-title {
-      font-size: 0.9rem;
+    .list-title {
+      font-size: 15px;
       font-weight: 600;
+    }
+    .list-meta {
       display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .cultivo-body {
-      font-size: 0.78rem;
-      color: var(--text-soft);
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 4px 10px;
-      margin-top: 4px;
-    }
-
-    @media (max-width: 480px) {
-      .cultivo-body {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .cultivo-notas {
-      margin-top: 4px;
-      font-size: 0.78rem;
-      color: #e5e7eb;
-    }
-
-    .cultivo-actions {
-      margin-top: 6px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 6px;
       flex-wrap: wrap;
+      gap: 5px;
+      font-size: 11px;
     }
-
-    .link-like {
-      font-size: 0.78rem;
-      color: #4ade80;
-      text-decoration: underline;
+    .meta-pill {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.9);
+      color: var(--text-soft);
+    }
+    .small-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #eff6ff;
+      color: var(--text-main);
+      padding: 5px 8px;
+      font-size: 11px;
       cursor: pointer;
-    }
-
-    /* Calendario de siembra */
-
-    .calendar-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .calendar-item {
-      border-radius: 16px;
-      padding: 9px 10px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(55,65,81,0.9);
-      font-size: 0.8rem;
-    }
-
-    .calendar-item-title {
-      font-weight: 600;
-      margin-bottom: 2px;
-      display: flex;
-      justify-content: space-between;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
     }
-
-    .calendar-empty {
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      margin-top: 8px;
+    .small-btn span.emoji { font-size: 13px; }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
     }
-
-    /* Diario */
-
-    .diario-list {
+    .crop-card {
+      border-radius: 22px;
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(22,163,74,0.3) 0, #ffffff 55%);
+      border: 1px solid rgba(148,163,184,0.9);
+      box-shadow: var(--shadow-soft);
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 6px;
-      font-size: 0.8rem;
+      min-height: 190px;
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     }
-
-    .diario-item {
+    .crop-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(148,163,184,1);
+      border-color: rgba(22,163,74,0.9);
+    }
+    .crop-photo {
+      height: 90px;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 20% 0, #bbf7d0 0, #22c55e 35%, #15803d 70%, #166534 100%);
+    }
+    .crop-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.88;
+    }
+    .crop-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(255,255,255,0.8));
+    }
+    .crop-body {
+      padding: 9px 10px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+    .crop-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .crop-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 4px;
+    }
+    .crop-tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.9);
+      color: var(--text-soft);
+    }
+    .empty-state {
+      padding: 26px 18px;
+      border-radius: var(--radius-2xl);
+      border: 1px dashed rgba(148,163,184,0.9);
+      background: #f8fafc;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+    .empty-state span.emoji {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    .garden-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .garden-cell {
       border-radius: 14px;
-      padding: 8px 10px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(55,65,81,0.9);
-    }
-
-    .diario-item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 2px;
-    }
-
-    /* Plagas / Guías */
-
-    .media-list {
+      border: 1px solid rgba(148,163,184,0.9);
+      background: radial-gradient(circle at top, rgba(22,163,74,0.25) 0, #ffffff 60%);
+      aspect-ratio: 1/1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .media-item-title {
-      font-size: 0.86rem;
-      font-weight: 600;
-    }
-
-    .media-item-body {
-      font-size: 0.8rem;
+      align-items: flex-start;
+      justify-content: flex-start;
+      font-size: 11px;
       color: var(--text-soft);
+      cursor: pointer;
+      text-align: left;
+      padding: 4px;
+    }
+    .garden-cell-label {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 12px;
+    }
+    .garden-cell-plant {
+      font-size: 11px;
       margin-top: 2px;
     }
-
-    ul {
-      margin: 4px 0 4px 18px;
-      padding: 0;
-      font-size: 0.8rem;
+    .garden-cell-meta {
+      font-size: 10px;
+      margin-top: 1px;
       color: var(--text-soft);
     }
-
-    /* FOOTER */
-
-    footer {
+    .dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .dialog-backdrop.active { display: flex; }
+    .dialog {
+      width: min(380px, 100% - 32px);
+      border-radius: 22px;
+      padding: 16px 16px 14px;
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.25) 0, #ffffff 50%);
+      border: 1px solid rgba(148,163,184,0.9);
+      box-shadow: 0 24px 70px rgba(15,23,42,0.35);
+    }
+    .dialog h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+    .dialog label {
+      font-size: 13px;
+      color: var(--text-soft);
+      display: block;
+      margin-bottom: 5px;
+    }
+    .dialog select,
+    .dialog input,
+    .dialog textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #f8fafc;
+      color: var(--text-main);
+      font-size: 14px;
+      padding: 7px 9px;
+      margin-bottom: 10px;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .dialog textarea { min-height: 60px; }
+    .dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
       margin-top: 6px;
-      font-size: 0.76rem;
-      color: var(--text-soft);
-      text-align: center;
-      padding-bottom: 6px;
     }
-
-    footer span {
+    .btn {
+      border-radius: 999px;
+      padding: 6px 12px;
+      border: 1px solid rgba(148,163,184,0.9);
+      background: #eff6ff;
+      color: #000;
+      font-size: 13px;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
     }
-
-    /* Install button */
-
-    #installBanner {
-      position: fixed;
-      left: 50%;
-      bottom: 16px;
-      transform: translateX(-50%);
-      background: rgba(15,23,42,0.97);
-      border-radius: 999px;
-      padding: 7px 12px;
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color: rgba(22,163,74,0.9);
+      color: #022c22;
+      font-weight: 600;
+      box-shadow: 0 12px 32px rgba(34,197,94,0.8);
+    }
+    .btn-ghost { background: transparent; }
+    .diary-list {
       display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .diary-entry {
+      border-radius: 16px;
+      padding: 8px 10px;
+      background: #ffffff;
+      border: 1px solid rgba(148,163,184,0.9);
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      cursor: pointer;
+    }
+    .diary-meta {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
       gap: 8px;
-      border: 1px solid rgba(148,163,184,0.75);
-      box-shadow: 0 16px 40px rgba(15,23,42,0.85);
-      font-size: 0.78rem;
-      z-index: 80;
     }
-
-    #installBanner.hidden {
-      display: none;
+    .diary-type { font-weight: 600; }
+    .diary-date {
+      font-size: 12px;
+      color: var(--text-soft);
     }
-
-    #installBanner button {
-      font-size: 0.78rem;
-      padding: 6px 10px;
+    .diary-notes {
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+    footer {
+      margin-top: 8px;
+      padding: 6px 4px 2px;
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    @media (min-width: 768px) {
+      .app-shell {
+        padding: 18px 8px 28px;
+      }
+      .section-card {
+        padding: 20px 20px 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="app-shell">
-    <!-- HEADER -->
     <header class="app-header">
-      <div class="app-header-icon">
-        <span>🌱</span>
-      </div>
-      <div class="app-header-text">
-        <div class="app-title-row">
-          <div class="app-title">Mi Siembra Inteligente</div>
-          <div class="app-tag">v17 · PWA</div>
+      <div class="header-inner">
+        <div class="brand">
+          <div class="brand-icon"><span>🌱</span></div>
+          <div class="brand-text">
+            <div class="brand-title">Mi Siembra Inteligente</div>
+            <div class="brand-sub">Planifica, registra y cuida tu huerto paso a paso.</div>
+          </div>
         </div>
-        <div class="app-subtitle" id="appSubtitle">
-          <!-- Se rellena desde JS con huerto, clima y hemisferio -->
-        </div>
+        <nav class="pill-nav" aria-label="Secciones principales">
+          <button class="nav-btn active" data-view="homeView"><span class="emoji">🏠</span><span>Inicio</span></button>
+          <button class="nav-btn" data-view="calendarView"><span class="emoji">📅</span><span>Calendario</span></button>
+          <button class="nav-btn" data-view="catalogView"><span class="emoji">🌿</span><span>Catálogo</span></button>
+          <button class="nav-btn" data-view="moreView"><span class="emoji">⋯</span><span>Más</span></button>
+        </nav>
       </div>
     </header>
-
-    <!-- NAV -->
-    <nav class="nav">
-      <button class="nav-btn nav-btn--active" data-section="inicio">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-label">Inicio</span>
-      </button>
-      <button class="nav-btn" data-section="calendario">
-        <span class="nav-icon">📅</span>
-        <span class="nav-label">Calendario</span>
-      </button>
-      <button class="nav-btn" data-section="huerto">
-        <span class="nav-icon">🌿</span>
-        <span class="nav-label">Mi huerto</span>
-      </button>
-      <button class="nav-btn" data-section="diario">
-        <span class="nav-icon">📓</span>
-        <span class="nav-label">Diario</span>
-      </button>
-      <button class="nav-btn" data-section="plagas">
-        <span class="nav-icon">🐛</span>
-        <span class="nav-label">Plagas</span>
-      </button>
-      <button class="nav-btn" data-section="pesticidas">
-        <span class="nav-icon">💧</span>
-        <span class="nav-label">Pesticidas</span>
-      </button>
-      <button class="nav-btn" data-section="opciones">
-        <span class="nav-icon">⚙️</span>
-        <span class="nav-label">Opciones</span>
-      </button>
-      <button class="nav-btn" data-section="guias">
-        <span class="nav-icon">📚</span>
-        <span class="nav-label">Guías</span>
-      </button>
-    </nav>
-
     <main>
       <!-- INICIO -->
-      <section id="section-inicio" class="section section--active">
-        <div class="section-title-row">
-          <div class="section-icon-pill">🏠</div>
-          <h2>Inicio</h2>
-        </div>
-        <p class="section-subtitle">
-          Resumen rápido de tu huerto y acceso a las funciones principales.
-        </p>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Estado rápido</div>
-            <div class="chip badge" id="estadoClimaChip">Clima tropical</div>
-          </div>
-          <div class="context-chips settings-context"></div>
-          <div class="grid-two">
+      <section id="homeView" class="view active">
+        <div class="section-card">
+          <div class="section-header">
             <div>
-              <div class="small-label">Cultivos registrados</div>
-              <div class="big-number" id="estadoCultivosCount">0</div>
+              <div class="section-title">Inicio</div>
+              <div class="section-subtitle">Elige qué quieres hacer hoy en tu siembra.</div>
             </div>
-            <div>
-              <div class="small-label">Entradas hoy en el diario</div>
-              <div class="big-number" id="estadoEntradasCount">0</div>
-            </div>
+            <div class="badge"><span class="emoji">⚡</span><span>Modo rápido</span></div>
           </div>
-          <div class="divider-soft"></div>
-          <p class="muted" id="estadoResumen">
-            Aún no has registrado cultivos. Usa "Mi huerto" para añadir tu primera siembra.
-          </p>
-          <div class="pill-group">
-            <button class="btn-secondary btn" id="btnIrMiHuerto">
-              <span>🌿</span> Ir a "Mi huerto"
-            </button>
-            <button class="btn-secondary btn" id="btnIrDiario">
-              <span>✏️</span> Escribir en el diario
-            </button>
-            <button class="btn-secondary btn" id="btnIrClima">
-              <span>⚙️</span> Ajustar clima
+          <div class="grid-cards">
+            <article class="home-card" data-view-target="calendarView">
+              <div class="home-card-title">Qué sembrar este mes</div>
+              <div class="home-card-desc">Calendario por mes con cultivos recomendados y tiempo de cosecha.</div>
+              <div class="home-card-icon">📅</div>
+            </article>
+            <article class="home-card" data-view-target="catalogView">
+              <div class="home-card-title">Catálogo de cultivos</div>
+              <div class="home-card-desc">Explora fichas visuales con fotos, tipo de cultivo y sol recomendado.</div>
+              <div class="home-card-icon">🌿</div>
+            </article>
+            <article class="home-card" data-view-target="gardenView">
+              <div class="home-card-title">Mi huerto</div>
+              <div class="home-card-desc">Plano 4×4 con resumen del cultivo en cada cuadro.</div>
+              <div class="home-card-icon">🧩</div>
+            </article>
+            <article class="home-card" data-view-target="diaryView">
+              <div class="home-card-title">Diario de siembra</div>
+              <div class="home-card-desc">Registra siembras, riegos, abonos y cosechas con iconos según actividad.</div>
+              <div class="home-card-icon">📓</div>
+            </article>
+            <article class="home-card" data-view-target="pestsView">
+              <div class="home-card-title">Plagas y cuidados</div>
+              <div class="home-card-desc">Identifica problemas comunes y qué hacer de forma sencilla.</div>
+              <div class="home-card-icon">🪲</div>
+            </article>
+            <article class="home-card" data-view-target="fertView">
+              <div class="home-card-title">Abonos y fertilizantes</div>
+              <div class="home-card-desc">Ideas de compost, abonos caseros y cuándo aplicarlos.</div>
+              <div class="home-card-icon">🧪</div>
+            </article>
+          </div>
+          <div class="chips-row">
+            <span class="chip"><span class="emoji">📱</span><span>PWA offline</span></span>
+            <span class="chip"><span class="emoji">☕</span><span>Hecho para planificar tranquilo</span></span>
+            <button type="button" class="chip" id="climateChip" data-view-target="optionsView">
+              <span class="emoji">🌍</span>
+              <span class="chip-label">Clima: <span id="currentClimateLabel">Tropical / Caribe</span></span>
             </button>
           </div>
-        </div>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Hoy en el calendario</div>
-            <div class="chip" id="calendarioClimaChip">Clima tropical</div>
-          </div>
-          <p class="muted" id="calendarioHoyTexto">
-            Usa el calendario de siembra para ver qué es recomendable sembrar este mes.
-          </p>
-          <button class="btn btn-full" id="btnVerCalendario">
-            <span>📅</span> Ver calendario de siembra
-          </button>
         </div>
       </section>
 
       <!-- CALENDARIO -->
-      <section id="section-calendario" class="section">
-        <div class="section-title-row">
-          <div class="section-icon-pill">📅</div>
-          <h2>Calendario de siembra</h2>
+      <section id="calendarView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">¿Qué puedo sembrar este mes?</div>
+              <div class="section-subtitle" id="calendarSubtitle">
+                Toca un mes para ver cultivos recomendados según el clima seleccionado.
+              </div>
+            </div>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
+          </div>
+          <div class="month-grid" id="monthButtons"></div>
+          <div class="list" id="monthResults"></div>
         </div>
-        <p class="section-subtitle">
-          Selecciona un mes para ver sugerencias de cultivos según tu clima actual.
-          Son recomendaciones generales; ajústalas a tu experiencia local.
-        </p>
+      </section>
 
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Meses del año</div>
-            <div class="chip" id="calendarioClimaChip2">Clima tropical</div>
+      <!-- CATÁLOGO -->
+      <section id="catalogView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Catálogo visual de cultivos</div>
+              <div class="section-subtitle">Busca por nombre, tipo o cantidad de sol.</div>
+            </div>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
-          <div class="context-chips settings-context"></div>
-
-          <div class="pill-group" id="mesesPills">
-            <button class="pill" data-mes="0">Ene</button>
-            <button class="pill" data-mes="1">Feb</button>
-            <button class="pill" data-mes="2">Mar</button>
-            <button class="pill" data-mes="3">Abr</button>
-            <button class="pill" data-mes="4">May</button>
-            <button class="pill pill--active" data-mes="5">Jun</button>
-            <button class="pill" data-mes="6">Jul</button>
-            <button class="pill" data-mes="7">Ago</button>
-            <button class="pill" data-mes="8">Sep</button>
-            <button class="pill" data-mes="9">Oct</button>
-            <button class="pill" data-mes="10">Nov</button>
-            <button class="pill" data-mes="11">Dic</button>
+          <div class="chips-row">
+            <input
+              id="catalogSearch"
+              class="search-input"
+              type="search"
+              placeholder="Buscar por nombre (ej. tomate, lechuga, cilantro…)">
           </div>
-
-          <div class="calendar-list" id="calendarList"></div>
-          <div class="calendar-empty" id="calendarEmpty" style="display:none;">
-            Por ahora no tenemos recomendaciones específicas para este mes y clima.
-            Puedes usar tu experiencia local o guiarte por cultivos similares.
-          </div>
+          <div class="chips-row" id="catalogTypeFilters"></div>
+          <div class="chips-row" id="catalogSunFilters"></div>
+          <div class="catalog-grid" id="catalogGrid"></div>
         </div>
       </section>
 
       <!-- MI HUERTO -->
-      <section id="section-huerto" class="section">
-        <div class="section-title-row">
-          <div class="section-icon-pill">🌿</div>
-          <h2>Mi huerto</h2>
-        </div>
-        <p class="section-subtitle">
-          Registra tus cultivos y consulta los detalles de cada planta.
-        </p>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Nuevo cultivo</div>
-            <div class="chip badge">Registro rápido</div>
-          </div>
-          <div class="context-chips settings-context"></div>
-
-          <div class="form-grid form-grid--2">
-            <div class="field">
-              <label for="cultivoNombre">Nombre del cultivo *</label>
-              <input type="text" id="cultivoNombre" placeholder="Ej. Tomate, lechuga, plátano" />
+      <section id="gardenView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Mi huerto</div>
+              <div class="section-subtitle">
+                Toca un cuadro para ver o asignar el cultivo. Ahora verás también días de cosecha y tipo de sol.
+              </div>
             </div>
-            <div class="field">
-              <label for="cultivoVariedad">Variedad (opcional)</label>
-              <input type="text" id="cultivoVariedad" placeholder="Ej. Cherry, romana, etc." />
-            </div>
+            <button class="small-btn" id="resetGarden"><span class="emoji">🧹</span><span>Limpiar</span></button>
           </div>
-
-          <div class="form-grid form-grid--2">
-            <div class="field">
-              <label for="cultivoTipo">Tipo</label>
-              <select id="cultivoTipo">
-                <option value="hoja">Hoja</option>
-                <option value="fruto">Fruto</option>
-                <option value="raiz">Raíz</option>
-                <option value="tuberculo">Tubérculo</option>
-                <option value="aromaticas">Aromáticas</option>
-                <option value="otro">Otro</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="cultivoFecha">Fecha de siembra</label>
-              <input type="date" id="cultivoFecha" />
-            </div>
+          <div class="garden-grid" id="gardenGrid"></div>
+          <div class="section-subtitle" style="margin-top:10px;">
+            Sugerencia: puedes usar el plano como referencia de tu cama de siembra real o de tiestos.
           </div>
-
-          <div class="field">
-            <label for="cultivoNotas">Notas (lugar, cama, maceta, etc.)</label>
-            <textarea id="cultivoNotas" placeholder="Ej. Cama 1, fila 2. Semilla directa en suelo."></textarea>
-          </div>
-
-          <button class="btn btn-full" id="btnAgregarCultivo">
-            <span>➕</span> Guardar cultivo
-          </button>
-          <p class="muted" style="margin-top:6px;">
-            * Solo el nombre es obligatorio. Puedes editar o eliminar los cultivos luego.
-          </p>
-        </div>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Cultivos registrados</div>
-            <div class="chip" id="cultivosCountChip">0 cultivos</div>
-          </div>
-          <div class="cultivos-list" id="cultivosList"></div>
         </div>
       </section>
 
       <!-- DIARIO -->
-      <section id="section-diario" class="section">
-        <div class="section-title-row">
-          <div class="section-icon-pill">📓</div>
-          <h2>Diario de huerto</h2>
-        </div>
-        <p class="section-subtitle">
-          Anota riegos, abonados, podas o cualquier evento importante de tu huerto.
-        </p>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Nueva entrada</div>
-            <div class="chip badge">Hoy</div>
+      <section id="diaryView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Diario de siembra</div>
+              <div class="section-subtitle">Cada entrada se muestra con un icono según el tipo de actividad.</div>
+            </div>
+            <button class="small-btn" id="addDiaryEntry"><span class="emoji">➕</span><span>Nuevo</span></button>
           </div>
-          <div class="field">
-            <label for="diarioTexto">¿Qué hiciste hoy?</label>
-            <textarea id="diarioTexto" placeholder="Ej. Regué tomates y lechugas. Apliqué compost a las aromáticas."></textarea>
+          <div class="diary-list" id="diaryList"></div>
+          <div class="empty-state" id="diaryEmpty">
+            <span class="emoji">📝</span>
+            Aún no has registrado actividades. Empieza añadiendo tu próxima siembra, riego, abono o cosecha.
           </div>
-          <button class="btn btn-full" id="btnGuardarDiario">
-            <span>💾</span> Guardar en el diario
-          </button>
-        </div>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Entradas recientes</div>
-            <div class="chip" id="diarioCountChip">0 entradas</div>
-          </div>
-          <div class="diario-list" id="diarioList"></div>
         </div>
       </section>
 
-      <!-- PLAGAS -->
-      <section id="section-plagas" class="section">
-        <div class="section-title-row">
-          <div class="section-icon-pill">🐛</div>
-          <h2>Plagas comunes</h2>
-        </div>
-        <p class="section-subtitle">
-          Referencia rápida de plagas frecuentes en huertos caseros y cómo manejarlas
-          de forma responsable.
-        </p>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Catálogo básico de plagas</div>
-            <div class="chip">Referencia</div>
+      <!-- PLAGAS (RESUMEN) -->
+      <section id="pestsView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Plagas y cuidados básicos</div>
+              <div class="section-subtitle">Guía rápida para problemas frecuentes y acciones sencillas.</div>
+            </div>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
-          <div class="media-list" id="plagasList"></div>
+          <div class="list">
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Pulgones</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🪲 Chupan savia</span>
+                  <span class="meta-pill">🌿 Brotes tiernos</span>
+                </div>
+                <div class="section-subtitle">
+                  Solución simple: rociar con agua jabonosa suave (jabón potásico o de lavar platos bien diluido) cada 2–3 días.
+                </div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Hongos en hojas</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🍃 Manchas</span>
+                  <span class="meta-pill">💧 Exceso de humedad</span>
+                </div>
+                <div class="section-subtitle">
+                  Mejora la ventilación, evita mojar las hojas al regar y retira hojas muy afectadas.
+                </div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Orugas y gusanos</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🪱 Hojas comidas</span>
+                  <span class="meta-pill">🌱 Plántulas</span>
+                </div>
+                <div class="section-subtitle">
+                  Revísalas a mano, especialmente por la tarde, y retíralas. Puedes proteger brotes con mallas ligeras.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chips-row" style="margin-top:12px;">
+            <button class="btn" data-view-target="pestsCatalogView">📚 Ver catálogo de plagas</button>
+            <button class="btn" data-view-target="pesticidesView">🧴 Ver pesticidas caseros</button>
+          </div>
         </div>
       </section>
 
-      <!-- PESTICIDAS -->
-      <section id="section-pesticidas" class="section">
-        <div class="section-title-row">
-          <div class="section-icon-pill">💧</div>
-          <h2>Pesticidas y preparados</h2>
-        </div>
-        <p class="section-subtitle">
-          Opciones suaves y de bajo impacto para manejar plagas en un huerto casero.
-          Siempre respeta las indicaciones de seguridad.
-        </p>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Preparados sugeridos</div>
-            <div class="chip">Uso responsable</div>
+      <!-- ABONOS (RESUMEN) -->
+      <section id="fertView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Abonos y fertilizantes</div>
+              <div class="section-subtitle">Ideas prácticas de abonos caseros y cuándo aplicarlos.</div>
+            </div>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
-          <div class="media-list" id="pesticidasList"></div>
+          <div class="list">
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Compost maduro</div>
+                <div class="list-meta">
+                  <span class="meta-pill">🗑️ Restos de cocina</span>
+                  <span class="meta-pill">🌱 Aporta de todo un poco</span>
+                </div>
+                <div class="section-subtitle">
+                  Ideal para mezclar con la tierra antes de sembrar o para mejorar camas ya usadas.
+                </div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Té de compost o de humus</div>
+                <div class="list-meta">
+                  <span class="meta-pill">💧 Líquido</span>
+                  <span class="meta-pill">🚿 Se aplica al riego</span>
+                </div>
+                <div class="section-subtitle">
+                  Útil para dar un empujón extra a plantas en crecimiento sin exagerar la dosis.
+                </div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-title">Abonos líquidos concentrados</div>
+                <div class="list-meta">
+                  <span class="meta-pill">⚠️ Leer etiqueta</span>
+                </div>
+                <div class="section-subtitle">
+                  Siempre respeta las dosis indicadas. Es mejor menos cantidad y más frecuente que pasarse.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- OPCIONES -->
-      <section id="section-opciones" class="section">
-        <div class="section-title-row">
-          <div class="section-icon-pill">⚙️</div>
-          <h2>Opciones</h2>
+      <!-- CATÁLOGO DE PLAGAS -->
+      <section id="pestsCatalogView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Catálogo de plagas</div>
+              <div class="section-subtitle">Busca por nombre o tipo y mira qué cultivos suelen afectar.</div>
+            </div>
+            <button class="small-btn" data-view-target="pestsView"><span class="emoji">⬅️</span><span>Volver</span></button>
+          </div>
+          <div class="chips-row">
+            <input id="pestSearch" class="search-input" type="search" placeholder="Nombre de plaga (ej. pulgón, caracol…)" />
+          </div>
+          <div class="chips-row" id="pestTypeFilters"></div>
+          <div class="list" id="pestsList"></div>
         </div>
-        <p class="section-subtitle">
-          Ajusta el nombre de tu huerto, el clima y el hemisferio. Estos datos
-          actualizan el calendario y los textos de la aplicación.
-        </p>
+      </section>
 
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Datos generales</div>
+      <!-- CATÁLOGO DE PESTICIDAS -->
+      <section id="pesticidesView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Pesticidas caseros</div>
+              <div class="section-subtitle">Opciones de bajo impacto para controlar plagas habituales.</div>
+            </div>
+            <button class="small-btn" data-view-target="pestsView"><span class="emoji">⬅️</span><span>Volver</span></button>
           </div>
-          <div class="context-chips settings-context"></div>
+          <div class="chips-row">
+            <input id="pesticideSearch" class="search-input" type="search" placeholder="Nombre del pesticida (ej. agua jabonosa…)" />
+          </div>
+          <div class="chips-row" id="pesticideTypeFilters"></div>
+          <div class="list" id="pesticidesList"></div>
+        </div>
+      </section>
 
-          <div class="form-grid">
-            <div class="field">
-              <label for="nombreHuerto">Nombre de huerto</label>
-              <input type="text" id="nombreHuerto" placeholder="Ej. Huerto RDG, Mi huerto, etc." />
+      <!-- MÁS -->
+      <section id="moreView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Más opciones</div>
+              <div class="section-subtitle">Atajos a secciones clave de la app.</div>
             </div>
           </div>
+          <div class="grid-cards">
+            <article class="home-card" data-view-target="gardenView">
+              <div class="home-card-title">Mi huerto</div>
+              <div class="home-card-desc">Plano rápido 4×4 para visualizar tu siembra.</div>
+              <div class="home-card-icon">🧩</div>
+            </article>
+            <article class="home-card" data-view-target="diaryView">
+              <div class="home-card-title">Diario</div>
+              <div class="home-card-desc">Historial de tareas y cosechas con iconos.</div>
+              <div class="home-card-icon">📓</div>
+            </article>
+            <article class="home-card" data-view-target="pestsView">
+              <div class="home-card-title">Plagas</div>
+              <div class="home-card-desc">Problemas frecuentes y soluciones básicas.</div>
+              <div class="home-card-icon">🪲</div>
+            </article>
+            <article class="home-card" data-view-target="fertView">
+              <div class="home-card-title">Abonos</div>
+              <div class="home-card-desc">Cuándo y cómo abonar sin excesos.</div>
+              <div class="home-card-icon">🧪</div>
+            </article>
+            <article class="home-card" data-view-target="pestsCatalogView">
+              <div class="home-card-title">Catálogo de plagas</div>
+              <div class="home-card-desc">Listado completo con síntomas y cultivos afectados.</div>
+              <div class="home-card-icon">📚</div>
+            </article>
+            <article class="home-card" data-view-target="pesticidesView">
+              <div class="home-card-title">Pesticidas caseros</div>
+              <div class="home-card-desc">Remedios suaves para cada tipo de plaga.</div>
+              <div class="home-card-icon">🧴</div>
+            </article>
+            <article class="home-card" data-view-target="optionsView">
+              <div class="home-card-title">Opciones y clima</div>
+              <div class="home-card-desc">Elige tu clima y revisa ajustes básicos.</div>
+              <div class="home-card-icon">⚙️</div>
+            </article>
+          </div>
+        </div>
 
-          <div class="form-grid form-grid--2">
-            <div class="field">
-              <label for="climaSelect">Clima principal</label>
-              <select id="climaSelect">
-                <option value="tropical">Tropical (Caribe, PR, etc.)</option>
-                <option value="subtropical">Subtropical / templado suave</option>
-                <option value="templado">Templado / frío</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="hemisferioSelect">Hemisferio</label>
-              <select id="hemisferioSelect">
-                <option value="norte">Hemisferio norte</option>
-                <option value="sur">Hemisferio sur</option>
-              </select>
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Copias de seguridad</div>
+              <div class="section-subtitle">Exporta o importa tus datos de Mi huerto y Diario (archivo .json).</div>
             </div>
           </div>
-
-          <button class="btn btn-full" id="btnGuardarConfig">
-            <span>💾</span> Guardar configuración
-          </button>
-
-          <div class="divider-soft"></div>
-          <p class="muted">
-            Toda la información se guarda <strong>solo en tu dispositivo</strong> usando almacenamiento local.
-            Puedes exportar los datos como texto para tener una copia de seguridad.
-          </p>
-
-          <div class="pill-group">
-            <button class="btn-secondary btn" id="btnExportar">
-              <span>📤</span> Exportar datos (texto)
+          <div class="chips-row">
+            <button class="btn btn-primary" id="backupExport">
+              💾 Guardar copia
             </button>
-            <button class="btn-secondary btn" id="btnImportar">
-              <span>📥</span> Importar datos (texto)
+            <button class="btn" id="backupImport">
+              📂 Restaurar copia
             </button>
-            <button class="btn-danger btn" id="btnBorrarTodo">
-              <span>🧹</span> Borrar todo
-            </button>
+            <input type="file" id="backupFile" accept="application/json" style="display:none" />
           </div>
         </div>
       </section>
 
-      <!-- GUIAS -->
-      <section id="section-guias" class="section">
-        <div class="section-title-row">
-          <div class="section-icon-pill">📚</div>
-          <h2>Guías rápidas</h2>
-        </div>
-        <p class="section-subtitle">
-          Consejos básicos para sacar más provecho a tu huerto, sin reemplazar la
-          experiencia de campo ni el consejo de especialistas.
-        </p>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Antes de sembrar</div>
-            <div class="chip">Paso 1</div>
+      <!-- OPCIONES / CLIMA -->
+      <section id="optionsView" class="view">
+        <div class="section-card">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Opciones y clima</div>
+              <div class="section-subtitle">
+                Selecciona el clima principal de tu zona para adaptar el calendario.
+              </div>
+            </div>
+            <button class="small-btn" data-view-target="homeView"><span class="emoji">⬅️</span><span>Inicio</span></button>
           </div>
-          <div class="media-list">
-            <div>
-              <div class="media-item-title">Preparar el suelo</div>
-              <div class="media-item-body">
-                Retira piedras y raíces gruesas, agrega materia orgánica (compost, estiércol bien
-                descompuesto) y afloja la tierra sin voltearla en exceso para cuidar la vida
-                del suelo.
-              </div>
-            </div>
-            <div>
-              <div class="media-item-title">Elegir el lugar</div>
-              <div class="media-item-body">
-                La mayoría de los cultivos necesitan al menos 4–6 horas de sol directo. Observa
-                tu patio o balcón un día completo y elige las zonas con mejor iluminación.
-              </div>
-            </div>
+          <div class="chips-row" id="climateOptionsRow">
+            <button type="button" class="chip" data-climate="tropical">
+              <span class="emoji">🌴</span><span>Tropical / Caribe</span>
+            </button>
+            <button type="button" class="chip" data-climate="templado">
+              <span class="emoji">🌤️</span><span>Templado</span>
+            </button>
+            <button type="button" class="chip" data-climate="frio">
+              <span class="emoji">❄️</span><span>Frío / inviernos largos</span>
+            </button>
           </div>
-        </div>
-
-        <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Riego inteligente</div>
-            <div class="chip">Paso 2</div>
+          <div class="section-subtitle" style="margin-top:8px;">
+            Clima actual: <strong id="optionsClimateText">Tropical / Caribe</strong>.
           </div>
-          <div class="media-list">
-            <div>
-              <div class="media-item-title">Revisar la humedad</div>
-              <div class="media-item-body">
-                Antes de regar, introduce un dedo en el sustrato hasta 2–3&nbsp;cm. Si está húmedo,
-                espera. Si está seco, riega de forma lenta y profunda.
-              </div>
-            </div>
-            <div>
-              <div class="media-item-title">Horario recomendado</div>
-              <div class="media-item-body">
-                En climas cálidos suele ser mejor regar temprano en la mañana o al final de la
-                tarde para reducir evaporación y estrés en las plantas.
-              </div>
-            </div>
+          <div class="section-subtitle" style="margin-top:8px;">
+            Nota: por ahora el calendario se basa en datos de clima tropical / Caribe. Puedes usarlo como guía general
+            y ajustar fechas según tu experiencia local.
           </div>
         </div>
       </section>
     </main>
-
     <footer>
-      <span>Mi Siembra Inteligente · Datos guardados localmente en tu dispositivo 🌿</span>
+      Mi Siembra Inteligente · Datos guardados solo en este dispositivo · Puedes instalarla como app desde el navegador.
     </footer>
   </div>
 
-  <!-- Banner instalar PWA -->
-  <div id="installBanner" class="hidden">
-    <span>Instala <strong>Mi Siembra Inteligente</strong> en tu dispositivo</span>
-    <button class="btn btn-secondary" id="btnInstalarPwa">
-      <span>📲</span> Instalar
-    </button>
+  <!-- DIÁLOGO HUERTO -->
+  <div class="dialog-backdrop" id="gardenDialog">
+    <div class="dialog">
+      <h3>Asignar cultivo</h3>
+      <div id="gardenDialogPosition" class="section-subtitle" style="margin-bottom:8px;"></div>
+      <label for="gardenCropSelect">Cultivo</label>
+      <select id="gardenCropSelect"></select>
+      <div id="gardenCropInfo" class="section-subtitle" style="margin-top:4px;"></div>
+      <div class="dialog-footer">
+        <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
+        <button class="btn btn-primary" type="button" id="gardenSave">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO DIARIO (NUEVA ENTRADA) -->
+  <div class="dialog-backdrop" id="diaryDialog">
+    <div class="dialog">
+      <h3>Nueva entrada</h3>
+      <label for="diaryType">Tipo de actividad</label>
+      <select id="diaryType">
+        <option value="Siembra">Siembra</option>
+        <option value="Riego">Riego</option>
+        <option value="Abono">Abono</option>
+        <option value="Cosecha">Cosecha</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <label for="diaryDate">Fecha</label>
+      <input id="diaryDate" type="date" />
+      <label for="diaryNotes">Notas</label>
+      <textarea id="diaryNotes" placeholder="Ej. Sembré 4 plantas de tomate en tiestos de 5 galones."></textarea>
+      <div class="dialog-footer">
+        <button class="btn btn-ghost" type="button" data-dialog-close>Cancelar</button>
+        <button class="btn btn-primary" type="button" id="diarySave">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO DETALLE DIARIO -->
+  <div class="dialog-backdrop" id="diaryDetailDialog">
+    <div class="dialog">
+      <h3>Detalle de la entrada</h3>
+      <div id="diaryDetailType" style="font-weight:600; margin-bottom:4px;"></div>
+      <div id="diaryDetailDate" class="section-subtitle" style="margin-bottom:8px;"></div>
+      <div id="diaryDetailNotes" class="diary-notes" style="margin-bottom:8px;"></div>
+      <div class="dialog-footer">
+        <button class="btn btn-ghost" type="button" data-dialog-close>Cerrar</button>
+        <button class="btn btn-primary" type="button" id="diaryDeleteBtn">Borrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO FICHA DEL CULTIVO -->
+  <div class="dialog-backdrop" id="cropDialog">
+    <div class="dialog dialog-crop">
+      <div class="crop-dialog-img-wrap" style="border-radius:18px;overflow:hidden;margin-bottom:10px;background:radial-gradient(circle at 20% 0,#bbf7d0 0,#22c55e 35%,#15803d 70%,#166534 100%);max-height:260px;display:flex;align-items:center;justify-content:center;">
+        <img id="cropDialogImg" src="" alt="Cultivo" style="width:100%;height:auto;object-fit:contain;display:block;" />
+      </div>
+      <div class="crop-dialog-header-line" style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
+        <div class="crop-dialog-name" id="cropDialogName" style="font-size:17px;font-weight:650;">Cultivo</div>
+        <button class="btn btn-ghost" type="button" data-dialog-close>✕</button>
+      </div>
+      <div class="crop-dialog-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+        <span class="crop-dialog-tag" id="cropDialogTipo"></span>
+        <span class="crop-dialog-tag" id="cropDialogDias"></span>
+        <span class="crop-dialog-tag" id="cropDialogSol"></span>
+      </div>
+      <div class="crop-dialog-body" style="font-size:13px;color:var(--text-soft);overflow-y:auto;padding-right:2px;margin-bottom:6px;">
+        <p><strong>Siembra:</strong> <span id="cropDialogSiembra"></span></p>
+        <p><strong>Mejores meses de siembra:</strong> <span id="cropDialogMeses"></span></p>
+        <p><strong>Distancia entre plantas:</strong> <span id="cropDialogDistancia"></span></p>
+        <p><strong>Profundidad de siembra:</strong> <span id="cropDialogProfundidad"></span></p>
+        <p><strong>Tiesto recomendado:</strong> <span id="cropDialogTiesto"></span></p>
+        <p><strong>Plagas frecuentes:</strong> <span id="cropDialogPlagas"></span></p>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn btn-primary" type="button" data-dialog-close>Cerrar</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    /*********************
-     * Datos y utilidades
-     *********************/
-    const STORAGE_KEYS = {
-      settings: "msi-settings",
-      cultivos: "msi-cultivos",
-      diario: "msi-diario"
-    };
+    const GARDEN_KEY = 'mi_siembra_huerto_v1';
+    const DIARY_KEY = 'mi_siembra_diario_v1';
+    const CLIMATE_KEY = 'mi_siembra_clima_v1';
 
-    const DEFAULT_SETTINGS = {
-      nombreHuerto: "Mi huerto",
-      clima: "tropical",   // tropical | subtropical | templado
-      hemisferio: "norte"  // norte | sur
-    };
+    const cultivos = [
+      { id: 'acelga', nombre: 'Acelga', tipo: 'Hortaliza de hoja', imagen: 'img/acelga.jpg', diasCosecha: '50–60 días', sol: 'Sol suave o media sombra', siembra: 'Siembra directa o semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
+      { id: 'acerola', nombre: 'Acerola', tipo: 'Frutal', imagen: 'img/acerola.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'aguacate', nombre: 'Aguacate', tipo: 'Frutal', imagen: 'img/aguacate.jpg', diasCosecha: '2–4 años', sol: 'Pleno sol', siembra: 'Injertos o plántulas', distancia: '4–6 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'aji', nombre: 'Ají', tipo: 'Fruto', imagen: 'img/aji.jpg', diasCosecha: '90–110 días', sol: 'Pleno sol', siembra: 'Semilleros y trasplante', distancia: '40–50 cm', profundidad: '0.5–1 cm', tiesto: '10–15 L' },
+      { id: 'ajo', nombre: 'Ajo', tipo: 'Bulbo', imagen: 'img/ajo.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Dientes directos', distancia: '10–15 cm', profundidad: '3–4 cm', tiesto: '15–20 L' },
+      { id: 'albahaca', nombre: 'Albahaca', tipo: 'Hierba aromática', imagen: 'img/albahaca.jpg', diasCosecha: '40–60 días', sol: 'Sol suave', siembra: 'Semilleros o directa', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '5–8 L' },
+      { id: 'apio', nombre: 'Apio', tipo: 'Hortaliza de tallo', imagen: 'img/apio.jpg', diasCosecha: '90–120 días', sol: 'Sol suave', siembra: 'Semilleros', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '10–15 L' },
+      { id: 'arugula', nombre: 'Arúgula', tipo: 'Hortaliza de hoja', imagen: 'img/arugula.jpg', diasCosecha: '30–40 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '15–20 cm', profundidad: '0.5 cm', tiesto: '5–8 L' },
+      { id: 'batata', nombre: 'Batata', tipo: 'Raíz/tubérculo', imagen: 'img/batata.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Estacas o guías', distancia: '40–60 cm', profundidad: '5–8 cm', tiesto: '25–30 L' },
+      { id: 'berenjena', nombre: 'Berenjena', tipo: 'Fruto', imagen: 'img/berenjena.jpg', diasCosecha: '100–120 días', sol: 'Pleno sol', siembra: 'Semilleros y trasplante', distancia: '50–60 cm', profundidad: '1–2 cm', tiesto: '20–30 L' },
+      { id: 'berro', nombre: 'Berro', tipo: 'Hortaliza de hoja', imagen: 'img/berro.jpg', diasCosecha: '45–60 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '10–15 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
+      { id: 'broccoli', nombre: 'Brócoli', tipo: 'Hortaliza de flor', imagen: 'img/broccoli.jpg', diasCosecha: '80–100 días', sol: 'Pleno sol', siembra: 'Semilleros y trasplante', distancia: '40–60 cm', profundidad: '1–2 cm', tiesto: '20–25 L' },
+      { id: 'calabaza', nombre: 'Calabaza', tipo: 'Fruto', imagen: 'img/calabaza.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '1–2 m', profundidad: '3–4 cm', tiesto: 'Suelo directo o 50 L' },
+      { id: 'cantalope', nombre: 'Cantalope', tipo: 'Fruto', imagen: 'img/cantalope.jpg', diasCosecha: '80–100 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '80–100 cm', profundidad: '2–3 cm', tiesto: '30–40 L' },
+      { id: 'carambola', nombre: 'Carambola', tipo: 'Frutal', imagen: 'img/carambola.jpg', diasCosecha: '1–2 años', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'cebolla', nombre: 'Cebolla', tipo: 'Bulbo', imagen: 'img/cebolla.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Plántulas o bulbitos', distancia: '10–15 cm', profundidad: '2–3 cm', tiesto: '15–20 L' },
+      { id: 'china', nombre: 'China (naranja)', tipo: 'Frutal cítrico', imagen: 'img/china.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'cilantro', nombre: 'Cilantro', tipo: 'Hierba/aromática', imagen: 'img/cilantro.jpg', diasCosecha: '30–45 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–10 cm', profundidad: '0.5–1 cm', tiesto: '4–6 L' },
+      { id: 'col_risada', nombre: 'Col risada (kale rizado)', tipo: 'Hortaliza de hoja', imagen: 'img/col_risada.jpg', diasCosecha: '60–80 días', sol: 'Sol suave', siembra: 'Semilleros y trasplante', distancia: '35–45 cm', profundidad: '1 cm', tiesto: '15–20 L' },
+      { id: 'col_roja', nombre: 'Col roja', tipo: 'Hortaliza de hoja', imagen: 'img/col_roja.jpg', diasCosecha: '80–100 días', sol: 'Sol suave', siembra: 'Semilleros y trasplante', distancia: '35–45 cm', profundidad: '1 cm', tiesto: '15–20 L' },
+      { id: 'coliflor', nombre: 'Coliflor', tipo: 'Hortaliza de flor', imagen: 'img/coliflor.jpg', diasCosecha: '80–100 días', sol: 'Sol suave', siembra: 'Semilleros y trasplante', distancia: '40–60 cm', profundidad: '1–2 cm', tiesto: '20–25 L' },
+      { id: 'escarolas', nombre: 'Escarolas', tipo: 'Hortaliza de hoja', imagen: 'img/escarolas.jpg', diasCosecha: '60–70 días', sol: 'Sol suave', siembra: 'Semilleros y trasplante', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '10–15 L' },
+      { id: 'espinaca', nombre: 'Espinaca', tipo: 'Hortaliza de hoja', imagen: 'img/espinaca.jpg', diasCosecha: '40–50 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '10–15 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
+      { id: 'fresas', nombre: 'Fresas', tipo: 'Frutal pequeño', imagen: 'img/fresas.jpg', diasCosecha: '4–5 meses', sol: 'Sol suave', siembra: 'Plántulas', distancia: '25–30 cm', profundidad: 'Cubrir raíces', tiesto: '15–20 L' },
+      { id: 'gandules', nombre: 'Gandules', tipo: 'Leguminosa', imagen: 'img/gandules.jpg', diasCosecha: '4–6 meses', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '50–80 cm', profundidad: '2–3 cm', tiesto: '30–40 L' },
+      { id: 'guayaba', nombre: 'Guayaba', tipo: 'Frutal', imagen: 'img/guayaba.jpg', diasCosecha: '1–2 años', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'guineo', nombre: 'Guineo', tipo: 'Frutal', imagen: 'img/guineo.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Hijuelos (retoños)', distancia: '2–3 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'habichuelas', nombre: 'Habichuelas', tipo: 'Leguminosa', imagen: 'img/habichuelas.jpg', diasCosecha: '60–70 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '25–30 cm', profundidad: '2–3 cm', tiesto: '15–20 L' },
+      { id: 'kale', nombre: 'Kale', tipo: 'Hortaliza de hoja', imagen: 'img/kale.jpg', diasCosecha: '60–80 días', sol: 'Sol suave', siembra: 'Semilleros y trasplante', distancia: '30–40 cm', profundidad: '1 cm', tiesto: '15–20 L' },
+      { id: 'lechuga', nombre: 'Lechuga', tipo: 'Hortaliza de hoja', imagen: 'img/lechuga.jpg', diasCosecha: '40–60 días', sol: 'Sol suave', siembra: 'Semilleros o directa', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
+      { id: 'limon', nombre: 'Limón', tipo: 'Frutal cítrico', imagen: 'img/limon.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'maiz', nombre: 'Maíz', tipo: 'Cereal', imagen: 'img/maiz.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '20–30 cm', profundidad: '3–4 cm', tiesto: 'Suelo directo' },
+      { id: 'malanga', nombre: 'Malanga', tipo: 'Raíz/tubérculo', imagen: 'img/malanga.jpg', diasCosecha: '8–10 meses', sol: 'Sol suave', siembra: 'Cormos o pedazos de cormos', distancia: '60–80 cm', profundidad: '8–10 cm', tiesto: '40–50 L' },
+      { id: 'mandarina', nombre: 'Mandarina', tipo: 'Frutal cítrico', imagen: 'img/mandarina.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'mango', nombre: 'Mango', tipo: 'Frutal', imagen: 'img/mango.jpg', diasCosecha: '3–5 años', sol: 'Pleno sol', siembra: 'Injertos o plántulas', distancia: '6–8 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'melon', nombre: 'Melón', tipo: 'Fruto', imagen: 'img/melon.jpg', diasCosecha: '80–100 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '80–100 cm', profundidad: '2–3 cm', tiesto: '30–40 L' },
+      { id: 'menta', nombre: 'Menta', tipo: 'Hierba aromática', imagen: 'img/menta.jpg', diasCosecha: '30–60 días', sol: 'Sol suave o media sombra', siembra: 'Esquejes o siembra directa', distancia: '20–25 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
+      { id: 'nabo', nombre: 'Nabo', tipo: 'Raíz', imagen: 'img/nabo.jpg', diasCosecha: '40–60 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '10–15 cm', profundidad: '1–2 cm', tiesto: '10–12 L' },
+      { id: 'naranja', nombre: 'Naranja', tipo: 'Frutal cítrico', imagen: 'img/naranja.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'oregano', nombre: 'Orégano', tipo: 'Hierba aromática', imagen: 'img/oregano.jpg', diasCosecha: '40–60 días', sol: 'Sol suave', siembra: 'Esquejes o siembra directa', distancia: '20–25 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
+      { id: 'oregano_brujo', nombre: 'Orégano brujo', tipo: 'Hierba aromática', imagen: 'img/oregano_brujo.jpg', diasCosecha: '40–60 días', sol: 'Sol suave', siembra: 'Esquejes', distancia: '25–30 cm', profundidad: '0.5–1 cm', tiesto: '8–10 L' },
+      { id: 'papa', nombre: 'Papa', tipo: 'Raíz/tubérculo', imagen: 'img/papa.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Trozos de tubérculo', distancia: '30–40 cm', profundidad: '5–8 cm', tiesto: '25–30 L' },
+      { id: 'papaya', nombre: 'Papaya', tipo: 'Frutal', imagen: 'img/papaya.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Semillas o plántulas', distancia: '2–3 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'parcha', nombre: 'Parcha (maracuyá)', tipo: 'Frutal trepador', imagen: 'img/parcha.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Semillas o plántulas', distancia: '2–3 m', profundidad: '2–3 cm', tiesto: 'Suelo directo con soporte' },
+      { id: 'pepinillo', nombre: 'Pepinillo', tipo: 'Fruto', imagen: 'img/pepinillo.jpg', diasCosecha: '50–70 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '40–60 cm', profundidad: '2–3 cm', tiesto: '20–25 L' },
+      { id: 'pimiento', nombre: 'Pimiento', tipo: 'Fruto', imagen: 'img/pimiento.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Semilleros y trasplante', distancia: '40–50 cm', profundidad: '0.5–1 cm', tiesto: '15–20 L' },
+      { id: 'pimiento_morron', nombre: 'Pimiento morrón', tipo: 'Fruto', imagen: 'img/pimiento_morron.jpg', diasCosecha: '90–120 días', sol: 'Pleno sol', siembra: 'Semilleros y trasplante', distancia: '40–50 cm', profundidad: '0.5–1 cm', tiesto: '15–20 L' },
+      { id: 'platano', nombre: 'Plátano', tipo: 'Frutal', imagen: 'img/platano.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Hijos o cormos', distancia: '2–3 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'quimbombo', nombre: 'Quimbombó', tipo: 'Fruto', imagen: 'img/quimbombo.jpg', diasCosecha: '60–80 días', sol: 'Pleno sol', siembra: 'Siembra directa', distancia: '40–60 cm', profundidad: '2–3 cm', tiesto: '20–25 L' },
+      { id: 'rabano', nombre: 'Rábano', tipo: 'Raíz', imagen: 'img/rabano.jpg', diasCosecha: '30–40 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–10 cm', profundidad: '1–2 cm', tiesto: '8–10 L' },
+      { id: 'recao', nombre: 'Recao', tipo: 'Hierba aromática', imagen: 'img/recao.jpg', diasCosecha: '60–90 días', sol: 'Media sombra', siembra: 'División de matas o semilla', distancia: '20–30 cm', profundidad: 'Cubrir raíces', tiesto: '10–15 L' },
+      { id: 'remolacha', nombre: 'Remolacha', tipo: 'Raíz', imagen: 'img/remolacha.jpg', diasCosecha: '60–70 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '10–15 cm', profundidad: '1–2 cm', tiesto: '10–12 L' },
+      { id: 'remolacha_blanca', nombre: 'Remolacha blanca', tipo: 'Raíz', imagen: 'img/remolacha_blanca.jpg', diasCosecha: '60–70 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '10–15 cm', profundidad: '1–2 cm', tiesto: '10–12 L' },
+      { id: 'repollo', nombre: 'Repollo', tipo: 'Hortaliza de hoja', imagen: 'img/repollo.jpg', diasCosecha: '80–100 días', sol: 'Sol suave', siembra: 'Semilleros y trasplante', distancia: '40–60 cm', profundidad: '1–2 cm', tiesto: '20–25 L' },
+      { id: 'tamarindo', nombre: 'Tamarindo', tipo: 'Frutal', imagen: 'img/tamarindo.jpg', diasCosecha: '3–5 años', sol: 'Pleno sol', siembra: 'Plántulas', distancia: '6–8 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'tomate', nombre: 'Tomate', tipo: 'Fruto', imagen: 'img/tomate.jpg', diasCosecha: '90–110 días', sol: 'Pleno sol', siembra: 'Semilleros y trasplante', distancia: '40–60 cm', profundidad: '0.5–1 cm', tiesto: '20–25 L' },
+      { id: 'toronja', nombre: 'Toronja', tipo: 'Frutal cítrico', imagen: 'img/toronja.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Plántulas o injertos', distancia: '3–4 m', profundidad: 'Cubrir raíces', tiesto: 'Suelo directo' },
+      { id: 'yautia', nombre: 'Yautía', tipo: 'Raíz/tubérculo', imagen: 'img/yautia.jpg', diasCosecha: '8–10 meses', sol: 'Sol suave', siembra: 'Cormos', distancia: '60–80 cm', profundidad: '8–10 cm', tiesto: '40–50 L' },
+      { id: 'yuca', nombre: 'Yuca', tipo: 'Raíz/tubérculo', imagen: 'img/yuca.jpg', diasCosecha: '8–12 meses', sol: 'Pleno sol', siembra: 'Estacas de tallo', distancia: '80–100 cm', profundidad: '10–15 cm', tiesto: 'Suelo directo' },
+      { id: 'zanahoria', nombre: 'Zanahoria', tipo: 'Raíz', imagen: 'img/zanahoria.jpg', diasCosecha: '70–90 días', sol: 'Sol suave', siembra: 'Siembra directa', distancia: '5–8 cm', profundidad: '1–2 cm', tiesto: '10–12 L' }
+    ];
 
-    const CLIMA_LABEL = {
-      tropical: "tropical",
-      subtropical: "subtropical/templado",
-      templado: "templado/frío"
-    };
-
-    const HEMISFERIO_LABEL = {
-      norte: "hemisferio norte",
-      sur: "hemisferio sur"
-    };
-
-    function loadSettings() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.settings);
-        if (!raw) return { ...DEFAULT_SETTINGS };
-        const parsed = JSON.parse(raw);
-        return { ...DEFAULT_SETTINGS, ...parsed };
-      } catch {
-        return { ...DEFAULT_SETTINGS };
-      }
-    }
-
-    function saveSettings(settings) {
-      localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(settings));
-    }
-
-    function loadCultivos() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.cultivos);
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        return Array.isArray(arr) ? arr : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveCultivos(list) {
-      localStorage.setItem(STORAGE_KEYS.cultivos, JSON.stringify(list));
-    }
-
-    function loadDiario() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.diario);
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        return Array.isArray(arr) ? arr : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveDiario(list) {
-      localStorage.setItem(STORAGE_KEYS.diario, JSON.stringify(list));
-    }
-
-    function formatDate(dateStr) {
-      if (!dateStr) return "Sin fecha";
-      const d = new Date(dateStr + "T00:00:00");
-      if (Number.isNaN(d.getTime())) return dateStr;
-      const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
-      return `${d.getDate().toString().padStart(2,"0")} ${meses[d.getMonth()]} ${d.getFullYear()}`;
-    }
-
-    function todayISO() {
-      const d = new Date();
-      return d.toISOString().slice(0,10);
-    }
-
-    /*********************
-     * Calendario de siembra
-     *********************/
-    // Muy resumido; puedes ampliar más tarde
-    const CALENDARIO_SIEMBRA = {
-      tropical: {
-        5: [
-          { titulo: "Re-siembra de lechugas", tipo: "Hoja", detalle: "Siembra escalonada cada 2–3 semanas para cosechas continuas." },
-          { titulo: "Rábanos", tipo: "Raíz", detalle: "Cosecha rápida (20–30 días). Perfectos para ocupar huecos libres." }
-        ],
-        6: [
-          { titulo: "Berenjena", tipo: "Fruto", detalle: "Le gustan las noches cálidas. Ideal para verano tropical." },
-          { titulo: "Ajíes y pimientos", tipo: "Fruto", detalle: "Sembrar en lugar soleado y con buen drenaje." }
-        ]
+    const plagasCatalog = [
+      {
+        id: 'pulgon',
+        nombre: 'Pulgón',
+        tipo: 'Insecto chupador',
+        icon: '🪲',
+        sintomas: 'Brotes tiernos deformados, hojas rizadas y pegajosas por mielilla.',
+        cultivos: ['tomate','lechuga','cilantro','habichuelas'],
+        remedios: 'Rocíos de agua jabonosa suave o jabón potásico, enjuagar con agua limpia y favorecer mariquitas y crisopas.'
       },
-      subtropical: {
-        5: [
-          { titulo: "Tomates de media estación", tipo: "Fruto", detalle: "Elige variedades adaptadas a tu región." }
-        ]
+      {
+        id: 'aranhuela_roja',
+        nombre: 'Arañuela roja',
+        tipo: 'Ácaro',
+        icon: '🕷️',
+        sintomas: 'Punteado amarillento en hojas y finas telarañas en el envés.',
+        cultivos: ['tomate','berenjena','pimiento'],
+        remedios: 'Aumentar humedad, duchas de agua en el envés y aplicaciones suaves de aceite de neem.'
       },
-      templado: {
-        2: [
-          { titulo: "Lechugas de primavera", tipo: "Hoja", detalle: "Siembra temprana bajo protección ligera si hay riesgo de heladas." }
-        ]
+      {
+        id: 'mosca_blanca',
+        nombre: 'Mosca blanca',
+        tipo: 'Insecto chupador',
+        icon: '🦟',
+        sintomas: 'Nubes de insectos blancos al mover la planta, hojas amarillentas con mielilla.',
+        cultivos: ['tomate','pimiento','calabaza'],
+        remedios: 'Trampas cromáticas amarillas, agua jabonosa y limpieza de hojas afectadas.'
+      },
+      {
+        id: 'cochinilla',
+        nombre: 'Cochinilla',
+        tipo: 'Insecto chupador',
+        icon: '🐞',
+        sintomas: 'Bultitos algodonosos o con caparazón en tallos y hojas.',
+        cultivos: ['cítricos','guayaba','papaya'],
+        remedios: 'Algodón con alcohol en focos pequeños, jabón potásico y aceite de neem en infestaciones mayores.'
+      },
+      {
+        id: 'chinche_verde',
+        nombre: 'Chinche verde',
+        tipo: 'Insecto chupador',
+        icon: '🪳',
+        sintomas: 'Manchas y deformaciones en vainas y frutos tiernos.',
+        cultivos: ['gandules','habichuelas','tomate'],
+        remedios: 'Recolecta manual, mantas anti-insectos en etapas tempranas y diversificar con flores repelentes.'
+      },
+      {
+        id: 'minador',
+        nombre: 'Minador de hojas',
+        tipo: 'Insecto minador',
+        icon: '🐛',
+        sintomas: 'Caminos blanquecinos serpenteantes dentro de las hojas.',
+        cultivos: ['habichuelas','cucurbitáceas','tomate'],
+        remedios: 'Retirar hojas muy afectadas, fomentar enemigos naturales y usar trampas cromáticas.'
+      },
+      {
+        id: 'caracol',
+        nombre: 'Caracoles y babosas',
+        tipo: 'Otros animales',
+        icon: '🐌',
+        sintomas: 'Hojas con mordidas grandes e irregulares y rastros de baba brillante.',
+        cultivos: ['lechuga','coles','fresas'],
+        remedios: 'Recolecta manual al atardecer, trampas de cerveza y barreras de ceniza o cáscara de huevo triturada.'
+      },
+      {
+        id: 'oruga',
+        nombre: 'Orugas',
+        tipo: 'Insecto masticador',
+        icon: '🐛',
+        sintomas: 'Hojas perforadas o comidas desde los bordes, bolitas de excremento oscuro.',
+        cultivos: ['coles','lechuga','tomate'],
+        remedios: 'Revisión manual diaria, eliminación de huevos y uso de mallas ligeras sobre los cultivos.'
+      },
+      {
+        id: 'trips',
+        nombre: 'Trips',
+        tipo: 'Insecto chupador',
+        icon: '🦟',
+        sintomas: 'Hojas con aspecto plateado o bronceado y pequeños puntos negros.',
+        cultivos: ['flores','cebolla','papaya'],
+        remedios: 'Trampas azules, extractos suaves de ajo y jabón potásico.'
+      },
+      {
+        id: 'oidio',
+        nombre: 'Oídio',
+        tipo: 'Hongo',
+        icon: '🍄',
+        sintomas: 'Polvillo blanco sobre la superficie de las hojas y tallos.',
+        cultivos: ['calabaza','pepino','fresas'],
+        remedios: 'Leche diluida (1 parte de leche por 9 de agua), infusión de manzanilla o bicarbonato muy diluido.'
       }
+    ];
+
+    const pesticidasCatalog = [
+      {
+        id: 'agua_jabonosa',
+        nombre: 'Agua jabonosa',
+        tipo: 'Insecticida suave',
+        icon: '🧼',
+        plagas: ['pulgon','mosca_blanca','cochinilla'],
+        uso: 'Mezclar jabón neutro o potásico en agua (siempre bien diluido) y aplicar sobre insectos pequeños.',
+        seguridad: 'No usar detergentes fuertes. Probar primero en una parte pequeña de la planta.'
+      },
+      {
+        id: 'jabon_potasico',
+        nombre: 'Jabón potásico',
+        tipo: 'Insecticida',
+        icon: '🧴',
+        plagas: ['pulgon','cochinilla','mosca_blanca'],
+        uso: 'Diluir según indicaciones del fabricante y rociar hojas por el envés y el haz.',
+        seguridad: 'Respetar dosis; repetir cada pocos días en infestaciones fuertes.'
+      },
+      {
+        id: 'aceite_neem',
+        nombre: 'Aceite de neem',
+        tipo: 'Insecticida y repelente',
+        icon: '🌿',
+        plagas: ['pulgon','aranhuela_roja','cochinilla','oruga'],
+        uso: 'Emulsionar en agua con unas gotas de jabón y aplicar al atardecer.',
+        seguridad: 'No usar a pleno sol para evitar quemaduras en hojas.'
+      },
+      {
+        id: 'repelente_ajo_picante',
+        nombre: 'Repelente de ajo picante',
+        tipo: 'Repelente',
+        icon: '🌶️',
+        plagas: ['pulgon','trips','oruga'],
+        uso: 'Licuar ajo, cebolla y chile en agua, colar y aplicar muy diluido sobre el follaje.',
+        seguridad: 'Probar primero en pocas hojas; puede ser fuerte en dosis altas.'
+      },
+      {
+        id: 'insecticida_tomate',
+        nombre: 'Insecticida de tomate',
+        tipo: 'Repelente',
+        icon: '🍅',
+        plagas: ['pulgon','oruga'],
+        uso: 'Hervir hojas de tomate en agua, dejar enfriar, colar y aplicar sobre hojas afectadas.',
+        seguridad: 'Usar en pequeñas cantidades y renovar la mezcla a menudo.'
+      },
+      {
+        id: 'insecticida_limon',
+        nombre: 'Insecticida de limón',
+        tipo: 'Repelente cítrico',
+        icon: '🍋',
+        plagas: ['pulgon','mosca_blanca'],
+        uso: 'Infusión de cáscaras de limón en agua caliente; una vez fría se rocía sobre la planta.',
+        seguridad: 'Evitar aplicaciones a pleno sol inmediato.'
+      },
+      {
+        id: 'tierra_diatomeas',
+        nombre: 'Tierra de diatomeas',
+        tipo: 'Polvo seco',
+        icon: '🪨',
+        plagas: ['caracol','babosa','oruga','hormiga'],
+        uso: 'Espolvorear en el suelo alrededor de las plantas, siempre en seco.',
+        seguridad: 'Usar mascarilla al aplicarla, no inhalar el polvo.'
+      },
+      {
+        id: 'trampa_cromatica',
+        nombre: 'Trampa cromática',
+        tipo: 'Trampa física',
+        icon: '🟨',
+        plagas: ['mosca_blanca','minador','trips'],
+        uso: 'Cartones amarillos o azules untados con pegamento especial colocados cerca de los cultivos.',
+        seguridad: 'Seguras para la planta; colocar fuera del alcance de niños pequeños.'
+      },
+      {
+        id: 'fungicida_manzanilla',
+        nombre: 'Fungicida de manzanilla',
+        tipo: 'Fungicida suave',
+        icon: '🌼',
+        plagas: ['oidio'],
+        uso: 'Preparar una infusión de manzanilla y pulverizar sobre hojas con hongos suaves.',
+        seguridad: 'Repetir cada pocos días; no mancha ni quema la planta.'
+      },
+      {
+        id: 'fungicida_canela',
+        nombre: 'Fungicida de canela',
+        tipo: 'Fungicida',
+        icon: '🥧',
+        plagas: ['hongos_suelo'],
+        uso: 'Espolvorear canela en la superficie del sustrato para prevenir hongos en semilleros.',
+        seguridad: 'No abusar en plantas adultas, se usa principalmente en semilleros.'
+      }
+    ];
+
+    const mesesInfo = [
+      { id: 1, nombre: 'Ene' },
+      { id: 2, nombre: 'Feb' },
+      { id: 3, nombre: 'Mar' },
+      { id: 4, nombre: 'Abr' },
+      { id: 5, nombre: 'May' },
+      { id: 6, nombre: 'Jun' },
+      { id: 7, nombre: 'Jul' },
+      { id: 8, nombre: 'Ago' },
+      { id: 9, nombre: 'Sep' },
+      { id: 10, nombre: 'Oct' },
+      { id: 11, nombre: 'Nov' },
+      { id: 12, nombre: 'Dic' }
+    ];
+
+    const siembrasPorMes = {
+      1: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','berro','apio'],
+      2: ['lechuga','espinaca','acelga','cilantro','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','cebolla'],
+      3: ['tomate','pimiento','pimiento_morron','aji','berenjena','pepinillo','calabaza','cantalope','melon','habichuelas','maiz','quimbombo','lechuga','espinaca','cilantro','albahaca','menta'],
+      4: ['tomate','pimiento','pimiento_morron','aji','berenjena','pepinillo','calabaza','cantalope','melon','habichuelas','maiz','quimbombo','gandules','batata','yuca','yautia','papa'],
+      5: ['calabaza','cantalope','melon','maiz','quimbombo','gandules','habichuelas','batata','yuca','yautia','papa','malanga','platano','guineo','papaya','parcha'],
+      6: ['batata','yuca','yautia','malanga','platano','guineo','papaya','parcha','gandules','calabaza','quimbombo','maiz'],
+      7: ['tomate','pimiento','pimiento_morron','berenjena','quimbombo','gandules','habichuelas','batata','yuca','yautia','albahaca','menta','oregano','oregano_brujo'],
+      8: ['tomate','pimiento','berenjena','habichuelas','gandules','lechuga','espinaca','cilantro','recao','albahaca','menta','oregano','oregano_brujo'],
+      9: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','apio','escarolas'],
+      10: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','col_roja','repollo','broccoli','coliflor','zanahoria','rabano','remolacha','remolacha_blanca','apio','berro'],
+      11: ['lechuga','espinaca','acelga','cilantro','recao','kale','col_risada','repollo','zanahoria','rabano','remolacha','remolacha_blanca','habichuelas','apio'],
+      12: ['lechuga','espinaca','acelga','cilantro','recao','berro','kale','col_risada','repollo','zanahoria','rabano','remolacha']
     };
 
-    function getCalendarData(settings, monthIndex) {
-      const climaKey = settings.clima || "tropical";
-      const base = CALENDARIO_SIEMBRA[climaKey] || {};
-      return base[monthIndex] || [];
-    }
-
-    /*********************
-     * Render de UI (header, chips, etc.)
-     *********************/
-    let stateSettings = loadSettings();
-    let stateCultivos = loadCultivos();
-    let stateDiario = loadDiario();
-
-    function updateHeader() {
-      const subtitleEl = document.getElementById("appSubtitle");
-      const nombre = stateSettings.nombreHuerto || "Mi huerto";
-      const clima = CLIMA_LABEL[stateSettings.clima] || CLIMA_LABEL.tropical;
-      const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio] || HEMISFERIO_LABEL.norte;
-
-      subtitleEl.innerHTML = `
-        <span>Huerto "<strong>${nombre}</strong>"</span>
-        <span class="app-subtitle-dot"></span>
-        <span>clima ${clima}</span>
-        <span class="app-subtitle-dot"></span>
-        <span>${hemis}</span>
-      `;
-    }
-
-    function updateSettingsContexts() {
-      const nombre = stateSettings.nombreHuerto || "Mi huerto";
-      const clima = CLIMA_LABEL[stateSettings.clima] || CLIMA_LABEL.tropical;
-      const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio] || HEMISFERIO_LABEL.norte;
-
-      document.querySelectorAll(".settings-context").forEach(el => {
-        el.innerHTML = `
-          <span class="chip"><span>🌿</span> Huerto: ${nombre}</span>
-          <span class="chip"><span>☁️</span> Clima: ${clima}</span>
-          <span class="chip"><span>🧭</span> ${hemis}</span>
-        `;
+    const cultivoMeses = {};
+    Object.entries(siembrasPorMes).forEach(([mesStr, lista]) => {
+      const mesNum = parseInt(mesStr, 10);
+      lista.forEach(id => {
+        if (!cultivoMeses[id]) cultivoMeses[id] = [];
+        if (!cultivoMeses[id].includes(mesNum)) cultivoMeses[id].push(mesNum);
       });
+    });
+    Object.values(cultivoMeses).forEach(arr => arr.sort((a, b) => a - b));
 
-      const climaText = `Clima ${clima}`;
-      const estadoClimaChip = document.getElementById("estadoClimaChip");
-      if (estadoClimaChip) estadoClimaChip.textContent = climaText;
-      const calChip = document.getElementById("calendarioClimaChip");
-      if (calChip) calChip.textContent = climaText;
-      const calChip2 = document.getElementById("calendarioClimaChip2");
-      if (calChip2) calChip2.textContent = climaText;
+    const plagasPorCultivo = {
+      tomate: ['pulgon','mosca_blanca','aranhuela_roja','minador'],
+      lechuga: ['pulgon','caracol','oruga'],
+      cilantro: ['pulgon','trips'],
+      habichuelas: ['pulgon','minador','chinche_verde'],
+      calabaza: ['caracol','oruga','oidio'],
+      fresas: ['caracol','oidio'],
+      gandules: ['chinche_verde'],
+      papaya: ['aranhuela_roja','trips'],
+      parcha: ['pulgon','oruga']
+    };
+
+    function obtenerCategoriaSol(solStr) {
+      const s = (solStr || '').toLowerCase();
+      if (s.includes('media sombra')) return 'Media sombra';
+      if (s.includes('sol suave')) return 'Sol suave';
+      return 'Pleno sol';
     }
 
-    function renderInicio() {
-      const cultivos = stateCultivos;
-      const diario = stateDiario;
-      const cultivosCount = cultivos.length;
-      const today = todayISO();
+    const TIPO_ICONOS = {
+      'Siembra': '🌱',
+      'Riego': '💧',
+      'Abono': '🧪',
+      'Cosecha': '🧺',
+      'Otro': '📌'
+    };
 
-      const entradasHoy = diario.filter(e => e.fecha === today).length;
+    const climateLabels = {
+      tropical: 'Tropical / Caribe',
+      templado: 'Templado',
+      frio: 'Frío / inviernos largos'
+    };
 
-      document.getElementById("estadoCultivosCount").textContent = cultivosCount.toString();
-      document.getElementById("estadoEntradasCount").textContent = entradasHoy.toString();
+    document.addEventListener('DOMContentLoaded', () => {
+      const views = document.querySelectorAll('section.view');
+      const pillButtons = document.querySelectorAll('.pill-nav .nav-btn');
+      const allViewButtons = document.querySelectorAll('.nav-btn,[data-view-target]');
 
-      const resumen = document.getElementById("estadoResumen");
-      const nombre = stateSettings.nombreHuerto || "tu huerto";
-
-      if (!cultivosCount && !entradasHoy) {
-        resumen.textContent = `Todavía no has registrado cultivos ni entradas en el diario. Empieza añadiendo tu primer cultivo en "Mi huerto".`;
-      } else if (cultivosCount && !entradasHoy) {
-        resumen.textContent = `Tienes ${cultivosCount} cultivo(s) registrado(s) en ${nombre}. Aún no has escrito nada en el diario hoy.`;
-      } else if (cultivosCount && entradasHoy) {
-        resumen.textContent = `Llevas ${cultivosCount} cultivo(s) activo(s) y ya registraste ${entradasHoy} nota(s) en el diario hoy. ¡Buen trabajo!`;
-      } else {
-        resumen.textContent = `Tienes anotaciones en el diario pero aún no has añadido cultivos. Usa "Mi huerto" para registrar lo que estás sembrando.`;
+      function setView(viewId) {
+        views.forEach(v => v.classList.toggle('active', v.id === viewId));
       }
-
-      // Calendario "hoy" (usa mes actual)
-      const now = new Date();
-      const monthIndex = now.getMonth();
-      const data = getCalendarData(stateSettings, monthIndex);
-      const calHoyTexto = document.getElementById("calendarioHoyTexto");
-
-      if (data.length === 0) {
-        calHoyTexto.textContent = `En ${nombre} no hay recomendaciones específicas para este mes con el clima actual, pero puedes consultar los demás meses en el calendario.`;
-      } else {
-        const nombres = data.map(d => d.titulo).join(", ");
-        calHoyTexto.textContent = `Para este mes se sugieren cultivos como: ${nombres}. Revisa el calendario para ver el detalle.`;
+      function setActivePill(viewId) {
+        pillButtons.forEach(b => {
+          const v = b.dataset.view;
+          b.classList.toggle('active', v === viewId);
+        });
       }
-    }
-
-    function renderCultivos() {
-      const listEl = document.getElementById("cultivosList");
-      const chip = document.getElementById("cultivosCountChip");
-      if (!listEl) return;
-
-      const count = stateCultivos.length;
-      if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
-
-      if (!count) {
-        listEl.innerHTML = `<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>`;
-        return;
-      }
-
-      listEl.innerHTML = "";
-      stateCultivos.forEach(c => {
-        const card = document.createElement("div");
-        card.className = "cultivo-card";
-
-        const tipoLabelMap = {
-          hoja: "Hoja",
-          fruto: "Fruto",
-          raiz: "Raíz",
-          tuberculo: "Tubérculo",
-          aromaticas: "Aromáticas",
-          otro: "Otro"
-        };
-        const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
-
-        card.innerHTML = `
-          <div class="cultivo-header">
-            <div class="cultivo-title">
-              <span>🌿</span>
-              <span>${c.nombre}</span>
-            </div>
-            <span class="chip">${tipoLabel}</span>
-          </div>
-          <div class="cultivo-body">
-            <div><strong>Variedad:</strong> ${c.variedad || "Sin especificar"}</div>
-            <div><strong>Fecha de siembra:</strong> ${formatDate(c.fechaSiembra)}</div>
-            <div><strong>Ubicación / notas cortas:</strong> ${c.notas ? c.notas.slice(0,140) : "—"}</div>
-            <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
-          </div>
-          ${c.notas ? `<div class="cultivo-notas"><strong>Notas:</strong> ${c.notas}</div>` : ""}
-          <div class="cultivo-actions">
-            <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
-            <button class="btn-danger btn" data-id="${c.id}" data-action="borrar">🗑 Eliminar</button>
-          </div>
-        `;
-
-        listEl.appendChild(card);
-      });
-    }
-
-    function renderCalendario(monthIndex = 5) {
-      const listEl = document.getElementById("calendarList");
-      const emptyEl = document.getElementById("calendarEmpty");
-      if (!listEl || !emptyEl) return;
-
-      const data = getCalendarData(stateSettings, monthIndex);
-
-      if (!data.length) {
-        listEl.innerHTML = "";
-        emptyEl.style.display = "block";
-        return;
-      }
-
-      emptyEl.style.display = "none";
-      listEl.innerHTML = "";
-
-      data.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "calendar-item";
-        div.innerHTML = `
-          <div class="calendar-item-title">
-            <span>${item.titulo}</span>
-            <span class="chip">${item.tipo}</span>
-          </div>
-          <div>${item.detalle}</div>
-        `;
-        listEl.appendChild(div);
-      });
-    }
-
-    function renderDiario() {
-      const listEl = document.getElementById("diarioList");
-      const chip = document.getElementById("diarioCountChip");
-      if (!listEl) return;
-
-      const arr = [...stateDiario].sort((a,b) => b.fecha.localeCompare(a.fecha));
-      const count = arr.length;
-      if (chip) chip.textContent = `${count} entrada${count === 1 ? "" : "s"}`;
-
-      if (!count) {
-        listEl.innerHTML = `<p class="muted">Aún no hay notas en el diario. Empieza escribiendo qué hiciste hoy en el huerto.</p>`;
-        return;
-      }
-
-      listEl.innerHTML = "";
-      arr.slice(0,25).forEach(item => {
-        const div = document.createElement("div");
-        div.className = "diario-item";
-        div.innerHTML = `
-          <div class="diario-item-header">
-            <strong>${formatDate(item.fecha)}</strong>
-            <span class="chip">${item.tipo || "General"}</span>
-          </div>
-          <div>${item.texto}</div>
-        `;
-        listEl.appendChild(div);
-      });
-    }
-
-    function renderPlagas() {
-      const listEl = document.getElementById("plagasList");
-      if (!listEl) return;
-
-      const plagasData = [
-        {
-          nombre: "Pulgones",
-          detalle: "Pequeños insectos que chupan savia y deforman brotes tiernos. Suelen aparecer en colonias.",
-          manejo: "Rociar con agua y jabón potásico o preparar extracto de ajo/ají. Favorecer mariquitas y crisopas."
-        },
-        {
-          nombre: "Mosca blanca",
-          detalle: "Insectos blancos que vuelan al mover la planta. Debilitan hojas y favorecen hongos.",
-          manejo: "Trampas amarillas, jabón potásico y aceites vegetales suaves respetando dosis."
-        },
-        {
-          nombre: "Orugas",
-          detalle: "Larvas que comen hojas dejando mordidas grandes o agujeros.",
-          manejo: "Revisión manual frecuente, retirar orugas a mano. Bacillus thuringiensis en casos necesarios."
-        },
-        {
-          nombre: "Caracoles y babosas",
-          detalle: "Suelo húmedo y restos de baba plateada cerca de las mordidas.",
-          manejo: "Refugios-trampa, barreras físicas y recolección manual al atardecer."
-        }
-      ];
-
-      listEl.innerHTML = "";
-      plagasData.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <div class="media-item-title">🐛 ${p.nombre}</div>
-          <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.detalle}</div>
-          <div class="media-item-body"><strong>Manejo recomendado:</strong> ${p.manejo}</div>
-        `;
-        listEl.appendChild(div);
-      });
-    }
-
-    function renderPesticidas() {
-      const listEl = document.getElementById("pesticidasList");
-      if (!listEl) return;
-
-      const data = [
-        {
-          nombre: "Jabón potásico",
-          detalle: "Eficaz contra pulgones y mosca blanca. Aplicar al atardecer y en hojas, evitando flores abiertas."
-        },
-        {
-          nombre: "Aceite de neem (uso hortícola)",
-          detalle: "Ayuda a cortar ciclos de varias plagas. Usar con moderación y siempre siguiendo etiqueta."
-        },
-        {
-          nombre: "Infusión de ajo y ají",
-          detalle: "Preparado casero de olor fuerte que puede repeler insectos suaves y algunos hongos."
-        }
-      ];
-
-      listEl.innerHTML = "";
-      data.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <div class="media-item-title">💧 ${p.nombre}</div>
-          <div class="media-item-body">${p.detalle}</div>
-        `;
-        listEl.appendChild(div);
-      });
-    }
-
-    /*********************
-     * Eventos y navegación
-     *********************/
-    function setupNavigation() {
-      const navButtons = document.querySelectorAll(".nav-btn");
-      navButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const section = btn.getAttribute("data-section");
-          if (!section) return;
-          // botones activos
-          navButtons.forEach(b => b.classList.toggle("nav-btn--active", b === btn));
-          // secciones
-          document.querySelectorAll(".section").forEach(sec => {
-            sec.classList.toggle("section--active", sec.id === `section-${section}`);
-          });
+      allViewButtons.forEach(btn => {
+        const target = btn.dataset.viewTarget || btn.dataset.view;
+        if (!target) return;
+        btn.addEventListener('click', () => {
+          setView(target);
+          setActivePill(target);
         });
       });
 
-      document.getElementById("btnIrMiHuerto").addEventListener("click", () => {
-        document.querySelector('.nav-btn[data-section="huerto"]').click();
+      const dialogBackdrops = document.querySelectorAll('.dialog-backdrop');
+      dialogBackdrops.forEach(backdrop => {
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) backdrop.classList.remove('active');
+        });
       });
-      document.getElementById("btnIrDiario").addEventListener("click", () => {
-        document.querySelector('.nav-btn[data-section="diario"]').click();
-      });
-      document.getElementById("btnIrClima").addEventListener("click", () => {
-        document.querySelector('.nav-btn[data-section="opciones"]').click();
-      });
-      document.getElementById("btnVerCalendario").addEventListener("click", () => {
-        document.querySelector('.nav-btn[data-section="calendario"]').click();
-      });
-    }
-
-    function setupMesesPills() {
-      const pills = document.querySelectorAll("#mesesPills .pill");
-      pills.forEach(p => {
-        p.addEventListener("click", () => {
-          pills.forEach(other => other.classList.toggle("pill--active", other === p));
-          const month = parseInt(p.getAttribute("data-mes"), 10);
-          renderCalendario(month);
+      document.querySelectorAll('[data-dialog-close]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const backdrop = btn.closest('.dialog-backdrop');
+          if (backdrop) backdrop.classList.remove('active');
         });
       });
 
-      // seleccionar mes actual por defecto
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      const target = Array.from(pills).find(p => parseInt(p.dataset.mes,10) === currentMonth);
-      if (target) target.click();
-      else renderCalendario(5);
-    }
+      // CLIMA
+      let currentClimate = 'tropical';
 
-    function setupMiHuertoForm() {
-      const btn = document.getElementById("btnAgregarCultivo");
-      btn.addEventListener("click", () => {
-        const nombre = document.getElementById("cultivoNombre").value.trim();
-        const variedad = document.getElementById("cultivoVariedad").value.trim();
-        const tipo = document.getElementById("cultivoTipo").value || "otro";
-        const fechaSiembra = document.getElementById("cultivoFecha").value || todayISO();
-        const notas = document.getElementById("cultivoNotas").value.trim();
+      function actualizarUIClima() {
+        const label = climateLabels[currentClimate] || climateLabels.tropical;
+        const currentClimateLabelEl = document.getElementById('currentClimateLabel');
+        const optionsClimateText = document.getElementById('optionsClimateText');
+        if (currentClimateLabelEl) currentClimateLabelEl.textContent = label;
+        if (optionsClimateText) optionsClimateText.textContent = label;
 
-        if (!nombre) {
-          alert("Por favor escribe al menos el nombre del cultivo.");
-          return;
-        }
+        const chips = document.querySelectorAll('#climateOptionsRow .chip');
+        chips.forEach(chip => {
+          const value = chip.dataset.climate;
+          chip.classList.toggle('active', value === currentClimate);
+        });
+      }
 
-        const nuevo = {
-          id: Date.now().toString(36),
-          nombre,
-          variedad,
-          tipo,
-          fechaSiembra,
-          notas,
-          creadoEl: todayISO()
-        };
-
-        stateCultivos.push(nuevo);
-        saveCultivos(stateCultivos);
-
-        document.getElementById("cultivoNombre").value = "";
-        document.getElementById("cultivoVariedad").value = "";
-        document.getElementById("cultivoFecha").value = "";
-        document.getElementById("cultivoNotas").value = "";
-
-        renderCultivos();
-        renderInicio();
-        alert("Cultivo guardado.");
-      });
-
-      // Delegación para botones de cada tarjeta
-      document.getElementById("cultivosList").addEventListener("click", (ev) => {
-        const btn = ev.target.closest("button[data-id]");
-        if (!btn) return;
-        const id = btn.getAttribute("data-id");
-        const action = btn.getAttribute("data-action");
-        const cultivo = stateCultivos.find(c => c.id === id);
-        if (!cultivo) return;
-
-        if (action === "borrar") {
-          if (confirm(`¿Eliminar el cultivo "${cultivo.nombre}"?`)) {
-            stateCultivos = stateCultivos.filter(c => c.id !== id);
-            saveCultivos(stateCultivos);
-            renderCultivos();
-            renderInicio();
-          }
-        } else if (action === "nota") {
-          document.querySelector('.nav-btn[data-section="diario"]').click();
-          const campo = document.getElementById("diarioTexto");
-          campo.value = `Cultivo: ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}). `;
-          campo.focus();
-        }
-      });
-    }
-
-    function setupDiario() {
-      document.getElementById("btnGuardarDiario").addEventListener("click", () => {
-        const texto = document.getElementById("diarioTexto").value.trim();
-        if (!texto) {
-          alert("Escribe algo antes de guardar.");
-          return;
-        }
-
-        const entrada = {
-          fecha: todayISO(),
-          texto,
-          tipo: "General"
-        };
-        stateDiario.push(entrada);
-        saveDiario(stateDiario);
-        document.getElementById("diarioTexto").value = "";
-        renderDiario();
-        renderInicio();
-        alert("Entrada guardada en el diario.");
-      });
-    }
-
-    function setupOpciones() {
-      const nombreInput = document.getElementById("nombreHuerto");
-      const climaSelect = document.getElementById("climaSelect");
-      const hemisSelect = document.getElementById("hemisferioSelect");
-
-      // Inicializar valores
-      nombreInput.value = stateSettings.nombreHuerto || "";
-      climaSelect.value = stateSettings.clima || "tropical";
-      hemisSelect.value = stateSettings.hemisferio || "norte";
-
-      document.getElementById("btnGuardarConfig").addEventListener("click", () => {
-        const nuevoNombre = nombreInput.value.trim() || "Mi huerto";
-        const nuevoClima = climaSelect.value || "tropical";
-        const nuevoHemis = hemisSelect.value || "norte";
-
-        stateSettings = {
-          ...stateSettings,
-          nombreHuerto: nuevoNombre,
-          clima: nuevoClima,
-          hemisferio: nuevoHemis
-        };
-        saveSettings(stateSettings);
-        updateHeader();
-        updateSettingsContexts();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        alert("Configuración guardada.");
-      });
-
-      // Exportar/importar/borrar
-      document.getElementById("btnExportar").addEventListener("click", () => {
-        const exportObj = {
-          settings: stateSettings,
-          cultivos: stateCultivos,
-          diario: stateDiario
-        };
-        const texto = JSON.stringify(exportObj, null, 2);
-        prompt("Copia este texto para guardar una copia de seguridad:", texto);
-      });
-
-      document.getElementById("btnImportar").addEventListener("click", () => {
-        const texto = prompt("Pega aquí un backup exportado previamente:");
-        if (!texto) return;
+      function cargarClima() {
         try {
-          const data = JSON.parse(texto);
-          if (data.settings) {
-            stateSettings = { ...DEFAULT_SETTINGS, ...data.settings };
-            saveSettings(stateSettings);
+          const saved = localStorage.getItem(CLIMATE_KEY);
+          if (saved === 'tropical' || saved === 'templado' || saved === 'frio') {
+            currentClimate = saved;
           }
-          if (Array.isArray(data.cultivos)) {
-            stateCultivos = data.cultivos;
-            saveCultivos(stateCultivos);
-          }
-          if (Array.isArray(data.diario)) {
-            stateDiario = data.diario;
-            saveDiario(stateDiario);
-          }
-          // Re-render
-          nombreInput.value = stateSettings.nombreHuerto || "";
-          climaSelect.value = stateSettings.clima || "tropical";
-          hemisSelect.value = stateSettings.hemisferio || "norte";
-          updateHeader();
-          updateSettingsContexts();
-          renderCultivos();
-          renderDiario();
-          renderInicio();
-          renderCalendario(new Date().getMonth());
-          alert("Datos importados correctamente.");
-        } catch (e) {
-          alert("El texto no parece un backup válido.");
+        } catch {}
+        actualizarUIClima();
+      }
+
+      function guardarClima() {
+        try {
+          localStorage.setItem(CLIMATE_KEY, currentClimate);
+        } catch {}
+      }
+
+      const climateOptionsRow = document.getElementById('climateOptionsRow');
+      if (climateOptionsRow) {
+        climateOptionsRow.addEventListener('click', (e) => {
+          const chip = e.target.closest('.chip[data-climate]');
+          if (!chip) return;
+          const value = chip.dataset.climate;
+          if (!value) return;
+          currentClimate = value;
+          guardarClima();
+          actualizarUIClima();
+        });
+      }
+      cargarClima();
+
+      // CALENDARIO
+      const monthButtonsContainer = document.getElementById('monthButtons');
+      const monthResults = document.getElementById('monthResults');
+
+      mesesInfo.forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = 'month-btn';
+        btn.textContent = m.nombre;
+        btn.dataset.mesId = String(m.id);
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          mostrarSiembrasDeMes(m.id);
+        });
+        monthButtonsContainer.appendChild(btn);
+      });
+
+      function mostrarSiembrasDeMes(mesId) {
+        monthResults.innerHTML = '';
+        const ids = siembrasPorMes[mesId] || [];
+        if (!ids.length) {
+          monthResults.innerHTML = `
+            <div class="empty-state">
+              <span class="emoji">🌧️</span>
+              Aún no hay cultivos recomendados para este mes.
+            </div>`;
+          return;
         }
+        ids.forEach(id => {
+          const cultivo = cultivos.find(c => c.id === id);
+          if (!cultivo) return;
+          const item = document.createElement('div');
+          item.className = 'list-item';
+          item.innerHTML = `
+            <div class="list-main">
+              <div class="list-title">${cultivo.nombre}</div>
+              <div class="list-meta">
+                <span class="meta-pill">${cultivo.tipo}</span>
+                <span class="meta-pill">⏱️ ${cultivo.diasCosecha}</span>
+                <span class="meta-pill">☀️ ${cultivo.sol}</span>
+              </div>
+            </div>
+            <button class="small-btn" type="button" data-crop-id="${cultivo.id}">
+              <span class="emoji">ℹ️</span><span>Ver ficha</span>
+            </button>
+          `;
+          monthResults.appendChild(item);
+        });
+      }
+
+      const hoy = new Date();
+      const mesActual = hoy.getMonth() + 1;
+      const btnMesActual =
+        monthButtonsContainer.querySelector(\`.month-btn[data-mes-id="\${mesActual}"]\`) ||
+        monthButtonsContainer.querySelector('.month-btn');
+      if (btnMesActual) {
+        btnMesActual.classList.add('active');
+        mostrarSiembrasDeMes(parseInt(btnMesActual.dataset.mesId, 10));
+      }
+
+      // CATÁLOGO
+      const catalogSearch = document.getElementById('catalogSearch');
+      const catalogTypeFilters = document.getElementById('catalogTypeFilters');
+      const catalogSunFilters = document.getElementById('catalogSunFilters');
+      const catalogGrid = document.getElementById('catalogGrid');
+
+      let filtroTipoActual = 'Todos';
+      let filtroSolActual = 'Todos';
+      let textoBusqueda = '';
+
+      const tiposUnicos = Array.from(new Set(cultivos.map(c => c.tipo))).sort();
+      const solSet = new Set();
+      cultivos.forEach(c => solSet.add(obtenerCategoriaSol(c.sol)));
+      const solesUnicos = Array.from(solSet).sort();
+
+      const tiposFiltro = ['Todos', ...tiposUnicos];
+      tiposFiltro.forEach(tipo => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip';
+        chip.dataset.tipo = tipo;
+        chip.textContent = tipo === 'Todos' ? 'Todos los tipos' : tipo;
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('#catalogTypeFilters .chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          filtroTipoActual = tipo;
+          renderCatalog();
+        });
+        catalogTypeFilters.appendChild(chip);
+      });
+      const primerChipTipo = catalogTypeFilters.querySelector('.chip');
+      if (primerChipTipo) primerChipTipo.classList.add('active');
+
+      const solesFiltro = ['Todos', ...solesUnicos];
+      solesFiltro.forEach(cat => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'chip';
+        chip.dataset.sol = cat;
+        chip.textContent = cat === 'Todos' ? 'Todo tipo de sol' : \`☀️ \${cat}\`;
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('#catalogSunFilters .chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          filtroSolActual = cat;
+          renderCatalog();
+        });
+        catalogSunFilters.appendChild(chip);
+      });
+      const primerChipSol = catalogSunFilters.querySelector('.chip');
+      if (primerChipSol) primerChipSol.classList.add('active');
+
+      catalogSearch.addEventListener('input', () => {
+        textoBusqueda = (catalogSearch.value || '').toLowerCase();
+        renderCatalog();
       });
 
-      document.getElementById("btnBorrarTodo").addEventListener("click", () => {
-        if (!confirm("Esto borrará todos los datos del huerto en este dispositivo. ¿Continuar?")) return;
-        localStorage.removeItem(STORAGE_KEYS.settings);
-        localStorage.removeItem(STORAGE_KEYS.cultivos);
-        localStorage.removeItem(STORAGE_KEYS.diario);
-        stateSettings = { ...DEFAULT_SETTINGS };
-        stateCultivos = [];
-        stateDiario = [];
-        // Re-render complet
-        nombreInput.value = stateSettings.nombreHuerto;
-        climaSelect.value = stateSettings.clima;
-        hemisSelect.value = stateSettings.hemisferio;
-        updateHeader();
-        updateSettingsContexts();
-        renderCultivos();
+      function renderCatalog() {
+        catalogGrid.innerHTML = '';
+        const texto = textoBusqueda.trim();
+        const listaFiltrada = cultivos.filter(c => {
+          const coincideTipo = filtroTipoActual === 'Todos' || c.tipo === filtroTipoActual;
+          const catSol = obtenerCategoriaSol(c.sol);
+          const coincideSol = filtroSolActual === 'Todos' || catSol === filtroSolActual;
+          const coincideBusqueda =
+            !texto ||
+            c.nombre.toLowerCase().includes(texto) ||
+            c.id.toLowerCase().includes(texto);
+          return coincideTipo && coincideSol && coincideBusqueda;
+        });
+        if (!listaFiltrada.length) {
+          catalogGrid.innerHTML = `
+            <div class="empty-state">
+              <span class="emoji">🔍</span>
+              No se encontraron cultivos con estos filtros. Prueba cambiando el tipo, el sol o el texto de búsqueda.
+            </div>`;
+          return;
+        }
+        listaFiltrada.forEach(cultivo => {
+          const card = document.createElement('article');
+          card.className = 'crop-card';
+          card.innerHTML = `
+            <div class="crop-photo">
+              <img src="${cultivo.imagen}" alt="${cultivo.nombre}">
+            </div>
+            <div class="crop-body">
+              <div class="crop-name">${cultivo.nombre}</div>
+              <div class="crop-tags">
+                <span class="crop-tag">${cultivo.tipo}</span>
+                <span class="crop-tag">⏱️ ${cultivo.diasCosecha}</span>
+                <span class="crop-tag">☀️ ${cultivo.sol}</span>
+              </div>
+            </div>
+          `;
+          card.addEventListener('click', () => abrirFichaCultivo(cultivo));
+          catalogGrid.appendChild(card);
+        });
+      }
+      renderCatalog();
+
+      // Ficha cultivo
+      const cropDialog = document.getElementById('cropDialog');
+      const cropDialogImg = document.getElementById('cropDialogImg');
+      const cropDialogName = document.getElementById('cropDialogName');
+      const cropDialogTipo = document.getElementById('cropDialogTipo');
+      const cropDialogDias = document.getElementById('cropDialogDias');
+      const cropDialogSol = document.getElementById('cropDialogSol');
+      const cropDialogSiembra = document.getElementById('cropDialogSiembra');
+      const cropDialogMeses = document.getElementById('cropDialogMeses');
+      const cropDialogDistancia = document.getElementById('cropDialogDistancia');
+      const cropDialogProfundidad = document.getElementById('cropDialogProfundidad');
+      const cropDialogTiesto = document.getElementById('cropDialogTiesto');
+      const cropDialogPlagas = document.getElementById('cropDialogPlagas');
+
+      function abrirFichaCultivo(c) {
+        cropDialogImg.src = c.imagen;
+        cropDialogImg.alt = c.nombre;
+        cropDialogName.textContent = c.nombre;
+        cropDialogTipo.textContent = c.tipo;
+        cropDialogDias.textContent = \`⏱️ \${c.diasCosecha}\`;
+        cropDialogSol.textContent = \`☀️ \${c.sol}\`;
+        cropDialogSiembra.textContent = c.siembra;
+
+        const mesesCultivo = cultivoMeses[c.id] || [];
+        if (mesesCultivo.length) {
+          const nombresMeses = mesesCultivo
+            .map(num => {
+              const m = mesesInfo.find(mm => mm.id === num);
+              return m ? m.nombre : '';
+            })
+            .filter(Boolean);
+          cropDialogMeses.textContent = nombresMeses.join(', ');
+        } else {
+          cropDialogMeses.textContent = 'Todo el año (según clima y manejo)';
+        }
+        cropDialogDistancia.textContent = c.distancia;
+        cropDialogProfundidad.textContent = c.profundidad;
+        cropDialogTiesto.textContent = c.tiesto;
+
+        const idsPlagasCultivo = plagasPorCultivo[c.id] || [];
+        if (idsPlagasCultivo.length) {
+          const nombresPlagas = idsPlagasCultivo.map(pid => {
+            const p = plagasCatalog.find(pp => pp.id === pid);
+            return p ? p.nombre : pid;
+          });
+          cropDialogPlagas.textContent = nombresPlagas.join(', ');
+        } else {
+          cropDialogPlagas.textContent = 'Sin datos específicos. Vigila pulgones, hongos en hojas y orugas de forma general.';
+        }
+
+        cropDialog.classList.add('active');
+      }
+
+      monthResults.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-crop-id]');
+        if (!btn) return;
+        const id = btn.dataset.cropId;
+        const cultivo = cultivos.find(c => c.id === id);
+        if (cultivo) abrirFichaCultivo(cultivo);
+      });
+
+      // MI HUERTO
+      const gardenGrid = document.getElementById('gardenGrid');
+      const gardenDialogEl = document.getElementById('gardenDialog');
+      const gardenDialogPosition = document.getElementById('gardenDialogPosition');
+      const gardenCropSelect = document.getElementById('gardenCropSelect');
+      const gardenCropInfo = document.getElementById('gardenCropInfo');
+      const gardenSave = document.getElementById('gardenSave');
+      const resetGardenBtn = document.getElementById('resetGarden');
+      const gardenSize = 4;
+      let gardenState = [];
+
+      function cargarGarden() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(GARDEN_KEY) || 'null');
+          if (Array.isArray(stored) && stored.length === gardenSize * gardenSize) {
+            gardenState = stored;
+          } else {
+            gardenState = Array(gardenSize * gardenSize).fill(null);
+          }
+        } catch {
+          gardenState = Array(gardenSize * gardenSize).fill(null);
+        }
+      }
+      function guardarGarden() {
+        localStorage.setItem(GARDEN_KEY, JSON.stringify(gardenState));
+      }
+      function renderGarden() {
+        gardenGrid.innerHTML = '';
+        gardenState.forEach((cultivoId, index) => {
+          const cell = document.createElement('button');
+          cell.type = 'button';
+          cell.className = 'garden-cell';
+          cell.dataset.index = String(index);
+
+          const label = document.createElement('div');
+          label.className = 'garden-cell-label';
+          label.textContent = \`#\${index + 1}\`;
+
+          const plant = document.createElement('div');
+          plant.className = 'garden-cell-plant';
+
+          const meta = document.createElement('div');
+          meta.className = 'garden-cell-meta';
+
+          if (cultivoId) {
+            const cultivo = cultivos.find(c => c.id === cultivoId);
+            if (cultivo) {
+              plant.textContent = \`🌱 \${cultivo.nombre}\`;
+              meta.textContent = \`⏱ \${cultivo.diasCosecha} · ☀ \${cultivo.sol}\`;
+            } else {
+              plant.textContent = \`🌱 \${cultivoId}\`;
+              meta.textContent = '';
+            }
+          } else {
+            plant.textContent = 'Vacío';
+            meta.textContent = '';
+          }
+
+          cell.appendChild(label);
+          cell.appendChild(plant);
+          if (meta.textContent) cell.appendChild(meta);
+          gardenGrid.appendChild(cell);
+        });
+      }
+
+      function actualizarGardenCropInfo(id) {
+        if (!id) {
+          gardenCropInfo.textContent = 'Cuadro vacío. Puedes elegir un cultivo del listado.';
+          return;
+        }
+        const c = cultivos.find(c => c.id === id);
+        if (!c) {
+          gardenCropInfo.textContent = '';
+          return;
+        }
+        gardenCropInfo.textContent =
+          \`\${c.nombre} · \${c.tipo} · ⏱️ \${c.diasCosecha} · ☀️ \${c.sol}\`;
+      }
+
+      gardenGrid.addEventListener('click', (e) => {
+        const cell = e.target.closest('.garden-cell');
+        if (!cell) return;
+        const index = parseInt(cell.dataset.index, 10);
+        gardenDialogEl.dataset.index = String(index);
+        gardenDialogPosition.textContent =
+          \`Cuadro #\${index + 1} (fila \${Math.floor(index / gardenSize) + 1}, columna \${(index % gardenSize) + 1})\`;
+        gardenCropSelect.innerHTML = '<option value="">Vacío</option>';
+        cultivos.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.nombre;
+          gardenCropSelect.appendChild(opt);
+        });
+        const actual = gardenState[index];
+        gardenCropSelect.value = actual || '';
+        actualizarGardenCropInfo(actual);
+        gardenDialogEl.classList.add('active');
+      });
+
+      gardenCropSelect.addEventListener('change', () => {
+        actualizarGardenCropInfo(gardenCropSelect.value || '');
+      });
+
+      gardenSave.addEventListener('click', () => {
+        const index = parseInt(gardenDialogEl.dataset.index || '0', 10);
+        const val = gardenCropSelect.value || null;
+        gardenState[index] = val;
+        guardarGarden();
+        renderGarden();
+        gardenDialogEl.classList.remove('active');
+      });
+
+      resetGardenBtn.addEventListener('click', () => {
+        if (!confirm('¿Seguro que quieres limpiar todo el plano del huerto?')) return;
+        gardenState = Array(gardenSize * gardenSize).fill(null);
+        guardarGarden();
+        renderGarden();
+      });
+
+      cargarGarden();
+      renderGarden();
+
+      // DIARIO
+      const diaryList = document.getElementById('diaryList');
+      const diaryEmpty = document.getElementById('diaryEmpty');
+      const addDiaryEntryBtn = document.getElementById('addDiaryEntry');
+      const diaryDialogEl = document.getElementById('diaryDialog');
+      const diaryType = document.getElementById('diaryType');
+      const diaryDate = document.getElementById('diaryDate');
+      const diaryNotes = document.getElementById('diaryNotes');
+      const diarySave = document.getElementById('diarySave');
+      const diaryDetailDialog = document.getElementById('diaryDetailDialog');
+      const diaryDetailType = document.getElementById('diaryDetailType');
+      const diaryDetailDate = document.getElementById('diaryDetailDate');
+      const diaryDetailNotes = document.getElementById('diaryDetailNotes');
+      const diaryDeleteBtn = document.getElementById('diaryDeleteBtn');
+      let diaryEntries = [];
+
+      function cargarDiario() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(DIARY_KEY) || 'null');
+          diaryEntries = Array.isArray(stored) ? stored : [];
+        } catch (e) {
+          diaryEntries = [];
+        }
+      }
+      function guardarDiario() {
+        localStorage.setItem(DIARY_KEY, JSON.stringify(diaryEntries));
+      }
+      function renderDiario() {
+        diaryList.innerHTML = '';
+        if (!diaryEntries.length) {
+          diaryEmpty.style.display = 'block';
+          return;
+        }
+        diaryEmpty.style.display = 'none';
+        const items = diaryEntries
+          .map((entry, index) => ({ entry, index }))
+          .slice()
+          .sort((a, b) => (b.entry.fecha || '').localeCompare(a.entry.fecha || ''));
+        items.forEach(({ entry, index }) => {
+          const div = document.createElement('div');
+          div.className = 'diary-entry';
+          div.dataset.index = String(index);
+          const icono = TIPO_ICONOS[entry.tipo] || '📌';
+          div.innerHTML = `
+            <div class="diary-meta">
+              <div class="diary-type">${icono} ${entry.tipo || 'Actividad'}</div>
+              <div class="diary-date">${entry.fecha || ''}</div>
+            </div>
+            <div class="diary-notes">${entry.notas || ''}</div>
+          `;
+          diaryList.appendChild(div);
+        });
+      }
+      addDiaryEntryBtn.addEventListener('click', () => {
+        const hoyISO = new Date().toISOString().slice(0, 10);
+        diaryDate.value = hoyISO;
+        diaryNotes.value = '';
+        diaryType.value = 'Siembra';
+        diaryDialogEl.classList.add('active');
+      });
+      diarySave.addEventListener('click', () => {
+        const entrada = {
+          tipo: diaryType.value || 'Actividad',
+          fecha: diaryDate.value || new Date().toISOString().slice(0, 10),
+          notas: diaryNotes.value.trim()
+        };
+        diaryEntries.push(entrada);
+        guardarDiario();
         renderDiario();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        alert("Datos borrados. Empezarás de cero.");
+        diaryDialogEl.classList.remove('active');
       });
-    }
-
-    /*********************
-     * PWA: service worker + instalar
-     *********************/
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("sw.js")
-          .catch(err => console.error("Error registrando SW:", err));
+      diaryList.addEventListener('click', (event) => {
+        const item = event.target.closest('.diary-entry');
+        if (!item) return;
+        const idxStr = item.dataset.index;
+        if (typeof idxStr === 'undefined') return;
+        const index = parseInt(idxStr, 10);
+        if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) return;
+        const entrada = diaryEntries[index];
+        const icono = TIPO_ICONOS[entrada.tipo] || '📌';
+        diaryDetailDialog.dataset.index = String(index);
+        diaryDetailType.textContent = `${icono} ${entrada.tipo || 'Actividad'}`;
+        diaryDetailDate.textContent = entrada.fecha || '';
+        diaryDetailNotes.textContent = entrada.notas || '';
+        diaryDetailDialog.classList.add('active');
       });
-    }
-
-    let deferredPrompt = null;
-    const installBanner = document.getElementById("installBanner");
-    const installBtn = document.getElementById("btnInstalarPwa");
-
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBanner.classList.remove("hidden");
-    });
-
-    installBtn.addEventListener("click", async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      installBanner.classList.add("hidden");
-    });
-
-    /*********************
-     * Inicio de la app
-     *********************/
-    document.addEventListener("DOMContentLoaded", () => {
-      updateHeader();
-      updateSettingsContexts();
-      renderCultivos();
+      diaryDeleteBtn.addEventListener('click', () => {
+        const idxStr = diaryDetailDialog.dataset.index;
+        const index = parseInt(idxStr || '-1', 10);
+        if (Number.isNaN(index) || index < 0 || index >= diaryEntries.length) {
+          diaryDetailDialog.classList.remove('active');
+          return;
+        }
+        if (!confirm('¿Seguro que quieres borrar esta entrada del diario?')) return;
+        diaryEntries.splice(index, 1);
+        guardarDiario();
+        renderDiario();
+        diaryDetailDialog.classList.remove('active');
+      });
+      cargarDiario();
       renderDiario();
-      renderInicio();
-      renderCalendario(new Date().getMonth());
-      renderPlagas();
-      renderPesticidas();
 
-      setupNavigation();
-      setupMesesPills();
-      setupMiHuertoForm();
-      setupDiario();
-      setupOpciones();
+      // BACKUP
+      const backupExportBtn = document.getElementById('backupExport');
+      const backupImportBtn = document.getElementById('backupImport');
+      const backupFileInput = document.getElementById('backupFile');
+
+      backupExportBtn.addEventListener('click', () => {
+        const payload = {
+          version: 1,
+          createdAt: new Date().toISOString(),
+          garden: gardenState,
+          diary: diaryEntries
+        };
+        const json = JSON.stringify(payload, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const now = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        const fileName = `mi_siembra_backup_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}.json`;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+
+      backupImportBtn.addEventListener('click', () => {
+        backupFileInput.value = '';
+        backupFileInput.click();
+      });
+
+      backupFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            if (!data || typeof data !== 'object') throw new Error('Formato inválido');
+            if (Array.isArray(data.garden) && data.garden.length === gardenSize * gardenSize) {
+              gardenState = data.garden;
+              guardarGarden();
+              renderGarden();
+            }
+            if (Array.isArray(data.diary)) {
+              diaryEntries = data.diary;
+              guardarDiario();
+              renderDiario();
+            }
+            alert('Copia de seguridad restaurada correctamente.');
+          } catch (err) {
+            console.warn(err);
+            alert('No se pudo leer el archivo de copia de seguridad.');
+          }
+        };
+        reader.readAsText(file, 'utf-8');
+      });
+
+      // CATÁLOGO PLAGAS
+      const pestSearch = document.getElementById('pestSearch');
+      const pestTypeFilters = document.getElementById('pestTypeFilters');
+      const pestsList = document.getElementById('pestsList');
+
+      if (pestSearch && pestTypeFilters && pestsList) {
+        let pestTypeFilter = 'Todos';
+        const tiposPlaga = Array.from(new Set(plagasCatalog.map(p => p.tipo))).sort();
+        ['Todos', ...tiposPlaga].forEach(tipo => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'chip';
+          chip.dataset.tipo = tipo;
+          chip.textContent = tipo === 'Todos' ? 'Todas las plagas' : tipo;
+          chip.addEventListener('click', () => {
+            pestTypeFilter = tipo;
+            pestTypeFilters.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            renderPlagas();
+          });
+          pestTypeFilters.appendChild(chip);
+        });
+        const firstPChip = pestTypeFilters.querySelector('.chip');
+        if (firstPChip) firstPChip.classList.add('active');
+
+        pestSearch.addEventListener('input', renderPlagas);
+
+        function renderPlagas() {
+          const q = pestSearch.value.trim().toLowerCase();
+          pestsList.innerHTML = '';
+          let lista = plagasCatalog.filter(p => {
+            const matchTipo = pestTypeFilter === 'Todos' || p.tipo === pestTypeFilter;
+            const matchText = !q ||
+              p.nombre.toLowerCase().includes(q) ||
+              (p.sintomas && p.sintomas.toLowerCase().includes(q));
+            return matchTipo && matchText;
+          });
+          lista = lista.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+          if (!lista.length) {
+            pestsList.innerHTML = `
+              <div class="empty-state">
+                <span class="emoji">🔍</span>
+                No se encontraron plagas con estos filtros.
+              </div>`;
+            return;
+          }
+          lista.forEach(plaga => {
+            const nombresCultivos = (plaga.cultivos || [])
+              .map(cid => {
+                const cu = cultivos.find(c => c.id === cid);
+                return cu ? cu.nombre : null;
+              })
+              .filter(Boolean)
+              .join(', ');
+            const item = document.createElement('div');
+            item.className = 'list-item with-media';
+            item.innerHTML = `
+              <div class="list-icon">${plaga.icon || '🪲'}</div>
+              <div class="list-main">
+                <div class="list-title">${plaga.nombre}</div>
+                <div class="list-meta">
+                  <span class="meta-pill">${plaga.tipo}</span>
+                  ${nombresCultivos ? `<span class="meta-pill">🌱 ${nombresCultivos}</span>` : ''}
+                </div>
+                <div class="section-subtitle"><strong>Síntomas:</strong> ${plaga.sintomas}</div>
+                <div class="section-subtitle"><strong>Remedios suaves:</strong> ${plaga.remedios}</div>
+              </div>
+            `;
+            pestsList.appendChild(item);
+          });
+        }
+        renderPlagas();
+      }
+
+      // CATÁLOGO PESTICIDAS
+      const pesticideSearch = document.getElementById('pesticideSearch');
+      const pesticideTypeFilters = document.getElementById('pesticideTypeFilters');
+      const pesticidesList = document.getElementById('pesticidesList');
+
+      if (pesticideSearch && pesticideTypeFilters && pesticidesList) {
+        let pestTypeFilter2 = 'Todos';
+        const tiposPesticida = Array.from(new Set(pesticidasCatalog.map(p => p.tipo))).sort();
+        ['Todos', ...tiposPesticida].forEach(tipo => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'chip';
+          chip.dataset.tipo = tipo;
+          chip.textContent = tipo === 'Todos' ? 'Todos los tipos' : tipo;
+          chip.addEventListener('click', () => {
+            pestTypeFilter2 = tipo;
+            pesticideTypeFilters.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            renderPesticidas();
+          });
+          pesticideTypeFilters.appendChild(chip);
+        });
+        const firstChipPest = pesticideTypeFilters.querySelector('.chip');
+        if (firstChipPest) firstChipPest.classList.add('active');
+
+        pesticideSearch.addEventListener('input', renderPesticidas);
+
+        function renderPesticidas() {
+          const q = pesticideSearch.value.trim().toLowerCase();
+          pesticidesList.innerHTML = '';
+          let lista = pesticidasCatalog.filter(p => {
+            const matchTipo = pestTypeFilter2 === 'Todos' || p.tipo === pestTypeFilter2;
+            const matchText = !q ||
+              p.nombre.toLowerCase().includes(q) ||
+              (p.uso && p.uso.toLowerCase().includes(q));
+            return matchTipo && matchText;
+          });
+          lista = lista.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+          if (!lista.length) {
+            pesticidesList.innerHTML = `
+              <div class="empty-state">
+                <span class="emoji">🔍</span>
+                No se encontraron pesticidas con estos filtros.
+              </div>`;
+            return;
+          }
+          lista.forEach(prod => {
+            const nombresPlagas = (prod.plagas || [])
+              .map(pid => {
+                const pl = plagasCatalog.find(p => p.id === pid);
+                return pl ? pl.nombre : null;
+              })
+              .filter(Boolean)
+              .join(', ');
+            const item = document.createElement('div');
+            item.className = 'list-item with-media';
+            item.innerHTML = `
+              <div class="list-icon">${prod.icon || '🧴'}</div>
+              <div class="list-main">
+                <div class="list-title">${prod.nombre}</div>
+                <div class="list-meta">
+                  <span class="meta-pill">${prod.tipo}</span>
+                  ${nombresPlagas ? `<span class="meta-pill">🪲 ${nombresPlagas}</span>` : ''}
+                </div>
+                <div class="section-subtitle"><strong>Uso:</strong> ${prod.uso}</div>
+                <div class="section-subtitle"><strong>Seguridad:</strong> ${prod.seguridad}</div>
+              </div>
+            `;
+            pesticidesList.appendChild(item);
+          });
+        }
+        renderPesticidas();
+      }
+
+      // SERVICE WORKER
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.warn('SW error', err);
+        });
+      }
     });
   </script>
 </body>
-      </html>
+</html>
