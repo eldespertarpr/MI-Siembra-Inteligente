@@ -718,18 +718,24 @@ document.addEventListener("DOMContentLoaded", () => {
 </section>
 
       <!-- 🧩 MI HUERTO -->
-      <section id="gardenView" class="view">
-        <h2>Mi huerto</h2>
-        <p>Puedes usar este plano 4×4 para visualizar tus cultivos.</p>
-        <div id="gardenGrid"></div>
-      </section>
+<section id="gardenView" class="view">
+  <h2>Mi huerto</h2>
+
+  <input id="plantInput" placeholder="Añadir planta..." />
+  <button id="addPlant">➕ Agregar</button>
+
+  <div id="gardenList"></div>
+</section>
 
       <!-- 📓 DIARIO -->
-      <section id="diaryView" class="view">
-        <h2>Diario de siembra</h2>
-        <button id="addDiaryEntry">➕ Añadir actividad</button>
-        <div id="diaryList"></div>
-      </section>
+<section id="diaryView" class="view">
+  <h2>Diario de siembra</h2>
+
+  <input id="diaryInput" placeholder="Nueva entrada..." />
+  <button id="addDiary">➕ Añadir</button>
+
+  <div id="diaryList"></div>
+</section>
 
       <!-- 🪲 PLAGAS Y CUIDADOS -->
       <section id="pestsView" class="view">
