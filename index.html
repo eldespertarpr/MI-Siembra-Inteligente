@@ -614,6 +614,31 @@ document.addEventListener("DOMContentLoaded", () => {
             catalogList.appendChild(item);
         });
 }
+
+    CULTIVOS
+        .filter(c => c.nombre.toLowerCase().includes(filtro.toLowerCase()))
+        .forEach(c => {
+
+            const item = document.createElement("div");
+            item.className = "catalog-item";
+
+            item.innerHTML = `
+                <div class="catalog-photo">
+                    <img src="${c.imagen}" alt="${c.nombre}">
+                </div>
+
+                <div class="catalog-info">
+                    <h3>${c.nombre}</h3>
+                    <div class="sub">Días a cosecha: ${c.dias}</div>
+                    <div class="plagas">
+                        Plagas comunes: ${c.plagas.tropical.join(", ")}
+                    </div>
+                </div>
+            `;
+
+            catalogList.appendChild(item);
+        });
+}
         CULTIVOS
             .filter(c => c.nombre.toLowerCase().includes(filtro.toLowerCase()))
             .forEach(c => {
