@@ -703,18 +703,19 @@ document.addEventListener("DOMContentLoaded", () => {
         <div id="monthButtons"></div>
         <div id="monthResults" style="margin-top:15px;"></div>
       </section>
+      <<!-- 🌿 CATÁLOGO -->
+<section id="catalogView" class="view">
+  <h2>Catálogo visual de cultivos</h2>
 
-      <!-- 🌿 CATÁLOGO -->
-      <section id="catalogView" class="view">
-        <h2>Catálogo de cultivos</h2>
+  <input id="catalogSearch" placeholder="Buscar cultivo...">
+  
+  <!-- Opciones: tipo, sol, etc. -->
+  <div id="catalogTypeFilters"></div>
+  <div id="catalogSunFilters"></div>
 
-        <input id="catalogSearch" placeholder="Buscar cultivo…">
-
-        <div id="catalogTypeFilters"></div>
-        <div id="catalogSunFilters"></div>
-
-        <div id="catalogGrid"></div>
-      </section>
+  <!-- Aquí sí se mostrarán las tarjetas -->
+  <div id="catalogResults"></div>
+</section>
 
       <!-- 🧩 MI HUERTO -->
       <section id="gardenView" class="view">
