@@ -6,880 +6,309 @@
   <title>Mi Siembra Inteligente (v18)</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#ffffff" />
+
   <style>
-/* ------------------------------------------ */
-/* MI SIEMBRA INTELIGENTE - ESTILOS v18       */
-/* ------------------------------------------ */
+  /* ------------------------------------------ */
+  /* MI SIEMBRA INTELIGENTE - ESTILOS v18       */
+  /* ------------------------------------------ */
 
-:root {
-  --bg: #ffffff;
-  --bg-soft: #f8fafc;
-  --text-main: #0f172a;
-  --text-soft: #475569;
-  --accent: #22c55e;
-  --accent-strong: #16a34a;
-  --border: #cbd5e1;
-  --radius: 18px;
-  --radius-lg: 22px;
-  --shadow: 0 6px 16px rgba(0,0,0,0.08);
-  --shadow-strong: 0 10px 30px rgba(0,0,0,0.15);
-}
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f8fafc;
+    --text-main: #0f172a;
+    --text-soft: #475569;
+    --accent: #22c55e;
+    --accent-strong: #16a34a;
+    --border: #cbd5e1;
+    --radius: 18px;
+    --radius-lg: 22px;
+    --shadow: 0 6px 16px rgba(0,0,0,0.08);
+    --shadow-strong: 0 10px 30px rgba(0,0,0,0.15);
+  }
 
-/* REGLAS GENERALES ------------------------------------------------ */
+  /* REGLAS GENERALES ------------------------------------------------ */
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  font-family: system-ui, sans-serif;
-  color: var(--text-main);
-}
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    font-family: system-ui, sans-serif;
+    color: var(--text-main);
+  }
 
-h2 {
-  margin-top: 0;
-  font-size: 22px;
-  font-weight: 700;
-}
+  h2 {
+    margin-top: 0;
+    font-size: 22px;
+    font-weight: 700;
+  }
 
-p {
-  font-size: 15px;
-  color: var(--text-soft);
-}
+  p {
+    font-size: 15px;
+    color: var(--text-soft);
+  }
 
-/* SPLASH SCREEN ---------------------------------------------------- */
+  /* SPLASH SCREEN ---------------------------------------------------- */
 
-#splash {
-  position: fixed;
-  inset: 0;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  opacity: 1;
-  transition: opacity 0.7s ease-out;
-}
+  #splash {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.7s ease-out;
+  }
 
-#splash.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
+  #splash.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
 
-#splash h1 {
-  margin-top: 18px;
-  font-weight: 700;
-  font-size: 26px;
-}
+  #splash h1 {
+    margin-top: 18px;
+    font-weight: 700;
+    font-size: 26px;
+  }
 
-#splash p {
-  margin-top: 4px;
-  font-size: 16px;
-  color: #64748b;
-}
+  #splash p {
+    margin-top: 4px;
+    font-size: 16px;
+    color: #64748b;
+  }
 
-/* CABECERA --------------------------------------------------------- */
+  /* CABECERA --------------------------------------------------------- */
 
-.app-header {
-  background: #ffffffee;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-}
+  .app-header {
+    background: #ffffffee;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
 
-.header-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-.brand-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 14px;
-  background: #22c55e22;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-}
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 14px;
+    background: #22c55e22;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
 
-.brand-title {
-  font-size: 18px;
-  font-weight: 700;
-}
+  .brand-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
 
-.brand-sub {
-  font-size: 13px;
-  color: var(--text-soft);
-}
+  .brand-sub {
+    font-size: 13px;
+    color: var(--text-soft);
+  }
 
-/* NAVEGACIÓN ------------------------------------------------------- */
+  /* NAVEGACIÓN ------------------------------------------------------- */
 
-.pill-nav {
-  display: flex;
-  gap: 6px;
-  background: var(--bg-soft);
-  padding: 4px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-}
+  .pill-nav {
+    display: flex;
+    gap: 6px;
+    background: var(--bg-soft);
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
 
-.pill-nav button {
-  border: none;
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
-  background: transparent;
-  cursor: pointer;
-  color: var(--text-soft);
-}
+  .pill-nav button {
+    border: none;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-soft);
+  }
 
-.pill-nav .active {
-  background: var(--accent);
-  color: white;
-}
+  .pill-nav .active {
+    background: var(--accent);
+    color: white;
+  }
 
-/* VISTAS ----------------------------------------------------------- */
+  /* VISTAS ----------------------------------------------------------- */
 
-.view {
-  display: none;
-  padding: 18px;
-  max-width: 960px;
-  margin: 0 auto;
-}
+  .view {
+    display: none;
+    padding: 18px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
 
-.view.active {
-  display: block;
-}
+  .view.active {
+    display: block;
+  }
 
-/* BOTONES ---------------------------------------------------------- */
+  /* BOTONES ---------------------------------------------------------- */
 
-button {
-  cursor: pointer;
-}
+  button {
+    cursor: pointer;
+  }
 
-.home-buttons button {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: left;
-  box-shadow: var(--shadow);
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
+  .home-buttons button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
 
-/* CATÁLOGO --------------------------------------------------------- */
+  /* CATÁLOGO --------------------------------------------------------- */
 
-#catalogSearch,
-#pestSearch,
-#pesticideSearch {
-  width: 100%;
-  padding: 12px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  font-size: 15px;
-  margin-bottom: 12px;
-}
+  #catalogSearch,
+  #pestSearch,
+  #pesticideSearch {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
 
-#catalogGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-}
+  #catalogGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
 
-.crop-card {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: 0.15s ease-out;
-}
+  .crop-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: 0.15s ease-out;
+  }
 
-.crop-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-strong);
-}
+  .crop-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-strong);
+  }
 
-.crop-photo {
-  height: 100px;
-  background: #e2e8f0;
-}
+  .crop-photo {
+    height: 100px;
+    background: #e2e8f0;
+  }
 
-.crop-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+  .crop-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-.crop-body {
-  padding: 10px;
-}
+  .crop-body {
+    padding: 10px;
+  }
 
-.crop-name {
-  font-size: 15px;
-  font-weight: 700;
-}
+  .crop-name {
+    font-size: 15px;
+    font-weight: 700;
+  }
 
-.crop-tag {
-  display: inline-block;
-  padding: 3px 7px;
-  margin-right: 4px;
-  margin-top: 4px;
-  font-size: 12px;
-  border-radius: 8px;
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-}
+  .crop-tag {
+    display: inline-block;
+    padding: 3px 7px;
+    margin-right: 4px;
+    margin-top: 4px;
+    font-size: 12px;
+    border-radius: 8px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+  }
 
-/* MI HUERTO -------------------------------------------------------- */
+  /* HUERTO ----------------------------------------------------------- */
 
-#gardenGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
+  #gardenGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
 
-.garden-cell {
-  background: #ffffff;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 8px;
-  min-height: 80px;
-  box-shadow: var(--shadow);
-}
+  .garden-cell {
+    background: #ffffff;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 8px;
+    min-height: 80px;
+    box-shadow: var(--shadow);
+  }
 
-/* DIARIO ----------------------------------------------------------- */
+  /* DIARIO ----------------------------------------------------------- */
 
-#diaryList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+  #diaryList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.diary-entry {
-  background: #ffffff;
-  border-radius: var(--radius);
-  padding: 12px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
+  .diary-entry {
+    background: #ffffff;
+    border-radius: var(--radius);
+    padding: 12px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
 
-.diary-type {
-  font-weight: 700;
-  color: var(--accent-strong);
-}
+  .diary-type {
+    font-weight: 700;
+    color: var(--accent-strong);
+  }
 
-/* PLAGAS ----------------------------------------------------------- */
+  /* PLAGAS ----------------------------------------------------------- */
 
-#pestsList .list-item,
-#pesticidesList .list-item {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px;
-  box-shadow: var(--shadow);
-  margin-bottom: 10px;
-}
+  #pestsList .list-item,
+  #pesticidesList .list-item {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+  }
 
-/* FOOTER ----------------------------------------------------------- */
+  /* FOOTER ----------------------------------------------------------- */
 
-footer {
-  padding: 20px;
-  text-align: center;
-  color: var(--text-soft);
-  font-size: 13px;
-}
-</style>
+  footer {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 13px;
+  }
+
+  </style>
 </head>
-
-<body>
-
-  <!-- 🌱 SPLASH SCREEN -->
-  <div id="splash">
-    <div style="font-size:64px;">🌱</div>
-    <h1>Mi Siembra Inteligente</h1>
-    <p>El huerto en tus manos</p>
-  </div>
-
-  <!-- 🌿 APP CONTENEDOR -->
-  <div id="app" style="display:none;">
-
-    <header class="app-header">
-      <div class="header-inner">
-        <div class="brand">
-          <div class="brand-icon"><span>🌱</span></div>
-          <div class="brand-text">
-            <div class="brand-title">Mi Siembra Inteligente</div>
-            <div class="brand-sub">Planifica, registra y cuida tu huerto paso a paso.</div>
-          </div>
-        </div>
-
-        <nav class="pill-nav">
-          <button class="nav-btn active" data-view="homeView">🏠 Inicio</button>
-          <button class="nav-btn" data-view="calendarView">📅 Calendario</button>
-          <button class="nav-btn" data-view="catalogView">🌿 Catálogo</button>
-          <button class="nav-btn" data-view="moreView">⋯ Más</button>
-        </nav>
-      </div>
-    </header>
-
-    <main>
-
-      <!-- 🏠 INICIO -->
-      <section id="homeView" class="view active">
-        <h2>Inicio</h2>
-        <p>Elige qué deseas hacer hoy.</p>
-
-        <div class="home-buttons">
-          <button data-view-target="calendarView">📅 Qué sembrar este mes</button>
-          <button data-view-target="catalogView">🌿 Catálogo de cultivos</button>
-          <button data-view-target="gardenView">🧩 Mi huerto</button>
-          <button data-view-target="diaryView">📓 Diario</button>
-          <button data-view-target="pestsView">🪲 Plagas y cuidados</button>
-          <button data-view-target="fertView">🧪 Abonos y fertilizantes</button>
-        </div>
-      </section>
-
-      <!-- 📅 CALENDARIO -->
-      <section id="calendarView" class="view">
-        <h2>¿Qué puedo sembrar este mes?</h2>
-        <div id="monthButtons"></div>
-        <div id="monthResults"></div>
-      </section>
-
-      <!-- 🌿 CATÁLOGO -->
-      <section id="catalogView" class="view">
-        <h2>Catálogo visual de cultivos</h2>
-        <input id="catalogSearch" placeholder="Buscar cultivo...">
-        <div id="catalogTypeFilters"></div>
-        <div id="catalogSunFilters"></div>
-        <div id="catalogGrid"></div>
-      </section>
-
-      <!-- 🧩 MI HUERTO -->
-      <section id="gardenView" class="view">
-        <h2>Mi huerto</h2>
-        <div id="gardenGrid"></div>
-      </section>
-
-      <!-- 📓 DIARIO -->
-      <section id="diaryView" class="view">
-        <h2>Diario de siembra</h2>
-        <button id="addDiaryEntry">➕ Añadir</button>
-        <div id="diaryList"></div>
-      </section>
-
-      <!-- 🪲 PLAGAS -->
-      <section id="pestsView" class="view">
-        <h2>Plagas y cuidados</h2>
-        <button data-view-target="pestsCatalogView">📚 Catálogo de plagas</button>
-        <button data-view-target="pesticidesView">🧴 Pesticidas caseros</button>
-      </section>
-
-      <!-- 📚 CATÁLOGO DE PLAGAS -->
-      <section id="pestsCatalogView" class="view">
-        <h2>Catálogo de plagas</h2>
-        <input id="pestSearch" placeholder="Buscar plaga...">
-        <div id="pestTypeFilters"></div>
-        <div id="pestsList"></div>
-      </section>
-
-      <!-- 🧴 PESTICIDAS -->
-      <section id="pesticidesView" class="view">
-        <h2>Pesticidas caseros</h2>
-        <input id="pesticideSearch" placeholder="Buscar pesticida...">
-        <div id="pesticideTypeFilters"></div>
-        <div id="pesticidesList"></div>
-      </section>
-
-      <!-- ⚙️ OPCIONES -->
-      <section id="optionsView" class="view">
-        <h2>Opciones y clima</h2>
-        <div id="climateOptionsRow"></div>
-        <p>Clima actual: <strong id="optionsClimateText"></strong></p>
-      </section>
-
-      <!-- ⋯ MÁS -->
-      <section id="moreView" class="view">
-        <h2>Más opciones</h2>
-
-        <button data-view-target="gardenView">🧩 Mi huerto</button>
-        <button data-view-target="diaryView">📓 Diario</button>
-        <button data-view-target="pestsView">🪲 Plagas</button>
-        <button data-view-target="fertView">🧪 Abonos</button>
-        <button id="backupExport">💾 Guardar copia</button>
-        <button id="backupImport">📂 Restaurar copia</button>
-        <input type="file" id="backupFile" accept="application/json" hidden />
-      </section>
-
-      <!-- 🧪 ABONOS -->
-      <section id="fertView" class="view">
-        <h2>Abonos y fertilizantes</h2>
-        <div id="fertList"></div>
-      </section>
-
-    </main>
-
-    <footer>
-      Mi Siembra Inteligente · Datos guardados solo en este dispositivo
-    </footer>
-
-  </div>
-
-  <script>
-// Esperar a que cargue todo
-document.addEventListener("DOMContentLoaded", () => {
-
-    // ---- SPLASH ----
-    setTimeout(() => {
-        const splash = document.getElementById("splash");
-        splash.classList.add("fade-out");
-
-        setTimeout(() => {
-            splash.style.display = "none";
-            document.getElementById("app").style.display = "block";
-        }, 400);
-
-    }, 1200);
-
-
-    // ---- NAVEGACIÓN ----
-    const pages = document.querySelectorAll(".page");
-    const navButtons = document.querySelectorAll("[data-page]");
-
-    function showPage(id) {
-        pages.forEach(p => p.style.display = "none");
-        document.getElementById(id).style.display = "block";
-    }
-
-    navButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const page = btn.getAttribute("data-page");
-            showPage(page);
-        });
-    });
-
-    showPage("inicio"); // primera pantalla
-
-
-    // ---- BASE DE DATOS DE CULTIVOS ----
-    const cultivos = [
-        { nombre: "Tomate", tipo: "fruto", meses: ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct"], dias: "70–90 días", sombra: "Pleno sol", riego: "Medio" },
-        { nombre: "Lechuga", tipo: "hoja", meses: ["ene","feb","mar","abr","oct","nov","dic"], dias: "30–45 días", sombra: "Media sombra", riego: "Alto" },
-        { nombre: "Rábanos", tipo: "raíz", meses: ["todo"], dias: "20–30 días", sombra: "Sol", riego: "Medio" },
-        { nombre: "Pimiento", tipo: "fruto", meses: ["feb","mar","abr","may","jun"], dias: "90–110 días", sombra: "Pleno sol", riego: "Medio" }
-    ];
-
-
-    // ---- CATÁLOGO DE CULTIVOS (tarjetas) ----
-    const catalogoCont = document.getElementById("catalogo-lista");
-
-    function renderCatalogo(lista) {
-        catalogoCont.innerHTML = "";
-        lista.forEach(c => {
-            const card = document.createElement("div");
-            card.className = "card fade-in";
-            card.innerHTML = `
-                <h3>${c.nombre}</h3>
-                <p><strong>Tipo:</strong> ${c.tipo}</p>
-                <p><strong>Días de cosecha:</strong> ${c.dias}</p>
-                <button class="verMasBtn">Ver más</button>
-            `;
-            card.addEventListener("click", () => abrirDetalle(c));
-            catalogoCont.appendChild(card);
-        });
-    }
-
-    renderCatalogo(cultivos);
-
-
-    // ---- DETALLE AMPLIADO ----
-    const dialogDetalle = document.getElementById("detalleCultivo");
-    const detalleContent = document.getElementById("detalleContenido");
-    const cerrarDetalle = document.getElementById("cerrarDetalle");
-
-    function abrirDetalle(c) {
-        detalleContent.innerHTML = `
-            <h2>${c.nombre}</h2>
-document.addEventListener("DOMContentLoaded", () => {
-
-    /* --------------------- NAVEGACIÓN GENERAL --------------------- */
-
-    const views = document.querySelectorAll(".view");
-
-    function showView(id) {
-        views.forEach(v => v.classList.remove("active"));
-        document.getElementById(id).classList.add("active");
-        window.scrollTo(0, 0);
-    }
-
-    // Botones del menú superior
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const target = btn.dataset.view;
-            if (target) showView(target);
-        });
-    });
-
-    // Botones dentro de Inicio
-    document.querySelectorAll("[data-view-target]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const target = btn.dataset.viewTarget;
-            if (target) showView(target);
-        });
-    });
-
-    /* --------------------- SPLASH SCREEN --------------------- */
-
-    const splash = document.getElementById("splash");
-    const app = document.getElementById("app");
-
-    setTimeout(() => {
-        splash.style.display = "none";
-        app.style.display = "block";
-    }, 1200);
-
-
-    /* --------------------- CALENDARIO: ¿QUÉ SEMBRAR ESTE MES? --------------------- */
-
-    const months = [
-        "enero","febrero","marzo","abril","mayo","junio",
-        "julio","agosto","septiembre","octubre","noviembre","diciembre"
-    ];
-
-    const cultivosPorMes = {
-        enero: ["Lechuga", "Rábanos", "Cilantro"],
-        febrero: ["Tomate", "Pimiento", "Cebolla"],
-        marzo: ["Calabaza", "Maíz", "Melón"],
-        abril: ["Pepinillo", "Sandía", "Ajo"],
-        mayo: ["Plátano", "Gandules", "Habichuelas"],
-        junio: ["Pepino", "Calabacín"],
-        julio: ["Tomate", "Pimiento"],
-        agosto: ["Lechuga", "Cilantro"],
-        septiembre: ["Rábanos", "Cebolla"],
-        octubre: ["Ajo", "Brócoli"],
-        noviembre: ["Coliflor", "Zanahoria"],
-        diciembre: ["Lechuga", "Cilantro", "Rábanos"]
-    };
-
-    const monthButtons = document.getElementById("monthButtons");
-    const monthResults = document.getElementById("monthResults");
-
-    // Crear botones de meses
-    months.forEach(mes => {
-        const b = document.createElement("button");
-        b.className = "month-btn";
-        b.textContent = mes.charAt(0).toUpperCase() + mes.slice(1);
-        b.addEventListener("click", () => showMonth(mes));
-        monthButtons.appendChild(b);
-    });
-
-    function showMonth(mes) {
-        monthResults.innerHTML = "";
-        const lista = cultivosPorMes[mes];
-
-        if (!lista || lista.length === 0) {
-            monthResults.innerHTML = "<p>No hay cultivos registrados para este mes.</p>";
-            return;
-        }
-
-        lista.forEach(cultivo => {
-            const div = document.createElement("div");
-            div.className = "card";
-            div.textContent = cultivo;
-            monthResults.appendChild(div);
-        });
-    }
-
-
-    /* --------------------- CATÁLOGO DE CULTIVOS --------------------- */
-
-    const catalogo = [
-        { nombre: "Tomate", descripcion: "Requiere sol directo y riego moderado." },
-        { nombre: "Lechuga", descripcion: "Crece rápido, preferible clima fresco." },
-        { nombre: "Cilantro", descripcion: "Aromática fácil de cuidar." },
-        { nombre: "Pimiento", descripcion: "Necesita calor y buen drenaje." },
-        { nombre: "Rábano", descripcion: "Cosecha rápida, ideal para principiantes." }
-    ];
-
-    const catalogResults = document.getElementById("catalogResults");
-    const catalogSearch = document.getElementById("catalogSearch");
-
-    function renderCatalog() {
-        catalogResults.innerHTML = "";
-        catalogo.forEach(item => {
-            const div = document.createElement("div");
-            div.className = "card";
-            div.innerHTML = `<strong>${item.nombre}</strong><br>${item.descripcion}`;
-            catalogResults.appendChild(div);
-        });
-    }
-
-    renderCatalog();
-
-    catalogSearch.addEventListener("input", () => {
-        const q = catalogSearch.value.toLowerCase();
-        catalogResults.innerHTML = "";
-
-        catalogo
-            .filter(c => c.nombre.toLowerCase().includes(q))
-            .forEach(item => {
-                const div = document.createElement("div");
-                div.className = "card";
-                div.innerHTML = `<strong>${item.nombre}</strong><br>${item.descripcion}`;
-                catalogResults.appendChild(div);
-            });
-    });
-
-
-    /* --------------------- PLAGAS Y CUIDADOS --------------------- */
-
-    const plagas = [
-        { nombre: "Mosca blanca", cuidado: "Usar jabón potásico o aceite de neem." },
-        { nombre: "Pulgones", cuidado: "Aplicar agua con jabón o neem." },
-        { nombre: "Orugas", cuidado: "Retiro manual y control biológico." }
-    ];
-
-    const pestsResults = document.getElementById("pestsResults");
-    pestsResults.innerHTML = "";
-
-    plagas.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<strong>${p.nombre}</strong><br>${p.cuidado}`;
-        pestsResults.appendChild(card);
-    });
-
-
-    /* --------------------- ABONOS Y FERTILIZANTES --------------------- */
-
-    const fertResults = document.getElementById("fertResults");
-    fertResults.innerHTML = `
-        <div class="card"><strong>Compost</strong><br>Mejora estructura del suelo.</div>
-        <div class="card"><strong>Humus</strong><br>Nutrientes disponibles rápidamente.</div>
-        <div class="card"><strong>Abono 10-10-10</strong><br>Nutriente balanceado.</div>
-    `;
-
-
-    /* --------------------- DIARIO --------------------- */
-
-    const diarioLista = document.getElementById("diaryList");
-    const btnAddDiary = document.getElementById("addDiary");
-  document.addEventListener("DOMContentLoaded", () => {
-
-    /* --------------------- NAVEGACIÓN GENERAL --------------------- */
-
-    const views = document.querySelectorAll(".view");
-
-    function showView(id) {
-        views.forEach(v => v.classList.remove("active"));
-        document.getElementById(id).classList.add("active");
-        window.scrollTo(0, 0);
-    }
-
-    // Botones del menú superior
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const target = btn.dataset.view;
-            if (target) showView(target);
-        });
-    });
-
-    // Botones dentro de Inicio
-    document.querySelectorAll("[data-view-target]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const target = btn.dataset.viewTarget;
-            if (target) showView(target);
-        });
-    });
-
-    /* --------------------- SPLASH SCREEN --------------------- */
-
-    const splash = document.getElementById("splash");
-    const app = document.getElementById("app");
-
-    setTimeout(() => {
-        splash.style.display = "none";
-        app.style.display = "block";
-    }, 1200);
-
-
-    /* --------------------- CALENDARIO: ¿QUÉ SEMBRAR ESTE MES? --------------------- */
-
-    const months = [
-        "enero","febrero","marzo","abril","mayo","junio",
-        "julio","agosto","septiembre","octubre","noviembre","diciembre"
-    ];
-
-    const cultivosPorMes = {
-        enero: ["Lechuga", "Rábanos", "Cilantro"],
-        febrero: ["Tomate", "Pimiento", "Cebolla"],
-        marzo: ["Calabaza", "Maíz", "Melón"],
-        abril: ["Pepinillo", "Sandía", "Ajo"],
-        mayo: ["Plátano", "Gandules", "Habichuelas"],
-        junio: ["Pepino", "Calabacín"],
-        julio: ["Tomate", "Pimiento"],
-        agosto: ["Lechuga", "Cilantro"],
-        septiembre: ["Rábanos", "Cebolla"],
-        octubre: ["Ajo", "Brócoli"],
-        noviembre: ["Coliflor", "Zanahoria"],
-        diciembre: ["Lechuga", "Cilantro", "Rábanos"]
-    };
-
-    const monthButtons = document.getElementById("monthButtons");
-    const monthResults = document.getElementById("monthResults");
-
-    // Crear botones de meses
-    months.forEach(mes => {
-        const b = document.createElement("button");
-        b.className = "month-btn";
-        b.textContent = mes.charAt(0).toUpperCase() + mes.slice(1);
-        b.addEventListener("click", () => showMonth(mes));
-        monthButtons.appendChild(b);
-    });
-
-    function showMonth(mes) {
-        monthResults.innerHTML = "";
-        const lista = cultivosPorMes[mes];
-
-        if (!lista || lista.length === 0) {
-            monthResults.innerHTML = "<p>No hay cultivos registrados para este mes.</p>";
-            return;
-        }
-
-        lista.forEach(cultivo => {
-            const div = document.createElement("div");
-            div.className = "card";
-            div.textContent = cultivo;
-            monthResults.appendChild(div);
-        });
-    }
-
-
-    /* --------------------- CATÁLOGO DE CULTIVOS --------------------- */
-
-    const catalogo = [
-        { nombre: "Tomate", descripcion: "Requiere sol directo y riego moderado." },
-        { nombre: "Lechuga", descripcion: "Crece rápido, preferible clima fresco." },
-        { nombre: "Cilantro", descripcion: "Aromática fácil de cuidar." },
-        { nombre: "Pimiento", descripcion: "Necesita calor y buen drenaje." },
-        { nombre: "Rábano", descripcion: "Cosecha rápida, ideal para principiantes." }
-    ];
-
-    const catalogResults = document.getElementById("catalogResults");
-    const catalogSearch = document.getElementById("catalogSearch");
-
-    function renderCatalog() {
-        catalogResults.innerHTML = "";
-        catalogo.forEach(item => {
-            const div = document.createElement("div");
-            div.className = "card";
-            div.innerHTML = `<strong>${item.nombre}</strong><br>${item.descripcion}`;
-            catalogResults.appendChild(div);
-        });
-    }
-
-    renderCatalog();
-
-    catalogSearch.addEventListener("input", () => {
-        const q = catalogSearch.value.toLowerCase();
-        catalogResults.innerHTML = "";
-
-        catalogo
-            .filter(c => c.nombre.toLowerCase().includes(q))
-            .forEach(item => {
-                const div = document.createElement("div");
-                div.className = "card";
-                div.innerHTML = `<strong>${item.nombre}</strong><br>${item.descripcion}`;
-                catalogResults.appendChild(div);
-            });
-    });
-
-
-    /* --------------------- PLAGAS Y CUIDADOS --------------------- */
-
-    const plagas = [
-        { nombre: "Mosca blanca", cuidado: "Usar jabón potásico o aceite de neem." },
-        { nombre: "Pulgones", cuidado: "Aplicar agua con jabón o neem." },
-        { nombre: "Orugas", cuidado: "Retiro manual y control biológico." }
-    ];
-
-    const pestsResults = document.getElementById("pestsResults");
-    pestsResults.innerHTML = "";
-
-    plagas.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<strong>${p.nombre}</strong><br>${p.cuidado}`;
-        pestsResults.appendChild(card);
-    });
-
-
-    /* --------------------- ABONOS Y FERTILIZANTES --------------------- */
-
-    const fertResults = document.getElementById("fertResults");
-    fertResults.innerHTML = `
-        <div class="card"><strong>Compost</strong><br>Mejora estructura del suelo.</div>
-        <div class="card"><strong>Humus</strong><br>Nutrientes disponibles rápidamente.</div>
-        <div class="card"><strong>Abono 10-10-10</strong><br>Nutriente balanceado.</div>
-    `;
-
-
-    /* --------------------- DIARIO --------------------- */
-
-    const diarioLista = document.getElementById("diaryList");
-    const btnAddDiary = document.getElementById("addDiary");
-    const diaryInput = document.getElementById("diaryInput");
-
-    btnAddDiary.addEventListener("click", () => {
-        if (!diaryInput.value.trim()) return;
-
-        const div = document.createElement("div");
-        div.className = "card";
-        div.textContent = diaryInput.value;
-
-        diarioLista.appendChild(div);
-        diaryInput.value = "";
-    });
-
-
-    /* --------------------- MI HUERTO --------------------- */
-
-    const huertoLista = document.getElementById("gardenList");
-    const btnAddHuerto = document.getElementById("addPlant");
-    const huertoInput = document.getElementById("plantInput");
-
-    btnAddHuerto.addEventListener("click", () => {
-        if (!huertoInput.value.trim()) return;
-
-        const div = document.createElement("div");
-        div.className = "card";
-        div.textContent = huertoInput.value;
-
-        huertoLista.appendChild(div);
-        huertoInput.value = "";
-    < script >
-    })
-
-});
-</body>
-</html>
