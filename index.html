@@ -281,3 +281,151 @@ html, body {
 
 <!-- ------------ APP ------------- -->
 <div id="app" style="display:none;">
+<!-- ---------------- HEADER ---------------- -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon">🌱</div>
+      <div>
+        <div class="brand-title">Mi Siembra Inteligente</div>
+        <div class="brand-sub">Planifica, cuida y cosecha mejor</div>
+      </div>
+    </div>
+
+    <nav class="pill-nav">
+      <button class="nav-btn active" data-view="homeView">🏠 Inicio</button>
+      <button class="nav-btn" data-view="calendarView">📅 Calendario</button>
+      <button class="nav-btn" data-view="catalogView">🌿 Catálogo</button>
+      <button class="nav-btn" data-view="moreView">⋯ Más</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ---------------- 🏠 INICIO ---------------- -->
+<section id="homeView" class="view active">
+  <h2>Inicio</h2>
+  <p>¿Qué deseas hacer hoy?</p>
+
+  <div class="home-buttons">
+    <button data-view-target="calendarView">📅 Qué sembrar este mes</button>
+    <button data-view-target="catalogView">🌿 Catálogo de cultivos</button>
+    <button data-view-target="gardenView">🧩 Mi huerto</button>
+    <button data-view-target="diaryView">📓 Diario</button>
+    <button data-view-target="pestsView">🪲 Plagas y cuidados</button>
+    <button data-view-target="fertView">🧪 Abonos y fertilizantes</button>
+    <button data-view-target="optionsView">🌍 Opciones y clima</button>
+  </div>
+</section>
+
+<!-- ---------------- 📅 CALENDARIO ---------------- -->
+<section id="calendarView" class="view">
+  <h2>¿Qué puedo sembrar este mes?</h2>
+  <p>Elige un mes para ver cultivos recomendados según tu clima.</p>
+
+  <div id="monthButtons" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;"></div>
+
+  <div id="monthResults" style="margin-top:16px;"></div>
+</section>
+
+<!-- ---------------- 🌿 CATÁLOGO DE CULTIVOS ---------------- -->
+<section id="catalogView" class="view">
+  <h2>Catálogo de cultivos</h2>
+
+  <input id="catalogSearch" placeholder="Buscar cultivo..." style="width:100%;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);margin-bottom:12px;">
+
+  <div id="catalogList" style="display:flex;flex-direction:column;gap:10px;"></div>
+</section>
+
+<!-- ---------------- 🧩 MI HUERTO ---------------- -->
+<section id="gardenView" class="view">
+  <h2>Mi huerto</h2>
+  <p>Toca un cuadro para asignar un cultivo.</p>
+
+  <div id="gardenGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;"></div>
+</section>
+
+<!-- ---------------- 📓 DIARIO ---------------- -->
+<section id="diaryView" class="view">
+  <h2>Diario de siembra</h2>
+
+  <button id="addDiaryEntry" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--accent);color:#0f2817;font-weight:700;margin-bottom:12px;">
+    ➕ Nuevo registro
+  </button>
+
+  <div id="diaryList" style="display:flex;flex-direction:column;gap:12px;"></div>
+</section>
+
+<!-- ---------------- 🪲 PLAGAS ---------------- -->
+<section id="pestsView" class="view">
+  <h2>Plagas y cuidados</h2>
+
+  <button data-view-target="pestsCatalogView" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);margin-bottom:12px;">
+    📚 Ver catálogo de plagas
+  </button>
+
+  <button data-view-target="pesticidesView" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);">
+    🧴 Pesticidas caseros
+  </button>
+</section>
+
+<!-- ---------------- 📚 CATÁLOGO DE PLAGAS ---------------- -->
+<section id="pestsCatalogView" class="view">
+  <h2>Catálogo de plagas</h2>
+
+  <input id="pestSearch" placeholder="Buscar plaga..." style="width:100%;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);margin-bottom:12px;">
+
+  <div id="pestsList" style="display:flex;flex-direction:column;gap:12px;"></div>
+</section>
+
+<!-- ---------------- 🧴 PESTICIDAS ---------------- -->
+<section id="pesticidesView" class="view">
+  <h2>Pesticidas caseros</h2>
+
+  <input id="pesticideSearch" placeholder="Buscar pesticida..." style="width:100%;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);margin-bottom:12px;">
+
+  <div id="pesticidesList" style="display:flex;flex-direction:column;gap:12px;"></div>
+</section>
+
+<!-- ---------------- 🧪 ABONOS ---------------- -->
+<section id="fertView" class="view">
+  <h2>Abonos y fertilizantes</h2>
+
+  <div id="fertList" style="display:flex;flex-direction:column;gap:12px;"></div>
+</section>
+
+<!-- ---------------- ⚙️ OPCIONES ---------------- -->
+<section id="optionsView" class="view">
+  <h2>Opciones y clima</h2>
+
+  <p>Selecciona el clima para adaptar las plagas y recomendaciones:</p>
+
+  <div id="climateOptions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+    <button class="climate-btn" data-climate="tropical" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);">🌴 Tropical</button>
+    <button class="climate-btn" data-climate="templado" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);">🌤️ Templado</button>
+    <button class="climate-btn" data-climate="frio" style="padding:10px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card-soft);color:var(--text-main);">❄️ Frío</button>
+  </div>
+
+  <p style="margin-top:12px;">Clima actual: <strong id="currentClimate">Tropical</strong></p>
+</section>
+
+<!-- -------------- ⋯ MÁS -------------- -->
+<section id="moreView" class="view">
+  <h2>Más opciones</h2>
+
+  <button data-view-target="gardenView" class="home-btn">🧩 Mi huerto</button>
+  <button data-view-target="diaryView" class="home-btn">📓 Diario</button>
+  <button data-view-target="pestsView" class="home-btn">🪲 Plagas</button>
+  <button data-view-target="fertView" class="home-btn">🧪 Abonos</button>
+
+  <button id="backupExport" class="home-btn">💾 Guardar copia</button>
+  <button id="backupImport" class="home-btn">📂 Restaurar copia</button>
+  <input type="file" id="backupFile" hidden accept="application/json">
+</section>
+
+</main>
+
+<footer style="text-align:center;padding:14px;color:var(--text-soft);font-size:13px;">
+  Mi Siembra Inteligente · Datos guardados solo en este dispositivo
+</footer>
