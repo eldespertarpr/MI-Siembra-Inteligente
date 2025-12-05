@@ -429,3 +429,342 @@ html, body {
 <footer style="text-align:center;padding:14px;color:var(--text-soft);font-size:13px;">
   Mi Siembra Inteligente · Datos guardados solo en este dispositivo
 </footer>
+<script>
+// =====================================
+// MI SIEMBRA INTELIGENTE - v18 PREMIUM
+// =====================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* ---------------- SPLASH ---------------- */
+    const splash = document.getElementById("splash");
+    setTimeout(() => {
+        splash.classList.add("fade-out");
+        setTimeout(() => splash.remove(), 700);
+    }, 900);
+
+
+    /* ---------------- NAVEGACIÓN ---------------- */
+    const views = document.querySelectorAll(".view");
+
+    function showView(id) {
+        views.forEach(v => v.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        window.scrollTo(0, 0);
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => showView(btn.dataset.view));
+        document.querySelectorAll(".nav-btn").forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+    });
+
+    document.querySelectorAll("[data-view-target]").forEach(btn => {
+        btn.addEventListener("click", () => showView(btn.dataset.viewTarget));
+    });
+
+
+    /* ---------------- BASE DE DATOS GLOBAL ---------------- */
+
+    const IMAGENES = {
+        acelga: "acelga.jpg",
+        ajo: "ajo.jpg",
+        ajoporro: "ajoporro.jpg",
+        albahaca: "albahaca.jpg",
+        apio: "apio.jpg",
+        berenjena: "berenjena.jpg",
+        berenjena_china: "berenjena_china.jpg",
+        brocoli: "brocoli.jpg",
+        calabacin: "calabacin.jpg",
+        calabaza: "calabaza.jpg",
+        cebolla: "cebolla.jpg",
+        cebolla_verde: "cebolla_verde.jpg",
+        cilantro: "cilantro.jpg",
+        col: "col.jpg",
+        coliflor: "coliflor.jpg",
+        col_risada: "col_risada.jpg",
+        espinaca: "espinaca.jpg",
+        gandules: "gandules.jpg",
+        habichuelas: "habichuelas.jpg",
+        jengibre: "jengibre.jpg",
+        lechuga: "lechuga.jpg",
+        limon: "limon.jpg",
+        lima: "lima.jpg",
+        mango: "mango.jpg",
+        melon: "melon.jpg",
+        menta: "menta.jpg",
+        oregano: "oregano.jpg",
+        papa: "papa.jpg",
+        papaya: "papaya.jpg",
+        pepinillo: "pepinillo.jpg",
+        perejil: "perejil.jpg",
+        pimiento: "pimiento.jpg",
+        pimiento_cubanelle: "pimiento_cubanelle.jpg",
+        pimiento_morron: "pimiento_morron.jpg",
+        platano: "platano.jpg",
+        rabano: "rabano.jpg",
+        remolacha: "remolacha.jpg",
+        sandia: "sandia.jpg",
+        tomate: "tomate.jpg",
+        zanahoria: "zanahoria.jpg"
+    };
+
+    const CULTIVOS = Object.keys(IMAGENES).map(id => ({
+        id,
+        nombre: id.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+        imagen: `img/${IMAGENES[id]}`,
+        dias: "60-90 días",
+        tipo: "Vegetal",
+        sol: "Sol directo",
+        riego: "Moderado",
+        plagas: {
+            tropical: ["Mosca blanca", "Pulgón"],
+            templado: ["Ácaros", "Oruga verde"],
+            frio: ["Babosas", "Hongos"]
+        }
+    }));
+
+
+    /* ---------------- CALENDARIO ---------------- */
+
+    const cultivosPorMes = {
+        enero:["lechuga","rabano","cilantro"],
+        febrero:["tomate","pimiento","cebolla"],
+        marzo:["calabaza","maiz","melon"],
+        abril:["pepinillo","sandia","ajo"],
+        mayo:["platano","gandules","habichuelas"],
+        junio:["pepinillo","calabacin"],
+        julio:["tomate","pimiento"],
+        agosto:["lechuga","cilantro"],
+        septiembre:["rabano","cebolla"],
+        octubre:["ajo","brocoli"],
+        noviembre:["coliflor","zanahoria"],
+        diciembre:["lechuga","cilantro","rabano"]
+    };
+
+    const monthButtons = document.getElementById("monthButtons");
+    const monthResults = document.getElementById("monthResults");
+
+    const meses = Object.keys(cultivosPorMes);
+    meses.forEach(m => {
+        const b = document.createElement("button");
+        b.className = "month-btn";
+        b.textContent = m.toUpperCase();
+        b.onclick = () => mostrarMes(m);
+        monthButtons.appendChild(b);
+    });
+
+    function mostrarMes(mes) {
+        monthResults.innerHTML = "";
+        const lista = cultivosPorMes[mes] || [];
+
+        if (lista.length === 0) {
+            monthResults.innerHTML = "<p>No hay cultivos registrados para este mes.</p>";
+            return;
+        }
+
+        lista.forEach(id => {
+            const c = CULTIVOS.find(x => x.id === id);
+            if (!c) return;
+
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <div class="card-header">
+                    <img src="${c.imagen}" class="card-img">
+                </div>
+                <div class="card-body">
+                    <h3>${c.nombre}</h3>
+                    <p>${c.dias}</p>
+                </div>`;
+            monthResults.appendChild(card);
+        });
+    }
+
+
+    /* ---------------- CATÁLOGO B1 ---------------- */
+
+    const catalogList = document.getElementById("catalogList");
+    const catalogSearch = document.getElementById("catalogSearch");
+
+    function renderCatalogo(filtro = "") {
+        catalogList.innerHTML = "";
+
+        CULTIVOS
+            .filter(c => c.nombre.toLowerCase().includes(filtro.toLowerCase()))
+            .forEach(c => {
+                const card = document.createElement("div");
+                card.className = "catalog-card";
+                card.innerHTML = `
+                    <div class="catalog-img">
+                        <img src="${c.imagen}">
+                    </div>
+                    <div class="catalog-info">
+                        <h3>${c.nombre}</h3>
+                        <p>Días: ${c.dias}</p>
+                        <p>Plagas comunes: ${c.plagas.tropical[0]}, ${c.plagas.tropical[1]}</p>
+                    </div>`;
+                catalogList.appendChild(card);
+            });
+    }
+
+    renderCatalogo();
+    catalogSearch.addEventListener("input", e => renderCatalogo(e.target.value));
+
+
+    /* ---------------- PLAGAS ---------------- */
+
+    const pestsList = document.getElementById("pestsList");
+    const pestSearch = document.getElementById("pestSearch");
+
+    const PLAGAS = [
+        { nombre:"Mosca blanca", descripcion:"Chupa savia. Control: jabón potásico o neem." },
+        { nombre:"Pulgones", descripcion:"Colonias grandes. Control: agua jabonosa." },
+        { nombre:"Ácaros", descripcion:"Puntos amarillos. Control: neem." },
+        { nombre:"Orugas", descripcion:"Hojas comidas. Control: BT o retiro manual." },
+        { nombre:"Hongos", descripcion:"Manchas. Control: bicarbonato." }
+    ];
+
+    function renderPlagas(filtro="") {
+        pestsList.innerHTML = "";
+        PLAGAS.filter(p => p.nombre.toLowerCase().includes(filtro.toLowerCase()))
+            .forEach(p => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `<h3>${p.nombre}</h3><p>${p.descripcion}</p>`;
+                pestsList.appendChild(card);
+            });
+    }
+
+    renderPlagas();
+    pestSearch.oninput = e => renderPlagas(e.target.value);
+
+
+    /* ---------------- PESTICIDAS ---------------- */
+
+    const pesticidesList = document.getElementById("pesticidesList");
+    const pesticideSearch = document.getElementById("pesticideSearch");
+
+    const PESTICIDAS = [
+        { nombre:"Aceite de neem", uso:"Control general natural" },
+        { nombre:"Jabón potásico", uso:"Pulgones, mosca blanca" },
+        { nombre:"Agua jabonosa", uso:"Control rápido de plagas suaves" },
+        { nombre:"Bicarbonato", uso:"Hongos del follaje" }
+    ];
+
+    function renderPesticidas(filtro="") {
+        pesticidesList.innerHTML = "";
+        PESTICIDAS.filter(x => x.nombre.toLowerCase().includes(filtro.toLowerCase()))
+            .forEach(p => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `<h3>${p.nombre}</h3><p>${p.uso}</p>`;
+                pesticidesList.appendChild(card);
+            });
+    }
+
+    renderPesticidas();
+    pesticideSearch.oninput = e => renderPesticidas(e.target.value);
+
+
+    /* ---------------- ABONOS ---------------- */
+
+    const fertList = document.getElementById("fertList");
+    fertList.innerHTML = `
+        <div class="card"><h3>Compost</h3><p>Mejora estructura del suelo y retención de agua.</p></div>
+        <div class="card"><h3>Humus</h3><p>Aporta microorganismos y nutrientes disponibles.</p></div>
+        <div class="card"><h3>Abono 10-10-10</h3><p>Equilibrado para la mayoría de cultivos.</p></div>
+    `;
+
+
+    /* ---------------- DIARIO ---------------- */
+
+    const diaryList = document.getElementById("diaryList");
+    const addDiaryEntry = document.getElementById("addDiaryEntry");
+
+    addDiaryEntry.onclick = () => {
+        const texto = prompt("Escribe el registro:");
+        if (!texto) return;
+
+        const item = document.createElement("div");
+        item.className = "card";
+        item.innerHTML = `${texto} <button class="delete-btn">❌</button>`;
+        diaryList.appendChild(item);
+
+        item.querySelector(".delete-btn").onclick = () => item.remove();
+    };
+
+
+    /* ---------------- MI HUERTO ---------------- */
+
+    const gardenGrid = document.getElementById("gardenGrid");
+
+    // Crear 12 espacios
+    for (let i = 0; i < 12; i++) {
+        const cell = document.createElement("div");
+        cell.className = "garden-cell";
+        cell.innerHTML = "<span style='color:#64748b;'>Vacío</span>";
+        cell.onclick = () => asignarCultivo(cell);
+        gardenGrid.appendChild(cell);
+    }
+
+    function asignarCultivo(cell) {
+        const nombre = prompt("¿Qué cultivo deseas asignar?");
+        if (!nombre) return;
+        cell.textContent = nombre;
+    }
+
+
+    /* ---------------- CLIMA ---------------- */
+
+    let climaActual = "tropical";
+    const currentClimate = document.getElementById("currentClimate");
+
+    document.querySelectorAll(".climate-btn").forEach(btn => {
+        btn.onclick = () => {
+            climaActual = btn.dataset.climate;
+            currentClimate.textContent = climaActual.charAt(0).toUpperCase() + climaActual.slice(1);
+        };
+    });
+
+
+    /* ---------------- BACKUP ---------------- */
+
+    const backupExport = document.getElementById("backupExport");
+    const backupImport = document.getElementById("backupImport");
+    const backupFile = document.getElementById("backupFile");
+
+    backupExport.onclick = () => {
+        const data = {
+            diario: diaryList.innerHTML,
+            huerto: gardenGrid.innerHTML,
+            clima: climaActual
+        };
+        const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "mis-siembra-backup.json";
+        a.click();
+    };
+
+    backupImport.onclick = () => backupFile.click();
+    backupFile.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const data = JSON.parse(reader.result);
+
+            diaryList.innerHTML = data.diario || "";
+            gardenGrid.innerHTML = data.huerto || "";
+            climaActual = data.clima || "tropical";
+            currentClimate.textContent = climaActual;
+        };
+        reader.readAsText(file);
+    };
+
+});
+      </script>
