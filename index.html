@@ -311,6 +311,338 @@
   }
 
   </style>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* -------------------------------------------------- */
+    /* 🌱 1. SPLASH SCREEN                                */
+    /* -------------------------------------------------- */
+    const splash = document.getElementById("splash");
+    const app = document.getElementById("app");
+
+    setTimeout(() => {
+        splash.classList.add("fade-out");
+        setTimeout(() => {
+            splash.style.display = "none";
+            app.style.display = "block";
+        }, 400);
+    }, 1000);
+
+
+    /* -------------------------------------------------- */
+    /* 🌱 2. NAVEGACIÓN ENTRE VISTAS                      */
+    /* -------------------------------------------------- */
+    const views = document.querySelectorAll(".view");
+
+    function showView(id) {
+        views.forEach(v => v.classList.remove("active"));
+        const view = document.getElementById(id);
+        if (view) view.classList.add("active");
+        window.scrollTo(0, 0);
+    }
+
+    // Menu superior
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            showView(btn.dataset.view);
+        });
+    });
+
+    // Botones internos
+    document.querySelectorAll("[data-view-target]").forEach(btn => {
+        btn.addEventListener("click", () => {
+            showView(btn.dataset.viewTarget);
+        });
+    });
+
+
+    /* -------------------------------------------------- */
+    /* 📅 3. CALENDARIO: QUÉ SEMBRAR CADA MES            */
+    /* -------------------------------------------------- */
+    const monthButtons = document.getElementById("monthButtons");
+    const monthResults = document.getElementById("monthResults");
+
+    const meses = [
+        "enero","febrero","marzo","abril","mayo","junio","julio",
+        "agosto","septiembre","octubre","noviembre","diciembre"
+    ];
+
+    const cultivosPorMes = {
+        enero: ["Lechuga","Rábanos","Cilantro"],
+        febrero: ["Tomate","Pimiento","Cebolla"],
+        marzo: ["Calabaza","Maíz","Melón"],
+        abril: ["Pepinillo","Sandía","Ajo"],
+        mayo: ["Plátano","Gandules","Habichuelas"],
+        junio: ["Pepino","Calabacín"],
+        julio: ["Tomate","Pimiento"],
+        agosto: ["Lechuga","Cilantro"],
+        septiembre: ["Rábanos","Cebolla"],
+        octubre: ["Ajo","Brócoli"],
+        noviembre: ["Coliflor","Zanahoria"],
+        diciembre: ["Lechuga","Cilantro","Rábanos"]
+    };
+
+    meses.forEach(m => {
+        const b = document.createElement("button");
+        b.textContent = m.charAt(0).toUpperCase()+m.slice(1);
+        b.className = "home-buttons";
+        b.style.padding = "10px";
+        b.style.margin = "4px";
+        b.style.border = "1px solid var(--border)";
+        b.style.borderRadius = "12px";
+        b.addEventListener("click", () => mostrarMes(m));
+        monthButtons.appendChild(b);
+    });
+
+    function mostrarMes(mes) {
+        monthResults.innerHTML = "";
+        const lista = cultivosPorMes[mes];
+
+        if (!lista || lista.length === 0) {
+            monthResults.innerHTML = "<p>No hay cultivos registrados para este mes.</p>";
+            return;
+        }
+
+        lista.forEach(nombre => {
+            const div = document.createElement("div");
+            div.className = "crop-card";
+            div.innerHTML = `
+                <div class="crop-body">
+                    <div class="crop-name">${nombre}</div>
+                    <div class="crop-tag">Ideal este mes</div>
+                </div>`;
+            monthResults.appendChild(div);
+        });
+    }
+
+
+    /* -------------------------------------------------- */
+    /* 🌿 4. CATÁLOGO DE CULTIVOS (TARJETAS VISUALES)     */
+    /* -------------------------------------------------- */
+    const catalogGrid = document.getElementById("catalogGrid");
+    const catalogSearch = document.getElementById("catalogSearch");
+
+    const catalogo = [
+        { nombre:"Tomate", sol:"Pleno sol", tipo:"Fruto", dias:"70–90 días" },
+        { nombre:"Lechuga", sol:"Media sombra", tipo:"Hoja", dias:"30–45 días" },
+        { nombre:"Cilantro", sol:"Sombra parcial", tipo:"Aromática", dias:"30–40 días" },
+        { nombre:"Pimiento", sol:"Pleno sol", tipo:"Fruto", dias:"90–110 días" },
+        { nombre:"Rábano", sol:"Sol", tipo:"Raíz", dias:"20–30 días" }
+    ];
+
+    function renderCatalogo(lista) {
+        catalogGrid.innerHTML = "";
+
+        lista.forEach(c => {
+            const card = document.createElement("div");
+            card.className = "crop-card";
+            card.innerHTML = `
+                <div class="crop-photo"></div>
+                <div class="crop-body">
+                    <div class="crop-name">${c.nombre}</div>
+                    <div class="crop-tag">${c.tipo}</div>
+                    <div class="crop-tag">${c.sol}</div>
+                    <div class="crop-tag">${c.dias}</div>
+                </div>
+            `;
+            catalogGrid.appendChild(card);
+        });
+    }
+
+    renderCatalogo(catalogo);
+
+    catalogSearch.addEventListener("input", () => {
+        const q = catalogSearch.value.toLowerCase();
+        renderCatalogo(catalogo.filter(c => c.nombre.toLowerCase().includes(q)));
+    });
+
+
+    /* -------------------------------------------------- */
+    /* 🪲 5. CATÁLOGO DE PLAGAS                           */
+    /* -------------------------------------------------- */
+    const pestsList = document.getElementById("pestsList");
+    const pestSearch = document.getElementById("pestSearch");
+
+    const plagas = [
+        { nombre:"Mosca blanca", afecta:"Tomate, pimiento", cuidado:"Jabón potásico o neem" },
+        { nombre:"Pulgones", afecta:"Lechuga, cilantro", cuidado:"Agua jabonosa cada 3 días" },
+        { nombre:"Orugas", afecta:"Repollo, brócoli", cuidado:"Retiro manual o mallas" }
+    ];
+
+    function renderPlagas(lista) {
+        pestsList.innerHTML = "";
+        lista.forEach(p => {
+            const div = document.createElement("div");
+            div.className = "list-item";
+            div.innerHTML = `
+                <strong>${p.nombre}</strong><br>
+                Afecta: ${p.afecta}<br>
+                Cuidado: ${p.cuidado}
+            `;
+            pestsList.appendChild(div);
+        });
+    }
+
+    renderPlagas(plagas);
+
+    pestSearch.addEventListener("input", () => {
+        const q = pestSearch.value.toLowerCase();
+        renderPlagas(plagas.filter(p => p.nombre.toLowerCase().includes(q)));
+    });
+
+
+    /* -------------------------------------------------- */
+    /* 🧴 6. PESTICIDAS CASEROS                           */
+    /* -------------------------------------------------- */
+    const pesticidesList = document.getElementById("pesticidesList");
+    const pesticideSearch = document.getElementById("pesticideSearch");
+
+    const pesticidas = [
+        { nombre:"Agua jabonosa", uso:"Pulgones y mosca blanca" },
+        { nombre:"Neem", uso:"Plagas generales sin dañar plantas" },
+        { nombre:"Ajo + jabón", uso:"Hongos y bacterias" }
+    ];
+
+    function renderPesticidas(lista) {
+        pesticidesList.innerHTML = "";
+        lista.forEach(p => {
+            const div = document.createElement("div");
+            div.className = "list-item";
+            div.innerHTML = `<strong>${p.nombre}</strong><br>Uso: ${p.uso}`;
+            pesticidesList.appendChild(div);
+        });
+    }
+
+    renderPesticidas(pesticidas);
+
+    pesticideSearch.addEventListener("input", () => {
+        const q = pesticideSearch.value.toLowerCase();
+        renderPesticidas(pesticidas.filter(p => p.nombre.toLowerCase().includes(q)));
+    });
+
+
+    /* -------------------------------------------------- */
+    /* 🧪 7. ABONOS                                       */
+    /* -------------------------------------------------- */
+    const fertList = document.getElementById("fertList");
+
+    fertList.innerHTML = `
+        <div class="list-item"><strong>Compost</strong><br>Mejora la tierra y retiene humedad.</div>
+        <div class="list-item"><strong>Humus de lombriz</strong><br>Ideal para macetas y germinación.</div>
+        <div class="list-item"><strong>Abono 10-10-10</strong><br>Aporta nutrientes balanceados.</div>
+    `;
+
+
+    /* -------------------------------------------------- */
+    /* 🧩 8. MI HUERTO – MATRIZ 4×4                      */
+    /* -------------------------------------------------- */
+    const gardenGrid = document.getElementById("gardenGrid");
+    let huerto = JSON.parse(localStorage.getItem("huerto") || "[]");
+
+    if (huerto.length === 0) huerto = Array(16).fill("");
+
+    function renderHuerto() {
+        gardenGrid.innerHTML = "";
+        huerto.forEach((plant, i) => {
+            const cell = document.createElement("div");
+            cell.className = "garden-cell";
+            cell.textContent = plant ? plant : "— vacío —";
+            cell.addEventListener("click", () => editarCelda(i));
+            gardenGrid.appendChild(cell);
+        });
+    }
+
+    function editarCelda(i) {
+        const nuevo = prompt("¿Qué sembraste aquí?", huerto[i] || "");
+        if (nuevo === null) return;
+        huerto[i] = nuevo.trim();
+        localStorage.setItem("huerto", JSON.stringify(huerto));
+        renderHuerto();
+    }
+
+    renderHuerto();
+
+
+    /* -------------------------------------------------- */
+    /* 📓 9. DIARIO DE ACTIVIDADES                        */
+    /* -------------------------------------------------- */
+    const diaryList = document.getElementById("diaryList");
+    const addDiaryEntry = document.getElementById("addDiaryEntry");
+
+    let diario = JSON.parse(localStorage.getItem("diario") || "[]");
+
+    function renderDiario() {
+        diaryList.innerHTML = "";
+        diario.forEach(entry => {
+            const div = document.createElement("div");
+            div.className = "diary-entry";
+            div.innerHTML = `
+                <div class="diary-type">${entry.tipo}</div>
+                <div>${entry.texto}</div>
+                <div style="color:gray;font-size:12px;margin-top:5px;">${entry.fecha}</div>
+            `;
+            diaryList.appendChild(div);
+        });
+    }
+
+    renderDiario();
+
+    addDiaryEntry.addEventListener("click", () => {
+        const tipo = prompt("Tipo (Siembra, Riego, Abono, Cosecha):", "Siembra");
+        if (!tipo) return;
+
+        const texto = prompt("Descripción:", "");
+        if (!texto) return;
+
+        const fecha = new Date().toLocaleDateString("es-PR");
+
+        diario.push({ tipo, texto, fecha });
+        localStorage.setItem("diario", JSON.stringify(diario));
+        renderDiario();
+    });
+
+
+    /* -------------------------------------------------- */
+    /* 💾 10. BACKUP: EXPORTAR E IMPORTAR                 */
+    /* -------------------------------------------------- */
+    const backupExport = document.getElementById("backupExport");
+    const backupImport = document.getElementById("backupImport");
+    const backupFile = document.getElementById("backupFile");
+
+    backupExport.addEventListener("click", () => {
+        const data = JSON.stringify({ huerto, diario });
+        const a = document.createElement("a");
+        a.href = "data:application/json;charset=utf-8," + encodeURIComponent(data);
+        a.download = "mi_siembra_backup.json";
+        a.click();
+    });
+
+    backupImport.addEventListener("click", () => backupFile.click());
+
+    backupFile.addEventListener("change", e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = evt => {
+            const data = JSON.parse(evt.target.result);
+            if (data.huerto) huerto = data.huerto;
+            if (data.diario) diario = data.diario;
+
+            localStorage.setItem("huerto", JSON.stringify(huerto));
+            localStorage.setItem("diario", JSON.stringify(diario));
+
+            renderHuerto();
+            renderDiario();
+            alert("Copia restaurada con éxito");
+        };
+        reader.readAsText(file);
+    });
+
+});
+</script>
 </head>
 <body>
 
