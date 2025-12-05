@@ -737,13 +737,14 @@ document.addEventListener("DOMContentLoaded", () => {
   <div id="diaryList"></div>
 </section>
 
-      <!-- 🪲 PLAGAS Y CUIDADOS -->
-      <section id="pestsView" class="view">
-        <h2>Plagas y cuidados</h2>
+      <!-- 🪲 PLAGAS -->
+<section id="pestsView" class="view">
+  <h2>Plagas y cuidados</h2>
 
-        <button data-view-target="pestsCatalogView">📚 Ver catálogo de plagas</button>
-        <button data-view-target="pesticidesView">🧴 Ver pesticidas caseros</button>
-      </section>
+  <input id="pestSearch" placeholder="Buscar plaga...">
+
+  <div id="pestsList"></div>
+</section>
 
       <!-- 📚 CATÁLOGO DE PLAGAS -->
       <section id="pestsCatalogView" class="view">
