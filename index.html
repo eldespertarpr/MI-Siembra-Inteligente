@@ -1433,7 +1433,15 @@
         listEl.appendChild(div);
       });
     }
+/* ---------------------------------------------------------
+   BASE DE DATOS — IMÁGENES Y CULTIVOS
+--------------------------------------------------------- */
 
+function cargarImagen(nombre) {
+    // Si la imagen existe en /img/, la usa
+    // Si no existe, usa placeholder.jpg
+    return `img/${nombre}.jpg`;
+}
     function renderPlagas() {
       const listEl = document.getElementById("plagasList");
       if (!listEl) return;
