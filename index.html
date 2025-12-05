@@ -445,6 +445,187 @@ footer {
 
   </div>
 
-  <!-- Aquí se insertará el JavaScript en las partes 3 y 4 -->
+  <script>
+// Esperar a que cargue todo
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ---- SPLASH ----
+    setTimeout(() => {
+        const splash = document.getElementById("splash");
+        splash.classList.add("fade-out");
+
+        setTimeout(() => {
+            splash.style.display = "none";
+            document.getElementById("app").style.display = "block";
+        }, 400);
+
+    }, 1200);
+
+
+    // ---- NAVEGACIÓN ----
+    const pages = document.querySelectorAll(".page");
+    const navButtons = document.querySelectorAll("[data-page]");
+
+    function showPage(id) {
+        pages.forEach(p => p.style.display = "none");
+        document.getElementById(id).style.display = "block";
+    }
+
+    navButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const page = btn.getAttribute("data-page");
+            showPage(page);
+        });
+    });
+
+    showPage("inicio"); // primera pantalla
+
+
+    // ---- BASE DE DATOS DE CULTIVOS ----
+    const cultivos = [
+        { nombre: "Tomate", tipo: "fruto", meses: ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct"], dias: "70–90 días", sombra: "Pleno sol", riego: "Medio" },
+        { nombre: "Lechuga", tipo: "hoja", meses: ["ene","feb","mar","abr","oct","nov","dic"], dias: "30–45 días", sombra: "Media sombra", riego: "Alto" },
+        { nombre: "Rábanos", tipo: "raíz", meses: ["todo"], dias: "20–30 días", sombra: "Sol", riego: "Medio" },
+        { nombre: "Pimiento", tipo: "fruto", meses: ["feb","mar","abr","may","jun"], dias: "90–110 días", sombra: "Pleno sol", riego: "Medio" }
+    ];
+
+
+    // ---- CATÁLOGO DE CULTIVOS (tarjetas) ----
+    const catalogoCont = document.getElementById("catalogo-lista");
+
+    function renderCatalogo(lista) {
+        catalogoCont.innerHTML = "";
+        lista.forEach(c => {
+            const card = document.createElement("div");
+            card.className = "card fade-in";
+            card.innerHTML = `
+                <h3>${c.nombre}</h3>
+                <p><strong>Tipo:</strong> ${c.tipo}</p>
+                <p><strong>Días de cosecha:</strong> ${c.dias}</p>
+                <button class="verMasBtn">Ver más</button>
+            `;
+            card.addEventListener("click", () => abrirDetalle(c));
+            catalogoCont.appendChild(card);
+        });
+    }
+
+    renderCatalogo(cultivos);
+
+
+    // ---- DETALLE AMPLIADO ----
+    const dialogDetalle = document.getElementById("detalleCultivo");
+    const detalleContent = document.getElementById("detalleContenido");
+    const cerrarDetalle = document.getElementById("cerrarDetalle");
+
+    function abrirDetalle(c) {
+        detalleContent.innerHTML = `
+            <h2>${c.nombre}</h2>
+            <p><strong>Tipo:</strong> ${c.tipo}</p>
+            <p><strong>Días de cosecha:</strong> ${c.dias}</p>
+            <p><strong>Sombra:</strong> ${c.sombra}</p>
+            <p><strong>Riego:</strong> ${c.riego}</p>
+        `;
+        dialogDetalle.showModal();
+    }
+
+    cerrarDetalle.addEventListener("click", () => dialogDetalle.close());
+
+
+    // ---- CALENDARIO ----
+    const calendarioLista = document.getElementById("calendario-lista");
+    const botonesMes = document.querySelectorAll(".btnMes");
+
+    botonesMes.forEach(btn => {
+        btn.addEventListener("click", () => {
+            botonesMes.forEach(b => b.classList.remove("activo"));
+            btn.classList.add("activo");
+
+            const mes = btn.dataset.mes;
+
+            const resultado = cultivos.filter(c =>
+                c.meses.includes(mes) || c.meses.includes("todo")
+            );
+
+            renderMes(resultado);
+        });
+    });
+
+    function renderMes(lista) {
+        calendarioLista.innerHTML = "";
+        if (lista.length === 0) {
+            calendarioLista.innerHTML = `<p>No hay cultivos sugeridos.</p>`;
+            return;
+        }
+        lista.forEach(c => {
+            const card = document.createElement("div");
+            card.className = "card fade-in";
+            card.innerHTML = `
+                <h3>${c.nombre}</h3>
+                <p>${c.dias}</p>
+            `;
+            calendarioLista.appendChild(card);
+        });
+    }
+
+
+    // ---- BUSCADOR ----
+    const inputBuscador = document.getElementById("buscar");
+
+    inputBuscador.addEventListener("input", () => {
+        const texto = inputBuscador.value.toLowerCase();
+        const filtrados = cultivos.filter(c =>
+            c.nombre.toLowerCase().includes(texto)
+        );
+        renderCatalogo(filtrados);
+    });
+
+
+    // ---- PLAGAS ----
+    const plagas = [
+        { nombre: "Pulgones", descripcion: "Insectos pequeños que chupan savia." },
+        { nombre: "Mosca blanca", descripcion: "Plaga común en hojas tiernas." }
+    ];
+
+    const listaPlagas = document.getElementById("lista-plagas");
+    plagas.forEach(p => {
+        listaPlagas.innerHTML += `
+            <div class="card">
+                <h3>${p.nombre}</h3>
+                <p>${p.descripcion}</p>
+            </div>`;
+    });
+
+
+    // ---- DIARIO ----
+    const diarioLista = document.getElementById("diario-lista");
+    const btnAgregarNota = document.getElementById("agregarNota");
+    const notaInput = document.getElementById("nota");
+
+    btnAgregarNota.addEventListener("click", () => {
+        if (!notaInput.value) return;
+        const div = document.createElement("div");
+        div.className = "card";
+        div.textContent = notaInput.value;
+        diarioLista.appendChild(div);
+        notaInput.value = "";
+    });
+
+
+    // ---- MI HUERTO ----
+    const miHuertoLista = document.getElementById("miHuertoLista");
+    const btnAgregarHuerto = document.getElementById("agregarHuerto");
+    const inputHuerto = document.getElementById("nuevoHuerto");
+
+    btnAgregarHuerto.addEventListener("click", () => {
+        if (!inputHuerto.value) return;
+        const div = document.createElement("div");
+        div.className = "card";
+        div.textContent = inputHuerto.value;
+        miHuertoLista.appendChild(div);
+        inputHuerto.value = "";
+    });
+
+});
+</script>
 </body>
 </html>
