@@ -1441,6 +1441,298 @@ function cargarImagen(nombre) {
     // Si la imagen existe en /img/, la usa
     // Si no existe, usa placeholder.jpg
     return `img/${nombre}.jpg`;
+  /* ============================
+   BASE DE DATOS DE CULTIVOS
+   ============================ */
+
+const CULTIVOS = [
+  {
+    nombre: "acelga",
+    tipo: "hoja",
+    imagen: cargarImagen("acelga"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Sombra parcial",
+    profundidad: "0.5 cm",
+    distancia: "25 cm",
+    plagas: ["pulgones", "babosas"],
+    notas: "Crece bien todo el año en climas tropicales."
+  },
+  {
+    nombre: "acerola",
+    tipo: "fruto",
+    imagen: cargarImagen("acerola"),
+    meses: [2,3,4,5,6,7,8],
+    sol: "Pleno sol",
+    profundidad: "No aplica (árbol)",
+    distancia: "3 metros",
+    plagas: ["mosca de fruta"],
+    notas: "Produce varias veces al año en clima tropical."
+  },
+  {
+    nombre: "aguacate",
+    tipo: "fruto",
+    imagen: cargarImagen("aguacate"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Pleno sol",
+    profundidad: "No aplica (árbol)",
+    distancia: "5 metros",
+    plagas: ["ácaros", "mosca de fruta"],
+    notas: "Requiere buen drenaje y espacio."
+  },
+  {
+    nombre: "aji",
+    tipo: "fruto",
+    imagen: cargarImagen("aji"),
+    meses: [2,3,4,5,6,7,8,9],
+    sol: "Pleno sol",
+    profundidad: "0.5 cm",
+    distancia: "40 cm",
+    plagas: ["pulgones", "mosca blanca"],
+    notas: "Excelente para climas calurosos como Puerto Rico."
+  },
+  {
+    nombre: "ajo",
+    tipo: "bulbo",
+    imagen: cargarImagen("ajo"),
+    meses: [9,10,11,0],
+    sol: "Pleno sol",
+    profundidad: "2–3 cm",
+    distancia: "15 cm",
+    plagas: ["hongos del suelo"],
+    notas: "Prefiere meses frescos; difícil en zonas muy húmedas."
+  },
+  {
+    nombre: "albahaca",
+    tipo: "aromática",
+    imagen: cargarImagen("albahaca"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Pleno sol",
+    profundidad: "0.5 cm",
+    distancia: "25 cm",
+    plagas: ["pulgones"],
+    notas: "Excelente repelente natural para tomates."
+  },
+  {
+    nombre: "apio",
+    tipo: "hoja",
+    imagen: cargarImagen("apio"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Sombra parcial",
+    profundidad: "0.5 cm",
+    distancia: "25 cm",
+    plagas: ["babosas", "caracoles"],
+    notas: "Mantener humedad constante."
+  },
+  {
+    nombre: "arugula",
+    tipo: "hoja",
+    imagen: cargarImagen("arugula"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Sombra parcial",
+    profundidad: "0.3 cm",
+    distancia: "20 cm",
+    plagas: ["pulgones"],
+    notas: "Cosecha rápida (20–30 días)."
+  },
+  {
+    nombre: "batata",
+    tipo: "tubérculo",
+    imagen: cargarImagen("batata"),
+    meses: [2,3,4,5,6,7,8,9],
+    sol: "Pleno sol",
+    profundidad: "5 cm",
+    distancia: "40 cm",
+    plagas: ["gusano de raíz"],
+    notas: "Crece muy bien en clima tropical."
+  },
+  {
+    nombre: "berenjena",
+    tipo: "fruto",
+    imagen: cargarImagen("berenjena"),
+    meses: [2,3,4,5,6,7,8,9],
+    sol: "Pleno sol",
+    profundidad: "1 cm",
+    distancia: "50 cm",
+    plagas: ["pulgones", "araña roja"],
+    notas: "Ama el calor, ideal para verano tropical."
+  },
+  {
+    nombre: "brocoli",
+    tipo: "hoja",
+    imagen: cargarImagen("brocoli"),
+    meses: [8,9,10,11,0,1],
+    sol: "Pleno sol",
+    profundidad: "1 cm",
+    distancia: "40 cm",
+    plagas: ["orugas"],
+    notas: "Mejor en clima fresco."
+  },
+  {
+    nombre: "calabaza",
+    tipo: "fruto",
+    imagen: cargarImagen("calabaza"),
+    meses: [1,2,3,4,5,6,7],
+    sol: "Pleno sol",
+    profundidad: "2 cm",
+    distancia: "1 metro",
+    plagas: ["barrenador", "orugas"],
+    notas: "Necesita espacio para expandirse."
+  },
+  {
+    nombre: "cebolla",
+    tipo: "bulbo",
+    imagen: cargarImagen("cebolla"),
+    meses: [8,9,10,11],
+    sol: "Pleno sol",
+    profundidad: "1 cm",
+    distancia: "15 cm",
+    plagas: ["nemátodos"],
+    notas: "Prefiere suelo suelto."
+  },
+  {
+    nombre: "cilantro",
+    tipo: "aromática",
+    imagen: cargarImagen("cilantro"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Sombra parcial",
+    profundidad: "0.5 cm",
+    distancia: "10 cm",
+    plagas: ["pulgones"],
+    notas: "Florece rápido si hace mucho calor."
+  },
+  {
+    nombre: "habichuela",
+    tipo: "fruto",
+    imagen: cargarImagen("habichuela"),
+    meses: [1,2,3,4,5,6,7,8],
+    sol: "Pleno sol",
+    profundidad: "2 cm",
+    distancia: "30 cm",
+    plagas: ["mosca blanca", "roya"],
+    notas: "Variedades trepadoras requieren soporte."
+  },
+  {
+    nombre: "lechuga",
+    tipo: "hoja",
+    imagen: cargarImagen("lechuga"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Sombra parcial",
+    profundidad: "0.3 cm",
+    distancia: "25 cm",
+    plagas: ["babosas"],
+    notas: "En PR funciona todo el año en sombra parcial."
+  },
+  {
+    nombre: "maiz",
+    tipo: "fruto",
+    imagen: cargarImagen("maiz"),
+    meses: [1,2,3,4,5,6,7],
+    sol: "Pleno sol",
+    profundidad: "3 cm",
+    distancia: "35 cm",
+    plagas: ["orugas"],
+    notas: "Sembrar en grupos para buena polinización."
+  },
+  {
+    nombre: "melon",
+    tipo: "fruto",
+    imagen: cargarImagen("melon"),
+    meses: [1,2,3,4,5,6],
+    sol: "Pleno sol",
+    profundidad: "2 cm",
+    distancia: "1 metro",
+    plagas: ["mosca de fruta"],
+    notas: "Necesita calor y suelos ricos."
+  },
+  {
+    nombre: "oregano",
+    tipo: "aromática",
+    imagen: cargarImagen("oregano"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Pleno sol",
+    profundidad: "0.3 cm",
+    distancia: "20 cm",
+    plagas: [],
+    notas: "Muy resistente en clima tropical."
+  },
+  {
+    nombre: "papa",
+    tipo: "tubérculo",
+    imagen: cargarImagen("papa"),
+    meses: [10,11,0,1],
+    sol: "Pleno sol",
+    profundidad: "10 cm",
+    distancia: "40 cm",
+    plagas: ["gusano de raíz"],
+    notas: "Difícil en zonas muy calientes."
+  },
+  {
+    nombre: "pimiento",
+    tipo: "fruto",
+    imagen: cargarImagen("pimiento"),
+    meses: [2,3,4,5,6,7,8],
+    sol: "Pleno sol",
+    profundidad: "0.5 cm",
+    distancia: "40 cm",
+    plagas: ["pulgones", "mosca blanca"],
+    notas: "Excelente rendimiento en clima cálido."
+  },
+  {
+    nombre: "piña",
+    tipo: "fruto",
+    imagen: cargarImagen("pina"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Pleno sol",
+    profundidad: "Superficial",
+    distancia: "1 metro",
+    plagas: ["cochinilla"],
+    notas: "Crece muy bien en PR."
+  },
+  {
+    nombre: "platano",
+    tipo: "fruto",
+    imagen: cargarImagen("platano"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Pleno sol",
+    profundidad: "No aplica",
+    distancia: "2 metros",
+    plagas: ["picudo"],
+    notas: "Requiere mucha agua y nutrientes."
+  },
+  {
+    nombre: "repollo",
+    tipo: "hoja",
+    imagen: cargarImagen("repollo"),
+    meses: [8,9,10,11,0,1],
+    sol: "Pleno sol",
+    profundidad: "1 cm",
+    distancia: "40 cm",
+    plagas: ["orugas"],
+    notas: "Prefiere clima fresco."
+  },
+  {
+    nombre: "tomate",
+    tipo: "fruto",
+    imagen: cargarImagen("tomate"),
+    meses: [1,2,3,4,5,6,7,8],
+    sol: "Pleno sol",
+    profundidad: "1 cm",
+    distancia: "45 cm",
+    plagas: ["pulgones", "mosca blanca", "tizón"],
+    notas: "Uno de los cultivos más nobles del huerto."
+  },
+  {
+    nombre: "zanahoria",
+    tipo: "raiz",
+    imagen: cargarImagen("zanahoria"),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    sol: "Pleno sol",
+    profundidad: "1 cm",
+    distancia: "5 cm",
+    plagas: ["mosca de la zanahoria"],
+    notas: "Necesita suelo suelto y profundo."
+  }
+];
 }
     function renderPlagas() {
       const listEl = document.getElementById("plagasList");
