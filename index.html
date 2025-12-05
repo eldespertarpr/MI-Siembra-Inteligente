@@ -312,3 +312,141 @@
 
   </style>
 </head>
+<body>
+
+  <!-- 🌱 SPLASH SCREEN -->
+  <div id="splash">
+    <div style="font-size:64px;">🌱</div>
+    <h1>Mi Siembra Inteligente</h1>
+    <p>El huerto en tus manos</p>
+  </div>
+
+  <!-- 🌿 APP CONTENEDOR -->
+  <div id="app" style="display:none;">
+
+    <!-- CABECERA -->
+    <header class="app-header">
+      <div class="header-inner">
+
+        <div class="brand">
+          <div class="brand-icon">🌱</div>
+          <div>
+            <div class="brand-title">Mi Siembra Inteligente</div>
+            <div class="brand-sub">Planifica, registra y cuida tu huerto.</div>
+          </div>
+        </div>
+
+        <nav class="pill-nav">
+          <button class="nav-btn active" data-view="homeView">🏠 Inicio</button>
+          <button class="nav-btn" data-view="calendarView">📅 Calendario</button>
+          <button class="nav-btn" data-view="catalogView">🌿 Catálogo</button>
+          <button class="nav-btn" data-view="moreView">⋯ Más</button>
+        </nav>
+
+      </div>
+    </header>
+
+    <main>
+
+      <!-- 🏠 INICIO -->
+      <section id="homeView" class="view active">
+        <h2>Inicio</h2>
+        <p>Elige qué deseas hacer hoy.</p>
+
+        <div class="home-buttons">
+          <button data-view-target="calendarView">📅 Qué sembrar este mes</button>
+          <button data-view-target="catalogView">🌿 Catálogo de cultivos</button>
+          <button data-view-target="gardenView">🧩 Mi huerto</button>
+          <button data-view-target="diaryView">📓 Diario</button>
+          <button data-view-target="pestsView">🪲 Plagas y cuidados</button>
+          <button data-view-target="fertView">🧪 Abonos y fertilizantes</button>
+        </div>
+      </section>
+
+      <!-- 📅 CALENDARIO -->
+      <section id="calendarView" class="view">
+        <h2>¿Qué puedo sembrar este mes?</h2>
+        <p>Toca un mes para ver cultivos recomendados.</p>
+
+        <div id="monthButtons"></div>
+        <div id="monthResults" style="margin-top:15px;"></div>
+      </section>
+
+      <!-- 🌿 CATÁLOGO -->
+      <section id="catalogView" class="view">
+        <h2>Catálogo de cultivos</h2>
+
+        <input id="catalogSearch" placeholder="Buscar cultivo…">
+
+        <div id="catalogTypeFilters"></div>
+        <div id="catalogSunFilters"></div>
+
+        <div id="catalogGrid"></div>
+      </section>
+
+      <!-- 🧩 MI HUERTO -->
+      <section id="gardenView" class="view">
+        <h2>Mi huerto</h2>
+        <p>Puedes usar este plano 4×4 para visualizar tus cultivos.</p>
+        <div id="gardenGrid"></div>
+      </section>
+
+      <!-- 📓 DIARIO -->
+      <section id="diaryView" class="view">
+        <h2>Diario de siembra</h2>
+        <button id="addDiaryEntry">➕ Añadir actividad</button>
+        <div id="diaryList"></div>
+      </section>
+
+      <!-- 🪲 PLAGAS Y CUIDADOS -->
+      <section id="pestsView" class="view">
+        <h2>Plagas y cuidados</h2>
+
+        <button data-view-target="pestsCatalogView">📚 Ver catálogo de plagas</button>
+        <button data-view-target="pesticidesView">🧴 Ver pesticidas caseros</button>
+      </section>
+
+      <!-- 📚 CATÁLOGO DE PLAGAS -->
+      <section id="pestsCatalogView" class="view">
+        <h2>Catálogo de plagas</h2>
+        <input id="pestSearch" placeholder="Buscar plaga…">
+        <div id="pestTypeFilters"></div>
+        <div id="pestsList"></div>
+      </section>
+
+      <!-- 🧴 PESTICIDAS -->
+      <section id="pesticidesView" class="view">
+        <h2>Pesticidas caseros</h2>
+        <input id="pesticideSearch" placeholder="Buscar pesticida…">
+        <div id="pesticideTypeFilters"></div>
+        <div id="pesticidesList"></div>
+      </section>
+
+      <!-- 🧪 ABONOS -->
+      <section id="fertView" class="view">
+        <h2>Abonos y fertilizantes</h2>
+        <div id="fertList"></div>
+      </section>
+
+      <!-- ⋯ MÁS -->
+      <section id="moreView" class="view">
+        <h2>Más opciones</h2>
+
+        <button data-view-target="gardenView">🧩 Mi huerto</button>
+        <button data-view-target="diaryView">📓 Diario</button>
+        <button data-view-target="pestsView">🪲 Plagas</button>
+        <button data-view-target="fertView">🧪 Abonos</button>
+
+        <h3>Copias de seguridad</h3>
+        <button id="backupExport">💾 Guardar copia</button>
+        <button id="backupImport">📂 Restaurar copia</button>
+        <input type="file" id="backupFile" accept="application/json" hidden />
+      </section>
+
+    </main>
+
+    <footer>
+      Mi Siembra Inteligente · Datos guardados solo en este dispositivo
+    </footer>
+
+  </div>
