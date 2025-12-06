@@ -1346,13 +1346,54 @@
         const nombres = data.map(d => d.titulo).join(", ");
         calHoyTexto.textContent = `Para este mes se sugieren cultivos como: ${nombres}. Revisa el calendario para ver el detalle.`;
       }
-    }
+    
 
-    function renderCultivos() {
-      const listEl = document.getElementById("cultivosList");
-      const chip = document.getElementById("cultivosCountChip");
-      if (!listEl) return;
+      /* ==========================================
+   RENDERIZAR CATÁLOGO DE CULTIVOS (OPTIMIZADO)
+=========================================== */
 
+function renderCultivos() {
+    const listEl = document.getElementById("catalogo-list");
+    if (!listEl) return;
+
+    listEl.innerHTML = ""; // Limpia catálogo completo
+
+    CULTIVOS.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "media-item";
+
+        const foto = c.imagen || `img/${c.nombre}.jpg`;
+
+        div.innerHTML = `
+            <img src="${foto}" class="media-thumb" loading="lazy"
+                 onerror="this.src='img/placeholder.jpg'" />
+
+            <div class="media-info">
+                <h3>${c.nombre}</h3>
+
+                <p class="media-type"><strong>Tipo:</strong> ${c.tipo}</p>
+
+                <p class="media-sol">
+                    <strong>Sol:</strong> ${c.sol}
+                </p>
+
+                <p class="media-meses">
+                    <strong>Meses:</strong> ${c.meses.join(", ")}
+                </p>
+
+                <p class="media-plagas">
+                    <strong>Plagas:</strong> ${c.plagas?.join(", ") || "Ninguna"}
+                </p>
+
+                <p class="media-notas">
+                    ${c.notas || ""}
+                </p>
+            </div>
+        `;
+
+        listEl.appendChild(div);
+    });
+}
       const count = stateCultivos.length;
       if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
 
