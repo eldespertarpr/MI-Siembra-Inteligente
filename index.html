@@ -1827,7 +1827,218 @@ const CULTIVOS = [
         `;
         listEl.appendChild(div);
       });
+    /********************************************
+ * RENDER DEL CATÁLOGO COMPLETO DE CULTIVOS
+ ********************************************/
+
+function renderCatalogo() {
+  const contenedor = document.getElementById("catalogoList");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = "";
+
+  // Crear barra de búsqueda
+  const buscador = document.createElement("input");
+  buscador.type = "text";
+  buscador.placeholder = "Buscar cultivo...";
+  buscador.style.width = "100%";
+  buscador.style.padding = "10px";
+  buscador.style.marginBottom = "12px";
+  buscador.style.borderRadius = "12px";
+  buscador.style.border = "1px solid rgba(148,163,184,0.4)";
+  buscador.style.background = "rgba(15,23,42,0.95)";
+  buscador.style.color = "white";
+  buscador.style.fontSize = "0.9rem";
+
+  contenedor.appendChild(buscador);
+
+  // Crear contenedor de tarjetas
+  const lista = document.createElement("div");
+  lista.style.display = "flex";
+  lista.style.flexDirection = "column";
+  lista.style.gap = "14px";
+  contenedor.appendChild(lista);
+
+  function dibujarTarjetas(filtro = "") {
+    lista.innerHTML = "";
+
+    const data = CULTIVOS.filter(c =>
+      c.nombre.toLowerCase().includes(filtro.toLowerCase())
+    );
+
+    if (data.length === 0) {
+      lista.innerHTML = `<p class="muted">No se encontraron cultivos con ese nombre.</p>`;
+      return;
     }
+
+    data.forEach(c => {
+      const card = document.createElement("div");
+      card.style.border = "1px solid rgba(148,163,184,0.3)";
+      card.style.borderRadius = "18px";
+      card.style.padding = "14px";
+      card.style.background = "rgba(15,23,42,0.9)";
+      card.style.display = "flex";
+      card.style.flexDirection = "column";
+      card.style.gap = "10px";
+
+      // Imagen
+      const img = document.createElement("img");
+      img.src = c.imagen || "img/placeholder.jpg";
+      img.onerror = () => { img.src = "img/placeholder.jpg"; };
+      img.style.width = "100%";
+      img.style.height = "170px";
+      img.style.objectFit = "cover";
+      img.style.borderRadius = "14px";
+      img.style.border = "1px solid rgba(148,163,184,0.3)";
+
+      // Título
+      const titulo = document.createElement("h3");
+      titulo.textContent = c.nombre.charAt(0).toUpperCase() + c.nombre.slice(1);
+      titulo.style.margin = "0";
+      titulo.style.fontSize = "1.05rem";
+
+      // Info compacta
+      const info = document.createElement("div");
+      info.style.fontSize = "0.85rem";
+      info.style.color = "#cbd5e1";
+      info.innerHTML = `
+        <strong>Tipo:</strong> ${c.tipo}<br>
+        <strong>Sol:</strong> ${c.sol}<br>
+        <strong>Profundidad:</strong> ${c.profundidad}<br>
+        <strong>Distancia:</strong> ${c.distancia}<br>
+        <strong>Meses recomendados:</strong> ${c.meses.map(m => m+1).join(", ")}
+      `;
+
+      // Plagas
+      const plagas = document.createElement("div");
+      plagas.style.fontSize = "0.82rem";
+      plagas.innerHTML = `
+        <strong>Plagas comunes:</strong> 
+        ${c.plagas.length ? c.plagas.join(", ") : "Ninguna registrada"}
+      `;
+
+      // Notas
+      const notas = document.createElement("div");
+      notas.style.fontSize = "0.82rem";
+      notas.innerHTML = `
+        <strong>Notas:</strong> ${c.notas}
+      `;
+
+      card.appendChild(img);
+      card.appendChild(titulo);
+      card.appendChild(info);
+      card.appendChild(plagas);
+      card.appendChild(notas);
+
+      lista.appendChild(card);
+    });
+  }
+
+  // Inicial
+  dibujarTarjetas();
+
+  // Evento de búsqueda
+  buscador.addEventListener("input", () => {
+    dibujarTarjetas(buscador.value);
+  });
+}
+/********************************************
+ * RENDER DEL CATÁLOGO COMPLETO DE CULTIVOS
+ ********************************************/
+
+function renderCatalogo() {
+  const contenedor = document.getElementById("catalogoList");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = "";
+
+  // Crear barra de búsqueda
+  const buscador = document.createElement("input");
+  buscador.type = "text";
+  buscador.placeholder = "Buscar cultivo...";
+  buscador.style.width = "100%";
+  buscador.style.padding = "10px";
+  buscador.style.marginBottom = "12px";
+  buscador.style.borderRadius = "12px";
+  buscador.style.border = "1px solid rgba(148,163,184,0.4)";
+  buscador.style.background = "rgba(15,23,42,0.95)";
+  buscador.style.color = "white";
+  buscador.style.fontSize = "0.9rem";
+
+  contenedor.appendChild(buscador);
+
+  // Crear contenedor de tarjetas
+  const lista = document.createElement("div");
+  lista.style.display = "flex";
+  lista.style.flexDirection = "column";
+  lista.style.gap = "14px";
+  contenedor.appendChild(lista);
+
+  function dibujarTarjetas(filtro = "") {
+    lista.innerHTML = "";
+
+    const data = CULTIVOS.filter(c =>
+      c.nombre.toLowerCase().includes(filtro.toLowerCase())
+    );
+
+    if (data.length === 0) {
+      lista.innerHTML = `<p class="muted">No se encontraron cultivos con ese nombre.</p>`;
+      return;
+    }
+
+    data.forEach(c => {
+      const card = document.createElement("div");
+      card.style.border = "1px solid rgba(148,163,184,0.3)";
+      card.style.borderRadius = "18px";
+      card.style.padding = "14px";
+      card.style.background = "rgba(15,23,42,0.9)";
+      card.style.display = "flex";
+      card.style.flexDirection = "column";
+      card.style.gap = "10px";
+
+      // Imagen
+      const img = document.createElement("img");
+      img.src = c.imagen || "img/placeholder.jpg";
+      img.onerror = () => { img.src = "img/placeholder.jpg"; };
+      img.style.width = "100%";
+      img.style.height = "170px";
+      img.style.objectFit = "cover";
+      img.style.borderRadius = "14px";
+      img.style.border = "1px solid rgba(148,163,184,0.3)";
+
+      // Título
+      const titulo = document.createElement("h3");
+      titulo.textContent = c.nombre.charAt(0).toUpperCase() + c.nombre.slice(1);
+      titulo.style.margin = "0";
+      titulo.style.fontSize = "1.05rem";
+
+      // Info compacta
+      const info = document.createElement("div");
+      info.style.fontSize = "0.85rem";
+      info.style.color = "#cbd5e1";
+      info.innerHTML = `
+        <strong>Tipo:</strong> ${c.tipo}<br>
+        <strong>Sol:</strong> ${c.sol}<br>
+        <strong>Profundidad:</strong> ${c.profundidad}<br>
+        <strong>Distancia:</strong> ${c.distancia}<br>
+        <strong>Meses recomendados:</strong> ${c.meses.map(m => m+1).join(", ")}
+      `;
+
+      // Plagas
+      const plagas = document.createElement("div");
+      plagas.style.fontSize = "0.82rem";
+      plagas.innerHTML = `
+        <strong>Plagas comunes:</strong> 
+        ${c.plagas.length ? c.plagas.join(", ") : "Ninguna registrada"}
+      `;
+
+      // Notas
+      const notas = document.createElement("div");
+      notas.style.fontSize = "0.82rem";
+      notas.innerHTML = `
+        <strong>Notas:</strong> ${c.notas}
+      `;
+
 
     /*********************
      * Eventos y navegación
