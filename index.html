@@ -622,6 +622,232 @@ function renderCalendario(monthIndex = 0) {
    FIN DE PARTE 3B
    ⬆️ Pega esta parte justo debajo de la 3A
 ============================================================ */
+    <!-- ===========================================
+     PARTE 3D – NAVEGACIÓN + FORMULARIOS + INICIO
+=========================================== -->
+
+<script>
+/* ============================================================
+   UTILIDADES
+============================================================ */
+function formatDate(str) {
+  if (!str) return "—";
+  const d = new Date(str);
+  return d.toLocaleDateString("es-PR", {
+    year: "numeric", month: "short", day: "numeric"
+  });
+}
+
+/* ============================================================
+   NAVEGACIÓN ENTRE SECCIONES
+============================================================ */
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.add("hidden"));
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.remove("hidden");
+
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll("[data-nav]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.nav;
+    showSection(target);
+  });
+});
+
+/* ============================================================
+   BOTÓN: NUEVO CULTIVO (Formulario)
+============================================================ */
+document.getElementById("btnAddCultivo")?.addEventListener("click", () => {
+  showSection("section-newcultivo");
+});
+
+document.getElementById("formCultivo")?.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("fNombre").value.trim();
+  const variedad = document.getElementById("fVariedad").value.trim();
+  const fecha = document.getElementById("fFecha").value;
+  const notas = document.getElementById("fNotas").value.trim();
+  const tipo = document.getElementById("fTipo").value;
+
+  if (!nombre || !fecha) {
+    alert("Por favor completa al menos nombre y fecha.");
+    return;
+  }
+
+  const nuevo = {
+    id: Date.now(),
+    nombre,
+    variedad,
+    fechaSiembra: fecha,
+    notas,
+    tipo,
+    creadoEl: new Date().toISOString()
+  };
+
+  stateCultivos.push(nuevo);
+  saveState();
+  renderCultivos();
+
+  showSection("section-cultivos");
+});
+
+/* ============================================================
+   BOTÓN: NOTA RÁPIDA A UN CULTIVO
+============================================================ */
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-action]");
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+  const action = btn.dataset.action;
+
+  if (action === "nota") {
+    const item = stateCultivos.find(c => c.id == id);
+    if (!item) return;
+
+    const t = prompt("Añadir nota:", item.notas || "");
+    if (t === null) return;
+
+    item.notas = t;
+    saveState();
+    renderCultivos();
+  }
+
+  if (action === "borrar") {
+    if (!confirm("¿Eliminar este cultivo?")) return;
+    const idx = stateCultivos.findIndex(c => c.id == id);
+    if (idx >= 0) {
+      stateCultivos.splice(idx, 1);
+      saveState();
+      renderCultivos();
+    }
+  }
+});
+
+/* ============================================================
+   DIARIO – NUEVA ENTRADA
+============================================================ */
+document.getElementById("btnAddDiario")?.addEventListener("click", () => {
+  const texto = prompt("Escribe tu entrada del diario:");
+  if (!texto) return;
+
+  stateDiario.push({
+    id: Date.now(),
+    fecha: new Date().toISOString(),
+    texto,
+    tipo: "General"
+  });
+
+  saveState();
+  renderDiario();
+});
+
+/* ============================================================
+   CAMBIO DE CLIMA
+============================================================ */
+document.querySelectorAll(".clima-btn")?.forEach(btn => {
+  btn.addEventListener("click", () => {
+    stateConfig.clima = btn.dataset.clima;
+    saveState();
+    document.getElementById("climaActual").textContent =
+      stateConfig.clima.toUpperCase();
+  });
+});
+
+/* ============================================================
+   AUTOAJUSTE A PANTALLA — ESTILO VERSIÓN 17
+============================================================ */
+function ajustarTamaño() {
+  document.documentElement.style.height = window.innerHeight + "px";
+}
+
+window.addEventListener("resize", ajustarTamaño);
+ajustarTamaño();
+
+/* ============================================================
+   RESTAURAR / BACKUP
+============================================================ */
+document.getElementById("btnExport")?.addEventListener("click", () => {
+  const data = {
+    cultivos: stateCultivos,
+    diario: stateDiario,
+    config: stateConfig
+  };
+
+  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "mis-siembra-backup.json";
+  a.click();
+});
+
+document.getElementById("btnImport")?.addEventListener("click", () => {
+  document.getElementById("backupFile").click();
+});
+
+document.getElementById("backupFile")?.addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (data.cultivos) stateCultivos = data.cultivos;
+      if (data.diario) stateDiario = data.diario;
+      if (data.config) stateConfig = data.config;
+      saveState();
+
+      iniciarApp();
+    } catch {
+      alert("Archivo inválido.");
+    }
+  };
+
+  reader.readAsText(file);
+});
+
+/* ============================================================
+   BORRAR TODO
+============================================================ */
+document.getElementById("btnReset")?.addEventListener("click", () => {
+  if (!confirm("¿Seguro que deseas borrar todos los datos?")) return;
+
+  localStorage.removeItem("msi_cultivos");
+  localStorage.removeItem("msi_diario");
+  localStorage.removeItem("msi_config");
+
+  stateCultivos = [];
+  stateDiario = [];
+  stateConfig = { clima: "tropical" };
+
+  iniciarApp();
+});
+
+/* ============================================================
+   INICIALIZACIÓN GENERAL
+============================================================ */
+function iniciarApp() {
+  document.getElementById("climaActual").textContent =
+    stateConfig.clima.toUpperCase();
+
+  renderCultivos();
+  renderDiario();
+  renderPlagas();
+  renderPesticidas();
+  renderCatalogo();
+}
+
+iniciarApp();
+
+/* ============================================================
+   FIN PARTE 3D
+============================================================ */
   </script>
 <body>
 <div class="app-shell">
