@@ -407,10 +407,11 @@ document.addEventListener("DOMContentLoaded", () => {
      SPLASH
   --------------------------------------------------------- */
   const splash = document.getElementById("splash");
+  // Splash más rápido (apenas 300 ms)
   setTimeout(() => {
     splash.classList.add("fade-out");
-    setTimeout(() => splash.remove(), 700);
-  }, 900);
+    setTimeout(() => splash.remove(), 400);
+  }, 300);
 
   /* ---------------------------------------------------------
      NAVEGACIÓN ENTRE VIEWS
