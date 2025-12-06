@@ -1715,28 +1715,37 @@
      * Catálogo: render + búsqueda
      *********************/
     function renderCatalogo(filtroTexto = "") {
-      const listEl = document.getElementById("catalogoList");
-      if (!listEl) return;
+  const listEl = document.getElementById("catalogoList");
+  if (!listEl) return;
 
-      const filtro = filtroTexto.trim().toLowerCase();
-      const lista = CATALOGO_CULTIVOS.filter(c => {
-        if (!filtro) return true;
-        return (
-          c.nombre.toLowerCase().includes(filtro) ||
-          c.id.toLowerCase().includes(filtro)
-        );
-      });
+  const filtro = filtroTexto.trim().toLowerCase();
+  const lista = CATALOGO_CULTIVOS.filter(c => {
+    if (!filtro) return true;
+    return (
+      c.nombre.toLowerCase().includes(filtro) ||
+      c.id.toLowerCase().includes(filtro)
+    );
+  });
 
-      if (!lista.length) {
-        listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
-        return;
-      }
+  if (!lista.length) {
+    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
+    return;
+  }
 
-      listEl.innerHTML = "";
-      lista.forEach(c => {
-        const card = document.createElement("div");
-        card.className = "cultivo-card";
-        card.innerHTML = `
+  listEl.innerHTML = "";
+  lista.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "cultivo-card";
+
+    // Si no tiene imagen, usa un placeholder
+    const src = c.imagen || "img/placeholder.jpg";
+
+    card.innerHTML = `
+      <div class="catalogo-card-main">
+        <div class="catalogo-thumb">
+          <img src="${src}" alt="${c.nombre}">
+        </div>
+        <div class="catalogo-info">
           <div class="cultivo-header">
             <div class="cultivo-title">
               <span>🌱</span>
@@ -1752,8 +1761,10 @@
             <div><strong>Profundidad de siembra:</strong> ${c.profundidad}</div>
             <div><strong>Plagas frecuentes:</strong> ${c.plagas.join(", ")}</div>
           </div>
-        `;
-        listEl.appendChild(card);
+        </div>
+      </div>
+    `;
+    listEl.appendChild(card);
       });
     }
 
