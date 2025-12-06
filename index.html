@@ -248,6 +248,135 @@ let stateDiario   = loadDiario();
    ⬆️ Pega SOLO esto en tu archivo.
    Me dices “LISTO” para enviarte la PARTE 3B.
 ============================================================ */
+    <!-- ================================
+     PARTE 3B – RENDER DE INTERFAZ
+================================ -->
+
+<script>
+/* ============================================================
+   ACTUALIZAR ENCABEZADO Y CHIPS
+============================================================ */
+
+function updateHeader() {
+  const subtitle = document.getElementById("appSubtitle");
+  const nombre = stateSettings.nombreHuerto;
+  const clima = CLIMA_LABEL[stateSettings.clima];
+  const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio];
+
+  subtitle.innerHTML = `
+    <span>Huerto "<strong>${nombre}</strong>"</span>
+    <span class="app-subtitle-dot"></span>
+    <span>clima ${clima}</span>
+    <span class="app-subtitle-dot"></span>
+    <span>${hemis}</span>
+  `;
+}
+
+function updateSettingsContexts() {
+  const nombre = stateSettings.nombreHuerto;
+  const clima = CLIMA_LABEL[stateSettings.clima];
+  const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio];
+
+  document.querySelectorAll(".settings-context").forEach(el => {
+    el.innerHTML = `
+      <span class="chip"><span>🌿</span> Huerto: ${nombre}</span>
+      <span class="chip"><span>☁️</span> Clima: ${clima}</span>
+      <span class="chip"><span>🧭</span> ${hemis}</span>
+    `;
+  });
+
+  const climaText = `Clima ${clima}`;
+  const estadoChip = document.getElementById("estadoClimaChip");
+  const calChip = document.getElementById("calendarioClimaChip");
+  const calChip2 = document.getElementById("calendarioClimaChip2");
+
+  if (estadoChip) estadoChip.textContent = climaText;
+  if (calChip) calChip.textContent = climaText;
+  if (calChip2) calChip2.textContent = climaText;
+}
+
+/* ============================================================
+   RENDER – INICIO (DASHBOARD)
+============================================================ */
+function renderInicio() {
+  const cultivos = stateCultivos;
+  const diario = stateDiario;
+  const nombre = stateSettings.nombreHuerto;
+
+  // Totales
+  document.getElementById("estadoCultivosCount").textContent = cultivos.length;
+  const hoy = todayISO();
+  const entradasHoy = diario.filter(x => x.fecha === hoy).length;
+  document.getElementById("estadoEntradasCount").textContent = entradasHoy;
+
+  // Resumen
+  const resumen = document.getElementById("estadoResumen");
+
+  if (!cultivos.length && !entradasHoy) {
+    resumen.textContent =
+      `Aún no has registrado cultivos ni notas. Empieza en "Mi huerto".`;
+  } else if (cultivos.length && !entradasHoy) {
+    resumen.textContent =
+      `Tienes ${cultivos.length} cultivo(s) registrado(s). Aún no has escrito en el diario hoy.`;
+  } else if (cultivos.length && entradasHoy) {
+    resumen.textContent =
+      `Tienes ${cultivos.length} cultivo(s) y ${entradasHoy} nota(s) hoy. ¡Buen trabajo!`;
+  } else {
+    resumen.textContent =
+      `Hay notas en el diario pero ningún cultivo registrado aún.`;
+  }
+
+  // Sugerencias para HOY en calendario
+  const now = new Date();
+  const monthIndex = now.getMonth();
+  const data = getCalendarData(stateSettings, monthIndex);
+
+  const textoHoy = document.getElementById("calendarioHoyTexto");
+
+  if (!data.length) {
+    textoHoy.textContent =
+      `Este mes no tiene sugerencias específicas según tu clima.`;
+  } else {
+    textoHoy.textContent =
+      `Sugerencias de siembra este mes: ${data.map(x => x.titulo).join(", ")}.`;
+  }
+}
+
+/* ============================================================
+   RENDER – CALENDARIO DE SIEMBRA
+============================================================ */
+function renderCalendario(monthIndex = 0) {
+  const list = document.getElementById("calendarList");
+  const empty = document.getElementById("calendarEmpty");
+
+  list.innerHTML = "";
+  empty.style.display = "none";
+
+  const data = getCalendarData(stateSettings, monthIndex);
+
+  if (!data.length) {
+    empty.style.display = "block";
+    return;
+  }
+
+  data.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "calendar-item";
+    div.innerHTML = `
+      <div class="calendar-item-title">
+        <span>${item.titulo}</span>
+        <span class="chip">${item.tipo}</span>
+      </div>
+      <div>${item.detalle}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+/* ============================================================
+   FIN DE PARTE 3B
+   ⬆️ Pega esta parte justo debajo de la 3A
+============================================================ */
   </script>
 <body>
 <div class="app-shell">
