@@ -1113,8 +1113,7 @@ footer span {
   nombreHuerto: "Mi huerto",    
   clima: "tropical",   // tropical | subtropical | templado    
   hemisferio: "norte"  // norte | sur    
-};    
-
+};  gapw
 const CLIMA_LABEL = {    
   tropical: "tropical",    
   subtropical: "subtropical/templado",    
@@ -1184,12 +1183,69 @@ function todayISO() {
   return d.toISOString().slice(0,10);    
 }    
 
-/*********************    
- * Calendario de siembra    
- *********************/    
-// Muy resumido; puedes ampliar más tarde    
-const CALENDARIO_SIEMBRA = {   
-  /*********************
+/*********************
+ * Calendario de siembra
+ *********************/
+// Muy resumido; puedes ampliar más tarde
+const CALENDARIO_SIEMBRA = {
+  tropical: {
+    5: [
+      {
+        titulo: "Re-siembra de lechugas",
+        tipo: "Hoja",
+        detalle:
+          "Siembra escalonada cada 2–3 semanas para cosechas continuas."
+      },
+      {
+        titulo: "Rábanos",
+        tipo: "Raíz",
+        detalle:
+          "Cosecha rápida (20–30 días). Perfectos para ocupar huecos libres."
+      }
+    ],
+    6: [
+      {
+        titulo: "Berenjena",
+        tipo: "Fruto",
+        detalle:
+          "Le gustan las noches cálidas. Ideal para verano tropical."
+      },
+      {
+        titulo: "Ajíes y pimientos",
+        tipo: "Fruto",
+        detalle:
+          "Sembrar en lugar soleado y con buen drenaje."
+      }
+    ]
+  },
+  subtropical: {
+    5: [
+      {
+        titulo: "Tomates de media estación",
+        tipo: "Fruto",
+        detalle: "Elige variedades adaptadas a tu región."
+      }
+    ]
+  },
+  templado: {
+    2: [
+      {
+        titulo: "Lechugas de primavera",
+        tipo: "Hoja",
+        detalle:
+          "Siembra temprana bajo protección ligera si hay riesgo de heladas."
+      }
+    ]
+  }
+};
+
+function getCalendarData(settings, monthIndex) {
+  const climaKey = settings.clima || "tropical";
+  const base = CALENDARIO_SIEMBRA[climaKey] || {};
+  return base[monthIndex] || [];
+}
+
+/*********************
  * Catálogo de cultivos
  *********************/
 const CATALOGO_CULTIVOS = [
@@ -1203,7 +1259,7 @@ const CATALOGO_CULTIVOS = [
     tiesto: "Macetas profundas de 5+ galones",
     profundidad: "0.5–1 cm",
     plagas: ["Pulgones", "Mosca blanca", "Orugas"],
-    meses: [0,1,2,3,4,5,6,7], // ene–ago
+    meses: [0, 1, 2, 3, 4, 5, 6, 7], // ene–ago
     imagen: "img/tomate.jpg"
   },
   {
@@ -1216,7 +1272,7 @@ const CATALOGO_CULTIVOS = [
     tiesto: "Macetas anchas de 3+ galones",
     profundidad: "0.5 cm",
     plagas: ["Babosas", "Caracoles", "Pulgones"],
-    meses: [0,1,2,3,8,9,10,11],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
     imagen: "img/lechuga.jpg"
   },
   {
@@ -1229,7 +1285,7 @@ const CATALOGO_CULTIVOS = [
     tiesto: "Macetas profundas de 5+ galones con tutor",
     profundidad: "1–2 cm",
     plagas: ["Mosca blanca", "Ácaros", "Hongos"],
-    meses: [3,4,5,6,7,8],
+    meses: [3, 4, 5, 6, 7, 8],
     imagen: "img/pepinillo.jpg"
   },
   {
@@ -1242,8 +1298,11 @@ const CATALOGO_CULTIVOS = [
     tiesto: "Suelo directo, espacio amplio",
     profundidad: "Cormo enterrado firmemente",
     plagas: ["Picudo del plátano", "Sigatoka"],
-    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     imagen: "img/platano.jpg"
+  }
+  // Aquí luego seguimos añadiendo más cultivos
+];
   }
   // Luego podemos añadir muchos más cultivos aquí
 ];
