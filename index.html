@@ -1861,21 +1861,23 @@ installBtn.addEventListener("click", async () => {
 /*********************    
  * Inicio de la app    
  *********************/    
-document.addEventListener("DOMContentLoaded", () => {    
-  updateHeader();    
-  updateSettingsContexts();    
-  renderCultivos();    
-  renderDiario();    
-  renderInicio();    
-  renderCalendario(new Date().getMonth());    
-  renderPlagas();    
-  renderPesticidas();    
+document.addEventListener("DOMContentLoaded", () => {  
+  updateHeader();  
+  updateSettingsContexts();  
+  renderCultivos();  
+  renderDiario();  
+  renderInicio();  
+  renderCalendario(new Date().getMonth());  
+  renderPlagas();  
+  renderPesticidas();  
 
-  setupNavigation();    
-  setupMesesPills();    
-  setupMiHuertoForm();    
-  setupDiario();    
-  setupOpciones();    
+  renderCatalogo();          // ← NUEVO
+  setupNavigation();  
+  setupMesesPills();  
+  setupMiHuertoForm();  
+  setupDiario();  
+  setupOpciones();  
+  setupCatalogo();           // ← NUEVO
 });
 
 </script>  </body>
