@@ -144,3 +144,286 @@
 </head>
 <body>
 <div class="app-shell">
+<!-- HEADER -->
+    <header class="app-header">
+      <div class="app-header-icon">
+        <span>🌱</span>
+      </div>
+      <div class="app-header-text">
+        <div class="app-title-row">
+          <div class="app-title">Mi Siembra Inteligente</div>
+          <div class="app-tag">v18 · PWA</div>
+        </div>
+        <div class="app-subtitle" id="appSubtitle"></div>
+      </div>
+    </header>
+
+    <!-- NAV -->
+    <nav class="nav">
+      <button class="nav-btn nav-btn--active" data-section="inicio">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Inicio</span>
+      </button>
+
+      <button class="nav-btn" data-section="calendario">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">Calendario</span>
+      </button>
+
+      <button class="nav-btn" data-section="huerto">
+        <span class="nav-icon">🌿</span>
+        <span class="nav-label">Mi huerto</span>
+      </button>
+
+      <button class="nav-btn" data-section="diario">
+        <span class="nav-icon">📓</span>
+        <span class="nav-label">Diario</span>
+      </button>
+
+      <button class="nav-btn" data-section="plagas">
+        <span class="nav-icon">🐛</span>
+        <span class="nav-label">Plagas</span>
+      </button>
+
+      <button class="nav-btn" data-section="pesticidas">
+        <span class="nav-icon">💧</span>
+        <span class="nav-label">Pesticidas</span>
+      </button>
+
+      <button class="nav-btn" data-section="opciones">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Opciones</span>
+      </button>
+
+      <button class="nav-btn" data-section="catalogo">
+        <span class="nav-icon">🌱</span>
+        <span class="nav-label">Catálogo</span>
+      </button>
+    </nav>
+
+    <main>
+
+      <!-- 🔹 SECCIÓN INICIO -->
+      <section id="section-inicio" class="section section--active">
+        <h2>Inicio</h2>
+        <p class="section-subtitle">Resumen rápido del huerto.</p>
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-title">Estado rápido</div>
+            <div class="chip badge" id="estadoClimaChip">Clima tropical</div>
+          </div>
+
+          <div class="context-chips settings-context"></div>
+
+          <div class="grid-two">
+            <div>
+              <div class="small-label">Cultivos registrados</div>
+              <div class="big-number" id="estadoCultivosCount">0</div>
+            </div>
+            <div>
+              <div class="small-label">Entradas hoy</div>
+              <div class="big-number" id="estadoEntradasCount">0</div>
+            </div>
+          </div>
+
+          <div class="divider-soft"></div>
+          <p class="muted" id="estadoResumen"></p>
+
+          <div class="pill-group">
+            <button class="btn-secondary btn" id="btnIrMiHuerto">
+              <span>🌿</span> Ir a "Mi huerto"
+            </button>
+            <button class="btn-secondary btn" id="btnIrDiario">
+              <span>✏️</span> Escribir en diario
+            </button>
+            <button class="btn-secondary btn" id="btnIrClima">
+              <span>⚙️</span> Ajustar clima
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 🔹 SECCIÓN CALENDARIO -->
+      <section id="section-calendario" class="section">
+        <h2>Calendario de siembra</h2>
+        <p class="section-subtitle">Selecciona un mes para ver qué sembrar.</p>
+
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-title">Meses del año</div>
+            <div class="chip" id="calendarioClimaChip2">Clima tropical</div>
+          </div>
+
+          <div class="pill-group" id="mesesPills">
+            <button class="pill" data-mes="0">Ene</button>
+            <button class="pill" data-mes="1">Feb</button>
+            <button class="pill" data-mes="2">Mar</button>
+            <button class="pill" data-mes="3">Abr</button>
+            <button class="pill" data-mes="4">May</button>
+            <button class="pill pill--active" data-mes="5">Jun</button>
+            <button class="pill" data-mes="6">Jul</button>
+            <button class="pill" data-mes="7">Ago</button>
+            <button class="pill" data-mes="8">Sep</button>
+            <button class="pill" data-mes="9">Oct</button>
+            <button class="pill" data-mes="10">Nov</button>
+            <button class="pill" data-mes="11">Dic</button>
+          </div>
+
+          <div id="calendarList" class="calendar-list"></div>
+          <div id="calendarEmpty" class="calendar-empty" style="display:none;">
+            No hay recomendaciones para este mes.
+          </div>
+        </div>
+      </section>
+
+      <!-- 🔹 SECCIÓN HUERTO (igual a tu v17) -->
+      <section id="section-huerto" class="section">
+        <h2>Mi huerto</h2>
+        <p class="section-subtitle">Registra y administra tus cultivos.</p>
+
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-title">Nuevo cultivo</div>
+          </div>
+
+          <div class="form-grid form-grid--2">
+            <div class="field">
+              <label>Nombre *</label>
+              <input type="text" id="cultivoNombre" />
+            </div>
+            <div class="field">
+              <label>Variedad</label>
+              <input type="text" id="cultivoVariedad" />
+            </div>
+          </div>
+
+          <div class="form-grid form-grid--2">
+            <div class="field">
+              <label>Tipo</label>
+              <select id="cultivoTipo">
+                <option value="hoja">Hoja</option>
+                <option value="fruto">Fruto</option>
+                <option value="raiz">Raíz</option>
+                <option value="tuberculo">Tubérculo</option>
+                <option value="aromaticas">Aromáticas</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Fecha</label>
+              <input type="date" id="cultivoFecha" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Notas</label>
+            <textarea id="cultivoNotas"></textarea>
+          </div>
+
+          <button class="btn btn-full" id="btnAgregarCultivo">
+            <span>➕</span> Guardar cultivo
+          </button>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-title">Cultivos registrados</div>
+            <div class="chip" id="cultivosCountChip">0</div>
+          </div>
+          <div id="cultivosList" class="cultivos-list"></div>
+        </div>
+      </section>
+
+      <!-- 🔹 SECCIÓN DIARIO -->
+      <section id="section-diario" class="section">
+        <h2>Diario</h2>
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-title">Nueva entrada</div>
+          </div>
+
+          <textarea id="diarioTexto" placeholder="Ej. Regué tomates..."></textarea>
+
+          <button class="btn btn-full" id="btnGuardarDiario">
+            <span>💾</span> Guardar entrada
+          </button>
+        </div>
+
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-title">Entradas</div>
+            <div class="chip" id="diarioCountChip">0</div>
+          </div>
+          <div id="diarioList" class="diario-list"></div>
+        </div>
+      </section>
+
+      <!-- 🔹 SECCIÓN PLAGAS -->
+      <section id="section-plagas" class="section">
+        <h2>Plagas comunes</h2>
+        <div class="media-list" id="plagasList"></div>
+      </section>
+
+      <!-- 🔹 SECCIÓN PESTICIDAS -->
+      <section id="section-pesticidas" class="section">
+        <h2>Pesticidas y preparados</h2>
+        <div class="media-list" id="pesticidasList"></div>
+      </section>
+
+      <!-- 🔹 SECCIÓN OPCIONES -->
+      <section id="section-opciones" class="section">
+        <h2>Opciones</h2>
+
+        <div class="field">
+          <label>Nombre del huerto</label>
+          <input type="text" id="nombreHuerto" />
+        </div>
+
+        <div class="form-grid form-grid--2">
+          <div class="field">
+            <label>Clima</label>
+            <select id="climaSelect">
+              <option value="tropical">Tropical</option>
+              <option value="subtropical">Subtropical</option>
+              <option value="templado">Templado</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Hemisferio</label>
+            <select id="hemisferioSelect">
+              <option value="norte">Norte</option>
+              <option value="sur">Sur</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-full" id="btnGuardarConfig">
+          <span>💾</span> Guardar configuración
+        </button>
+      </section>
+
+      <!-- 🌱 NUEVA SECCIÓN: CATÁLOGO DE CULTIVOS (compacto) -->
+      <section id="section-catalogo" class="section">
+        <h2>Catálogo de cultivos</h2>
+        <p class="section-subtitle">Información rápida: sol, meses, distancia y plagas.</p>
+
+        <div class="app-card">
+          <div class="app-card-header">
+            <div class="app-card-title">Cultivos disponibles</div>
+            <div class="chip">40 cultivos</div>
+          </div>
+
+          <input type="text" id="catalogoBuscar" placeholder="Buscar cultivo..." 
+            style="width:100%; padding:10px; border-radius:12px; margin-bottom:12px;
+            background:rgba(15,23,42,0.9); border:1px solid rgba(148,163,184,0.4); color:white;">
+
+          <div id="catalogoList" class="catalogo-lista"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <span>Mi Siembra Inteligente · Datos locales · 🌿</span>
+    </footer>
