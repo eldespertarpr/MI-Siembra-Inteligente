@@ -827,7 +827,31 @@ footer span {
   </div>    
 </div>
 
-  </section>      <!-- MI HUERTO -->      <section id="section-huerto" class="section">    
+  </section>     
+  <!-- CATALOGO -->
+  <section id="section-catalogo" class="section">
+    <div class="section-title-row">
+      <div class="section-icon-pill">🌱</div>
+      <h2>Catálogo de cultivos</h2>
+    </div>
+    <p class="section-subtitle">
+      Lista de cultivos con información rápida de luz, riego, tiempo de cosecha,
+      tamaño de tiesto y plagas más frecuentes.
+    </p>
+
+    <div class="app-card">
+      <div class="field">
+        <label for="catalogoBusqueda">Buscar cultivo</label>
+        <input
+          type="text"
+          id="catalogoBusqueda"
+          placeholder="Ej. tomate, lechuga, plátano..."
+        />
+      </div>
+      <div class="cultivos-list" id="catalogoList"></div>
+    </div>
+  </section>
+  <!-- MI HUERTO -->      <section id="section-huerto" class="section">    
     <div class="section-title-row">    
       <div class="section-icon-pill">🌿</div>    
       <h2>Mi huerto</h2>    
