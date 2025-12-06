@@ -142,6 +142,113 @@
     }
   </style>
 </head>
+  <script>
+/* ============================================================
+   MI SIEMBRA INTELIGENTE – SCRIPT PRINCIPAL
+   PARTE 3A – CONSTANTES, UTILIDADES, ESTADOS
+============================================================ */
+
+/* ============================
+   Claves de almacenamiento
+============================ */
+const STORAGE_KEYS = {
+  settings: "msi-settings",
+  cultivos: "msi-cultivos",
+  diario:   "msi-diario"
+};
+
+/* ============================
+   Ajustes por defecto
+============================ */
+const DEFAULT_SETTINGS = {
+  nombreHuerto: "Mi huerto",
+  clima: "tropical",
+  hemisferio: "norte"
+};
+
+/* ============================
+   Etiquetas amigables
+============================ */
+const CLIMA_LABEL = {
+  tropical: "tropical",
+  subtropical: "subtropical/templado",
+  templado: "templado/frío"
+};
+
+const HEMISFERIO_LABEL = {
+  norte: "hemisferio norte",
+  sur: "hemisferio sur"
+};
+
+/* ============================
+   FUNCIONES – almacenamiento
+============================ */
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.settings);
+    if (!raw) return { ...DEFAULT_SETTINGS };
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch {
+    return { ...DEFAULT_SETTINGS };
+  }
+}
+
+function saveSettings(v) {
+  localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(v));
+}
+
+function loadCultivos() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.cultivos)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveCultivos(v) {
+  localStorage.setItem(STORAGE_KEYS.cultivos, JSON.stringify(v));
+}
+
+function loadDiario() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.diario)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveDiario(v) {
+  localStorage.setItem(STORAGE_KEYS.diario, JSON.stringify(v));
+}
+
+/* ============================
+   Utilidades de fecha
+============================ */
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return "Sin fecha";
+  const d = new Date(dateStr + "T00:00:00");
+  if (isNaN(d.getTime())) return dateStr;
+  const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  return `${d.getDate().toString().padStart(2,"0")} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+/* ============================
+   ESTADO GLOBAL DE LA APP
+============================ */
+let stateSettings = loadSettings();
+let stateCultivos = loadCultivos();
+let stateDiario   = loadDiario();
+
+/* ============================================================
+   FIN DE PARTE 3A
+   ⬆️ Pega SOLO esto en tu archivo.
+   Me dices “LISTO” para enviarte la PARTE 3B.
+============================================================ */
+  </script>
 <body>
 <div class="app-shell">
 <!-- HEADER -->
