@@ -1329,60 +1329,606 @@
      * Catálogo de cultivos
      *********************/
     const CATALOGO_CULTIVOS = [
-      {
-        id: "tomate",
-        nombre: "Tomate",
-        categoria: "Fruto",
-        dias: "70–90 días",
-        luz: "Sol directo (6–8 h)",
-        riego: "Regular, sin encharcar",
-        tiesto: "Macetas profundas de 5+ galones",
-        profundidad: "0.5–1 cm",
-        plagas: ["Pulgones", "Mosca blanca", "Orugas"],
-        meses: [0, 1, 2, 3, 4, 5, 6, 7], // ene–ago
-        imagen: "img/tomate.jpg"
-      },
-      {
-        id: "lechuga",
-        nombre: "Lechuga",
-        categoria: "Hoja",
-        dias: "45–60 días",
-        luz: "Sol suave o sombra parcial",
-        riego: "Suelo siempre ligeramente húmedo",
-        tiesto: "Macetas anchas de 3+ galones",
-        profundidad: "0.5 cm",
-        plagas: ["Babosas", "Caracoles", "Pulgones"],
-        meses: [0, 1, 2, 3, 8, 9, 10, 11],
-        imagen: "img/lechuga.jpg"
-      },
-      {
-        id: "pepinillo",
-        nombre: "Pepinillo / Pepino",
-        categoria: "Fruto",
-        dias: "60–90 días",
-        luz: "Sol directo",
-        riego: "Abundante y constante",
-        tiesto: "Macetas profundas de 5+ galones con tutor",
-        profundidad: "1–2 cm",
-        plagas: ["Mosca blanca", "Ácaros", "Hongos"],
-        meses: [3, 4, 5, 6, 7, 8],
-        imagen: "img/pepinillo.jpg"
-      },
-      {
-        id: "platano",
-        nombre: "Plátano",
-        categoria: "Fruto perenne",
-        dias: "Cosecha a partir de 9–12 meses",
-        luz: "Sol directo",
-        riego: "Regular, le gusta la humedad",
-        tiesto: "Suelo directo, espacio amplio",
-        profundidad: "Cormo enterrado firmemente",
-        plagas: ["Picudo del plátano", "Sigatoka"],
-        meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        imagen: "img/platano.jpg"
-      }
-      // Puedes añadir más cultivos aquí
-    ];
+  // 1. Tomate
+  {
+    id: "tomate",
+    nombre: "Tomate",
+    categoria: "Fruto",
+    dias: "70–90 días",
+    luz: "Sol directo (6–8 h)",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas profundas de 5+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones", "Mosca blanca", "Orugas"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7],
+    imagen: "img/tomate.jpg"
+  },
+
+  // 2. Lechuga
+  {
+    id: "lechuga",
+    nombre: "Lechuga",
+    categoria: "Hoja",
+    dias: "45–60 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Suelo siempre ligeramente húmedo",
+    tiesto: "Macetas anchas de 3+ galones",
+    profundidad: "0.5 cm",
+    plagas: ["Babosas", "Caracoles", "Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/lechuga.jpg"
+  },
+
+  // 3. Pepinillo / Pepino
+  {
+    id: "pepinillo",
+    nombre: "Pepinillo / Pepino",
+    categoria: "Fruto",
+    dias: "60–90 días",
+    luz: "Sol directo",
+    riego: "Abundante y constante",
+    tiesto: "Macetas profundas de 5+ galones con tutor",
+    profundidad: "1–2 cm",
+    plagas: ["Mosca blanca", "Ácaros", "Hongos"],
+    meses: [3, 4, 5, 6, 7, 8],
+    imagen: "img/pepinillo.jpg"
+  },
+
+  // 4. Plátano
+  {
+    id: "platano",
+    nombre: "Plátano",
+    categoria: "Fruto perenne",
+    dias: "Cosecha a partir de 9–12 meses",
+    luz: "Sol directo",
+    riego: "Regular, le gusta la humedad",
+    tiesto: "Suelo directo, espacio amplio",
+    profundidad: "Cormo enterrado firmemente",
+    plagas: ["Picudo del plátano", "Sigatoka"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/platano.jpg"
+  },
+
+  // 5. Pimiento dulce
+  {
+    id: "pimiento_dulce",
+    nombre: "Pimiento dulce",
+    categoria: "Fruto",
+    dias: "80–100 días",
+    luz: "Sol directo (6–8 h)",
+    riego: "Regular, evitando encharcamientos",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "0.5 cm",
+    plagas: ["Pulgones", "Trips", "Araña roja"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/pimiento_dulce.jpg"
+  },
+
+  // 6. Ají picante
+  {
+    id: "aji_picante",
+    nombre: "Ají picante",
+    categoria: "Fruto",
+    dias: "90–110 días",
+    luz: "Sol directo",
+    riego: "Moderado, prefiere suelos bien drenados",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "0.5 cm",
+    plagas: ["Pulgones", "Mosca blanca"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/aji_picante.jpg"
+  },
+
+  // 7. Berenjena
+  {
+    id: "berenjena",
+    nombre: "Berenjena",
+    categoria: "Fruto",
+    dias: "80–100 días",
+    luz: "Sol directo",
+    riego: "Constante, sin encharcar",
+    tiesto: "Macetas de 5+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Escarabajos", "Pulgones", "Araña roja"],
+    meses: [3, 4, 5, 6, 7, 8],
+    imagen: "img/berenjena.jpg"
+  },
+
+  // 8. Cebolla
+  {
+    id: "cebolla",
+    nombre: "Cebolla",
+    categoria: "Bulbo",
+    dias: "100–150 días",
+    luz: "Sol directo",
+    riego: "Moderado, reducir antes de cosechar",
+    tiesto: "Macetas profundas o suelo directo",
+    profundidad: "1–2 cm",
+    plagas: ["Trips", "Mosca de la cebolla"],
+    meses: [0, 1, 2, 6, 7, 8, 9, 10],
+    imagen: "img/cebolla.jpg"
+  },
+
+  // 9. Cebolleta / cebollín
+  {
+    id: "cebollin",
+    nombre: "Cebollín / Cebolleta",
+    categoria: "Bulbo",
+    dias: "60–90 días",
+    luz: "Sol directo o media sombra",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "1 cm",
+    plagas: ["Trips"],
+    meses: [0, 1, 2, 3, 4, 8, 9, 10, 11],
+    imagen: "img/cebollin.jpg"
+  },
+
+  // 10. Zanahoria
+  {
+    id: "zanahoria",
+    nombre: "Zanahoria",
+    categoria: "Raíz",
+    dias: "70–100 días",
+    luz: "Sol directo",
+    riego: "Suelo siempre ligeramente húmedo",
+    tiesto: "Macetas profundas (30+ cm)",
+    profundidad: "0.5–1 cm",
+    plagas: ["Mosca de la zanahoria", "Hongos"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/zanahoria.jpg"
+  },
+
+  // 11. Rábano
+  {
+    id: "rabano",
+    nombre: "Rábano",
+    categoria: "Raíz",
+    dias: "25–35 días",
+    luz: "Sol directo o media sombra",
+    riego: "Suelo constantemente húmedo",
+    tiesto: "Macetas de 3+ galones, algo profundas",
+    profundidad: "1 cm",
+    plagas: ["Pulguillas", "Babosas"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/rabano.jpg"
+  },
+
+  // 12. Remolacha / betabel
+  {
+    id: "remolacha",
+    nombre: "Remolacha",
+    categoria: "Raíz",
+    dias: "60–80 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas profundas (25+ cm)",
+    profundidad: "1–2 cm",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/remolacha.jpg"
+  },
+
+  // 13. Papa
+  {
+    id: "papa",
+    nombre: "Papa",
+    categoria: "Tubérculo",
+    dias: "90–120 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Sacos o macetas profundas de 10+ galones",
+    profundidad: "Tubérculo cubierto con 5–10 cm de sustrato",
+    plagas: ["Escarabajo de la papa", "Hongos"],
+    meses: [0, 1, 2, 7, 8, 9],
+    imagen: "img/papa.jpg"
+  },
+
+  // 14. Batata / camote
+  {
+    id: "batata",
+    nombre: "Batata / Camote",
+    categoria: "Tubérculo",
+    dias: "120–150 días",
+    luz: "Sol directo",
+    riego: "Moderado, tolera algo de sequía",
+    tiesto: "Suelo directo o macetas grandes",
+    profundidad: "Estacas enterradas 5–10 cm",
+    plagas: ["Gusanos de suelo", "Hongos"],
+    meses: [2, 3, 4, 5, 6, 7, 8],
+    imagen: "img/batata.jpg"
+  },
+
+  // 15. Yuca
+  {
+    id: "yuca",
+    nombre: "Yuca",
+    categoria: "Tubérculo perenne",
+    dias: "8–12 meses",
+    luz: "Sol directo",
+    riego: "Poca exigencia, suelo bien drenado",
+    tiesto: "Mejor en suelo directo",
+    profundidad: "Estacas enterradas 15–20 cm",
+    plagas: ["Mosca blanca", "Ácaros"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/yuca.jpg"
+  },
+
+  // 16. Maíz dulce
+  {
+    id: "maiz_dulce",
+    nombre: "Maíz dulce",
+    categoria: "Grano",
+    dias: "80–100 días",
+    luz: "Sol directo",
+    riego: "Regular, más constante en floración",
+    tiesto: "Parterres o contenedores grandes y profundos",
+    profundidad: "2–3 cm",
+    plagas: ["Gusanos del maíz", "Pulgones"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/maiz_dulce.jpg"
+  },
+
+  // 17. Habichuela de enrame
+  {
+    id: "habichuela_enrame",
+    nombre: "Habichuela de enrame",
+    categoria: "Leguminosa",
+    dias: "60–80 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 5+ galones con tutor",
+    profundidad: "2–3 cm",
+    plagas: ["Pulgones", "Trips"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/habichuela_enrame.jpg"
+  },
+
+  // 18. Habichuela arbustiva
+  {
+    id: "habichuela_bush",
+    nombre: "Habichuela arbustiva",
+    categoria: "Leguminosa",
+    dias: "55–70 días",
+    luz: "Sol directo",
+    riego: "Regular",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "2–3 cm",
+    plagas: ["Pulgones", "Trips"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/habichuela_bush.jpg"
+  },
+
+  // 19. Gandul
+  {
+    id: "gandul",
+    nombre: "Gandul",
+    categoria: "Leguminosa perenne",
+    dias: "4–6 meses para la primera cosecha",
+    luz: "Sol directo",
+    riego: "Moderado, resistente a sequía",
+    tiesto: "Suelo directo o macetas muy grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Gusanos de vaina", "Pulgones"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/gandul.jpg"
+  },
+
+  // 20. Calabaza
+  {
+    id: "calabaza",
+    nombre: "Calabaza",
+    categoria: "Fruto rastrero",
+    dias: "90–130 días",
+    luz: "Sol directo",
+    riego: "Regular, le gusta suelo fértil",
+    tiesto: "Suelo directo o macetas muy grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Barrenador de tallo", "Mosca blanca"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/calabaza.jpg"
+  },
+
+  // 21. Calabacín / zucchini
+  {
+    id: "calabacin",
+    nombre: "Calabacín / Zucchini",
+    categoria: "Fruto",
+    dias: "45–60 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 8+ galones",
+    profundidad: "2–3 cm",
+    plagas: ["Oídio", "Pulgones"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/calabacin.jpg"
+  },
+
+  // 22. Melón
+  {
+    id: "melon",
+    nombre: "Melón",
+    categoria: "Fruto rastrero",
+    dias: "90–120 días",
+    luz: "Sol directo",
+    riego: "Regular, reducir al madurar frutos",
+    tiesto: "Suelo directo o macetas grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Mosca blanca", "Oídio"],
+    meses: [3, 4, 5, 6, 7],
+    imagen: "img/melon.jpg"
+  },
+
+  // 23. Sandía
+  {
+    id: "sandia",
+    nombre: "Sandía",
+    categoria: "Fruto rastrero",
+    dias: "90–120 días",
+    luz: "Sol directo fuerte",
+    riego: "Abundante al inicio, reducir en madurez",
+    tiesto: "Suelo directo o contenedores muy grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Mosca blanca", "Oídio"],
+    meses: [3, 4, 5, 6, 7],
+    imagen: "img/sandia.jpg"
+  },
+
+  // 24. Espinaca
+  {
+    id: "espinaca",
+    nombre: "Espinaca",
+    categoria: "Hoja",
+    dias: "40–60 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Suelo fresco y húmedo",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Babosas", "Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/espinaca.jpg"
+  },
+
+  // 25. Acelga
+  {
+    id: "acelga",
+    nombre: "Acelga",
+    categoria: "Hoja",
+    dias: "50–70 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "1–2 cm",
+    plagas: ["Babosas", "Caracoles"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/acelga.jpg"
+  },
+
+  // 26. Col rizada / kale
+  {
+    id: "col_rizada",
+    nombre: "Col rizada / Kale",
+    categoria: "Hoja",
+    dias: "60–90 días",
+    luz: "Sol directo o media sombra",
+    riego: "Regular",
+    tiesto: "Macetas de 5+ galones",
+    profundidad: "1 cm",
+    plagas: ["Orugas", "Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/col_rizada.jpg"
+  },
+
+  // 27. Cilantro
+  {
+    id: "cilantro",
+    nombre: "Cilantro",
+    categoria: "Aromática",
+    dias: "30–50 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Suelo fresco y húmedo",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/cilantro.jpg"
+  },
+
+  // 28. Perejil
+  {
+    id: "perejil",
+    nombre: "Perejil",
+    categoria: "Aromática",
+    dias: "70–90 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Regular",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 4, 8, 9, 10, 11],
+    imagen: "img/perejil.jpg"
+  },
+
+  // 29. Albahaca
+  {
+    id: "albahaca",
+    nombre: "Albahaca",
+    categoria: "Aromática",
+    dias: "40–60 días",
+    luz: "Sol directo suave",
+    riego: "Suelo ligeramente húmedo",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5 cm",
+    plagas: ["Pulgones", "Mosca blanca"],
+    meses: [2, 3, 4, 5, 6, 7, 8],
+    imagen: "img/albahaca.jpg"
+  },
+
+  // 30. Orégano
+  {
+    id: "oregano",
+    nombre: "Orégano",
+    categoria: "Aromática perenne",
+    dias: "Cosecha a partir de 60 días",
+    luz: "Sol directo",
+    riego: "Escaso, prefiere suelos secos",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "Superficial, esquejes o plantines",
+    plagas: ["Muy pocas plagas importantes"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/oregano.jpg"
+  },
+
+  // 31. Menta
+  {
+    id: "menta",
+    nombre: "Menta",
+    categoria: "Aromática perenne",
+    dias: "Cosecha desde 40–60 días",
+    luz: "Media sombra o sol suave",
+    riego: "Le gusta humedad constante",
+    tiesto: "Macetas profundas (mejor aislada, es invasiva)",
+    profundidad: "Plantines o esquejes superficiales",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/menta.jpg"
+  },
+
+  // 32. Romero
+  {
+    id: "romero",
+    nombre: "Romero",
+    categoria: "Aromática perenne",
+    dias: "Planta lenta, cosecha continua",
+    luz: "Sol directo",
+    riego: "Muy poco, prefiere suelos secos",
+    tiesto: "Macetas de 5+ galones",
+    profundidad: "Esquejes o plantines superficiales",
+    plagas: ["Pocas plagas, a veces cochinilla"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/romero.jpg"
+  },
+
+  // 33. Tomillo
+  {
+    id: "tomillo",
+    nombre: "Tomillo",
+    categoria: "Aromática perenne",
+    dias: "Cosecha desde 60 días",
+    luz: "Sol directo",
+    riego: "Escaso",
+    tiesto: "Macetas pequeñas o medianas",
+    profundidad: "Semilla muy superficial o plantines",
+    plagas: ["Muy poco susceptible"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/tomillo.jpg"
+  },
+
+  // 34. Fresa
+  {
+    id: "fresa",
+    nombre: "Fresa",
+    categoria: "Fruto",
+    dias: "4–6 meses desde plantín",
+    luz: "Sol directo suave",
+    riego: "Regular, le gusta el sustrato húmedo",
+    tiesto: "Jardineras o macetas colgantes",
+    profundidad: "Plantines al nivel del cuello",
+    plagas: ["Babosas", "Hongos"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/fresa.jpg"
+  },
+
+  // 35. Papaya
+  {
+    id: "papaya",
+    nombre: "Papaya",
+    categoria: "Frutal",
+    dias: "9–14 meses hasta la primera cosecha",
+    luz: "Sol directo",
+    riego: "Regular, suelo bien drenado",
+    tiesto: "Mejor en suelo directo",
+    profundidad: "Semillas superficiales, luego trasplante",
+    plagas: ["Mosca de la fruta", "Hongos"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/papaya.jpg"
+  },
+
+  // 36. Guayaba
+  {
+    id: "guayaba",
+    nombre: "Guayaba",
+    categoria: "Frutal perenne",
+    dias: "18–24 meses desde plantín",
+    luz: "Sol directo",
+    riego: "Moderado, tolera algo de sequía",
+    tiesto: "Mejor suelo directo, puede ir en macetón",
+    profundidad: "Plantín al nivel del cuello",
+    plagas: ["Mosca de la fruta"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/guayaba.jpg"
+  },
+
+  // 37. Maracuyá / parcha
+  {
+    id: "maracuya",
+    nombre: "Maracuyá / Parcha",
+    categoria: "Frutal trepador",
+    dias: "8–12 meses",
+    luz: "Sol directo",
+    riego: "Regular, suelo fértil",
+    tiesto: "Suelo directo con enredadera",
+    profundidad: "Plantines al nivel del cuello",
+    plagas: ["Mosca de la fruta", "Ácaros"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/maracuya.jpg"
+  },
+
+  // 38. Mango
+  {
+    id: "mango",
+    nombre: "Mango",
+    categoria: "Frutal perenne",
+    dias: "Varios años hasta producir (dependiendo del tamaño del plantín)",
+    luz: "Sol directo fuerte",
+    riego: "Poco una vez establecido",
+    tiesto: "Suelo directo; en macetón solo variedades enanas",
+    profundidad: "Plantín al nivel del cuello",
+    plagas: ["Mosca de la fruta", "Hongos"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/mango.jpg"
+  },
+
+  // 39. Limón
+  {
+    id: "limon",
+    nombre: "Limón",
+    categoria: "Frutal cítrico",
+    dias: "2–3 años desde plantín",
+    luz: "Sol directo",
+    riego: "Regular en sequía",
+    tiesto: "Macetón grande o suelo directo",
+    profundidad: "Plantín al nivel del cuello",
+    plagas: ["Minador de hoja", "Cochinillas"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/limon.jpg"
+  },
+
+  // 40. Café
+  {
+    id: "cafe",
+    nombre: "Café",
+    categoria: "Perene",
+    dias: "2–3 años hasta la primera cosecha",
+    luz: "Sombra parcial (bajo árboles) o sol suave",
+    riego: "Regular, no encharcar",
+    tiesto: "Macetones profundos o suelo directo",
+    profundidad: "Plantines al nivel del cuello",
+    plagas: ["Broca del café", "Hongos"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/cafe.jpg"
+  }
+];
 
     /*********************
      * Estado global
