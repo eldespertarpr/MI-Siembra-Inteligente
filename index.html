@@ -1188,7 +1188,65 @@ function todayISO() {
  * Calendario de siembra    
  *********************/    
 // Muy resumido; puedes ampliar más tarde    
-const CALENDARIO_SIEMBRA = {    
+const CALENDARIO_SIEMBRA = {   
+  /*********************
+ * Catálogo de cultivos
+ *********************/
+const CATALOGO_CULTIVOS = [
+  {
+    id: "tomate",
+    nombre: "Tomate",
+    categoria: "Fruto",
+    dias: "70–90 días",
+    luz: "Sol directo (6–8 h)",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas profundas de 5+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones", "Mosca blanca", "Orugas"],
+    meses: [0,1,2,3,4,5,6,7], // ene–ago
+    imagen: "img/tomate.jpg"
+  },
+  {
+    id: "lechuga",
+    nombre: "Lechuga",
+    categoria: "Hoja",
+    dias: "45–60 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Suelo siempre ligeramente húmedo",
+    tiesto: "Macetas anchas de 3+ galones",
+    profundidad: "0.5 cm",
+    plagas: ["Babosas", "Caracoles", "Pulgones"],
+    meses: [0,1,2,3,8,9,10,11],
+    imagen: "img/lechuga.jpg"
+  },
+  {
+    id: "pepinillo",
+    nombre: "Pepinillo / Pepino",
+    categoria: "Fruto",
+    dias: "60–90 días",
+    luz: "Sol directo",
+    riego: "Abundante y constante",
+    tiesto: "Macetas profundas de 5+ galones con tutor",
+    profundidad: "1–2 cm",
+    plagas: ["Mosca blanca", "Ácaros", "Hongos"],
+    meses: [3,4,5,6,7,8],
+    imagen: "img/pepinillo.jpg"
+  },
+  {
+    id: "platano",
+    nombre: "Plátano",
+    categoria: "Fruto perenne",
+    dias: "Cosecha a partir de 9–12 meses",
+    luz: "Sol directo",
+    riego: "Regular, le gusta la humedad",
+    tiesto: "Suelo directo, espacio amplio",
+    profundidad: "Cormo enterrado firmemente",
+    plagas: ["Picudo del plátano", "Sigatoka"],
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11],
+    imagen: "img/platano.jpg"
+  }
+  // Luego podemos añadir muchos más cultivos aquí
+];
   tropical: {    
     5: [    
       { titulo: "Re-siembra de lechugas", tipo: "Hoja", detalle: "Siembra escalonada cada 2–3 semanas para cosechas continuas." },    
