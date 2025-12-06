@@ -546,6 +546,19 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      /* Miniatura de imagen del catálogo */
+.cultivo-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Si el nombre es largo, que salte de línea sin salirse */
+.cultivo-title span {
+  word-break: break-word;
+}
     }
 
     .cultivo-body {
