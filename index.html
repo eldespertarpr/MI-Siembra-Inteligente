@@ -1333,9 +1333,16 @@
     };
 
     function getCalendarData(settings, monthIndex) {
-      const climaKey = settings.clima || "tropical";
-      const base = CALENDARIO_SIEMBRA[climaKey] || {};
-      return base[monthIndex] || [];
+  const climaKey = settings.clima || "tropical";
+  let mes = monthIndex;
+
+  // En climas templado/subtropical del hemisferio sur, invertimos estación
+  if (settings.hemisferio === "sur" && (climaKey === "templado" || climaKey === "subtropical")) {
+    mes = (monthIndex + 6) % 12;
+  }
+
+  const base = CALENDARIO_SIEMBRA[climaKey] || {};
+  return base[mes] || [];
     }
 
     /*********************
