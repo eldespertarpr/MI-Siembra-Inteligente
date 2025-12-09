@@ -2375,37 +2375,57 @@
     }
 
     function renderPesticidas() {
-      const listEl = document.getElementById("pesticidasList");
-      if (!listEl) return;
+  const listEl = document.getElementById("pesticidasList");
+  if (!listEl) return;
 
-      const data = [
-        {
-          nombre: "Jabón potásico",
-          detalle:
-            "Eficaz contra pulgones y mosca blanca. Aplicar al atardecer y en hojas, evitando flores abiertas."
-        },
-        {
-          nombre: "Aceite de neem (uso hortícola)",
-          detalle:
-            "Ayuda a cortar ciclos de varias plagas. Usar con moderación y siempre siguiendo etiqueta."
-        },
-        {
-          nombre: "Infusión de ajo y ají",
-          detalle:
-            "Preparado casero de olor fuerte que puede repeler insectos suaves y algunos hongos."
-        }
-      ];
-
-      listEl.innerHTML = "";
-      data.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <div class="media-item-title">💧 ${p.nombre}</div>
-          <div class="media-item-body">${p.detalle}</div>
-        `;
-        listEl.appendChild(div);
-      });
+  const data = [
+    {
+      nombre: "Jabón potásico",
+      detalle:
+        "Limpia y ablanda la capa externa de muchos insectos blandos (pulgones, mosca blanca, trips). Se usa muy diluido en agua y se aplica al atardecer, en el envés de las hojas."
+    },
+    {
+      nombre: "Aceite de neem (uso hortícola)",
+      detalle:
+        "Aceite vegetal con efecto sobre el ciclo de varias plagas (mosca blanca, minador, cochinillas, ácaros). Usar en dosis bajas y siempre siguiendo etiqueta; aplicar al atardecer."
+    },
+    {
+      nombre: "Infusión o extracto de ajo y ají picante",
+      detalle:
+        "Preparado casero que actúa como repelente y apoyo contra insectos blandos y algunos hongos. Se cuela bien y se aplica en pulverización fina sobre hojas."
+    },
+    {
+      nombre: "Macerado de cebolla",
+      detalle:
+        "Similar al ajo, ayuda a repeler pulgones y trips. Se deja cebolla en agua unas horas, se cuela y se aplica en pulverización."
+    },
+    {
+      nombre: "Trampas cromáticas",
+      detalle:
+        "Cartones amarillos o azules con pegamento que atraen mosca blanca, trips y otros insectos voladores sin usar venenos. Útiles para monitoreo y captura."
+    },
+    {
+      nombre: "Bacillus thuringiensis (Bt)",
+      detalle:
+        "Producto biológico que afecta principalmente a larvas de orugas cuando comen hojas tratadas. No es un veneno químico clásico, pero hay que usarlo solo cuando sea necesario y siguiendo indicaciones."
+    },
+    {
+      nombre: "Tierra de diatomeas (grado alimentario)",
+      detalle:
+        "Polvo mineral muy fino que daña la cutícula de insectos rastreros (babosas pequeñas, hormigas, cucarachitas). Se aplica en seco sobre el suelo, evitando respirar el polvo y no usar en días de mucho viento."
     }
+  ];
+
+  listEl.innerHTML = "";
+  data.forEach(p => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div class="media-item-title">💧 ${p.nombre}</div>
+      <div class="media-item-body">${p.detalle}</div>
+    `;
+    listEl.appendChild(div);
+  });
+}
 
     /*********************
      * Catálogo: render + búsqueda
