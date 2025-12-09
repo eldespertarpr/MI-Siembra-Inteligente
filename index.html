@@ -2389,8 +2389,7 @@
 
       listEl.innerHTML = "";
       lista.forEach(c => {
-        // si no hay imagen, usamos el placeholder
-        const imgSrc = c.imagen || "img/placeholder.jpg";   // asegúrate de que este archivo exista
+        const imgSrc = c.imagen || "img/placeholder.jpg";
 
         const card = document.createElement("div");
         card.className = "cultivo-card";
