@@ -2286,50 +2286,92 @@
     }
 
     function renderPlagas() {
-      const listEl = document.getElementById("plagasList");
-      if (!listEl) return;
+  const listEl = document.getElementById("plagasList");
+  if (!listEl) return;
 
-      const plagasData = [
-        {
-          nombre: "Pulgones",
-          detalle:
-            "Pequeños insectos que chupan savia y deforman brotes tiernos. Suelen aparecer en colonias.",
-          manejo:
-            "Rociar con agua y jabón potásico o preparar extracto de ajo/ají. Favorecer mariquitas y crisopas."
-        },
-        {
-          nombre: "Mosca blanca",
-          detalle:
-            "Insectos blancos que vuelan al mover la planta. Debilitan hojas y favorecen hongos.",
-          manejo:
-            "Trampas amarillas, jabón potásico y aceites vegetales suaves respetando dosis."
-        },
-        {
-          nombre: "Orugas",
-          detalle:
-            "Larvas que comen hojas dejando mordidas grandes o agujeros.",
-          manejo:
-            "Revisión manual frecuente, retirar orugas a mano. Bacillus thuringiensis en casos necesarios."
-        },
-        {
-          nombre: "Caracoles y babosas",
-          detalle:
-            "Suelo húmedo y restos de baba plateada cerca de las mordidas.",
-          manejo:
-            "Refugios-trampa, barreras físicas y recolección manual al atardecer."
-        }
-      ];
+  const plagasData = [
+    {
+      nombre: "Pulgones (áfidos)",
+      detalle:
+        "Insectos pequeños (verdes, negros o amarillos) que se agrupan en brotes tiernos y el envés de las hojas. Deforman hojas y chupan savia.",
+      manejo:
+        "Rociar con agua y jabón potásico, repetir cada 3–5 días. Favorecer mariquitas y crisopas; evitar exceso de fertilizante nitrogenado."
+    },
+    {
+      nombre: "Mosca blanca",
+      detalle:
+        "Pequeños insectos blancos que salen volando al mover la planta. Producen melaza pegajosa y favorecen hongos negros (fumagina).",
+      manejo:
+        "Trampas amarillas pegajosas, jabón potásico y aceite de neem en aplicaciones suaves al atardecer."
+    },
+    {
+      nombre: "Trips",
+      detalle:
+        "Insectos muy finos y alargados que dejan manchas plateadas o rayas en las hojas y flores.",
+      manejo:
+        "Trampas azules, jabón potásico y extractos de ajo/ají. Mantener buena humedad ambiental sin encharcar."
+    },
+    {
+      nombre: "Araña roja (ácaros)",
+      detalle:
+        "Puntos rojizos muy pequeños, hacen telarañas finas y hojas amarillentas o con puntitos claros.",
+      manejo:
+        "Aumentar humedad ambiental, duchas de agua en el envés de las hojas, jabón potásico y, si hace falta, aceite de neem muy diluido."
+    },
+    {
+      nombre: "Orugas (gusanos de hoja)",
+      detalle:
+        "Larvas que comen hojas dejando mordidas grandes o agujeros. A veces se esconden durante el día.",
+      manejo:
+        "Revisión manual frecuente y retirar orugas a mano. En ataques fuertes, usar Bacillus thuringiensis (biológico) siguiendo indicaciones."
+    },
+    {
+      nombre: "Babosas y caracoles",
+      detalle:
+        "Dejan mordidas grandes en hojas bajas y rastros de baba plateada en el suelo y las plantas.",
+      manejo:
+        "Recolectar al atardecer, usar refugios-trampa (tablitas, cáscaras de fruta) y barreras físicas como ceniza, cáscara de huevo triturada o cinta de cobre."
+    },
+    {
+      nombre: "Cochinillas",
+      detalle:
+        "Forman bultitos blancos o marrones, algodonosos o duros, en tallos y hojas. Producen melaza pegajosa.",
+      manejo:
+        "Retirar con hisopo o paño con agua jabonosa, aplicar jabón potásico o aceite de neem sobre las colonias."
+    },
+    {
+      nombre: "Minador de hoja",
+      detalle:
+        "Larvas que hacen galerías blancas o transparentes dentro de la hoja (como caminos serpenteantes).",
+      manejo:
+        "Retirar y desechar hojas muy afectadas. Fomentar enemigos naturales. Se puede reforzar con aceite de neem suave y constante vigilancia."
+    },
+    {
+      nombre: "Mosca de la fruta",
+      detalle:
+        "Ataca frutos (tomate, parcha, papaya, cítricos, etc.), poniendo huevos y dañando la pulpa.",
+      manejo:
+        "Recolectar frutos maduros a tiempo, no dejar fruta dañada en el suelo, usar trampas caseras con vinagre/jugo y botellas, y mallas para proteger cultivos sensibles."
+    },
+    {
+      nombre: "Hongos en hojas (oídio, mildiu, manchas)",
+      detalle:
+        "Manchas blancas en polvo (oídio), amarillas con moho por debajo (mildiu) o puntos marrones en hojas.",
+      manejo:
+        "Mejorar ventilación, evitar mojar tanto las hojas, retirar hojas muy enfermas. Se puede usar bicarbonato de sodio o extractos de cola de caballo como preventivo."
+    }
+  ];
 
-      listEl.innerHTML = "";
-      plagasData.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <div class="media-item-title">🐛 ${p.nombre}</div>
-          <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.detalle}</div>
-          <div class="media-item-body"><strong>Manejo recomendado:</strong> ${p.manejo}</div>
-        `;
-        listEl.appendChild(div);
-      });
+  listEl.innerHTML = "";
+  plagasData.forEach(p => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div class="media-item-title">🐛 ${p.nombre}</div>
+      <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.detalle}</div>
+      <div class="media-item-body"><strong>Manejo recomendado (no tóxico):</strong> ${p.manejo}</div>
+    `;
+    listEl.appendChild(div);
+  });
     }
 
     function renderPesticidas() {
