@@ -1347,7 +1347,32 @@
   const base = CALENDARIO_SIEMBRA[climaKey] || {};
   return base[mes] || [];
     }
+function cultivoAplicaAClima(cultivo, settings) {
+  // Si no se especifica nada, asumimos que sirve para todos
+  if (!cultivo.climas || !cultivo.climas.length) return true;
+  return cultivo.climas.includes(settings.clima);
+}
 
+function cultivoRecomendadoEnMes(cultivo, settings, monthIndex) {
+  const climaKey = settings.clima || "tropical";
+
+  // 1) Meses base para este cultivo
+  let mesesBase = cultivo.meses || [];
+  if (cultivo.mesesPorClima && cultivo.mesesPorClima[climaKey]) {
+    mesesBase = cultivo.mesesPorClima[climaKey];
+  }
+
+  // 2) Ajuste por hemisferio sur en climas templado/subtropical
+  let mesUsuario = monthIndex;
+  if (
+    settings.hemisferio === "sur" &&
+    (climaKey === "templado" || climaKey === "subtropical")
+  ) {
+    mesUsuario = (monthIndex + 6) % 12;
+  }
+
+  return Array.isArray(mesesBase) && mesesBase.includes(mesUsuario);
+}
     /*********************
      * Catálogo de cultivos
      *********************/
