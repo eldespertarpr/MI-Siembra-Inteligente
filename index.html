@@ -2251,8 +2251,10 @@ function cultivoRecomendadoEnMes(cultivo, settings, monthIndex) {
 
       // 2) Sugerencias extra desde el catálogo
       const sugeridos = CATALOGO_CULTIVOS.filter(
-        c => Array.isArray(c.meses) && c.meses.includes(monthIndex)
-      );
+  c =>
+    cultivoAplicaAClima(c, stateSettings) &&
+    cultivoRecomendadoEnMes(c, stateSettings, monthIndex)
+);
 
       if (sugeridos.length) {
         const separador = document.createElement("div");
