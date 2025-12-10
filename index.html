@@ -2231,10 +2231,12 @@ function ajustarMesPorHemisferio(settings, monthIndex) {
         emptyEl.style.display = "block";
       }
 
-      // 2) Sugerencias extra desde el catálogo
-      const sugeridos = CATALOGO_CULTIVOS.filter(
-        c => Array.isArray(c.meses) && c.meses.includes(monthIndex)
-      );
+      // 2) Sugerencias extra desde el catálogo (ajustadas por hemisferio)
+const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
+
+const sugeridos = CATALOGO_CULTIVOS.filter(
+  c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo)
+);
 
       if (sugeridos.length) {
         const separador = document.createElement("div");
