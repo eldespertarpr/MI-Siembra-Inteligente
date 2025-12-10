@@ -178,32 +178,27 @@
       .nav {
         grid-template-columns: repeat(8, minmax(0,1fr));
       }
-    }
 
     .nav-btn {
-      border: none;
-      border-radius: 999px;
-      padding: 7px 6px 6px;
-      font-size: 0.70rem;
-      color: var(--text-soft);
-      background: transparent;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s, transform 0.12s;
-      position: relative;
-      min-height: 52px;
-    }
+  border: none;
+  border-radius: 999px;
+  padding: 8px 6px 7px;
+  font-size: 0.74rem;
+  color: var(--text-soft);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, transform 0.12s;
+  position: relative;
+  min-height: 64px; /* más altos para que haya espacio */
+}
 
-    .nav-btn span.nav-icon {
-      font-size: 1.1rem;
-    }
-
-    .nav-btn span.nav-label {
-      line-height: 1.1;
-    }
+.nav-btn span.nav-icon {
+  font-size: 1.5rem; /* ÍCONOS MÁS GRANDES */
+}
 
     .nav-btn.nav-btn--active {
       background: radial-gradient(circle at top, var(--accent) 0, var(--accent-soft) 45%, transparent 100%);
