@@ -1561,25 +1561,28 @@
   const emptyEl = document.getElementById("calendarEmpty");
   if (!listEl || !emptyEl) return;
 
-  const data = getCalendarData(stateSettings, monthIndex);
   listEl.innerHTML = "";
 
-  // Sugerencias desde el catálogo para este mes
+  // 1) Datos base del calendario (CALENDARIO_SIEMBRA)
+  const data = getCalendarData(stateSettings, monthIndex);
+
+  // 2) Sugerencias desde el catálogo
   const sugeridos = CATALOGO_CULTIVOS.filter(
     c =>
       cultivoAplicaAClima(c, stateSettings) &&
       cultivoRecomendadoEnMes(c, stateSettings, monthIndex)
   );
 
-  // 1) Si no hay nada de nada: mostrar mensaje vacío
+  // 3) Mostrar/ocultar el mensaje de "no hay recomendaciones"
   if (!data.length && !sugeridos.length) {
+    // No hay nada ni en calendario ni en catálogo
     emptyEl.style.display = "block";
-    return;
   } else {
+    // Hay algo que mostrar (calendario o catálogo)
     emptyEl.style.display = "none";
   }
 
-  // 2) Mostrar bloque de CALENDARIO_SIEMBRA (si hay)
+  // 4) Pintar datos del calendario base (si existen)
   if (data.length) {
     data.forEach(item => {
       const div = document.createElement("div");
@@ -1595,13 +1598,11 @@
     });
   }
 
-  // 3) Mostrar sugeridos del catálogo (si hay)
+  // 5) Separador y título para sugerencias del catálogo (si hay)
   if (sugeridos.length) {
-    if (data.length) {
-      const separador = document.createElement("div");
-      separador.className = "divider-soft";
-      listEl.appendChild(separador);
-    }
+    const separador = document.createElement("div");
+    separador.className = "divider-soft";
+    listEl.appendChild(separador);
 
     const tituloExtra = document.createElement("p");
     tituloExtra.className = "muted";
@@ -1625,7 +1626,7 @@
       listEl.appendChild(div);
     });
   }
-    }
+}
 
     function renderDiario() {
       const listEl = document.getElementById("diarioList");
