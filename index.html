@@ -1349,17 +1349,13 @@ function ajustarMesPorHemisferio(settings, monthIndex) {
 }
     function getCalendarData(settings, monthIndex) {
   const climaKey = settings.clima || "tropical";
-  let mes = monthIndex;
 
-  // En climas templado/subtropical del hemisferio sur, invertimos estación
-  if (settings.hemisferio === "sur" && (climaKey === "templado" || climaKey === "subtropical")) {
-    mes = (monthIndex + 6) % 12;
-  }
+  // Usamos el helper para ajustar el mes según clima + hemisferio
+  const mesAjustado = ajustarMesPorHemisferio(settings, monthIndex);
 
   const base = CALENDARIO_SIEMBRA[climaKey] || {};
-  return base[mes] || [];
-    }
-
+  return base[mesAjustado] || [];
+}
     /*********************
      * Catálogo de cultivos
      *********************/
