@@ -1352,9 +1352,7 @@
      *********************/
     const CATALOGO_CULTIVOS = [
   // 1. Tomate
-  {
-    id: "tomate",
-    nombre: "Tomate",
+  {"Tomate",
     categoria: "Fruto",
     dias: "70–90 días",
     luz: "Sol directo (6–8 h)",
@@ -2370,37 +2368,62 @@
 }
 
     function renderPesticidas() {
-      const listEl = document.getElementById("pesticidasList");
-      if (!listEl) return;
+  const listEl = document.getElementById("pesticidasList");
+  if (!listEl) return;
 
-      const data = [
-        {
-          nombre: "Jabón potásico",
-          detalle:
-            "Eficaz contra pulgones y mosca blanca. Aplicar al atardecer y en hojas, evitando flores abiertas."
-        },
-        {
-          nombre: "Aceite de neem (uso hortícola)",
-          detalle:
-            "Ayuda a cortar ciclos de varias plagas. Usar con moderación y siempre siguiendo etiqueta."
-        },
-        {
-          nombre: "Infusión de ajo y ají",
-          detalle:
-            "Preparado casero de olor fuerte que puede repeler insectos suaves y algunos hongos."
-        }
-      ];
-
-      listEl.innerHTML = "";
-      data.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <div class="media-item-title">💧 ${p.nombre}</div>
-          <div class="media-item-body">${p.detalle}</div>
-        `;
-        listEl.appendChild(div);
-      });
+  const data = [
+    {
+      nombre: "Jabón potásico",
+      detalle:
+        "Eficaz contra pulgones, mosca blanca y trips. Disolver la dosis indicada por el fabricante en agua y aplicar al atardecer, mojando bien el envés de las hojas."
+    },
+    {
+      nombre: "Aceite de neem (uso hortícola)",
+      detalle:
+        "Ayuda a interrumpir el ciclo de varias plagas chupadoras. Usar solo productos registrados para agricultura, respetar dosis y no aplicar a pleno sol ni con temperaturas extremas."
+    },
+    {
+      nombre: "Infusión de ajo y ají picante",
+      detalle:
+        "Preparado casero que puede repeler insectos suaves y algunos hongos. Macerar ajo y ají en agua 24 horas, colar y aplicar en pruebas pequeñas antes de usar en toda la planta."
+    },
+    {
+      nombre: "Bicarbonato de potasio",
+      detalle:
+        "Muy usado de forma ecológica para prevenir y frenar oídio y otros hongos de hoja. Se aplica disuelto en agua, siempre siguiendo las recomendaciones del producto comercial."
+    },
+    {
+      nombre: "Extracto de cola de caballo",
+      detalle:
+        "Fortalece los tejidos de la planta y ayuda a prevenir enfermedades fúngicas. Se usa como tratamiento preventivo, alternando con otros preparados."
+    },
+    {
+      nombre: "Trampas cromáticas (amarillas/azules)",
+      detalle:
+        "Cartones o láminas pegajosas de colores que atraen mosca blanca, trips y otros insectos voladores. No son un veneno, pero ayudan a monitorear y reducir la población."
+    },
+    {
+      nombre: "Control biológico (mariquitas, crisopas, avispas parasitoides)",
+      detalle:
+        "En algunos lugares se pueden comprar insectos benéficos para soltarlos en el huerto. Se alimentan de plagas como pulgones y mosca blanca sin dejar residuos químicos."
+    },
+    {
+      nombre: "Buenas prácticas culturales",
+      detalle:
+        "Rotar cultivos, no saturar de fertilizante, retirar hojas enfermas y mantener el huerto limpio de restos en descomposición reduce mucho la necesidad de usar productos."
     }
+  ];
+
+  listEl.innerHTML = "";
+  data.forEach(p => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div class="media-item-title">💧 ${p.nombre}</div>
+      <div class="media-item-body">${p.detalle}</div>
+    `;
+    listEl.appendChild(div);
+  });
+}
 
     /*********************
      * Catálogo: render + búsqueda
