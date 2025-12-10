@@ -2288,51 +2288,86 @@
     }
 
     function renderPlagas() {
-      const listEl = document.getElementById("plagasList");
-      if (!listEl) return;
+  const listEl = document.getElementById("plagasList");
+  if (!listEl) return;
 
-      const plagasData = [
-        {
-          nombre: "Pulgones",
-          detalle:
-            "Pequeños insectos que chupan savia y deforman brotes tiernos. Suelen aparecer en colonias.",
-          manejo:
-            "Rociar con agua y jabón potásico o preparar extracto de ajo/ají. Favorecer mariquitas y crisopas."
-        },
-        {
-          nombre: "Mosca blanca",
-          detalle:
-            "Insectos blancos que vuelan al mover la planta. Debilitan hojas y favorecen hongos.",
-          manejo:
-            "Trampas amarillas, jabón potásico y aceites vegetales suaves respetando dosis."
-        },
-        {
-          nombre: "Orugas",
-          detalle:
-            "Larvas que comen hojas dejando mordidas grandes o agujeros.",
-          manejo:
-            "Revisión manual frecuente, retirar orugas a mano. Bacillus thuringiensis en casos necesarios."
-        },
-        {
-          nombre: "Caracoles y babosas",
-          detalle:
-            "Suelo húmedo y restos de baba plateada cerca de las mordidas.",
-          manejo:
-            "Refugios-trampa, barreras físicas y recolección manual al atardecer."
-        }
-      ];
-
-      listEl.innerHTML = "";
-      plagasData.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <div class="media-item-title">🐛 ${p.nombre}</div>
-          <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.detalle}</div>
-          <div class="media-item-body"><strong>Manejo recomendado:</strong> ${p.manejo}</div>
-        `;
-        listEl.appendChild(div);
-      });
+  const plagasData = [
+    {
+      nombre: "Pulgones",
+      detalle:
+        "Pequeños insectos que chupan savia y deforman brotes tiernos. Suelen aparecer en colonias en la parte tierna de la planta.",
+      manejo:
+        "Rociar con agua y jabón potásico, o preparar extracto de ajo/ají. Favorecer mariquitas y crisopas (control biológico)."
+    },
+    {
+      nombre: "Mosca blanca",
+      detalle:
+        "Insectos blancos que vuelan al mover la planta. Se ubican en el envés de las hojas y debilitan la planta.",
+      manejo:
+        "Trampas amarillas adhesivas, jabón potásico y aceites vegetales suaves. Evitar aplicaciones a pleno sol."
+    },
+    {
+      nombre: "Orugas",
+      detalle:
+        "Larvas que comen hojas dejando mordidas grandes o agujeros. Suelen esconderse en el envés o entre pliegues.",
+      manejo:
+        "Revisión manual frecuente y retiro a mano. En casos fuertes, usar Bacillus thuringiensis siguiendo la etiqueta."
+    },
+    {
+      nombre: "Caracoles y babosas",
+      detalle:
+        "Aparecen en ambientes muy húmedos. Dejan hojas mordidas irregularmente y rastros de baba plateada.",
+      manejo:
+        "Refugios-trampa (tablillas, tejas), barreras físicas (ceniza, cáscara de huevo triturada) y recolección manual al atardecer."
+    },
+    {
+      nombre: "Araña roja",
+      detalle:
+        "Ácaro muy pequeño que produce puntos amarillos en las hojas y finas telarañas, sobre todo en clima seco y caluroso.",
+      manejo:
+        "Aumentar humedad ambiental, duchas de agua en el envés de las hojas y aplicaciones suaves de jabón potásico o extracto de ajo."
+    },
+    {
+      nombre: "Trips",
+      detalle:
+        "Insectos muy finos y rápidos, dejan manchas plateadas o rayas en hojas y pétalos, y pueden transmitir virosis.",
+      manejo:
+        "Trampas azules o amarillas, mantener buena diversidad de plantas y usar jabón potásico de forma preventiva."
+    },
+    {
+      nombre: "Cochinillas",
+      detalle:
+        "Pequeños bultos algodonosos o duros pegados a tallos y hojas. Chupan savia y producen melaza pegajosa.",
+      manejo:
+        "Retirar manualmente con hisopo y alcohol, podar partes muy afectadas y aplicar jabón potásico o aceite hortícola suave."
+    },
+    {
+      nombre: "Minador de hoja",
+      detalle:
+        "Larvas que hacen galerías o caminos claros dentro de la hoja, muy comunes en cítricos y algunas hortalizas.",
+      manejo:
+        "Retirar hojas muy afectadas y destruirlas. Favorecer enemigos naturales y evitar exceso de fertilización nitrogenada."
+    },
+    {
+      nombre: "Hongos de hoja (mildiu, oídio, manchas foliares)",
+      detalle:
+        "Manchas amarillas, cafés o polvillo blanco en las hojas. Empeoran con humedad alta o ventilación pobre.",
+      manejo:
+        "Mejorar ventilación, evitar mojar las hojas de noche y usar preventivos suaves como bicarbonato de potasio o preparados con cola de caballo."
     }
+  ];
+
+  listEl.innerHTML = "";
+  plagasData.forEach(p => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div class="media-item-title">🐛 ${p.nombre}</div>
+      <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.detalle}</div>
+      <div class="media-item-body"><strong>Manejo recomendado:</strong> ${p.manejo}</div>
+    `;
+    listEl.appendChild(div);
+  });
+}
 
     function renderPesticidas() {
       const listEl = document.getElementById("pesticidasList");
