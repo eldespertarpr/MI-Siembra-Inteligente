@@ -1332,7 +1332,21 @@
         ]
       }
     };
+    
+function ajustarMesPorHemisferio(settings, monthIndex) {
+  const climaKey = settings.clima || "tropical";
+  let mes = monthIndex;
 
+  // En climas templado/subtropical del hemisferio sur, invertimos estación (6 meses)
+  if (
+    settings.hemisferio === "sur" &&
+    (climaKey === "templado" || climaKey === "subtropical")
+  ) {
+    mes = (monthIndex + 6) % 12;
+  }
+
+  return mes;
+}
     function getCalendarData(settings, monthIndex) {
   const climaKey = settings.clima || "tropical";
   let mes = monthIndex;
