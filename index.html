@@ -1573,12 +1573,12 @@
       cultivoRecomendadoEnMes(c, stateSettings, monthIndex)
   );
 
-  // 3) Mostrar/ocultar el mensaje de "no hay recomendaciones"
+  // 3) Mostrar/ocultar el mensaje vacío
   if (!data.length && !sugeridos.length) {
-    // No hay nada ni en calendario ni en catálogo
+    // No hay NADA para este mes → mostramos el mensaje
     emptyEl.style.display = "block";
   } else {
-    // Hay algo que mostrar (calendario o catálogo)
+    // Sí hay algo (calendario y/o catálogo) → ocultamos el mensaje
     emptyEl.style.display = "none";
   }
 
@@ -1598,7 +1598,7 @@
     });
   }
 
-  // 5) Separador y título para sugerencias del catálogo (si hay)
+  // 5) Sugerencias desde el catálogo (si hay)
   if (sugeridos.length) {
     const separador = document.createElement("div");
     separador.className = "divider-soft";
