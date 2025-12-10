@@ -183,26 +183,26 @@
     .nav-btn {
       border: none;
       border-radius: 999px;
-      padding: 9px 6px 8px;
-      font-size: 0.78rem;
+      padding: 7px 6px 6px;
+      font-size: 0.70rem;
       color: var(--text-soft);
       background: transparent;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       cursor: pointer;
       transition: background 0.18s, color 0.18s, transform 0.12s;
       position: relative;
-      min-height: 64px;
+      min-height: 52px;
     }
 
     .nav-btn span.nav-icon {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
     }
 
     .nav-btn span.nav-label {
-      line-height: 1.2;
+      line-height: 1.1;
     }
 
     .nav-btn.nav-btn--active {
@@ -489,33 +489,31 @@
       box-shadow: 0 0 0 1px rgba(34,197,94,0.5);
       background: rgba(15,23,42,0.98);
     }
+/* Catálogo con imagen */
+.catalogo-card-main {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
 
-    /* Catálogo con imagen */
-    .catalogo-card-main {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-    }
+.catalogo-thumb {
+  flex-shrink: 0;
+}
 
-    .catalogo-thumb {
-      flex-shrink: 0;
-    }
+.catalogo-thumb img {
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 8px 20px rgba(15,23,42,0.7);
+}
 
-    .catalogo-thumb img {
-      width: 70px;
-      height: 70px;
-      border-radius: 16px;
-      object-fit: cover;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 8px 20px rgba(15,23,42,0.7);
-    }
-
-    @media (max-width: 480px) {
-      .catalogo-card-main {
-        flex-direction: row;
-      }
-    }
-
+@media (max-width: 480px) {
+  .catalogo-card-main {
+    flex-direction: row;
+  }
+}
     /* Mi huerto – tarjetas de cultivos */
 
     .cultivos-list {
@@ -549,17 +547,20 @@
       align-items: center;
       gap: 6px;
     }
+  /* Miniatura de imagen del catálogo */
+.cultivo-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
 
-    .cultivo-thumb {
-      width: 64px;
-      height: 64px;
-      border-radius: 18px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-
-    .cultivo-title span {
-      word-break: break-word;
+/* Si el nombre es largo, que salte de línea sin salirse */
+.cultivo-title span {
+  word-break: break-word;
+}
+    
     }
 
     .cultivo-body {
@@ -645,7 +646,7 @@
       padding: 8px 10px;
       background: rgba(15,23,42,0.9);
       border: 1px solid rgba(55,65,81,0.9);
-    }
+  }
 
     .diario-item-header {
       display: flex;
@@ -1201,8 +1202,8 @@
 
     const DEFAULT_SETTINGS = {
       nombreHuerto: "Mi huerto",
-      clima: "tropical",
-      hemisferio: "norte"
+      clima: "tropical", // tropical | subtropical | templado
+      hemisferio: "norte" // norte | sur
     };
 
     const CLIMA_LABEL = {
@@ -1334,78 +1335,711 @@
     };
 
     function getCalendarData(settings, monthIndex) {
-      const climaKey = settings.clima || "tropical";
-      let mes = monthIndex;
+  const climaKey = settings.clima || "tropical";
+  let mes = monthIndex;
 
-      if (
-        settings.hemisferio === "sur" &&
-        (climaKey === "templado" || climaKey === "subtropical")
-      ) {
-        mes = (monthIndex + 6) % 12;
-      }
+  // En climas templado/subtropical del hemisferio sur, invertimos estación
+  if (settings.hemisferio === "sur" && (climaKey === "templado" || climaKey === "subtropical")) {
+    mes = (monthIndex + 6) % 12;
+  }
 
-      const base = CALENDARIO_SIEMBRA[climaKey] || {};
-      return base[mes] || [];
-    }
-
-    function cultivoAplicaAClima(cultivo, settings) {
-      if (!cultivo.climas || !cultivo.climas.length) return true;
-      return cultivo.climas.includes(settings.clima);
-    }
-
-    function cultivoRecomendadoEnMes(cultivo, settings, monthIndex) {
-      const climaKey = settings.clima || "tropical";
-
-      let mesesBase = cultivo.meses || [];
-      if (cultivo.mesesPorClima && cultivo.mesesPorClima[climaKey]) {
-        mesesBase = cultivo.mesesPorClima[climaKey];
-      }
-
-      let mesUsuario = monthIndex;
-      if (
-        settings.hemisferio === "sur" &&
-        (climaKey === "templado" || climaKey === "subtropical")
-      ) {
-        mesUsuario = (monthIndex + 6) % 12;
-      }
-
-      return Array.isArray(mesesBase) && mesesBase.includes(mesUsuario);
+  const base = CALENDARIO_SIEMBRA[climaKey] || {};
+  return base[mes] || [];
     }
 
     /*********************
      * Catálogo de cultivos
      *********************/
     const CATALOGO_CULTIVOS = [
-      /* (CATÁLOGO COMPLETO IGUAL AL QUE PEGASTE – lo dejo tal cual) */
-      {
-        id: "tomate",
-        nombre: "Tomate",
-        categoria: "Fruto",
-        dias: "70–90 días",
-        luz: "Sol directo (6–8 h)",
-        riego: "Regular, sin encharcar",
-        tiesto: "Macetas profundas de 5+ galones",
-        profundidad: "0.5–1 cm",
-        plagas: ["Pulgones", "Mosca blanca", "Orugas"],
-        meses: [0, 1, 2, 3, 4, 5, 6, 7],
-        imagen: "img/tomate.jpg"
-      },
-      /* … TODAS LAS DEMÁS ENTRADAS QUE YA TENÍAS … */
-      {
-        id: "quimbombo",
-        nombre: "Quimbombó / Okra",
-        categoria: "Fruto",
-        dias: "60–80 días",
-        luz: "Sol directo fuerte",
-        riego: "Moderado, tolera algo de sequía",
-        tiesto: "Macetas de 5+ galones o suelo directo",
-        profundidad: "2–3 cm",
-        plagas: ["Pulgones", "Trips", "Ácaros"],
-        meses: [2, 3, 4, 5, 6, 7, 8],
-        imagen: "img/quimbombo.jpg"
-      }
-    ];
+  // 1. Tomate
+  {
+    id: "tomate",
+    nombre: "Tomate",
+    categoria: "Fruto",
+    dias: "70–90 días",
+    luz: "Sol directo (6–8 h)",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas profundas de 5+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones", "Mosca blanca", "Orugas"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7],
+    imagen: "img/tomate.jpg"
+  },
 
+  // 2. Lechuga
+  {
+    id: "lechuga",
+    nombre: "Lechuga",
+    categoria: "Hoja",
+    dias: "45–60 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Suelo siempre ligeramente húmedo",
+    tiesto: "Macetas anchas de 3+ galones",
+    profundidad: "0.5 cm",
+    plagas: ["Babosas", "Caracoles", "Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/lechuga.jpg"
+  },
+
+  // 3. Pepinillo / Pepino
+  {
+    id: "pepinillo",
+    nombre: "Pepinillo / Pepino",
+    categoria: "Fruto",
+    dias: "60–90 días",
+    luz: "Sol directo",
+    riego: "Abundante y constante",
+    tiesto: "Macetas profundas de 5+ galones con tutor",
+    profundidad: "1–2 cm",
+    plagas: ["Mosca blanca", "Ácaros", "Hongos"],
+    meses: [3, 4, 5, 6, 7, 8],
+    imagen: "img/pepinillo.jpg"
+  },
+
+  // 4. Plátano
+  {
+    id: "platano",
+    nombre: "Plátano",
+    categoria: "Fruto perenne",
+    dias: "Cosecha a partir de 9–12 meses",
+    luz: "Sol directo",
+    riego: "Regular, le gusta la humedad",
+    tiesto: "Suelo directo, espacio amplio",
+    profundidad: "Cormo enterrado firmemente",
+    plagas: ["Picudo del plátano", "Sigatoka"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/platano.jpg"
+  },
+
+  // 5. Pimiento morron
+  {
+    id: "pimiento_morron",
+    nombre: "Pimiento morron",
+    categoria: "Fruto",
+    dias: "80–100 días",
+    luz: "Sol directo (6–8 h)",
+    riego: "Regular, evitando encharcamientos",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "0.5 cm",
+    plagas: ["Pulgones", "Trips", "Araña roja"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/pimiento_morron.jpg"
+  },
+
+  // 6. Ají
+  {
+    id: "aji",
+    nombre: "Ají",
+    categoria: "Fruto",
+    dias: "90–110 días",
+    luz: "Sol directo",
+    riego: "Moderado, prefiere suelos bien drenados",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "0.5 cm",
+    plagas: ["Pulgones", "Mosca blanca"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/aji.jpg"
+  },
+
+  // 7. Berenjena
+  {
+    id: "berenjena",
+    nombre: "Berenjena",
+    categoria: "Fruto",
+    dias: "80–100 días",
+    luz: "Sol directo",
+    riego: "Constante, sin encharcar",
+    tiesto: "Macetas de 5+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Escarabajos", "Pulgones", "Araña roja"],
+    meses: [3, 4, 5, 6, 7, 8],
+    imagen: "img/berenjena.jpg"
+  },
+
+  // 8. Cebolla
+  {
+    id: "cebolla",
+    nombre: "Cebolla",
+    categoria: "Bulbo",
+    dias: "100–150 días",
+    luz: "Sol directo",
+    riego: "Moderado, reducir antes de cosechar",
+    tiesto: "Macetas profundas o suelo directo",
+    profundidad: "1–2 cm",
+    plagas: ["Trips", "Mosca de la cebolla"],
+    meses: [0, 1, 2, 6, 7, 8, 9, 10],
+    imagen: "img/cebolla.jpg"
+  },
+
+  // 9. Cebolleta / cebollín
+  {
+    id: "cebollin",
+    nombre: "Cebollín / cebolleta",
+    categoria: "Bulbo",
+    dias: "60–90 días",
+    luz: "Sol directo o media sombra",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "1 cm",
+    plagas: ["Trips"],
+    meses: [0, 1, 2, 3, 4, 8, 9, 10, 11],
+    imagen: "img/cebollin.jpg"
+  },
+
+  // 10. Zanahoria
+  {
+    id: "zanahoria",
+    nombre: "Zanahoria",
+    categoria: "Raíz",
+    dias: "70–100 días",
+    luz: "Sol directo",
+    riego: "Suelo siempre ligeramente húmedo",
+    tiesto: "Macetas profundas (30+ cm)",
+    profundidad: "0.5–1 cm",
+    plagas: ["Mosca de la zanahoria", "Hongos"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/zanahoria.jpg"
+  },
+
+  // 11. Rábano
+  {
+    id: "rabano",
+    nombre: "Rábano",
+    categoria: "Raíz",
+    dias: "25–35 días",
+    luz: "Sol directo o media sombra",
+    riego: "Suelo constantemente húmedo",
+    tiesto: "Macetas de 3+ galones, algo profundas",
+    profundidad: "1 cm",
+    plagas: ["Pulguillas", "Babosas"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/rabano.jpg"
+  },
+
+  // 12. Remolacha
+  {
+    id: "remolacha",
+    nombre: "Remolacha",
+    categoria: "Raíz",
+    dias: "60–80 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas profundas (25+ cm)",
+    profundidad: "1–2 cm",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/remolacha.jpg"
+  },
+
+  // 13. Papa
+  {
+    id: "papa",
+    nombre: "Papa",
+    categoria: "Tubérculo",
+    dias: "90–120 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Sacos o macetas profundas de 10+ galones",
+    profundidad: "Tubérculo cubierto con 5–10 cm de sustrato",
+    plagas: ["Escarabajo de la papa", "Hongos"],
+    meses: [0, 1, 2, 7, 8, 9],
+    imagen: "img/papa.jpg"
+  },
+
+  // 14. Batata
+  {
+    id: "batata",
+    nombre: "Batata",
+    categoria: "Tubérculo",
+    dias: "120–150 días",
+    luz: "Sol directo",
+    riego: "Moderado, tolera algo de sequía",
+    tiesto: "Suelo directo o macetas grandes",
+    profundidad: "Estacas enterradas 5–10 cm",
+    plagas: ["Gusanos de suelo", "Hongos"],
+    meses: [2, 3, 4, 5, 6, 7, 8],
+    imagen: "img/batata.jpg"
+  },
+
+  // 15. Yuca
+  {
+    id: "yuca",
+    nombre: "Yuca",
+    categoria: "Tubérculo perenne",
+    dias: "8–12 meses",
+    luz: "Sol directo",
+    riego: "Poca exigencia, suelo bien drenado",
+    tiesto: "Mejor en suelo directo",
+    profundidad: "Estacas enterradas 15–20 cm",
+    plagas: ["Mosca blanca", "Ácaros"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/yuca.jpg"
+  },
+
+  // 16. Maíz
+  {
+    id: "maiz",
+    nombre: "Maíz",
+    categoria: "Grano",
+    dias: "80–100 días",
+    luz: "Sol directo",
+    riego: "Regular, más constante en floración",
+    tiesto: "Parterres o contenedores grandes y profundos",
+    profundidad: "2–3 cm",
+    plagas: ["Gusanos del maíz", "Pulgones"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/maiz.jpg"
+  },
+
+  // 17. Habichuelas
+  {
+    id: "habichuelas",
+    nombre: "Habichuelas",
+    categoria: "Leguminosa",
+    dias: "60–80 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 5+ galones con tutor",
+    profundidad: "2–3 cm",
+    plagas: ["Pulgones", "Trips"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/habichuelas.jpg"
+  },
+
+  // 18. Habichuela arbustiva
+  {
+    id: "habichuela_arbustiva",
+    nombre: "Habichuela arbustiva",
+    categoria: "Leguminosa",
+    dias: "55–70 días",
+    luz: "Sol directo",
+    riego: "Regular",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "2–3 cm",
+    plagas: ["Pulgones", "Trips"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/habichuela_arbustiva.jpg"
+  },
+
+  // 19. Gandules
+  {
+    id: "gandules",
+    nombre: "Gandules",
+    categoria: "Leguminosa perenne",
+    dias: "4–6 meses para la primera cosecha",
+    luz: "Sol directo",
+    riego: "Moderado, resistente a sequía",
+    tiesto: "Suelo directo o macetas muy grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Gusanos de vaina", "Pulgones"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/gandules.jpg"
+  },
+
+  // 20. Calabaza
+  {
+    id: "calabaza",
+    nombre: "Calabaza",
+    categoria: "Fruto rastrero",
+    dias: "90–130 días",
+    luz: "Sol directo",
+    riego: "Regular, le gusta suelo fértil",
+    tiesto: "Suelo directo o macetas muy grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Barrenador de tallo", "Mosca blanca"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/calabaza.jpg"
+  },
+
+  // 21. Calabacín / zucchini
+  {
+    id: "calabacin_zucchini",
+    nombre: "Calabacín / Zucchini",
+    categoria: "Fruto",
+    dias: "45–60 días",
+    luz: "Sol directo",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 8+ galones",
+    profundidad: "2–3 cm",
+    plagas: ["Oídio", "Pulgones"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/calabacin_zucchini.jpg"
+  },
+
+  // 22. Melón
+  {
+    id: "melon",
+    nombre: "Melón",
+    categoria: "Fruto rastrero",
+    dias: "90–120 días",
+    luz: "Sol directo",
+    riego: "Regular, reducir al madurar frutos",
+    tiesto: "Suelo directo o macetas grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Mosca blanca", "Oídio"],
+    meses: [3, 4, 5, 6, 7],
+    imagen: "img/melon.jpg"
+  },
+
+  // 23. Sandía
+  {
+    id: "sandia",
+    nombre: "Sandía",
+    categoria: "Fruto rastrero",
+    dias: "90–120 días",
+    luz: "Sol directo fuerte",
+    riego: "Abundante al inicio, reducir en madurez",
+    tiesto: "Suelo directo o contenedores muy grandes",
+    profundidad: "2–3 cm",
+    plagas: ["Mosca blanca", "Oídio"],
+    meses: [3, 4, 5, 6, 7],
+    imagen: "img/sandia.jpg"
+  },
+
+  // 24. Espinaca
+  {
+    id: "espinaca",
+    nombre: "Espinaca",
+    categoria: "Hoja",
+    dias: "40–60 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Suelo fresco y húmedo",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Babosas", "Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/espinaca.jpg"
+  },
+
+  // 25. Acelga
+  {
+    id: "acelga",
+    nombre: "Acelga",
+    categoria: "Hoja",
+    dias: "50–70 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Regular, sin encharcar",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "1–2 cm",
+    plagas: ["Babosas", "Caracoles"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/acelga.jpg"
+  },
+
+  // 26. Col rizada 
+  {
+    id: "col_rizada",
+    nombre: "Col rizada_kale",
+    categoria: "Hoja",
+    dias: "60–90 días",
+    luz: "Sol directo o media sombra",
+    riego: "Regular",
+    tiesto: "Macetas de 5+ galones",
+    profundidad: "1 cm",
+    plagas: ["Orugas", "Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/col_rizada_kale.jpg"
+  },
+
+  // 27. Cilantro
+  {
+    id: "cilantro",
+    nombre: "Cilantro",
+    categoria: "Aromática",
+    dias: "30–50 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Suelo fresco y húmedo",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/cilantro.jpg"
+  },
+
+  // 28. Perejil
+  {
+    id: "perejil",
+    nombre: "Perejil",
+    categoria: "Aromática",
+    dias: "70–90 días",
+    luz: "Sol suave o sombra parcial",
+    riego: "Regular",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 4, 8, 9, 10, 11],
+    imagen: "img/perejil.jpg"
+  },
+
+  // 29. Albahaca
+  {
+    id: "albahaca",
+    nombre: "Albahaca",
+    categoria: "Aromática",
+    dias: "40–60 días",
+    luz: "Sol directo suave",
+    riego: "Suelo ligeramente húmedo",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "0.5 cm",
+    plagas: ["Pulgones", "Mosca blanca"],
+    meses: [2, 3, 4, 5, 6, 7, 8],
+    imagen: "img/albahaca.jpg"
+  },
+
+  // 30. Orégano
+  {
+    id: "oregano",
+    nombre: "Orégano",
+    categoria: "Aromática perenne",
+    dias: "Cosecha a partir de 60 días",
+    luz: "Sol directo",
+    riego: "Escaso, prefiere suelos secos",
+    tiesto: "Macetas de 3+ galones",
+    profundidad: "Superficial, esquejes o plantines",
+    plagas: ["Muy pocas plagas importantes"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/oregano.jpg"
+  },
+
+  // 31. Menta
+  {
+    id: "menta",
+    nombre: "Menta",
+    categoria: "Aromática perenne",
+    dias: "Cosecha desde 40–60 días",
+    luz: "Media sombra o sol suave",
+    riego: "Le gusta humedad constante",
+    tiesto: "Macetas profundas (mejor aislada, es invasiva)",
+    profundidad: "Plantines o esquejes superficiales",
+    plagas: ["Pulgones"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/menta.jpg"
+  },
+
+  // 32. Romero
+  {
+    id: "romero",
+    nombre: "Romero",
+    categoria: "Aromática perenne",
+    dias: "Planta lenta, cosecha continua",
+    luz: "Sol directo",
+    riego: "Muy poco, prefiere suelos secos",
+    tiesto: "Macetas de 5+ galones",
+    profundidad: "Esquejes o plantines superficiales",
+    plagas: ["Pocas plagas, a veces cochinilla"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/romero.jpg"
+  },
+
+  // 33. Tomillo
+  {
+    id: "tomillo",
+    nombre: "Tomillo",
+    categoria: "Aromática perenne",
+    dias: "Cosecha desde 60 días",
+    luz: "Sol directo",
+    riego: "Escaso",
+    tiesto: "Macetas pequeñas o medianas",
+    profundidad: "Semilla muy superficial o plantines",
+    plagas: ["Muy poco susceptible"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/tomillo.jpg"
+  },
+
+  // 34. Fresas
+  {
+    id: "fresas",
+    nombre: "Fresas",
+    categoria: "Fruto",
+    dias: "4–6 meses desde plantín",
+    luz: "Sol directo suave",
+    riego: "Regular, le gusta el sustrato húmedo",
+    tiesto: "Jardineras o macetas colgantes",
+    profundidad: "Plantines al nivel del cuello",
+    plagas: ["Babosas", "Hongos"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/fresas.jpg"
+  },
+
+  // 35. Papaya
+  {
+    id: "papaya",
+    nombre: "Papaya",
+    categoria: "Frutal",
+    dias: "9–14 meses hasta la primera cosecha",
+    luz: "Sol directo",
+    riego: "Regular, suelo bien drenado",
+    tiesto: "Mejor en suelo directo",
+    profundidad: "Semillas superficiales, luego trasplante",
+    plagas: ["Mosca de la fruta", "Hongos"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/papaya.jpg"
+  },
+
+  // 36. Guayaba
+  {
+    id: "guayaba",
+    nombre: "Guayaba",
+    categoria: "Frutal perenne",
+    dias: "18–24 meses desde plantín",
+    luz: "Sol directo",
+    riego: "Moderado, tolera algo de sequía",
+    tiesto: "Mejor suelo directo, puede ir en macetón",
+    profundidad: "Plantín al nivel del cuello",
+    plagas: ["Mosca de la fruta"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/guayaba.jpg"
+  },
+
+  // 37. Parcha
+  {
+    id: "parcha",
+    nombre: "Parcha",
+    categoria: "Frutal trepador",
+    dias: "8–12 meses",
+    luz: "Sol directo",
+    riego: "Regular, suelo fértil",
+    tiesto: "Suelo directo con enredadera",
+    profundidad: "Plantines al nivel del cuello",
+    plagas: ["Mosca de la fruta", "Ácaros"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/parcha.jpg"
+  },
+
+  // 38. Mango
+  {
+    id: "mango",
+    nombre: "Mango",
+    categoria: "Frutal perenne",
+    dias: "Varios años hasta producir (dependiendo del tamaño del plantín)",
+    luz: "Sol directo fuerte",
+    riego: "Poco una vez establecido",
+    tiesto: "Suelo directo; en macetón solo variedades enanas",
+    profundidad: "Plantín al nivel del cuello",
+    plagas: ["Mosca de la fruta", "Hongos"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/mango.jpg"
+  },
+
+  // 39. Limón
+  {
+    id: "limon",
+    nombre: "Limón",
+    categoria: "Frutal cítrico",
+    dias: "2–3 años desde plantín",
+    luz: "Sol directo",
+    riego: "Regular en sequía",
+    tiesto: "Macetón grande o suelo directo",
+    profundidad: "Plantín al nivel del cuello",
+    plagas: ["Minador de hoja", "Cochinillas"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/limon.jpg"
+  },
+
+  // 40. Café
+  {
+    id: "cafe",
+    nombre: "Café",
+    categoria: "Perene",
+    dias: "2–3 años hasta la primera cosecha",
+    luz: "Sombra parcial (bajo árboles) o sol suave",
+    riego: "Regular, no encharcar",
+    tiesto: "Macetones profundos o suelo directo",
+    profundidad: "Plantines al nivel del cuello",
+    plagas: ["Broca del café", "Hongos"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/cafe.jpg"
+  },
+  // 41. Ajo
+  {
+    id: "ajo",
+    nombre: "Ajo",
+    categoria: "Bulbo",
+    dias: "120–180 días",
+    luz: "Sol directo",
+    riego: "Moderado, sin encharcar",
+    tiesto: "Macetas profundas o suelo directo",
+    profundidad: "2–3 cm",
+    plagas: ["Trips", "Mosca de la cebolla"],
+    meses: [0, 1, 2, 6, 7, 8, 9, 10],
+    imagen: "img/ajo.jpg"
+  },
+
+  // 42. Pimiento (genérico)
+  {
+    id: "pimiento",
+    nombre: "Pimiento",
+    categoria: "Fruto",
+    dias: "75–95 días",
+    luz: "Sol directo (6–8 h)",
+    riego: "Regular, evitando encharcamientos",
+    tiesto: "Macetas de 4–5 galones",
+    profundidad: "0.5 cm",
+    plagas: ["Pulgones", "Trips", "Araña roja"],
+    meses: [2, 3, 4, 5, 6, 7],
+    imagen: "img/pimiento.jpg"
+  },
+
+  // 43. Brócoli
+  {
+    id: "brocoli",
+    nombre: "Brócoli",
+    categoria: "Brásica",
+    dias: "80–100 días",
+    luz: "Sol directo suave",
+    riego: "Suelo siempre ligeramente húmedo",
+    tiesto: "Macetas profundas de 5+ galones",
+    profundidad: "0.5–1 cm",
+    plagas: ["Orugas", "Pulgones", "Babosas"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/brocoli.jpg"
+  },
+
+  // 44. China (naranja)
+  {
+    id: "china",
+    nombre: "China (naranja)",
+    categoria: "Frutal cítrico",
+    dias: "2–3 años desde plantín",
+    luz: "Sol directo",
+    riego: "Regular en época seca",
+    tiesto: "Macetón grande o suelo directo",
+    profundidad: "Plantín al nivel del cuello",
+    plagas: ["Minador de hoja", "Cochinillas", "Mosca de la fruta"],
+    meses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    imagen: "img/china.jpg"
+  },
+
+  // 45. Coliflor
+  {
+    id: "coliflor",
+    nombre: "Coliflor",
+    categoria: "Brásica",
+    dias: "80–110 días",
+    luz: "Sol directo suave o media sombra",
+    riego: "Suelo siempre ligeramente húmedo",
+    tiesto: "Macetas profundas de 5+ galones o suelo directo",
+    profundidad: "0.5–1 cm",
+    plagas: ["Pulgones", "Caracoles"],
+    meses: [0, 1, 2, 3, 8, 9, 10, 11],
+    imagen: "img/coliflor.jpg"
+  },
+
+  // 48. Quimbombó (okra)
+  {
+    id: "quimbombo",
+    nombre: "Quimbombó / Okra",
+    categoria: "Fruto",
+    dias: "60–80 días",
+    luz: "Sol directo fuerte",
+    riego: "Moderado, tolera algo de sequía",
+    tiesto: "Macetas de 5+ galones o suelo directo",
+    profundidad: "2–3 cm",
+    plagas: ["Pulgones", "Trips", "Ácaros"],
+    meses: [2, 3, 4, 5, 6, 7, 8],
+    imagen: "img/quimbombo.jpg"
+  }
+]
     /*********************
      * Estado global
      *********************/
@@ -1414,7 +2048,7 @@
     let stateDiario = loadDiario();
 
     /*********************
-     * Render de UI
+     * Render de UI (header, chips, etc.)
      *********************/
     function updateHeader() {
       const subtitleEl = document.getElementById("appSubtitle");
@@ -1481,6 +2115,7 @@
           'Tienes anotaciones en el diario pero aún no has añadido cultivos. Usa "Mi huerto" para registrar lo que estás sembrando.';
       }
 
+      // Calendario "hoy" (usa mes actual)
       const now = new Date();
       const monthIndex = now.getMonth();
       const data = getCalendarData(stateSettings, monthIndex);
@@ -1556,6 +2191,9 @@
       });
     }
 
+    /*********************
+     * Calendario (con catálogo)
+     *********************/
     function renderCalendario(monthIndex = 5) {
       const listEl = document.getElementById("calendarList");
       const emptyEl = document.getElementById("calendarEmpty");
@@ -1565,6 +2203,7 @@
 
       listEl.innerHTML = "";
 
+      // 1) Texto básico de calendario
       if (data.length) {
         emptyEl.style.display = "none";
 
@@ -1584,10 +2223,9 @@
         emptyEl.style.display = "block";
       }
 
+      // 2) Sugerencias extra desde el catálogo
       const sugeridos = CATALOGO_CULTIVOS.filter(
-        c =>
-          cultivoAplicaAClima(c, stateSettings) &&
-          cultivoRecomendadoEnMes(c, stateSettings, monthIndex)
+        c => Array.isArray(c.meses) && c.meses.includes(monthIndex)
       );
 
       if (sugeridos.length) {
@@ -1655,74 +2293,32 @@
 
       const plagasData = [
         {
-          nombre: "Pulgones (áfidos)",
+          nombre: "Pulgones",
           detalle:
-            "Insectos pequeños (verdes, negros o amarillos) que se agrupan en brotes tiernos y el envés de las hojas. Deforman hojas y chupan savia.",
+            "Pequeños insectos que chupan savia y deforman brotes tiernos. Suelen aparecer en colonias.",
           manejo:
-            "Rociar con agua y jabón potásico, repetir cada 3–5 días. Favorecer mariquitas y crisopas; evitar exceso de fertilizante nitrogenado."
+            "Rociar con agua y jabón potásico o preparar extracto de ajo/ají. Favorecer mariquitas y crisopas."
         },
         {
           nombre: "Mosca blanca",
           detalle:
-            "Pequeños insectos blancos que salen volando al mover la planta. Producen melaza pegajosa y favorecen hongos negros (fumagina).",
+            "Insectos blancos que vuelan al mover la planta. Debilitan hojas y favorecen hongos.",
           manejo:
-            "Trampas amarillas pegajosas, jabón potásico y aceite de neem en aplicaciones suaves al atardecer."
+            "Trampas amarillas, jabón potásico y aceites vegetales suaves respetando dosis."
         },
         {
-          nombre: "Trips",
+          nombre: "Orugas",
           detalle:
-            "Insectos muy finos y alargados que dejan manchas plateadas o rayas en las hojas y flores.",
+            "Larvas que comen hojas dejando mordidas grandes o agujeros.",
           manejo:
-            "Trampas azules, jabón potásico y extractos de ajo/ají. Mantener buena humedad ambiental sin encharcar."
+            "Revisión manual frecuente, retirar orugas a mano. Bacillus thuringiensis en casos necesarios."
         },
         {
-          nombre: "Araña roja (ácaros)",
+          nombre: "Caracoles y babosas",
           detalle:
-            "Puntos rojizos muy pequeños, hacen telarañas finas y hojas amarillentas o con puntitos claros.",
+            "Suelo húmedo y restos de baba plateada cerca de las mordidas.",
           manejo:
-            "Aumentar humedad ambiental, duchas de agua en el envés de las hojas, jabón potásico y, si hace falta, aceite de neem muy diluido."
-        },
-        {
-          nombre: "Orugas (gusanos de hoja)",
-          detalle:
-            "Larvas que comen hojas dejando mordidas grandes o agujeros. A veces se esconden durante el día.",
-          manejo:
-            "Revisión manual frecuente y retirar orugas a mano. En ataques fuertes, usar Bacillus thuringiensis (biológico) siguiendo indicaciones."
-        },
-        {
-          nombre: "Babosas y caracoles",
-          detalle:
-            "Dejan mordidas grandes en hojas bajas y rastros de baba plateada en el suelo y las plantas.",
-          manejo:
-            "Recolectar al atardecer, usar refugios-trampa (tablitas, cáscaras de fruta) y barreras físicas como ceniza, cáscara de huevo triturada o cinta de cobre."
-        },
-        {
-          nombre: "Cochinillas",
-          detalle:
-            "Forman bultitos blancos o marrones, algodonosos o duros, en tallos y hojas. Producen melaza pegajosa.",
-          manejo:
-            "Retirar con hisopo o paño con agua jabonosa, aplicar jabón potásico o aceite de neem sobre las colonias."
-        },
-        {
-          nombre: "Minador de hoja",
-          detalle:
-            "Larvas que hacen galerías blancas o transparentes dentro de la hoja (como caminos serpenteantes).",
-          manejo:
-            "Retirar y desechar hojas muy afectadas. Fomentar enemigos naturales. Se puede reforzar con aceite de neem suave y constante vigilancia."
-        },
-        {
-          nombre: "Mosca de la fruta",
-          detalle:
-            "Ataca frutos (tomate, parcha, papaya, cítricos, etc.), poniendo huevos y dañando la pulpa.",
-          manejo:
-            "Recolectar frutos maduros a tiempo, no dejar fruta dañada en el suelo, usar trampas caseras con vinagre/jugo y botellas, y mallas para proteger cultivos sensibles."
-        },
-        {
-          nombre: "Hongos en hojas (oídio, mildiu, manchas)",
-          detalle:
-            "Manchas blancas en polvo (oídio), amarillas con moho por debajo (mildiu) o puntos marrones en hojas.",
-          manejo:
-            "Mejorar ventilación, evitar mojar tanto las hojas, retirar hojas muy enfermas. Se puede usar bicarbonato de sodio o extractos de cola de caballo como preventivo."
+            "Refugios-trampa, barreras físicas y recolección manual al atardecer."
         }
       ];
 
@@ -1732,7 +2328,7 @@
         div.innerHTML = `
           <div class="media-item-title">🐛 ${p.nombre}</div>
           <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.detalle}</div>
-          <div class="media-item-body"><strong>Manejo recomendado (no tóxico):</strong> ${p.manejo}</div>
+          <div class="media-item-body"><strong>Manejo recomendado:</strong> ${p.manejo}</div>
         `;
         listEl.appendChild(div);
       });
@@ -1746,37 +2342,17 @@
         {
           nombre: "Jabón potásico",
           detalle:
-            "Limpia y ablanda la capa externa de muchos insectos blandos (pulgones, mosca blanca, trips). Se usa muy diluido en agua y se aplica al atardecer, en el envés de las hojas."
+            "Eficaz contra pulgones y mosca blanca. Aplicar al atardecer y en hojas, evitando flores abiertas."
         },
         {
           nombre: "Aceite de neem (uso hortícola)",
           detalle:
-            "Aceite vegetal con efecto sobre el ciclo de varias plagas (mosca blanca, minador, cochinillas, ácaros). Usar en dosis bajas y siempre siguiendo etiqueta; aplicar al atardecer."
+            "Ayuda a cortar ciclos de varias plagas. Usar con moderación y siempre siguiendo etiqueta."
         },
         {
-          nombre: "Infusión o extracto de ajo y ají picante",
+          nombre: "Infusión de ajo y ají",
           detalle:
-            "Preparado casero que actúa como repelente y apoyo contra insectos blandos y algunos hongos. Se cuela bien y se aplica en pulverización fina sobre hojas."
-        },
-        {
-          nombre: "Macerado de cebolla",
-          detalle:
-            "Similar al ajo, ayuda a repeler pulgones y trips. Se deja cebolla en agua unas horas, se cuela y se aplica en pulverización."
-        },
-        {
-          nombre: "Trampas cromáticas",
-          detalle:
-            "Cartones amarillos o azules con pegamento que atraen mosca blanca, trips y otros insectos voladores sin usar venenos. Útiles para monitoreo y captura."
-        },
-        {
-          nombre: "Bacillus thuringiensis (Bt)",
-          detalle:
-            "Producto biológico que afecta principalmente a larvas de orugas cuando comen hojas tratadas. No es un veneno químico clásico, pero hay que usarlo solo cuando sea necesario y siguiendo indicaciones."
-        },
-        {
-          nombre: "Tierra de diatomeas (grado alimentario)",
-          detalle:
-            "Polvo mineral muy fino que daña la cutícula de insectos rastreros (babosas pequeñas, hormigas, cucarachitas). Se aplica en seco sobre el suelo, evitando respirar el polvo y no usar en días de mucho viento."
+            "Preparado casero de olor fuerte que puede repeler insectos suaves y algunos hongos."
         }
       ];
 
@@ -1791,6 +2367,9 @@
       });
     }
 
+    /*********************
+     * Catálogo: render + búsqueda
+     *********************/
     function renderCatalogo(filtroTexto = "") {
       const listEl = document.getElementById("catalogoList");
       if (!listEl) return;
@@ -1859,11 +2438,11 @@
         btn.addEventListener("click", () => {
           const section = btn.getAttribute("data-section");
           if (!section) return;
-
+          // botones activos
           navButtons.forEach(b =>
             b.classList.toggle("nav-btn--active", b === btn)
           );
-
+          // secciones
           document.querySelectorAll(".section").forEach(sec => {
             sec.classList.toggle(
               "section--active",
@@ -1899,6 +2478,7 @@
         });
       });
 
+      // seleccionar mes actual por defecto
       const now = new Date();
       const currentMonth = now.getMonth();
       const target = Array.from(pills).find(
@@ -1946,6 +2526,7 @@
         alert("Cultivo guardado.");
       });
 
+      // Delegación para botones de cada tarjeta
       document
         .getElementById("cultivosList")
         .addEventListener("click", ev => {
@@ -2001,6 +2582,7 @@
       const climaSelect = document.getElementById("climaSelect");
       const hemisSelect = document.getElementById("hemisferioSelect");
 
+      // Inicializar valores
       nombreInput.value = stateSettings.nombreHuerto || "";
       climaSelect.value = stateSettings.clima || "tropical";
       hemisSelect.value = stateSettings.hemisferio || "norte";
@@ -2024,6 +2606,7 @@
         alert("Configuración guardada.");
       });
 
+      // Exportar/importar/borrar
       document.getElementById("btnExportar").addEventListener("click", () => {
         const exportObj = {
           settings: stateSettings,
@@ -2051,6 +2634,7 @@
             stateDiario = data.diario;
             saveDiario(stateDiario);
           }
+          // Re-render
           nombreInput.value = stateSettings.nombreHuerto || "";
           climaSelect.value = stateSettings.clima || "tropical";
           hemisSelect.value = stateSettings.hemisferio || "norte";
@@ -2079,6 +2663,7 @@
         stateSettings = { ...DEFAULT_SETTINGS };
         stateCultivos = [];
         stateDiario = [];
+        // Re-render completo
         nombreInput.value = stateSettings.nombreHuerto;
         climaSelect.value = stateSettings.clima;
         hemisSelect.value = stateSettings.hemisferio;
@@ -2093,7 +2678,7 @@
     }
 
     /*********************
-     * PWA
+     * PWA: service worker + instalar
      *********************/
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
@@ -2144,4 +2729,4 @@
     });
   </script>
 </body>
-                </html>
+    </html>
