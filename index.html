@@ -2233,9 +2233,10 @@ function ajustarMesPorHemisferio(settings, monthIndex) {
               : ""
           }
           <div class="cultivo-actions">
-            <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
-            <button class="btn-danger btn" data-id="${c.id}" data-action="borrar">🗑 Eliminar</button>
-          </div>
+  <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
+  <button class="btn-secondary btn" data-id="${c.id}" data-action="plaga">🐛 Plagas de este cultivo</button>
+  <button class="btn-danger btn" data-id="${c.id}" data-action="borrar">🗑 Eliminar</button>
+</div>
         `;
 
         listEl.appendChild(card);
