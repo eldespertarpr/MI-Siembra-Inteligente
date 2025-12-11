@@ -2765,20 +2765,42 @@ function renderPlagas(highlightId) {
           if (!cultivo) return;
 
           if (action === "borrar") {
-            if (confirm(`¿Eliminar el cultivo "${cultivo.nombre}"?`)) {
-              stateCultivos = stateCultivos.filter(c => c.id !== id);
-              saveCultivos(stateCultivos);
-              renderCultivos();
-              renderInicio();
-            }
-          } else if (action === "nota") {
-            document.querySelector('.nav-btn[data-section="diario"]').click();
-            const campo = document.getElementById("diarioTexto");
-            campo.value = `Cultivo: ${cultivo.nombre} (${
-              cultivo.variedad || "sin variedad"
-            }). `;
-            campo.focus();
-          }
+      if (confirm(`¿Eliminar el cultivo "${cultivo.nombre}"?`)) {
+        stateCultivos = stateCultivos.filter(c => c.id !== id);
+        saveCultivos(stateCultivos);
+        renderCultivos();
+        renderInicio();
+      }
+    } else if (action === "nota") {
+      document.querySelector('.nav-btn[data-section="diario"]').click();
+      const campo = document.getElementById("diarioTexto");
+      campo.value = `Cultivo: ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}). `;
+      campo.focus();
+    } else if (action === "plaga") {
+      const entrada = prompt(
+        'Escribe la plaga que quieres consultar para este cultivo (ej. "minador", "pulgones", "araña roja"):'
+      );
+      if (!entrada) return;
+
+      const texto = entrada.trim().toLowerCase();
+      const plaga = PLAGAS_DATA.find(p =>
+        p.nombre.toLowerCase().includes(texto)
+      );
+
+      if (!plaga) {
+        alert("No encontré esa plaga en la lista. Revisa el nombre (ej. minador, pulgones).");
+        return;
+      }
+
+      // Guardamos la plaga principal en el cultivo (opcional)
+      cultivo.plagaId = plaga.id;
+      saveCultivos(stateCultivos);
+
+      // Cambiamos a la pestaña Plagas y resaltamos esa plaga
+      document.querySelector('.nav-btn[data-section="plagas"]').click();
+      renderPlagas(plaga.id);
+      alert(`Mostrando información para: ${plaga.nombre}.`);
+    }
         });
     }
 
