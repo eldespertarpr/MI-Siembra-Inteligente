@@ -2515,51 +2515,15 @@ const PLAGAS_DATA = [
       nombre: "Trips",
       comoSeVe:
         "Manchas plateadas o rayas en hojas y pétalos. Al mirar de cerca se ven insectos alargados, muy finos y rápidos.",
-      manejoSuave:
-        "Eliminar flores y hojas muy dañadas, mejorar ventilación y evitar exceso de fertilización.",
-      preparadosCaseros:
-        "Trampas azules o amarillas adhesivas y jabón potásico suave como apoyo.",
-      productosComerciales:
-        "Insecticidas para trips de uso doméstico, respetando tiempos de seguridad antes de cosechar."
-    },
-    {
-      nombre: "Cochinillas",
-      comoSeVe:
-        "Bultitos algodonosos o duros pegados a tallos y hojas. Producen melaza pegajosa y atraen hormigas.",
-      manejoSuave:
-        "Quitar las cochinillas a mano o con hisopo y alcohol. Podar las partes muy infestadas.",
-      preparadosCaseros:
-        "Aplicaciones de jabón potásico y aceites vegetales suaves (hortícolas) en el envés y tallos.",
-      productosComerciales:
-        "Aceites hortícolas minerales o productos específicos para cochinilla en cítricos y ornamentales."
-    },
-    {
-      nombre: "Minador de hoja (especial en cítricos)",
-      comoSeVe:
-        "Hace galerías o caminos claros dentro de la hoja, como líneas serpenteantes. Afecta sobre todo hojas tiernas de cítricos y algunas hortalizas.",
-      manejoSuave:
-        "Podar y desechar las hojas y brotes más dañados sin dejar la planta sin follaje. Evitar exceso de fertilizante fuerte que provoque brotes muy tiernos.",
-      preparadosCaseros:
-        "No hay un remedio casero que lo elimine por completo, pero ayuda mantener plantas fuertes, revisar brotes nuevos cada semana y retirar hojas recién afectadas.",
-      productosComerciales:
-        "Aceites hortícolas o productos específicos para minador de hoja en cítricos, aplicados al atardecer y siempre siguiendo la etiqueta."
-    },
-    {
-      nombre: "Hongos de hoja (mildiu, oídio, manchas)",
-      comoSeVe:
-        "Manchas amarillas o cafés, a veces polvillo blanco sobre la hoja. Empeoran con humedad alta y poca ventilación.",
-      manejoSuave:
-        "Mejorar ventilación, evitar mojar el follaje de noche y quitar hojas muy enfermas.",
-      preparadosCaseros:
-        "Soluciones suaves de bicarbonato de potasio o infusiones de cola de caballo, usadas de forma preventiva.",
-      productosComerciales:
-        "Fungicidas autorizados para huerto casero (orgánicos o convencionales), siempre respetando tiempos de seguridad antes de cosechar."
-    }
-  ];
+function renderPlagas(highlightId) {
+  const listEl = document.getElementById("plagasList");
+  if (!listEl) return;
 
   listEl.innerHTML = "";
-  plagasData.forEach(p => {
+  PLAGAS_DATA.forEach(p => {
+    const isHighlighted = highlightId && p.id === highlightId;
     const div = document.createElement("div");
+    div.className = "plaga-card" + (isHighlighted ? " plaga-card--highlight" : "");
     div.innerHTML = `
       <div class="media-item-title">🐛 ${p.nombre}</div>
       <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.comoSeVe}</div>
