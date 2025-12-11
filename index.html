@@ -2308,7 +2308,6 @@ const sugeridos = CATALOGO_CULTIVOS.filter(
           listEl.appendChild(div);
         });
       }
-    }
 
     function renderDiario() {
       const listEl = document.getElementById("diarioList");
@@ -2338,7 +2337,119 @@ const sugeridos = CATALOGO_CULTIVOS.filter(
         `;
         listEl.appendChild(div);
       });
-    }
+    }/*********************
+ * Plagas (datos base)
+ *********************/
+const PLAGAS_DATA = [
+  {
+    id: "pulgones",
+    nombre: "Pulgones",
+    comoSeVe:
+      "Pequeños insectos verdes, negros o amarillos pegados en brotes tiernos y botones florales. Las hojas se enrollan o deforman.",
+    manejoSuave:
+      "Revisar con frecuencia la parte tierna de las plantas y lavar con agua a presión suave para tumbarlos.",
+    preparadosCaseros:
+      "Jabón potásico o una mezcla suave de agua con un poco de jabón neutro (bien diluido) aplicado al atardecer, mojando el envés.",
+    productosComerciales:
+      "Insecticidas de contacto para pulgones autorizados para huerto casero. Siempre seguir la etiqueta y evitar horas de sol fuerte."
+  },
+  {
+    id: "mosca_blanca",
+    nombre: "Mosca blanca",
+    comoSeVe:
+      "Al mover la hoja salen volantitos blancos. En el envés se ven pequeños puntos blancos fijos. Suelen dejar melaza pegajosa.",
+    manejoSuave:
+      "Retirar hojas muy afectadas y mantener buena ventilación entre plantas.",
+    preparadosCaseros:
+      "Trampas amarillas adhesivas cerca de las plantas y aplicaciones suaves de jabón potásico o infusión de ajo como apoyo.",
+    productosComerciales:
+      "Productos específicos para mosca blanca de uso doméstico, aplicados al atardecer y siguiendo instrucciones."
+  },
+  {
+    id: "orugas",
+    nombre: "Orugas (cortadoras de hojas)",
+    comoSeVe:
+      "Hojas con mordidas grandes o casi comidas completas. A veces se encuentran las orugas en el envés o escondidas entre hojas.",
+    manejoSuave:
+      "Revisión manual frecuente y retiro de orugas a mano (con guantes). Muy efectivo en huertos pequeños.",
+    preparadosCaseros:
+      "Infusiones de ajo y ají como repelente, combinadas con la recolección manual.",
+    productosComerciales:
+      "Bacillus thuringiensis (BT) para orugas jóvenes, solo si es necesario y siguiendo la etiqueta."
+  },
+  {
+    id: "caracoles_babosas",
+    nombre: "Caracoles y babosas",
+    comoSeVe:
+      "Hojas con mordidas irregulares y rastros de baba plateada en el suelo o las macetas.",
+    manejoSuave:
+      "Mantener el área limpia de escombros donde se escondan. Revisar al atardecer o de noche y recogerlos a mano.",
+    preparadosCaseros:
+      "Refugios-trampa (tablitas, pedazos de teja) donde se esconden y luego retirarlos; barreras de cáscara de huevo triturada alrededor de plantas sensibles.",
+    productosComerciales:
+      "Cebos específicos para babosas/caracoles aptos para huerto casero; usar en pequeñas cantidades y lejos de mascotas/niños."
+  },
+  {
+    id: "arana_roja",
+    nombre: "Araña roja",
+    comoSeVe:
+      "Puntos amarillos muy finos en las hojas, que luego se ven apagadas. En ataques severos aparece una fina telaraña.",
+    manejoSuave:
+      "Aumentar humedad ambiental (nebulizaciones suaves) y duchas de agua en el envés de las hojas.",
+    preparadosCaseros:
+      "Jabón potásico muy diluido o infusión de ajo aplicada cada pocos días, siempre al atardecer.",
+    productosComerciales:
+      "Acaricidas autorizados para araña roja en huerto casero; usar solo si el daño es muy fuerte."
+  },
+  {
+    id: "trips",
+    nombre: "Trips",
+    comoSeVe:
+      "Manchas plateadas o rayas en hojas y pétalos. Al mirar de cerca se ven insectos alargados, muy finos y rápidos.",
+    manejoSuave:
+      "Eliminar flores y hojas muy dañadas, mejorar ventilación y evitar exceso de fertilización.",
+    preparadosCaseros:
+      "Trampas azules o amarillas adhesivas y jabón potásico suave como apoyo.",
+    productosComerciales:
+      "Insecticidas para trips de uso doméstico, respetando tiempos de seguridad antes de cosechar."
+  },
+  {
+    id: "cochinillas",
+    nombre: "Cochinillas",
+    comoSeVe:
+      "Bultitos algodonosos o duros pegados a tallos y hojas. Producen melaza pegajosa y atraen hormigas.",
+    manejoSuave:
+      "Quitar las cochinillas a mano o con hisopo y alcohol. Podar las partes muy infestadas.",
+    preparadosCaseros:
+      "Aplicaciones de jabón potásico y aceites vegetales suaves (hortícolas) en el envés y tallos.",
+    productosComerciales:
+      "Aceites hortícolas minerales o productos específicos para cochinilla en cítricos y ornamentales."
+  },
+  {
+    id: "minador_hoja",
+    nombre: "Minador de hoja (especial en cítricos)",
+    comoSeVe:
+      "Hace galerías o caminos claros dentro de la hoja, como líneas serpenteantes. Afecta sobre todo hojas tiernas de cítricos y algunas hortalizas.",
+    manejoSuave:
+      "Podar y desechar las hojas y brotes más dañados sin dejar la planta sin follaje. Evitar exceso de fertilizante fuerte que provoque brotes muy tiernos.",
+    preparadosCaseros:
+      "No hay un remedio casero que lo elimine por completo, pero ayuda mantener plantas fuertes, revisar brotes nuevos cada semana y retirar hojas recién afectadas.",
+    productosComerciales:
+      "Aceites hortícolas o productos específicos para minador de hoja en cítricos, aplicados al atardecer y siempre siguiendo la etiqueta."
+  },
+  {
+    id: "hongos_hoja",
+    nombre: "Hongos de hoja (mildiu, oídio, manchas)",
+    comoSeVe:
+      "Manchas amarillas o cafés, a veces polvillo blanco sobre la hoja. Empeoran con humedad alta y poca ventilación.",
+    manejoSuave:
+      "Mejorar ventilación, evitar mojar el follaje de noche y quitar hojas muy enfermas.",
+    preparadosCaseros:
+      "Soluciones suaves de bicarbonato de potasio o infusiones de cola de caballo, usadas de forma preventiva.",
+    productosComerciales:
+      "Fungicidas autorizados para huerto casero (orgánicos o convencionales), siempre respetando tiempos de seguridad antes de cosechar."
+  }
+];
 
     function renderPlagas() {
   const listEl = document.getElementById("plagasList");
