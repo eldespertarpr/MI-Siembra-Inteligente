@@ -2577,79 +2577,198 @@ function renderPlagas(highlightId) {
   const listEl = document.getElementById("plagasList");
   if (!listEl) return;
 
-  listEl.innerHTML = "";
-  PLAGAS_DATA.forEach(p => {
-    const isHighlighted = highlightId && p.id === highlightId;
-    const div = document.createElement("div");
-    div.className = "plaga-card" + (isHighlighted ? " plaga-card--highlight" : "");
-    div.innerHTML = `
-      <div class="media-item-title">🐛 ${p.nombre}</div>
-      <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.comoSeVe}</div>
-      <div class="media-item-body"><strong>Manejo suave:</strong> ${p.manejoSuave}</div>
-      <div class="media-item-body"><strong>Preparados caseros / apoyo:</strong> ${p.preparadosCaseros}</div>
-      <div class="media-item-body"><strong>Productos comerciales (lee la etiqueta):</strong> ${p.productosComerciales}</div>
-    `;
-    listEl.appendChild(div);
-  });
-}
+/*********************
+     * Plagas (datos base)
+     *********************/
+    const PLAGAS_DATA = [
+      {
+        id: "pulgones",
+        nombre: "Pulgones",
+        comoSeVe:
+          "Pequeños insectos verdes, negros o amarillos pegados en brotes tiernos y botones florales. Las hojas se enrollan o deforman.",
+        manejoSuave:
+          "Revisar con frecuencia la parte tierna de las plantas y lavar con agua a presión suave para tumbarlos.",
+        preparadosCaseros:
+          "Jabón potásico o una mezcla suave de agua con un poco de jabón neutro (bien diluido) aplicado al atardecer, mojando el envés.",
+        productosComerciales:
+          "Insecticidas de contacto para pulgones autorizados para huerto casero. Siempre seguir la etiqueta y evitar horas de sol fuerte."
+      },
+      {
+        id: "mosca_blanca",
+        nombre: "Mosca blanca",
+        comoSeVe:
+          "Al mover la hoja salen volantitos blancos. En el envés se ven pequeños puntos blancos fijos. Suelen dejar melaza pegajosa.",
+        manejoSuave:
+          "Retirar hojas muy afectadas y mantener buena ventilación entre plantas.",
+        preparadosCaseros:
+          "Trampas amarillas adhesivas cerca de las plantas y aplicaciones suaves de jabón potásico o infusión de ajo como apoyo.",
+        productosComerciales:
+          "Productos específicos para mosca blanca de uso doméstico, aplicados al atardecer y siguiendo instrucciones."
+      },
+      {
+        id: "orugas",
+        nombre: "Orugas (cortadoras de hojas)",
+        comoSeVe:
+          "Hojas con mordidas grandes o casi comidas completas. A veces se encuentran las orugas en el envés o escondidas entre hojas.",
+        manejoSuave:
+          "Revisión manual frecuente y retiro de orugas a mano (con guantes). Muy efectivo en huertos pequeños.",
+        preparadosCaseros:
+          "Infusiones de ajo y ají como repelente, combinadas con la recolección manual.",
+        productosComerciales:
+          "Bacillus thuringiensis (BT) para orugas jóvenes, solo si es necesario y siguiendo la etiqueta."
+      },
+      {
+        id: "caracoles_babosas",
+        nombre: "Caracoles y babosas",
+        comoSeVe:
+          "Hojas con mordidas irregulares y rastros de baba plateada en el suelo o las macetas.",
+        manejoSuave:
+          "Mantener el área limpia de escombros donde se escondan. Revisar al atardecer o de noche y recogerlos a mano.",
+        preparadosCaseros:
+          "Refugios-trampa (tablitas, pedazos de teja) donde se esconden y luego retirarlos; barreras de cáscara de huevo triturada alrededor de plantas sensibles.",
+        productosComerciales:
+          "Cebos específicos para babosas/caracoles aptos para huerto casero; usar en pequeñas cantidades y lejos de mascotas/niños."
+      },
+      {
+        id: "arana_roja",
+        nombre: "Araña roja",
+        comoSeVe:
+          "Puntos amarillos muy finos en las hojas, que luego se ven apagadas. En ataques severos aparece una fina telaraña.",
+        manejoSuave:
+          "Aumentar humedad ambiental (nebulizaciones suaves) y duchas de agua en el envés de las hojas.",
+        preparadosCaseros:
+          "Jabón potásico muy diluido o infusión de ajo aplicada cada pocos días, siempre al atardecer.",
+        productosComerciales:
+          "Acaricidas autorizados para araña roja en huerto casero; usar solo si el daño es muy fuerte."
+      },
+      {
+        id: "trips",
+        nombre: "Trips",
+        comoSeVe:
+          "Manchas plateadas o rayas en hojas y pétalos. Al mirar de cerca se ven insectos alargados, muy finos y rápidos.",
+        manejoSuave:
+          "Eliminar flores y hojas muy dañadas, mejorar ventilación y evitar exceso de fertilización.",
+        preparadosCaseros:
+          "Trampas azules o amarillas adhesivas y jabón potásico suave como apoyo.",
+        productosComerciales:
+          "Insecticidas para trips de uso doméstico, respetando tiempos de seguridad antes de cosechar."
+      },
+      {
+        id: "cochinillas",
+        nombre: "Cochinillas",
+        comoSeVe:
+          "Bultitos algodonosos o duros pegados a tallos y hojas. Producen melaza pegajosa y atraen hormigas.",
+        manejoSuave:
+          "Quitar las cochinillas a mano o con hisopo y alcohol. Podar las partes muy infestadas.",
+        preparadosCaseros:
+          "Aplicaciones de jabón potásico y aceites vegetales suaves (hortícolas) en el envés y tallos.",
+        productosComerciales:
+          "Aceites hortícolas minerales o productos específicos para cochinilla en cítricos y ornamentales."
+      },
+      {
+        id: "minador_hoja",
+        nombre: "Minador de hoja (especial en cítricos)",
+        comoSeVe:
+          "Hace galerías o caminos claros dentro de la hoja, como líneas serpenteantes. Afecta sobre todo hojas tiernas de cítricos y algunas hortalizas.",
+        manejoSuave:
+          "Podar y desechar las hojas y brotes más dañados sin dejar la planta sin follaje. Evitar exceso de fertilizante fuerte que provoque brotes muy tiernos.",
+        preparadosCaseros:
+          "No hay un remedio casero que lo elimine por completo, pero ayuda mantener plantas fuertes, revisar brotes nuevos cada semana y retirar hojas recién afectadas.",
+        productosComerciales:
+          "Aceites hortícolas o productos específicos para minador de hoja en cítricos, aplicados al atardecer y siempre siguiendo la etiqueta."
+      },
+      {
+        id: "hongos_hoja",
+        nombre: "Hongos de hoja (mildiu, oídio, manchas)",
+        comoSeVe:
+          "Manchas amarillas o cafés, a veces polvillo blanco sobre la hoja. Empeoran con humedad alta y poca ventilación.",
+        manejoSuave:
+          "Mejorar ventilación, evitar mojar el follaje de noche y quitar hojas muy enfermas.",
+        preparadosCaseros:
+          "Soluciones suaves de bicarbonato de potasio o infusiones de cola de caballo, usadas de forma preventiva.",
+        productosComerciales:
+          "Fungicidas autorizados para huerto casero (orgánicos o convencionales), siempre respetando tiempos de seguridad antes de cosechar."
+      }
+    ];
+
+    function renderPlagas(highlightId) {
+      const listEl = document.getElementById("plagasList");
+      if (!listEl) return;
+
+      listEl.innerHTML = "";
+      PLAGAS_DATA.forEach(p => {
+        const isHighlighted = highlightId && p.id === highlightId;
+        const div = document.createElement("div");
+        div.className =
+          "plaga-card" + (isHighlighted ? " plaga-card--highlight" : "");
+        div.innerHTML = `
+          <div class="media-item-title">🐛 ${p.nombre}</div>
+          <div class="media-item-body"><strong>Cómo se ve:</strong> ${p.comoSeVe}</div>
+          <div class="media-item-body"><strong>Manejo suave:</strong> ${p.manejoSuave}</div>
+          <div class="media-item-body"><strong>Preparados caseros / apoyo:</strong> ${p.preparadosCaseros}</div>
+          <div class="media-item-body"><strong>Productos comerciales (lee la etiqueta):</strong> ${p.productosComerciales}</div>
+        `;
+        listEl.appendChild(div);
+      });
+    }
 
     function renderPesticidas() {
-  const listEl = document.getElementById("pesticidasList");
-  if (!listEl) return;
+      const listEl = document.getElementById("pesticidasList");
+      if (!listEl) return;
 
-  const data = [
-    {
-      nombre: "Jabón potásico",
-      detalle:
-        "Eficaz contra pulgones, mosca blanca y otros insectos de cutícula blanda. Aplicar diluido al atardecer, mojando bien el envés de las hojas y evitando flores abiertas."
-    },
-    {
-      nombre: "Aceite de neem (uso hortícola)",
-      detalle:
-        "Producto de origen vegetal que ayuda a cortar el ciclo de varias plagas. Usar siempre en bajas dosis, al atardecer y siguiendo la etiqueta del fabricante."
-    },
-    {
-      nombre: "Infusión de ajo y ají",
-      detalle:
-        "Preparado casero que actúa como repelente suave de insectos y algunos hongos. Colar bien antes de aplicar para no tapar pulverizadores."
-    },
-    {
-      nombre: "Tierra de diatomeas (grado alimentario)",
-      detalle:
-        "Polvo mineral muy fino que daña la cutícula de insectos rastreros (hormigas, babosas pequeñas, pulgones en tallos bajos). Aplicar en seco y renovar tras lluvias."
-    },
-    {
-      nombre: "Bacillus thuringiensis (BT)",
-      detalle:
-        "Microorganismo utilizado como bio-insecticida contra orugas jóvenes. Respetar dosis y condiciones indicadas en el envase; no es de uso sistemático sino puntual."
-    },
-    {
-      nombre: "Macerado de ortiga",
-      detalle:
-        "Refuerzo general para la planta y ligero efecto insecticida/repelente. Se usa bien colado y muy diluido, alternando con riegos normales."
-    },
-    {
-      nombre: "Té o extracto de compost",
-      detalle:
-        "Aporta microorganismos benéficos que compiten con hongos patógenos en hojas y raíces. Siempre usar compost bien maduro y recipientes limpios."
-    },
-    {
-      nombre: "Trampas cromáticas (amarillas y azules)",
-      detalle:
-        "No son un líquido, pero complementan muy bien el manejo ecológico: atraen mosca blanca, trips y otros volantones reduciendo su población sin rociar tanto la planta."
+      const data = [
+        {
+          nombre: "Jabón potásico",
+          detalle:
+            "Eficaz contra pulgones, mosca blanca y otros insectos de cutícula blanda. Aplicar diluido al atardecer, mojando bien el envés de las hojas y evitando flores abiertas."
+        },
+        {
+          nombre: "Aceite de neem (uso hortícola)",
+          detalle:
+            "Producto de origen vegetal que ayuda a cortar el ciclo de varias plagas. Usar siempre en bajas dosis, al atardecer y siguiendo la etiqueta del fabricante."
+        },
+        {
+          nombre: "Infusión de ajo y ají",
+          detalle:
+            "Preparado casero que actúa como repelente suave de insectos y algunos hongos. Colar bien antes de aplicar para no tapar pulverizadores."
+        },
+        {
+          nombre: "Tierra de diatomeas (grado alimentario)",
+          detalle:
+            "Polvo mineral muy fino que daña la cutícula de insectos rastreros (hormigas, babosas pequeñas, pulgones en tallos bajos). Aplicar en seco y renovar tras lluvias."
+        },
+        {
+          nombre: "Bacillus thuringiensis (BT)",
+          detalle:
+            "Microorganismo utilizado como bio-insecticida contra orugas jóvenes. Respetar dosis y condiciones indicadas en el envase; no es de uso sistemático sino puntual."
+        },
+        {
+          nombre: "Macerado de ortiga",
+          detalle:
+            "Refuerzo general para la planta y ligero efecto insecticida/repelente. Se usa bien colado y muy diluido, alternando con riegos normales."
+        },
+        {
+          nombre: "Té o extracto de compost",
+          detalle:
+            "Aporta microorganismos benéficos que compiten con hongos patógenos en hojas y raíces. Siempre usar compost bien maduro y recipientes limpios."
+        },
+        {
+          nombre: "Trampas cromáticas (amarillas y azules)",
+          detalle:
+            "No son un líquido, pero complementan muy bien el manejo ecológico: atraen mosca blanca, trips y otros volantones reduciendo su población sin rociar tanto la planta."
+        }
+      ];
+
+      listEl.innerHTML = "";
+      data.forEach(p => {
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <div class="media-item-title">💧 ${p.nombre}</div>
+          <div class="media-item-body">${p.detalle}</div>
+        `;
+        listEl.appendChild(div);
+      });
     }
-  ];
-
-  listEl.innerHTML = "";
-  data.forEach(p => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <div class="media-item-title">💧 ${p.nombre}</div>
-      <div class="media-item-body">${p.detalle}</div>
-    `;
-    listEl.appendChild(div);
-  });
-}
 
     /*********************
      * Catálogo: render + búsqueda
