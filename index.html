@@ -2662,73 +2662,7 @@ function renderPlagas(highlightId) {
             "Polvo mineral muy fino que daña la cutícula de insectos rastreros (hormigas, babosas pequeñas, pulgones en tallos bajos). Aplicar en seco y renovar tras lluvias."
         },
         {
-/*********************
- * Calendario (con catálogo)
- *********************/
-function renderCalendario(monthIndex = 5) {
-  const listEl = document.getElementById("calendarList");
-  const emptyEl = document.getElementById("calendarEmpty");
-  if (!listEl || !emptyEl) return;
 
-  const data = getCalendarData(stateSettings, monthIndex);
-
-  listEl.innerHTML = "";
-
-  // 1) Texto básico de calendario
-  if (data.length) {
-    emptyEl.style.display = "none";
-
-    data.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "calendar-item";
-      div.innerHTML = `
-        <div class="calendar-item-title">
-          <span>${item.titulo}</span>
-          <span class="chip">${item.tipo}</span>
-        </div>
-        <div>${item.detalle}</div>
-      `;
-      listEl.appendChild(div);
-    });
-  } else {
-    emptyEl.style.display = "block";
-  }
-
-  // 2) Sugerencias extra desde el catálogo (ajustadas por hemisferio)
-  const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
-
-  const sugeridos = CATALOGO_CULTIVOS.filter(
-    c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo)
-  );
-
-  if (sugeridos.length) {
-    const separador = document.createElement("div");
-    separador.className = "divider-soft";
-    listEl.appendChild(separador);
-
-    const tituloExtra = document.createElement("p");
-    tituloExtra.className = "muted";
-    tituloExtra.textContent =
-      "Desde el catálogo: cultivos recomendados para este mes.";
-    listEl.appendChild(tituloExtra);
-
-    sugeridos.forEach(c => {
-      const div = document.createElement("div");
-      div.className = "calendar-item";
-      div.innerHTML = `
-        <div class="calendar-item-title">
-          <span>${c.nombre}</span>
-          <span class="chip">${c.categoria || "Cultivo"}</span>
-        </div>
-        <div>
-          Días a cosecha: ${c.dias}. Luz: ${c.luz}.
-          Plagas frecuentes: ${c.plagas.join(", ")}.
-        </div>
-      `;
-      listEl.appendChild(div);
-    });
-  }
-}
 
 /*********************
  * Diario
