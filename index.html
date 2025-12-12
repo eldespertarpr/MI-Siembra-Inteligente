@@ -2243,83 +2243,7 @@ function ajustarMesPorHemisferio(settings, monthIndex) {
       });
     }
 
-/*********************
-     * Calendario (con catálogo)
-     *********************/
-    function renderCalendario(monthIndex = 5) {
-      const listEl = document.getElementById("calendarList");
-      const emptyEl = document.getElementById("calendarEmpty");
-      if (!listEl || !emptyEl) return;
 
-      const data = getCalendarData(stateSettings, monthIndex);
-
-      listEl.innerHTML = "";
-
-      // 1) Texto básico de calendario
-      if (data.length) {
-        emptyEl.style.display = "none";
-
-        data.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "calendar-item";
-          div.innerHTML = `
-            <div class="calendar-item-title">
-              <span>${item.titulo}</span>
-              <span class="chip">${item.tipo}</span>
-            </div>
-            <div>${item.detalle}</div>
-          `;
-          listEl.appendChild(div);
-        });
-      } else {
-        emptyEl.style.display = "block";
-      }
-
-      // 2) Sugerencias extra desde el catálogo (ajustadas por hemisferio)
-      const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
-
-      const sugeridos = CATALOGO_CULTIVOS.filter(
-        c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo)
-      );
-
-      if (sugeridos.length) {
-        const separador = document.createElement("div");
-        separador.className = "divider-soft";
-        listEl.appendChild(separador);
-
-        const tituloExtra = document.createElement("p");
-        tituloExtra.className = "muted";
-        tituloExtra.textContent =
-          "Desde el catálogo: cultivos recomendados para este mes.";
-        listEl.appendChild(tituloExtra);
-
-        sugeridos.forEach(c => {
-          const div = document.createElement("div");
-          div.className = "calendar-item";
-          div.innerHTML = `
-            <div class="calendar-item-title">
-              <span>${c.nombre}</span>
-              <span class="chip">${c.categoria || "Cultivo"}</span>
-            </div>
-            <div>
-              Días a cosecha: ${c.dias}. Luz: ${c.luz}.
-              Plagas frecuentes: ${c.plagas.join(", ")}.
-            </div>
-          `;
-          listEl.appendChild(div);
-        });
-      }
-
-    function renderDiario() {
-      const listEl = document.getElementById("diarioList");
-      const chip = document.getElementById("diarioCountChip");
-      if (!listEl) return;
-
-      const arr = [...stateDiario].sort((a, b) => b.fecha.localeCompare(a.fecha));
-      const count = arr.length;
-      if (chip) chip.textContent = `${count} entrada${count === 1 ? "" : "s"}`;
-
-      if (!count) {
 /*********************
      * Calendario (con catálogo)
      *********************/
@@ -2750,25 +2674,7 @@ function renderPlagas(highlightId) {
         {
           nombre: "Té o extracto de compost",
           detalle:
-            "Aporta microorganismos benéficos que compiten con hongos patógenos en hojas y raíces. Siempre usar compost bien maduro y recipientes limpios."
-        },
-        {
-          nombre: "Trampas cromáticas (amarillas y azules)",
-          detalle:
-            "No son un líquido, pero complementan muy bien el manejo ecológico: atraen mosca blanca, trips y otros volantones reduciendo su población sin rociar tanto la planta."
-        }
-      ];
 
-      listEl.innerHTML = "";
-      data.forEach(p => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-          <div class="media-item-title">💧 ${p.nombre}</div>
-          <div class="media-item-body">${p.detalle}</div>
-        `;
-        listEl.appendChild(div);
-      });
-    }
 
     /*********************
      * Catálogo: render + búsqueda
