@@ -2585,14 +2585,16 @@
       }
 
       const nuevo = {
-        id: Date.now().toString(36),
-        nombre,
-        variedad,
-        tipo,
-        fechaSiembra,
-        notas,
-        creadoEl: todayISO()
-      };
+  id: Date.now().toString(36),
+  nombre,
+  variedad,
+  tipo,
+  fechaSiembra,
+  notas,
+  creadoEl: todayISO(),
+  frecuenciaAbonoDias: 30,      // por defecto, cada 30 días
+  ultimaFertilizacion: null     // aún no se ha abonado
+};
 
       stateCultivos.push(nuevo);
       saveCultivos(stateCultivos);
