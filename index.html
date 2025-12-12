@@ -2165,46 +2165,61 @@
   }
 
   function renderInicio() {
-    const cultivos = stateCultivos;
-    const diario = stateDiario;
-    const cultivosCount = cultivos.length;
-    const today = todayISO();
+  function renderInicio() {
+  const cultivos = stateCultivos;
+  const diario = stateDiario;
+  const cultivosCount = cultivos.length;
+  const hoyISO = todayISO();
 
-    const entradasHoy = diario.filter(e => e.fecha === today).length;
+  const entradasHoy = diario.filter(e => e.fecha === hoyISO).length;
 
-    document.getElementById("estadoCultivosCount").textContent =
-      cultivosCount.toString();
-    document.getElementById("estadoEntradasCount").textContent =
-      entradasHoy.toString();
+  document.getElementById("estadoCultivosCount").textContent =
+    cultivosCount.toString();
+  document.getElementById("estadoEntradasCount").textContent =
+    entradasHoy.toString();
 
-    const resumen = document.getElementById("estadoResumen");
-    const nombre = stateSettings.nombreHuerto || "tu huerto";
+  const resumen = document.getElementById("estadoResumen");
+  const nombre = stateSettings.nombreHuerto || "tu huerto";
 
-    if (!cultivosCount && !entradasHoy) {
-      resumen.textContent =
-        'Todavía no has registrado cultivos ni entradas en el diario. Empieza añadiendo tu primer cultivo en "Mi huerto".';
-    } else if (cultivosCount && !entradasHoy) {
-      resumen.textContent = `Tienes ${cultivosCount} cultivo(s) registrado(s) en ${nombre}. Aún no has escrito nada en el diario hoy.`;
-    } else if (cultivosCount && entradasHoy) {
-      resumen.textContent = `Llevas ${cultivosCount} cultivo(s) activo(s) y ya registraste ${entradasHoy} nota(s) en el diario hoy. ¡Buen trabajo!`;
-    } else {
-      resumen.textContent =
-        'Tienes anotaciones en el diario pero aún no has añadido cultivos. Usa "Mi huerto" para registrar lo que estás sembrando.';
-    }
-
-    // Calendario "hoy"
-    const now = new Date();
-    const monthIndex = now.getMonth();
-    const data = getCalendarData(stateSettings, monthIndex);
-    const calHoyTexto = document.getElementById("calendarioHoyTexto");
-
-    if (data.length === 0) {
-      calHoyTexto.textContent = `En ${nombre} no hay recomendaciones específicas para este mes con el clima actual, pero puedes consultar los demás meses en el calendario.`;
-    } else {
-      const nombres = data.map(d => d.titulo).join(", ");
-      calHoyTexto.textContent = `Para este mes se sugieren cultivos como: ${nombres}. Revisa el calendario para ver el detalle.`;
-    }
+  // Mensaje básico
+  if (!cultivosCount && !entradasHoy) {
+    resumen.textContent =
+      'Todavía no has registrado cultivos ni entradas en el diario. Empieza añadiendo tu primer cultivo en "Mi huerto".';
+  } else if (cultivosCount && !entradasHoy) {
+    resumen.textContent = `Tienes ${cultivosCount} cultivo(s) registrado(s) en ${nombre}. Aún no has escrito nada en el diario hoy.`;
+  } else if (cultivosCount && entradasHoy) {
+    resumen.textContent = `Llevas ${cultivosCount} cultivo(s) activo(s) y ya registraste ${entradasHoy} nota(s) en el diario hoy. ¡Buen trabajo!`;
+  } else {
+    resumen.textContent =
+      'Tienes anotaciones en el diario pero aún no has añadido cultivos. Usa "Mi huerto" para registrar lo que estás sembrando.';
   }
+
+  // 🔔 Recordatorio de abono
+  const pendientesAbono = cultivos
+    .filter(c => c.ultimaFertilizacion && c.frecuenciaAbonoDias)
+    .filter(c => {
+      const dias = daysBetween(c.ultimaFertilizacion, hoyISO);
+      return dias >= c.frecuenciaAbonoDias;
+    });
+
+  if (pendientesAbono.length) {
+    const nombresAbono = pendientesAbono.map(c => c.nombre).join(", ");
+    resumen.textContent += ` Además, hoy o en estos días toca abonar: ${nombresAbono}.`;
+  }
+
+  // Calendario "hoy" (usa mes actual)
+  const now = new Date();
+  const monthIndex = now.getMonth();
+  const data = getCalendarData(stateSettings, monthIndex);
+  const calHoyTexto = document.getElementById("calendarioHoyTexto");
+
+  if (data.length === 0) {
+    calHoyTexto.textContent = `En ${nombre} no hay recomendaciones específicas para este mes con el clima actual, pero puedes consultar los demás meses en el calendario.`;
+  } else {
+    const nombres = data.map(d => d.titulo).join(", ");
+    calHoyTexto.textContent = `Para este mes se sugieren cultivos como: ${nombres}. Revisa el calendario para ver el detalle.`;
+  }
+}
 
   function renderCultivos() {
     const listEl = document.getElementById("cultivosList");
