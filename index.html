@@ -2238,15 +2238,19 @@
           <span class="chip">${tipoLabel}</span>
         </div>
         <div class="cultivo-body">
-          <div><strong>Variedad:</strong> ${c.variedad || "Sin especificar"}</div>
-          <div><strong>Fecha de siembra:</strong> ${formatDate(
-            c.fechaSiembra
-          )}</div>
-          <div><strong>Ubicación / notas cortas:</strong> ${
-            c.notas ? c.notas.slice(0, 140) : "—"
-          }</div>
-          <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
-        </div>
+  <div><strong>Variedad:</strong> ${c.variedad || "Sin especificar"}</div>
+  <div><strong>Fecha de siembra:</strong> ${formatDate(c.fechaSiembra)}</div>
+  <div><strong>Ubicación / notas cortas:</strong> ${
+    c.notas ? c.notas.slice(0, 140) : "—"
+  }</div>
+  <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
+  <div><strong>Último abono:</strong> ${
+    c.ultimaFertilizacion ? formatDate(c.ultimaFertilizacion) : "Sin registro"
+  }</div>
+  <div><strong>Frecuencia de abono:</strong> ${
+    c.frecuenciaAbonoDias ? c.frecuenciaAbonoDias + " días" : "No definido"
+  }</div>
+</div>
         ${
           c.notas
             ? `<div class="cultivo-notas"><strong>Notas:</strong> ${c.notas}</div>`
