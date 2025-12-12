@@ -1288,6 +1288,12 @@
     const d = new Date();
     return d.toISOString().slice(0, 10);
   }
+    function daysBetween(dateISO1, dateISO2) {
+  const d1 = new Date(dateISO1 + "T00:00:00");
+  const d2 = new Date(dateISO2 + "T00:00:00");
+  const diffMs = d2 - d1;
+  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    }
 
   /*********************
    * Calendario de siembra
