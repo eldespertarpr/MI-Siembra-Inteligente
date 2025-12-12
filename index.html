@@ -2641,6 +2641,16 @@
           const campo = document.getElementById("diarioTexto");
           campo.value = `Cultivo: ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}). `;
           campo.focus();
+          else if (action === "abono") {
+  cultivo.ultimaFertilizacion = todayISO();
+  if (!cultivo.frecuenciaAbonoDias) {
+    cultivo.frecuenciaAbonoDias = 30; // por si hay cultivos viejos sin este campo
+  }
+  saveCultivos(stateCultivos);
+  renderCultivos();
+  renderInicio();
+  alert(`Se registró que abonaste "${cultivo.nombre}" hoy.`);
+        }
         } else if (action === "plaga") {
           const entrada = prompt(
             'Escribe la plaga que quieres consultar para este cultivo (ej. "minador", "pulgones", "araña roja"):'
