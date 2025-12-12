@@ -2393,30 +2393,7 @@ function ajustarMesPorHemisferio(settings, monthIndex) {
       const chip = document.getElementById("diarioCountChip");
       if (!listEl) return;
 
-      const arr = [...stateDiario].sort((a, b) => b.fecha.localeCompare(a.fecha));
-      const count = arr.length;
-      if (chip) chip.textContent = `${count} entrada${count === 1 ? "" : "s"}`;
 
-      if (!count) {
-        listEl.innerHTML =
-          '<p class="muted">Aún no hay notas en el diario. Empieza escribiendo qué hiciste hoy en el huerto.</p>';
-        return;
-      }
-
-      listEl.innerHTML = "";
-      arr.slice(0, 25).forEach(item => {
-        const div = document.createElement("div");
-        div.className = "diario-item";
-        div.innerHTML = `
-          <div class="diario-item-header">
-            <strong>${formatDate(item.fecha)}</strong>
-            <span class="chip">${item.tipo || "General"}</span>
-          </div>
-          <div>${item.texto}</div>
-        `;
-        listEl.appendChild(div);
-      });
-    }
     
     }/*********************
  * Plagas (datos base)
