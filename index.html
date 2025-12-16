@@ -2578,80 +2578,35 @@ function setupCatalogo() {
 /*********************
  * Navegación
  *********************/
- function setupNavigation() {
-  const navButtons = document.querySelectorAll(".nav-btn");
-  navButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const section = btn.getAttribute("data-section");
-      if (!section) return;
+ // Devuelve TODOS los cultivos con abono registrado, indicando si ya toca o cuántos días faltan
+function getRecordatoriosAbono() {
+  const hoyISO = todayISO();
 
-      navButtons.forEach(b =>
-        b.classList.toggle("nav-btn--active", b === btn)
-      );
+  return stateCultivos
+    .filter(c => c.ultimaFertilizacion && c.frecuenciaAbonoDias)
+    .map(c => {
+      const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
+      const diasRestantes = c.frecuenciaAbonoDias - diasDesde;
 
-      document.querySelectorAll(".section").forEach(sec => {
-        sec.classList.toggle(
-          "section--active",
-          sec.id === `section-${section}`
-        );
-      });
-    });
-  });
-
-  const btnHuerto = document.getElementById("btnIrMiHuerto");
-  const btnDiario = document.getElementById("btnIrDiario");
-  const btnClima = document.getElementById("btnIrClima");
-  const btnVerCalendario = document.getElementById("btnVerCalendario");
-  const btnRecordatorios = document.getElementById("btnVerRecordatorios");
-
-  if (btnHuerto) {
-    btnHuerto.addEventListener("click", () => {
-      document.querySelector('.nav-btn[data-section="huerto"]').click();
-    });
-  }
-  if (btnDiario) {
-    btnDiario.addEventListener("click", () => {
-      document.querySelector('.nav-btn[data-section="diario"]').click();
-    });
-  }
-  if (btnClima) {
-    btnClima.addEventListener("click", () => {
-      document.querySelector('.nav-btn[data-section="opciones"]').click();
-    });
-  }
-  if (btnVerCalendario) {
-    btnVerCalendario.addEventListener("click", () => {
-      document.querySelector('.nav-btn[data-section="calendario"]').click();
-    });
-  }
-
-  // Botón de recordatorios de abono
-  if (btnRecordatorios) {
-    btnRecordatorios.addEventListener("click", () => {
-      const pendientes = getPendientesAbono();
-      const hoyISO = todayISO();
-
-      if (!pendientes.length) {
-        alert(
-          "✅ No tienes abonos pendientes según lo que has registrado.\n\n" +
-          "Cuando registres abonos desde 'Mi huerto', aquí aparecerán los que ya toque repetir."
-        );
-        return;
+      let estadoLabel;
+      if (diasRestantes > 0) {
+        estadoLabel = `faltan ${diasRestantes} día(s)`;
+      } else if (diasRestantes === 0) {
+        estadoLabel = "toca hoy";
+      } else {
+        estadoLabel = `vencido hace ${Math.abs(diasRestantes)} día(s)`;
       }
 
-      const lineas = pendientes.map(c => {
-        const dias = daysBetween(c.ultimaFertilizacion, hoyISO);
-        return `• ${c.nombre} — último abono hace ${dias} día(s).`;
-      });
-
-      alert(
-        "🔔 Recordatorio de abono:\n\n" +
-        lineas.join("\n") +
-        "\n\n(En una versión futura podemos añadir también recordatorios de pesticidas.)"
-        );
-    });
-  }
-  }
+      return {
+        nombre: c.nombre,
+        diasDesde,
+        diasRestantes,
+        estadoLabel
+      };
+    })
+    // Ordenar: primero los que están más urgentes (vencidos o que faltan menos días)
+    .sort((a, b) => a.diasRestantes - b.diasRestantes);
+}
 
   const btnHuerto = document.getElementById("btnIrMiHuerto");
   const btnDiario = document.getElementById("btnIrDiario");
