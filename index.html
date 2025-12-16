@@ -2559,24 +2559,7 @@ function setupCatalogo() {
 /*********************
  * Navegación
  *********************/
-function setupNavigation() {
-  const navButtons = document.querySelectorAll(".nav-btn");
-  navButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const section = btn.getAttribute("data-section");
-      if (!section) return;
-
-      navButtons.forEach(b =>
-        b.classList.toggle("nav-btn--active", b === btn)
-      );
-
-      document.querySelectorAll(".section").forEach(sec => {
-        sec.classList.toggle(
-          "section--active",
-          sec.id === `section-${section}`
-        );
-      });
-    });function setupNavigation() {
+ function setupNavigation() {
   const navButtons = document.querySelectorAll(".nav-btn");
   navButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -2596,21 +2579,34 @@ function setupNavigation() {
     });
   });
 
-  document.getElementById("btnIrMiHuerto").addEventListener("click", () => {
-    document.querySelector('.nav-btn[data-section="huerto"]').click();
-  });
-  document.getElementById("btnIrDiario").addEventListener("click", () => {
-    document.querySelector('.nav-btn[data-section="diario"]').click();
-  });
-  document.getElementById("btnIrClima").addEventListener("click", () => {
-    document.querySelector('.nav-btn[data-section="opciones"]').click();
-  });
-  document.getElementById("btnVerCalendario").addEventListener("click", () => {
-    document.querySelector('.nav-btn[data-section="calendario"]').click();
-  });
-
-  // 👉 AÑADIR DESDE AQUÍ
+  const btnHuerto = document.getElementById("btnIrMiHuerto");
+  const btnDiario = document.getElementById("btnIrDiario");
+  const btnClima = document.getElementById("btnIrClima");
+  const btnVerCalendario = document.getElementById("btnVerCalendario");
   const btnRecordatorios = document.getElementById("btnVerRecordatorios");
+
+  if (btnHuerto) {
+    btnHuerto.addEventListener("click", () => {
+      document.querySelector('.nav-btn[data-section="huerto"]').click();
+    });
+  }
+  if (btnDiario) {
+    btnDiario.addEventListener("click", () => {
+      document.querySelector('.nav-btn[data-section="diario"]').click();
+    });
+  }
+  if (btnClima) {
+    btnClima.addEventListener("click", () => {
+      document.querySelector('.nav-btn[data-section="opciones"]').click();
+    });
+  }
+  if (btnVerCalendario) {
+    btnVerCalendario.addEventListener("click", () => {
+      document.querySelector('.nav-btn[data-section="calendario"]').click();
+    });
+  }
+
+  // Botón de recordatorios de abono
   if (btnRecordatorios) {
     btnRecordatorios.addEventListener("click", () => {
       const pendientes = getPendientesAbono();
@@ -2633,12 +2629,10 @@ function setupNavigation() {
         "🔔 Recordatorio de abono:\n\n" +
         lineas.join("\n") +
         "\n\n(En una versión futura podemos añadir también recordatorios de pesticidas.)"
-      );
+        );
     });
   }
-  // 👉 HASTA AQUÍ
-          }
-  });
+  }
 
   const btnHuerto = document.getElementById("btnIrMiHuerto");
   const btnDiario = document.getElementById("btnIrDiario");
