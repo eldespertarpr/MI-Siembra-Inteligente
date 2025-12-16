@@ -2033,7 +2033,70 @@ const CATALOGO_CULTIVOS = [
     imagen: "img/pina.jpg"
   }
 ];
+// Frecuencia orientativa de abono por cultivo (en días)
+const FERTILIZACION_FRECUENCIAS = {
+  tomate: 21,
+  lechuga: 14,
+  pepinillo: 21,
+  platano: 45,
+  pimiento_morron: 21,
+  aji: 21,
+  berenjena: 21,
+  cebolla: 21,
+  cebollin: 21,
+  zanahoria: 21,
+  rabano: 21,
+  remolacha: 21,
+  papa: 30,
+  batata: 30,
+  yuca: 45,
+  maiz: 21,
+  habichuelas: 21,
+  habichuela_arbustiva: 21,
+  gandules: 30,
+  calabaza: 21,
+  calabacin_zucchini: 21,
+  melon: 21,
+  sandia: 21,
+  espinaca: 14,
+  acelga: 14,
+  col_rizada: 14,
+  cilantro: 14,
+  perejil: 14,
+  albahaca: 14,
+  oregano: 30,
+  menta: 30,
+  romero: 30,
+  tomillo: 30,
+  fresas: 21,
+  papaya: 45,
+  guayaba: 60,
+  parcha: 45,
+  mango: 60,
+  limon: 60,
+  cafe: 60,
+  ajo: 21,
+  pimiento: 21,
+  brocoli: 21,
+  china: 60,
+  coliflor: 21,
+  quimbombo: 21,
+  chayote: 45,
+  pina: 60
+};
 
+// Devuelve frecuencia por nombre de cultivo (usando el catálogo).
+function getFrecuenciaAbonoParaNombre(nombre) {
+  if (!nombre) return 30; // valor por defecto
+
+  const nombreLower = nombre.trim().toLowerCase();
+  const cultivoCatalogo = CATALOGO_CULTIVOS.find(
+    c => c.nombre.toLowerCase() === nombreLower
+  );
+  if (!cultivoCatalogo) return 30;
+
+  return FERTILIZACION_FRECUENCIAS[cultivoCatalogo.id] || 30;
+    }
 /*********************
  * Plagas (datos base)
  *********************/
