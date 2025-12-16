@@ -1188,7 +1188,6 @@
           </div>
         </div>
       </section>
-    </main>
 
     <footer>
       <span>Mi Siembra Inteligente · Datos guardados localmente en tu dispositivo 🌿</span>
@@ -1298,15 +1297,35 @@ function daysBetween(dateISO1, dateISO2) {
   const diffMs = d2 - d1;
   return Math.floor(diffMs / (1000 * 60 * 60 * 24));
 }// Devuelve los cultivos que ya deberían abonarse según su última fertilización
-function getPendientesAbono() {
+// Devuelve TODOS los cultivos con abono registrado, indicando si ya toca o cuántos días faltan
+function getRecordatoriosAbono() {
   const hoyISO = todayISO();
+
   return stateCultivos
     .filter(c => c.ultimaFertilizacion && c.frecuenciaAbonoDias)
-    .filter(c => {
-      const dias = daysBetween(c.ultimaFertilizacion, hoyISO);
-      return dias >= c.frecuenciaAbonoDias;
-    });
-    }
+    .map(c => {
+      const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
+      const diasRestantes = c.frecuenciaAbonoDias - diasDesde;
+
+      let estadoLabel;
+      if (diasRestantes > 0) {
+        estadoLabel = `faltan ${diasRestantes} día(s)`;
+      } else if (diasRestantes === 0) {
+        estadoLabel = "toca hoy";
+      } else {
+        estadoLabel = `vencido hace ${Math.abs(diasRestantes)} día(s)`;
+      }
+
+      return {
+        nombre: c.nombre,
+        diasDesde,
+        diasRestantes,
+        estadoLabel
+      };
+    })
+    // Ordenar: primero los que están más urgentes (vencidos o que faltan menos días)
+    .sort((a, b) => a.diasRestantes - b.diasRestantes);
+}
 
 /*********************
  * Calendario de siembra
