@@ -2752,16 +2752,18 @@ function setupMiHuertoForm() {
       return;
     }
 
-    const nuevo = {
-      id: Date.now().toString(36),
-      nombre,
-      variedad,
-      tipo,
-      fechaSiembra,
-      notas,
-      creadoEl: todayISO(),
-      frecuenciaAbonoDias: 30,
-      ultimaFertilizacion: null
+    const frecuenciaBase = getFrecuenciaAbonoParaNombre(nombre);
+
+const nuevo = {
+  id: Date.now().toString(36),
+  nombre,
+  variedad,
+  tipo,
+  fechaSiembra,
+  notas,
+  creadoEl: todayISO(),
+  frecuenciaAbonoDias: frecuenciaBase,
+  ultimaFertilizacion: null
     };
 
     stateCultivos.push(nuevo);
