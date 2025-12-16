@@ -2578,40 +2578,31 @@ function setupCatalogo() {
 /*********************
  * Navegación
  *********************/
- // Devuelve TODOS los cultivos con abono registrado, indicando si ya toca o cuántos días faltan
-function getRecordatoriosAbono() {
-  const hoyISO = todayISO();
+function setupNavigation() {
+  const navButtons = document.querySelectorAll(".nav-btn");
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const section = btn.getAttribute("data-section");
+      if (!section) return;
 
-  return stateCultivos
-    .filter(c => c.ultimaFertilizacion && c.frecuenciaAbonoDias)
-    .map(c => {
-      const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
-      const diasRestantes = c.frecuenciaAbonoDias - diasDesde;
+      navButtons.forEach(b =>
+        b.classList.toggle("nav-btn--active", b === btn)
+      );
 
-      let estadoLabel;
-      if (diasRestantes > 0) {
-        estadoLabel = `faltan ${diasRestantes} día(s)`;
-      } else if (diasRestantes === 0) {
-        estadoLabel = "toca hoy";
-      } else {
-        estadoLabel = `vencido hace ${Math.abs(diasRestantes)} día(s)`;
-      }
-
-      return {
-        nombre: c.nombre,
-        diasDesde,
-        diasRestantes,
-        estadoLabel
-      };
-    })
-    // Ordenar: primero los que están más urgentes (vencidos o que faltan menos días)
-    .sort((a, b) => a.diasRestantes - b.diasRestantes);
-}
+      document.querySelectorAll(".section").forEach(sec => {
+        sec.classList.toggle(
+          "section--active",
+          sec.id === `section-${section}`
+        );
+      });
+    });
+  });
 
   const btnHuerto = document.getElementById("btnIrMiHuerto");
   const btnDiario = document.getElementById("btnIrDiario");
   const btnClima = document.getElementById("btnIrClima");
   const btnVerCalendario = document.getElementById("btnVerCalendario");
+  const btnRecordatorios = document.getElementById("btnVerRecordatorios");
 
   if (btnHuerto) {
     btnHuerto.addEventListener("click", () => {
@@ -2631,6 +2622,31 @@ function getRecordatoriosAbono() {
   if (btnVerCalendario) {
     btnVerCalendario.addEventListener("click", () => {
       document.querySelector('.nav-btn[data-section="calendario"]').click();
+    });
+  }
+
+  // 🔔 Botón de recordatorios de abono
+  if (btnRecordatorios) {
+    btnRecordatorios.addEventListener("click", () => {
+      const recordatorios = getRecordatoriosAbono();
+
+      if (!recordatorios.length) {
+        alert(
+          "Por ahora no hay cultivos con abono registrado.\n\n" +
+          "Cuando registres un abono desde 'Mi huerto', aquí verás en cuántos días toca el próximo."
+        );
+        return;
+      }
+
+      const lineas = recordatorios.map(r =>
+        `• ${r.nombre} — ${r.estadoLabel}.`
+      );
+
+      alert(
+        "🔔 Recordatorio de abono:\n\n" +
+        lineas.join("\n") +
+        "\n\n(Los días se cuentan desde el último abono que registraste.)"
+      );
     });
   }
 }
