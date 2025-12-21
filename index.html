@@ -812,6 +812,17 @@
         <div class="app-card">
           <div class="app-card-header">
             <div class="app-card-title">Estado rápido</div>
+            <!-- Dentro de section-inicio, después del primer app-card -->
+<div class="app-card" id="recordatoriosCard" style="display:none;">
+  <div class="app-card-header">
+    <div class="app-card-title">Recordatorios de abono</div>
+    <div class="chip">Según tus registros</div>
+  </div>
+  <p class="muted">
+    Aquí verás los cultivos que ya deberían recibir abono, usando la fecha del último abono y la frecuencia configurada.
+  </p>
+  <ul id="recordatoriosList"></ul>
+</div>
             <div class="chip badge" id="estadoClimaChip">Clima tropical</div>
           </div>
           <div class="context-chips settings-context"></div>
