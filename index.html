@@ -1321,6 +1321,7 @@ function getRecordatoriosAbono() {
       if (diasRestantes > 0) {
         estadoLabel = `faltan ${diasRestantes} día(s)`;
       } else if (diasRestantes === 0) {
+        
         estadoLabel = "toca hoy";
       } else {
         estadoLabel = `vencido hace ${Math.abs(diasRestantes)} día(s)`;
@@ -1334,7 +1335,9 @@ function getRecordatoriosAbono() {
       };
     })
     // Ordenar: primero los que están más urgentes (vencidos o que faltan menos días)
-    .sort((a, b) => a.diasRestantes - b.diasRestantes);
+    .sort((a, b) => a.diasRestantes - b.diasRestantes)
+}
+  
   // Cultivos que YA deberían abonarse (toca hoy o está vencido)
 function getPendientesAbono() {
   const hoyISO = todayISO();
