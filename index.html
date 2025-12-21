@@ -2397,9 +2397,10 @@ function renderCultivos() {
   }
 
   listEl.innerHTML = "";
+  const hoyISO = todayISO();
+
   stateCultivos.forEach(c => {
     const card = document.createElement("div");
-    card.className = "cultivo-card";
 
     const tipoLabelMap = {
       hoja: "Hoja",
@@ -2418,6 +2419,28 @@ function renderCultivos() {
       ? c.frecuenciaAbonoDias + " días"
       : "No definido";
 
+    // 🔔 cálculo de estado del próximo abono
+    let estadoProx = "Sin registro";
+    let statusClass = "";
+
+    if (c.ultimaFertilizacion && c.frecuenciaAbonoDias) {
+      const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
+      const diasRestantes = c.frecuenciaAbonoDias - diasDesde;
+
+      if (diasRestantes > 5) {
+        estadoProx = `en ${diasRestantes} día(s)`;
+        statusClass = " cultivo-card--ok";
+      } else if (diasRestantes >= 0) {
+        estadoProx = `en ${diasRestantes} día(s)`;
+        statusClass = " cultivo-card--alerta";
+      } else {
+        estadoProx = `atrasado hace ${Math.abs(diasRestantes)} día(s)`;
+        statusClass = " cultivo-card--critico";
+      }
+    }
+
+    card.className = "cultivo-card" + statusClass;
+
     card.innerHTML = `
       <div class="cultivo-header">
         <div class="cultivo-title">
@@ -2435,6 +2458,7 @@ function renderCultivos() {
         <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
         <div><strong>Último abono:</strong> ${ultimaAbonoTexto}</div>
         <div><strong>Frecuencia de abono:</strong> ${frecuenciaTexto}</div>
+        <div><strong>Próximo abono:</strong> ${estadoProx}</div>
       </div>
       ${
         c.notas
