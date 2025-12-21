@@ -1365,7 +1365,30 @@ function getRecordatoriosAbono() {
     // Ordenar: primero los que están más urgentes (vencidos o que faltan menos días)
     .sort((a, b) => a.diasRestantes - b.diasRestantes)
 }
-  
+  // Resumen rápido de abonos en Mi huerto
+function getResumenAbono() {
+  const hoyISO = todayISO();
+  let alDia = 0;
+  let porVencer = 0; // próximos 5 días
+  let atrasados = 0;
+
+  stateCultivos.forEach(c => {
+    if (!c.ultimaFertilizacion || !c.frecuenciaAbonoDias) return;
+
+    const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
+    const diasRestantes = c.frecuenciaAbonoDias - diasDesde;
+
+    if (diasRestantes > 5) {
+      alDia++;
+    } else if (diasRestantes >= 0) {
+      porVencer++;
+    } else {
+      atrasados++;
+    }
+  });
+
+  return { alDia, porVencer, atrasados };
+}
   // Cultivos que YA deberían abonarse (toca hoy o está vencido)
 function getPendientesAbono() {
   const hoyISO = todayISO();
