@@ -1335,6 +1335,15 @@ function getRecordatoriosAbono() {
     })
     // Ordenar: primero los que están más urgentes (vencidos o que faltan menos días)
     .sort((a, b) => a.diasRestantes - b.diasRestantes);
+  // Cultivos que YA deberían abonarse (toca hoy o está vencido)
+function getPendientesAbono() {
+  const hoyISO = todayISO();
+
+  return stateCultivos.filter(c => {
+    if (!c.ultimaFertilizacion || !c.frecuenciaAbonoDias) return false;
+    const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
+    return diasDesde >= c.frecuenciaAbonoDias; // ya toca o está pasado
+  });
 }
 
 /*********************
