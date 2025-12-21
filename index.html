@@ -2285,34 +2285,51 @@ function renderInicio() {
   const resumen = document.getElementById("estadoResumen");
   const nombre = stateSettings.nombreHuerto || "tu huerto";
 
-  if (!resumen) return;
+  if (resumen) {
+    if (!cultivosCount && !entradasHoy) {
+      resumen.textContent =
+        'Todavía no has registrado cultivos ni entradas en el diario. Empieza añadiendo tu primer cultivo en "Mi huerto".';
+    } else if (cultivosCount && !entradasHoy) {
+      resumen.textContent = `Tienes ${cultivosCount} cultivo(s) registrado(s) en ${nombre}. Aún no has escrito nada en el diario hoy.`;
+    } else if (cultivosCount && entradasHoy) {
+      resumen.textContent = `Llevas ${cultivosCount} cultivo(s) activo(s) y ya registraste ${entradasHoy} nota(s) en el diario hoy. ¡Buen trabajo!`;
+    } else {
+      resumen.textContent =
+        'Tienes anotaciones en el diario pero aún no has añadido cultivos. Usa "Mi huerto" para registrar lo que estás sembrando.';
+    }
 
-  if (!cultivosCount && !entradasHoy) {
-    resumen.textContent =
-      'Todavía no has registrado cultivos ni entradas en el diario. Empieza añadiendo tu primer cultivo en "Mi huerto".';
-  } else if (cultivosCount && !entradasHoy) {
-    resumen.textContent = `Tienes ${cultivosCount} cultivo(s) registrado(s) en ${nombre}. Aún no has escrito nada en el diario hoy.`;
-  } else if (cultivosCount && entradasHoy) {
-    resumen.textContent = `Llevas ${cultivosCount} cultivo(s) activo(s) y ya registraste ${entradasHoy} nota(s) en el diario hoy. ¡Buen trabajo!`;
-  } else {
-    resumen.textContent =
-      'Tienes anotaciones en el diario pero aún no has añadido cultivos. Usa "Mi huerto" para registrar lo que estás sembrando.';
+    // Texto extra si hay abonos pendientes
+    const pendientesTexto = getPendientesAbono();
+    if (pendientesTexto.length) {
+      const nombresAbono = pendientesTexto.map(c => c.nombre).join(", ");
+      resumen.textContent += ` Además, hoy o en estos días toca abonar: ${nombresAbono}.`;
+    }
   }
 
-  // 🔔 Recordatorio de abono
-  const pendientesAbono = cultivos
-    .filter(c => c.ultimaFertilizacion && c.frecuenciaAbonoDias)
-    .filter(c => {
-      const dias = daysBetween(c.ultimaFertilizacion, hoyISO);
-      return dias >= c.frecuenciaAbonoDias;
-    });
+  // 🔔 Bloque visual de recordatorios en Inicio
+  const cardRecord = document.getElementById("recordatoriosCard");
+  const listRecord = document.getElementById("recordatoriosList");
 
-  if (pendientesAbono.length) {
-    const nombresAbono = pendientesAbono.map(c => c.nombre).join(", ");
-    resumen.textContent += ` Además, hoy o en estos días toca abonar: ${nombresAbono}.`;
+  if (cardRecord && listRecord) {
+    const pendientes = getPendientesAbono();
+
+    if (!pendientes.length) {
+      cardRecord.style.display = "none";
+      listRecord.innerHTML = "";
+    } else {
+      cardRecord.style.display = "block";
+      listRecord.innerHTML = "";
+
+      pendientes.forEach(c => {
+        const dias = daysBetween(c.ultimaFertilizacion, hoyISO);
+        const li = document.createElement("li");
+        li.textContent = `${c.nombre} — último abono hace ${dias} día(s). Frecuencia: cada ${c.frecuenciaAbonoDias} día(s).`;
+        listRecord.appendChild(li);
+      });
+    }
   }
 
-  // Resumen rápido de calendario para el mes actual
+  // Resumen rápido del calendario para el mes actual
   const now = new Date();
   const monthIndex = now.getMonth();
   const data = getCalendarData(stateSettings, monthIndex);
