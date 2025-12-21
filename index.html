@@ -2381,63 +2381,8 @@ function renderInicio() {
     }
   }
 }
-// 🔼🔼🔼 RENDER INICIO 🔼🔼🔼
-
-function renderCultivos() {
-  const listEl = document.getElementById("cultivosList");
-  const chip = document.getElementById("cultivosCountChip");
-  if (!listEl) return;
-
-  const count = stateCultivos.length;
-  if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
-
-  if (!count) {
-    listEl.innerHTML =
-      '<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>';
-    return;
-  }
-
-  listEl.innerHTML = "";
-  const hoyISO = todayISO();
-
-  stateCultivos.forEach(c => {
-    const card = document.createElement("div");
-
-    const tipoLabelMap = {
-      hoja: "Hoja",
-      fruto: "Fruto",
-      raiz: "Raíz",
-      tuberculo: "Tubérculo",
-      aromaticas: "Aromáticas",
-      otro: "Otro"
-    };
-    const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
-
-    const ultimaAbonoTexto = c.ultimaFertilizacion
-      ? formatDate(c.ultimaFertilizacion)
-      : "Sin registro";
-    const frecuenciaTexto = c.frecuenciaAbonoDias
-      ? c.frecuenciaAbonoDias + " días"
-      : "No definido";
-
-    // 🔔 cálculo de estado del próximo abono
-    let estadoProx = "Sin registro";
-    let statusClass = "";
-
-    if (c.ultimaFertilizacion && c.frecuenciaAbonoDias) {
-      const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
-      const diasRestantes = c.frecuenciaAbonoDias - diasDesde;
-
-      if (diasRestantes > 5) {
-        estadoProx = `en ${diasRestantes} día(s)`;
-        statusClass = " cultivo-card--ok";
-      } else if (diasRestantes >= 0) {
-        estadoProx = `en ${diasRestantes} día(s)`;
-        statusClass = " cultivo-card--alerta";
-      } else {
-        estadoProx = `atrasado hace ${Math.abs(diasRestantes)} día(s)`;
-        statusClass = " cultivo-card--critico";
-      }function renderCultivos() {
+// 🔼🔼🔼 RENDER INICIO 
+ }function renderCultivos() {
   const listEl = document.getElementById("cultivosList");
   const chip = document.getElementById("cultivosCountChip");
   const resumenEl = document.getElementById("huertoAbonoResumen");
