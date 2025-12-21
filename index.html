@@ -2463,10 +2463,56 @@ function renderCultivos() {
       } else {
         estadoProx = `atrasado hace ${Math.abs(diasRestantes)} día(s)`;
         statusClass = " cultivo-card--critico";
-      }
-    }
+      }function renderCultivos() {
+  const listEl = document.getElementById("cultivosList");
+  const chip = document.getElementById("cultivosCountChip");
+  const resumenEl = document.getElementById("huertoAbonoResumen");
+  if (!listEl) return;
 
-    card.className = "cultivo-card" + statusClass;
+  const count = stateCultivos.length;
+  if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
+
+  // 🔹 Actualizar resumen de abonos
+  if (resumenEl) {
+    if (!count) {
+      resumenEl.innerHTML = "";
+    } else {
+      const { alDia, porVencer, atrasados } = getResumenAbono();
+      resumenEl.innerHTML = `
+        <span class="chip"><span>✅</span> Al día: ${alDia}</span>
+        <span class="chip"><span>⏰</span> Próx. 5 días: ${porVencer}</span>
+        <span class="chip chip-danger"><span>⚠️</span> Atrasados: ${atrasados}</span>
+      `;
+    }
+  }
+
+  if (!count) {
+    listEl.innerHTML =
+      '<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>';
+    return;
+  }
+
+  listEl.innerHTML = "";
+  stateCultivos.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "cultivo-card";
+
+    const tipoLabelMap = {
+      hoja: "Hoja",
+      fruto: "Fruto",
+      raiz: "Raíz",
+      tuberculo: "Tubérculo",
+      aromaticas: "Aromáticas",
+      otro: "Otro"
+    };
+    const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
+
+    const ultimaAbonoTexto = c.ultimaFertilizacion
+      ? formatDate(c.ultimaFertilizacion)
+      : "Sin registro";
+    const frecuenciaTexto = c.frecuenciaAbonoDias
+      ? c.frecuenciaAbonoDias + " días"
+      : "No definido";
 
     card.innerHTML = `
       <div class="cultivo-header">
@@ -2485,7 +2531,6 @@ function renderCultivos() {
         <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
         <div><strong>Último abono:</strong> ${ultimaAbonoTexto}</div>
         <div><strong>Frecuencia de abono:</strong> ${frecuenciaTexto}</div>
-        <div><strong>Próximo abono:</strong> ${estadoProx}</div>
       </div>
       ${
         c.notas
