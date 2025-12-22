@@ -2495,6 +2495,119 @@ function renderCultivos() {
         <div class="cultivo-title">
           <span>🌿</span>
           <span>${c.nombre}</span>
+// 🔼🔼🔼 RENDER MI HUERTO (lista de cultivos)
+function renderCultivos() {
+  const listEl = document.getElementById("cultivosList");
+  const chip = document.getElementById("cultivosCountChip");
+  const resumenEl = document.getElementById("huertoAbonoResumen");
+  if (!listEl) return;
+
+  const count = stateCultivos.length;
+  if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
+
+  const hoyISO = todayISO();
+
+  // Clasificar cada cultivo por estado de abono
+  function estadoAbono(cultivo) {
+    if (!cultivo.ultimaFertilizacion || !cultivo.frecuenciaAbonoDias) return null;
+    const diasDesde = daysBetween(cultivo.ultimaFertilizacion, hoyISO);
+    const diasRestantes = cultivo.frecuenciaAbonoDias - diasDesde;
+    if (diasRestantes > 5) return "alDia";
+    if (diasRestantes >= 0) return "proximo";
+    return "atrasado";
+  }
+
+  // Resumen de abonos + chips clicables
+  if (resumenEl) {
+    if (!count) {
+      resumenEl.innerHTML = "";
+    } else {
+      const { alDia, porVencer, atrasados } = getResumenAbono();
+      resumenEl.innerHTML = `
+        <button type="button" class="chip" id="chipAlDia">
+          <span>✅</span> Al día: ${alDia}
+        </button>
+        <button type="button" class="chip" id="chipProx">
+          <span>⏰</span> Próx. 5 días: ${porVencer}
+        </button>
+        <button type="button" class="chip chip-danger" id="chipAtrasados">
+          <span>⚠️</span> Atrasados: ${atrasados}
+        </button>
+      `;
+
+      function mostrarGrupo(grupo) {
+        const nombres = stateCultivos
+          .filter(c => estadoAbono(c) === grupo)
+          .map(c => `• ${c.nombre}`);
+        if (!nombres.length) {
+          alert("No hay cultivos en ese grupo ahora mismo.");
+          return;
+        }
+        const titulo =
+          grupo === "alDia"
+            ? "Cultivos al día:"
+            : grupo === "proximo"
+            ? "Cultivos que tocarán en los próximos 5 días:"
+            : "Cultivos atrasados:";
+        alert(titulo + "\n\n" + nombres.join("\n"));
+      }
+
+      const chipAlDia = document.getElementById("chipAlDia");
+      const chipProx = document.getElementById("chipProx");
+      const chipAtr = document.getElementById("chipAtrasados");
+
+      if (chipAlDia) chipAlDia.addEventListener("click", () => mostrarGrupo("alDia"));
+      if (chipProx) chipProx.addEventListener("click", () => mostrarGrupo("proximo"));
+      if (chipAtr) chipAtr.addEventListener("click", () => mostrarGrupo("atrasado"));
+    }
+  }
+
+  if (!count) {
+    listEl.innerHTML =
+      '<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>';
+    return;
+  }
+
+  listEl.innerHTML = "";
+  stateCultivos.forEach(c => {
+    const est = estadoAbono(c);
+
+    // Borde de color según estado
+    let claseEstado = "";
+    if (est === "alDia") claseEstado = " cultivo-card--ok";
+    else if (est === "proximo") claseEstado = " cultivo-card--alerta";
+    else if (est === "atrasado") claseEstado = " cultivo-card--critico";
+
+    const card = document.createElement("div");
+    card.className = "cultivo-card" + claseEstado;
+
+    const tipoLabelMap = {
+      hoja: "Hoja",
+      fruto: "Fruto",
+      raiz: "Raíz",
+      tuberculo: "Tubérculo",
+      aromaticas: "Aromáticas",
+      otro: "Otro"
+    };
+    const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
+
+    const ultimaAbonoTexto = c.ultimaFertilizacion
+      ? formatDate(c.ultimaFertilizacion)
+      : "Sin registro";
+    const frecuenciaTexto = c.frecuenciaAbonoDias
+      ? c.frecuenciaAbonoDias + " días"
+      : "No definido";
+
+    let etiquetaEstado = "";
+    if (est === "alDia") etiquetaEstado = "✅ Al día";
+    else if (est === "proximo") etiquetaEstado = "⏰ Próx. 5 días";
+    else if (est === "atrasado") etiquetaEstado = "⚠️ Atrasado";
+
+    card.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <span>🌿</span>
+          <span>${c.nombre}</span>
         </div>
         <span class="chip">${tipoLabel}</span>
       </div>
@@ -2522,7 +2635,7 @@ function renderCultivos() {
 
     listEl.appendChild(card);
   });
-}
+  }
 /*********************
  * Calendario (con catálogo)
  *********************/
