@@ -2383,12 +2383,12 @@ function renderInicio() {
   }
 }
 // 🔼🔼🔼 RENDER INICIO 
- function renderCultivos() 
+ function renderCultivos(){
   const listEl = document.getElementById("cultivosList");
   const chip = document.getElementById("cultivosCountChip");
   const resumenEl = document.getElementById("huertoAbonoResumen");
   if (!listEl) return;
-
+}
   const count = stateCultivos.length;
   if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
 
