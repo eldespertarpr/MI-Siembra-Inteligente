@@ -1350,7 +1350,7 @@ function getCosechasHoy() {
     c => c.fechaCosechaEstimada && c.fechaCosechaEstimada <= hoyISO
   );
 }
-}// Devuelve los cultivos que ya deberían abonarse según su última fertilización
+// Devuelve los cultivos que ya deberían abonarse según su última fertilización
 // Devuelve TODOS los cultivos con abono registrado, indicando si ya toca o cuántos días faltan
 function getRecordatoriosAbono() {
   const hoyISO = todayISO();
