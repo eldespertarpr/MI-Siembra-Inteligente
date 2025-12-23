@@ -1309,6 +1309,45 @@ function daysBetween(dateISO1, dateISO2) {
   const d2 = new Date(dateISO2 + "T00:00:00");
   const diffMs = d2 - d1;
   return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  function addDays(dateISO, days) {
+  if (!dateISO || !Number.isFinite(days)) return dateISO;
+  const d = new Date(dateISO + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return dateISO;
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+// Cultivos que YA deberían abonarse (toca hoy o está vencido)
+function getPendientesAbono() {
+  const hoyISO = todayISO();
+
+  return stateCultivos.filter(c => {
+    if (!c.ultimaFertilizacion || !c.frecuenciaAbonoDias) return false;
+    const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
+    return diasDesde >= c.frecuenciaAbonoDias; // ya toca o está pasado
+  });
+}
+
+// Cultivos pendientes de riego según último riego + frecuencia
+function getPendientesRiego() {
+  const hoyISO = todayISO();
+
+  return stateCultivos.filter(c => {
+    if (!c.frecuenciaRiegoDias) return false;
+    const base = c.ultimoRiego || c.fechaSiembra || c.creadoEl;
+    if (!base) return false;
+    const diasDesde = daysBetween(base, hoyISO);
+    return diasDesde >= c.frecuenciaRiegoDias;
+  });
+}
+
+// Cultivos cuya fecha estimada de cosecha ya llegó o pasó
+function getCosechasHoy() {
+  const hoyISO = todayISO();
+  return stateCultivos.filter(
+    c => c.fechaCosechaEstimada && c.fechaCosechaEstimada <= hoyISO
+  );
+}
 }// Devuelve los cultivos que ya deberían abonarse según su última fertilización
 // Devuelve TODOS los cultivos con abono registrado, indicando si ya toca o cuántos días faltan
 function getRecordatoriosAbono() {
