@@ -1404,15 +1404,6 @@ function getResumenAbono() {
   return { alDia, porVencer, atrasados };
 }
   // Cultivos que YA deberían abonarse (toca hoy o está vencido)
-function getPendientesAbono() {
-  const hoyISO = todayISO();
-
-  return stateCultivos.filter(c => {
-    if (!c.ultimaFertilizacion || !c.frecuenciaAbonoDias) return false;
-    const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
-    return diasDesde >= c.frecuenciaAbonoDias; // ya toca o está pasado
-  });
-}
 
 /*********************
  * Calendario de siembra
