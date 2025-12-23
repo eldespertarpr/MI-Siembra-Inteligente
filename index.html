@@ -2766,20 +2766,58 @@ function renderCalendario(monthIndex = 5) {
 function renderDiario() {
   const listEl = document.getElementById("diarioList");
   const chip = document.getElementById("diarioCountChip");
+  const resumenHoyEl = document.getElementById("diarioResumenHoy");
   if (!listEl) return;
 
-  const arr = [...stateDiario].sort((a, b) => b.fecha.localeCompare(a.fecha));
-  const count = arr.length;
-  if (chip) chip.textContent = `${count} entrada${count === 1 ? "" : "s"}`;
+  // Ordenar por fecha (más reciente primero)
+  const arrOrdenada = [...stateDiario].sort((a, b) =>
+    b.fecha.localeCompare(a.fecha)
+  );
+  const countTotal = arrOrdenada.length;
 
-  if (!count) {
+  if (chip) {
+    chip.textContent = `${countTotal} entrada${
+      countTotal === 1 ? "" : "s"
+    }`;
+  }
+
+  // Resumen de hoy
+  if (resumenHoyEl) {
+    const hoy = todayISO();
+    const hoyEntries = arrOrdenada.filter(e => e.fecha === hoy);
+
+    if (!hoyEntries.length) {
+      resumenHoyEl.textContent =
+        "Hoy aún no has registrado nada en el diario.";
+    } else {
+      const riegos = hoyEntries.filter(e => e.tipo === "Riego").length;
+      const abonos = hoyEntries.filter(e => e.tipo === "Abono").length;
+      const otros =
+        hoyEntries.length - riegos - abonos;
+
+      const partes = [];
+      if (riegos) partes.push(`${riegos} riego(s)`);
+      if (abonos) partes.push(`${abonos} abono(s)`);
+      if (otros) partes.push(`${otros} nota(s) general(es)`);
+
+      resumenHoyEl.textContent = `Hoy registraste: ${partes.join(", ")}.`;
+    }
+  }
+
+  // Aplicar filtro actual
+  const arrFiltrada = arrOrdenada.filter(e => {
+    if (diarioFiltroActual === "todos") return true;
+    return (e.tipo || "General") === diarioFiltroActual;
+  });
+
+  if (!arrFiltrada.length) {
     listEl.innerHTML =
-      '<p class="muted">Todavía no has añadido entradas al diario.</p>';
+      '<p class="muted">No hay entradas que coincidan con el filtro seleccionado.</p>';
     return;
   }
 
   listEl.innerHTML = "";
-  arr.forEach(e => {
+  arrFiltrada.forEach(e => {
     const div = document.createElement("div");
     div.className = "diario-item";
     div.innerHTML = `
@@ -2792,7 +2830,6 @@ function renderDiario() {
     listEl.appendChild(div);
   });
 }
-
 /*********************
  * Plagas: render
  *********************/
