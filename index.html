@@ -3307,8 +3307,20 @@ function setupDiario() {
     if (!texto) {
       alert("Escribe algo antes de guardar.");
       return;
-    }
+      // --- Filtros del diario ---
+  const filtros = document.querySelectorAll(".diario-filtro");
 
+  filtros.forEach(filtro => {
+    filtro.addEventListener("click", () => {
+      // cambiar aspecto del botón activo
+      filtros.forEach(b => b.classList.remove("pill--active"));
+      filtro.classList.add("pill--active");
+
+      // actualizar filtro actual y volver a pintar la lista
+      stateDiarioFiltro = filtro.dataset.filtro || "todos";
+      renderDiario();
+    });
+    }
     const entrada = {
       id: Date.now().toString(36),
       fecha: todayISO(),
