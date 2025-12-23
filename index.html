@@ -3157,25 +3157,34 @@ function setupMiHuertoForm() {
         renderCultivos();
         renderInicio();
       }
+
     } else if (action === "nota") {
       const navBtn = document.querySelector('.nav-btn[data-section="diario"]');
       if (navBtn) navBtn.click();
       const campo = document.getElementById("diarioTexto");
       if (campo) {
-        campo.value = `Cultivo: ${cultivo.nombre} (${
-          cultivo.variedad || "sin variedad"
-        }). `;
+        campo.value = `Cultivo: ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}). `;
         campo.focus();
       }
+
     } else if (action === "abono") {
       cultivo.ultimaFertilizacion = todayISO();
       if (!cultivo.frecuenciaAbonoDias) {
         cultivo.frecuenciaAbonoDias = 30;
       }
       saveCultivos(stateCultivos);
+
+      // 👉 entrada automática en diario
+      agregarEntradaDiarioAuto(
+        `Abono registrado para ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}).`,
+        "Abono"
+      );
+
       renderCultivos();
+      renderDiario();
       renderInicio();
       alert(`Se registró que abonaste "${cultivo.nombre}" hoy.`);
+
     } else if (action === "riego") {
       cultivo.ultimoRiego = todayISO();
       if (!cultivo.frecuenciaRiegoDias) {
@@ -3189,9 +3198,18 @@ function setupMiHuertoForm() {
         }
       }
       saveCultivos(stateCultivos);
+
+      // 👉 entrada automática en diario
+      agregarEntradaDiarioAuto(
+        `Riego registrado para ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}).`,
+        "Riego"
+      );
+
       renderCultivos();
+      renderDiario();
       renderInicio();
       alert(`Se registró que regaste "${cultivo.nombre}" hoy.`);
+
     } else if (action === "plaga") {
       const entrada = prompt(
         'Escribe la plaga que quieres consultar (ej. "minador", "pulgones", "araña roja"):'
