@@ -3297,71 +3297,7 @@ function setupMiHuertoForm() {
         renderCultivos();
         renderInicio();
       }
-    } else if (action === "nota") {
-      const navBtn = document.querySelector('.nav-btn[data-section="diario"]');
-      if (navBtn) navBtn.click();
-      const campo = document.getElementById("diarioTexto");
-      if (campo) {
-        campo.value = `Cultivo: ${cultivo.nombre} (${
-          cultivo.variedad || "sin variedad"
-        }). `;
-        campo.focus();
-      }
-    } else if (action === "abono") {
-      cultivo.ultimaFertilizacion = todayISO();
-      if (!cultivo.frecuenciaAbonoDias) {
-        cultivo.frecuenciaAbonoDias = 30;
-      }
-      saveCultivos(stateCultivos);
-      renderCultivos();
-      renderInicio();
-      alert(`Se registró que abonaste "${cultivo.nombre}" hoy.`);
-    } else if (action === "riego") {
-      cultivo.ultimoRiego = todayISO();
-      if (!cultivo.frecuenciaRiegoDias) {
-        const entrada = prompt(
-          "¿Cada cuántos días quieres regar este cultivo? (número de días)",
-          "2"
-        );
-        const n = parseInt(entrada, 10);
-        if (Number.isFinite(n) && n > 0) {
-          cultivo.frecuenciaRiegoDias = n;
-        }
-      }
-      saveCultivos(stateCultivos);
-      renderCultivos();
-      renderInicio();
-      alert(`Se registró que regaste "${cultivo.nombre}" hoy.`);
-    } else if (action === "plaga") {
-      const entrada = prompt(
-        'Escribe la plaga que quieres consultar (ej. "minador", "pulgones", "araña roja"):'
-      );
-      if (!entrada) return;
 
-      const texto = entrada.trim().toLowerCase();
-      const plaga = PLAGAS_DATA.find(p =>
-        p.nombre.toLowerCase().includes(texto)
-      );
-
-      if (!plaga) {
-        alert(
-          "No encontré esa plaga en la lista. Prueba con nombres como: pulgones, mosca blanca, araña roja, etc."
-        );
-        return;
-      }
-
-      cultivo.plagaId = plaga.id;
-      saveCultivos(stateCultivos);
-
-      const navPlagas = document.querySelector(
-        '.nav-btn[data-section="plagas"]'
-      );
-      if (navPlagas) navPlagas.click();
-      renderPlagas(plaga.id);
-      alert(`Mostrando información para: ${plaga.nombre}.`);
-    }
-  });
-          }
 function setupDiario() {
   const btn = document.getElementById("btnGuardarDiario");
   if (!btn) return;
