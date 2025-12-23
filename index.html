@@ -1029,12 +1029,30 @@
         </div>
 
         <div class="app-card">
-          <div class="app-card-header">
-            <div class="app-card-title">Entradas recientes</div>
-            <div class="chip" id="diarioCountChip">0 entradas</div>
-          </div>
-          <div class="diario-list" id="diarioList"></div>
-        </div>
+  <div class="app-card-header">
+    <div class="app-card-title">Entradas recientes</div>
+    <div class="chip" id="diarioCountChip">0 entradas</div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="pill-group" id="diarioFiltros">
+    <button class="pill pill--active" data-filtro="todos">Todo</button>
+    <button class="pill" data-filtro="Riego">Riego</button>
+    <button class="pill" data-filtro="Abono">Abono</button>
+    <button class="pill" data-filtro="General">General</button>
+  </div>
+
+  <!-- Resumen de hoy -->
+  <p class="muted" id="diarioResumenHoy"></p>
+
+  <!-- Lista -->
+  <div class="diario-list" id="diarioList"></div>
+
+  <!-- Exportar diario -->
+  <button class="btn-secondary btn btn-full" id="btnExportarDiario">
+    <span>📤</span> Exportar diario (texto)
+  </button>
+</div>
       </section>
 
       <!-- PLAGAS -->
