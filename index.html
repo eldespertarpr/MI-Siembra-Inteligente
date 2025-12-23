@@ -1309,7 +1309,9 @@ function daysBetween(dateISO1, dateISO2) {
   const d2 = new Date(dateISO2 + "T00:00:00");
   const diffMs = d2 - d1;
   return Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  function addDays(dateISO, days) {
+}
+
+function addDays(dateISO, days) {
   if (!dateISO || !Number.isFinite(days)) return dateISO;
   const d = new Date(dateISO + "T00:00:00");
   if (Number.isNaN(d.getTime())) return dateISO;
