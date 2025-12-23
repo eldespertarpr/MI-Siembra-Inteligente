@@ -3297,10 +3297,10 @@ function setupMiHuertoForm() {
     }
 
 function setupDiario() {
-  const btn = document.getElementById("diarioGuardar");
+  // Botón para guardar en el diario
+  const btn = document.getElementById("btnGuardarDiario");
   if (!btn) return;
 
-  // Guardar entrada
   btn.addEventListener("click", () => {
     const campo = document.getElementById("diarioTexto");
     const texto = campo.value.trim();
@@ -3309,36 +3309,6 @@ function setupDiario() {
       return;
     }
 
-    const entrada = {
-      id: Date.now().toString(36),
-      fecha: todayISO(),
-      texto,
-      tipo: "General",
-    };
-
-    stateDiario.push(entrada);
-    saveDiario(stateDiario);
-    campo.value = "";
-    renderDiario();
-    renderInicio();
-    alert("Entrada guardada en el diario.");
-  });
-
-  // --- Filtros del diario ---
-  const filtros = document.querySelectorAll(".diario-filtro");
-
-  filtros.forEach(filtro => {
-    filtro.addEventListener("click", () => {
-      // cambiar aspecto del botón activo
-      filtros.forEach(b => b.classList.remove("pill--active"));
-      filtro.classList.add("pill--active");
-
-      // actualizar filtro actual y volver a pintar la lista
-      stateDiarioFiltro = filtro.dataset.filtro || "todos";
-      renderDiario();
-    });
-  });
-}
     const entrada = {
       id: Date.now().toString(36),
       fecha: todayISO(),
@@ -3352,6 +3322,21 @@ function setupDiario() {
     renderDiario();
     renderInicio();
     alert("Entrada guardada en el diario.");
+  });
+
+  // --- Filtros del diario ---
+  const filtros = document.querySelectorAll("#diarioFiltros .pill");
+
+  filtros.forEach(filtro => {
+    filtro.addEventListener("click", () => {
+      // cambiar aspecto del botón activo
+      filtros.forEach(b => b.classList.remove("pill--active"));
+      filtro.classList.add("pill--active");
+
+      // actualizar filtro actual y volver a pintar la lista
+      diarioFiltroActual = filtro.dataset.filtro || "todos";
+      renderDiario();
+    });
   });
 }
 
