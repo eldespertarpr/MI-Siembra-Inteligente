@@ -3080,6 +3080,17 @@ function setupMesesPills() {
   if (target) target.click();
   else renderCalendario(5);
 }
+    // Crea una entrada automática en el diario (riego / abono)
+function agregarEntradaDiarioAuto(texto, tipo) {
+  const entrada = {
+    id: Date.now().toString(36),
+    fecha: todayISO(),
+    texto,
+    tipo: tipo || "Auto"
+  };
+  stateDiario.push(entrada);
+  saveDiario(stateDiario);
+}
 function setupMiHuertoForm() {
   const btn = document.getElementById("btnAgregarCultivo");
   if (!btn) return;
