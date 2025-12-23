@@ -3215,31 +3215,104 @@ function setupMiHuertoForm() {
 
     } else if (action === "nota") {
       const navBtn = document.querySelector('.nav-btn[data-section="diario"]');
+function setupMiHuertoForm() {
+  const btn = document.getElementById("btnAgregarCultivo");
+  if (!btn) return;
+
+  // Crear cultivo nuevo
+  btn.addEventListener("click", () => {
+    const nombre = document.getElementById("cultivoNombre").value.trim();
+    const variedad = document.getElementById("cultivoVariedad").value.trim();
+    const tipo = document.getElementById("cultivoTipo").value || "otro";
+    const fechaSiembra =
+      document.getElementById("cultivoFecha").value || todayISO();
+    const notas = document.getElementById("cultivoNotas").value.trim();
+
+    if (!nombre) {
+      alert("Por favor escribe al menos el nombre del cultivo.");
+      return;
+    }
+
+    const frecuenciaBase = getFrecuenciaAbonoParaNombre(nombre);
+    const extra = getRiegoYCosechaParaNombre(nombre, fechaSiembra);
+
+    const nuevo = {
+      id: Date.now().toString(36),
+      nombre,
+      variedad,
+      tipo,
+      fechaSiembra,
+      notas,
+      creadoEl: todayISO(),
+      frecuenciaAbonoDias: frecuenciaBase,
+      ultimaFertilizacion: null,
+      frecuenciaRiegoDias: extra.frecuenciaRiego,
+      ultimoRiego: null,
+      fechaCosechaEstimada: extra.fechaCosechaEstimada || null
+    };
+
+    stateCultivos.push(nuevo);
+    saveCultivos(stateCultivos);
+
+    document.getElementById("cultivoNombre").value = "";
+    document.getElementById("cultivoVariedad").value = "";
+    document.getElementById("cultivoFecha").value = "";
+    document.getElementById("cultivoNotas").value = "";
+
+    renderCultivos();
+    renderInicio();
+    alert("Cultivo guardado.");
+  });
+
+  // Acciones en la lista de cultivos
+  const list = document.getElementById("cultivosList");
+  if (!list) return;
+
+  list.addEventListener("click", ev => {
+    const btn = ev.target.closest("button[data-id]");
+    if (!btn) return;
+    const id = btn.getAttribute("data-id");
+    const action = btn.getAttribute("data-action");
+    const cultivo = stateCultivos.find(c => c.id === id);
+    if (!cultivo) return;
+
+    if (action === "borrar") {
+      if (confirm(`¿Eliminar el cultivo "${cultivo.nombre}"?`)) {
+        stateCultivos = stateCultivos.filter(c => c.id !== id);
+        saveCultivos(stateCultivos);
+        renderCultivos();
+        renderInicio();
+      }
+    } else if (action === "nota") {
+      const navBtn = document.querySelector('.nav-btn[data-section="diario"]');
       if (navBtn) navBtn.click();
       const campo = document.getElementById("diarioTexto");
       if (campo) {
         campo.value = `Cultivo: ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}). `;
         campo.focus();
       }
-
     } else if (action === "abono") {
       cultivo.ultimaFertilizacion = todayISO();
       if (!cultivo.frecuenciaAbonoDias) {
         cultivo.frecuenciaAbonoDias = 30;
       }
+
+      // Registrar en diario
+      stateDiario.push({
+        id: Date.now().toString(36),
+        fecha: todayISO(),
+        texto: `Abono registrado para ${cultivo.nombre}${
+          cultivo.variedad ? ` (${cultivo.variedad})` : ""
+        }.`,
+        tipo: "Abono"
+      });
+
       saveCultivos(stateCultivos);
-
-      // 👉 entrada automática en diario
-      agregarEntradaDiarioAuto(
-        `Abono registrado para ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}).`,
-        "Abono"
-      );
-
+      saveDiario(stateDiario);
       renderCultivos();
       renderDiario();
       renderInicio();
       alert(`Se registró que abonaste "${cultivo.nombre}" hoy.`);
-
     } else if (action === "riego") {
       cultivo.ultimoRiego = todayISO();
       if (!cultivo.frecuenciaRiegoDias) {
@@ -3252,19 +3325,23 @@ function setupMiHuertoForm() {
           cultivo.frecuenciaRiegoDias = n;
         }
       }
+
+      // Registrar en diario
+      stateDiario.push({
+        id: Date.now().toString(36),
+        fecha: todayISO(),
+        texto: `Riego registrado para ${cultivo.nombre}${
+          cultivo.variedad ? ` (${cultivo.variedad})` : ""
+        }.`,
+        tipo: "Riego"
+      });
+
       saveCultivos(stateCultivos);
-
-      // 👉 entrada automática en diario
-      agregarEntradaDiarioAuto(
-        `Riego registrado para ${cultivo.nombre} (${cultivo.variedad || "sin variedad"}).`,
-        "Riego"
-      );
-
+      saveDiario(stateDiario);
       renderCultivos();
       renderDiario();
       renderInicio();
       alert(`Se registró que regaste "${cultivo.nombre}" hoy.`);
-
     } else if (action === "plaga") {
       const entrada = prompt(
         'Escribe la plaga que quieres consultar (ej. "minador", "pulgones", "araña roja"):'
@@ -3294,7 +3371,7 @@ function setupMiHuertoForm() {
       alert(`Mostrando información para: ${plaga.nombre}.`);
     }
   });
-    }
+}
 
 
 function setupDiario() {
