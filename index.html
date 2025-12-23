@@ -2174,7 +2174,9 @@ function getFrecuenciaAbonoParaNombre(nombre) {
   if (!cultivoCatalogo) return 30;
 
   return FERTILIZACION_FRECUENCIAS[cultivoCatalogo.id] || 30;
-  // Calcula frecuencia de riego y fecha estimada de cosecha desde el catálogo
+}
+
+// Calcula frecuencia de riego y fecha estimada de cosecha desde el catálogo
 function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
   let frecuenciaRiego = null;
   let fechaCosechaEstimada = null;
@@ -2196,7 +2198,7 @@ function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       riegoTexto.includes("siempre húmedo") ||
       riegoTexto.includes("suelo siempre")
     ) {
-      frecuenciaRiego = 2; // muy seguido
+      frecuenciaRiego = 2;
     } else if (riegoTexto.includes("abundante")) {
       frecuenciaRiego = 2;
     } else if (
@@ -2206,7 +2208,7 @@ function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       riegoTexto.includes("escaso") ||
       riegoTexto.includes("toler")
     ) {
-      frecuenciaRiego = 4; // aguanta más
+      frecuenciaRiego = 4;
     } else if (
       riegoTexto.includes("moderado") ||
       riegoTexto.includes("regular")
@@ -2228,7 +2230,7 @@ function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
   }
 
   return { frecuenciaRiego, fechaCosechaEstimada };
-}
+
     }
 /*********************
  * Plagas (datos base)
