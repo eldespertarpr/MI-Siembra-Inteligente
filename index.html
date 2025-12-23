@@ -3212,6 +3212,7 @@ function setupMiHuertoForm() {
   });
     }
 
+
 function setupDiario() {
   const btn = document.getElementById("btnGuardarDiario");
   if (!btn) return;
@@ -3224,7 +3225,21 @@ function setupDiario() {
       return;
     }
 
+    const entrada = {
+      id: Date.now().toString(36),
+      fecha: todayISO(),
+      texto,
+      tipo: "General"
+    };
 
+    stateDiario.push(entrada);
+    saveDiario(stateDiario);
+    campo.value = "";
+    renderDiario();
+    renderInicio();
+    alert("Entrada guardada en el diario.");
+  });
+}
 function setupMiHuertoForm() {
   const btn = document.getElementById("btnAgregarCultivo");
   if (!btn) return;
