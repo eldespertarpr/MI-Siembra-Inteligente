@@ -2418,44 +2418,81 @@ function renderInicio() {
   const nombre = stateSettings.nombreHuerto || "tu huerto";
 
   if (resumen) {
+    let texto;
+
     if (!cultivosCount && !entradasHoy) {
-      resumen.textContent =
+      texto =
         'Todavía no has registrado cultivos ni entradas en el diario. Empieza añadiendo tu primer cultivo en "Mi huerto".';
     } else if (cultivosCount && !entradasHoy) {
-      resumen.textContent = `Tienes ${cultivosCount} cultivo(s) registrado(s) en ${nombre}. Aún no has escrito nada en el diario hoy.`;
+      texto = `Tienes ${cultivosCount} cultivo(s) registrado(s) en ${nombre}. Aún no has escrito nada en el diario hoy.`;
     } else if (cultivosCount && entradasHoy) {
-      resumen.textContent = `Llevas ${cultivosCount} cultivo(s) activo(s) y ya registraste ${entradasHoy} nota(s) en el diario hoy. ¡Buen trabajo!`;
+      texto = `Llevas ${cultivosCount} cultivo(s) activo(s) y ya registraste ${entradasHoy} nota(s) en el diario hoy. ¡Buen trabajo!`;
     } else {
-      resumen.textContent =
+      texto =
         'Tienes anotaciones en el diario pero aún no has añadido cultivos. Usa "Mi huerto" para registrar lo que estás sembrando.';
     }
 
-    // Texto extra si hay abonos pendientes
-    const pendientesTexto = getPendientesAbono();
-    if (pendientesTexto.length) {
-      const nombresAbono = pendientesTexto.map(c => c.nombre).join(", ");
-      resumen.textContent += ` Además, hoy o en estos días toca abonar: ${nombresAbono}.`;
+    const pendientesAbono = getPendientesAbono();
+    const pendientesRiego = getPendientesRiego();
+    const cosechasHoy = getCosechasHoy();
+
+    if (pendientesAbono.length) {
+      const nombresAbono = pendientesAbono.map(c => c.nombre).join(", ");
+      texto += ` Hoy toca revisar abonado de: ${nombresAbono}.`;
     }
+    if (pendientesRiego.length) {
+      const nombresRiego = pendientesRiego.map(c => c.nombre).join(", ");
+      texto += ` También toca riego para: ${nombresRiego}.`;
+    }
+    if (cosechasHoy.length) {
+      const nombresCosecha = cosechasHoy.map(c => c.nombre).join(", ");
+      texto += ` Posibles cosechas listas: ${nombresCosecha}.`;
+    }
+
+    resumen.textContent = texto;
   }
 
-  // 🔔 Bloque visual de recordatorios en Inicio
+  // Bloque visual de recordatorios en Inicio
   const cardRecord = document.getElementById("recordatoriosCard");
   const listRecord = document.getElementById("recordatoriosList");
 
   if (cardRecord && listRecord) {
-    const pendientes = getPendientesAbono();
+    const pendientesAbono = getPendientesAbono();
+    const pendientesRiego = getPendientesRiego();
+    const cosechasHoy = getCosechasHoy();
 
-    if (!pendientes.length) {
+    if (
+      !pendientesAbono.length &&
+      !pendientesRiego.length &&
+      !cosechasHoy.length
+    ) {
       cardRecord.style.display = "none";
       listRecord.innerHTML = "";
     } else {
       cardRecord.style.display = "block";
       listRecord.innerHTML = "";
 
-      pendientes.forEach(c => {
+      pendientesAbono.forEach(c => {
         const dias = daysBetween(c.ultimaFertilizacion, hoyISO);
         const li = document.createElement("li");
-        li.textContent = `${c.nombre} — último abono hace ${dias} día(s). Frecuencia: cada ${c.frecuenciaAbonoDias} día(s).`;
+        li.textContent = `Abono · ${c.nombre} — último abono hace ${dias} día(s). Frecuencia: cada ${c.frecuenciaAbonoDias} día(s).`;
+        listRecord.appendChild(li);
+      });
+
+      pendientesRiego.forEach(c => {
+        const base = c.ultimoRiego || c.fechaSiembra || c.creadoEl;
+        const dias = base ? daysBetween(base, hoyISO) : "?";
+        const freq = c.frecuenciaRiegoDias || "?";
+        const li = document.createElement("li");
+        li.textContent = `Riego · ${c.nombre} — último riego hace ${dias} día(s). Frecuencia: cada ${freq} día(s).`;
+        listRecord.appendChild(li);
+      });
+
+      cosechasHoy.forEach(c => {
+        const li = document.createElement("li");
+        li.textContent = `Cosecha · ${c.nombre} — fecha estimada ${formatDate(
+          c.fechaCosechaEstimada
+        )}.`;
         listRecord.appendChild(li);
       });
     }
@@ -2475,7 +2512,7 @@ function renderInicio() {
       calHoyTexto.textContent = `Para este mes se sugieren cultivos como: ${nombres}. Revisa el calendario para ver el detalle.`;
     }
   }
-}
+    }
 
 // 🔼🔼🔼 RENDER MI HUERTO (lista de cultivos)
 function renderCultivos() {
