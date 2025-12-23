@@ -3006,32 +3006,64 @@ function setupNavigation() {
     });
   }
 
-  // 🔔 Botón de recordatorios de abono
+  // 🔔 Botón de recordatorios (abono, riego y cosecha)
   if (btnRecordatorios) {
     btnRecordatorios.addEventListener("click", () => {
-      const recordatorios = getRecordatoriosAbono();
+      const recordatoriosAbono = getRecordatoriosAbono();
+      const pendientesRiego = getPendientesRiego();
+      const cosechasHoy = getCosechasHoy();
 
-      if (!recordatorios.length) {
+      if (
+        !recordatoriosAbono.length &&
+        !pendientesRiego.length &&
+        !cosechasHoy.length
+      ) {
         alert(
-          "Por ahora no hay cultivos con abono registrado.\n\n" +
-          "Cuando registres un abono desde 'Mi huerto', aquí verás en cuántos días toca el próximo."
+          "Por ahora no hay recordatorios pendientes.\n\n" +
+            "Cuando registres abonos y riegos, aquí verás qué toca hoy."
         );
         return;
       }
 
-      const lineas = recordatorios.map(r =>
-        `• ${r.nombre} — ${r.estadoLabel}.`
-      );
+      const lineas = [];
 
-      alert(
-        "🔔 Recordatorio de abono:\n\n" +
-        lineas.join("\n") +
-        "\n\n(Los días se cuentan desde el último abono que registraste.)"
-      );
+      if (recordatoriosAbono.length) {
+        lineas.push("Abono:");
+        recordatoriosAbono.forEach(r => {
+          lineas.push(`• ${r.nombre} — ${r.estadoLabel}`);
+        });
+        lineas.push("");
+      }
+
+      if (pendientesRiego.length) {
+        lineas.push("Riego:");
+        const hoy = todayISO();
+        pendientesRiego.forEach(c => {
+          const base = c.ultimoRiego || c.fechaSiembra || c.creadoEl;
+          const diasDesde = base ? daysBetween(base, hoy) : "?";
+          const freq = c.frecuenciaRiegoDias || "?";
+          lineas.push(
+            `• ${c.nombre} — último riego hace ${diasDesde} día(s), frecuencia ${freq} día(s).`
+          );
+        });
+        lineas.push("");
+      }
+
+      if (cosechasHoy.length) {
+        lineas.push("Cosecha:");
+        cosechasHoy.forEach(c => {
+          lineas.push(
+            `• ${c.nombre} — fecha estimada ${formatDate(
+              c.fechaCosechaEstimada
+            )}.`
+          );
+        });
+        lineas.push("");
+      }
+
+      alert("🔔 Recordatorios del huerto:\n\n" + lineas.join("\n"));
     });
   }
-}
-
 function setupMesesPills() {
   const pills = document.querySelectorAll("#mesesPills .pill");
   pills.forEach(p => {
