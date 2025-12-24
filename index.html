@@ -3083,30 +3083,38 @@ const GERMINACION_POR_CULTIVO = {
         const card = document.createElement("div");
         card.className = "cultivo-card";
         card.innerHTML = `
-          <div class="cultivo-header">
-            <div class="cultivo-title">
-              <img
-                src="${imgSrc}"
-                alt="${c.nombre}"
-                class="cultivo-thumb"
-                onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-              />
-              <span>🌱 ${c.nombre}</span>
-            </div>
-            <span class="chip">${c.categoria}</span>
-          </div>
-          <div class="cultivo-body">
-            <div><strong>Días a cosecha:</strong> ${c.dias}</div>
-            <div><strong>Luz:</strong> ${c.luz}</div>
-            <div><strong>Riego:</strong> ${c.riego}</div>
-            <div><strong>Tiesto / suelo:</strong> ${c.tiesto}</div>
-            <div><strong>Profundidad de siembra:</strong> ${c.profundidad}</div>
-            <div><strong>Plagas frecuentes:</strong> ${c.plagas.join(", ")}</div>
-          </div>
-        `;
-        listEl.appendChild(card);
-      });
-    }
+  <div class="cultivo-header">
+    <div class="cultivo-title">
+      <img
+        src="${imgSrc}"
+        alt="${c.nombre}"
+        class="cultivo-thumb"
+        onerror="this.onerror=null;this.src='img/placeholder.jpg';"
+      />
+      <span>🌱 ${c.nombre}</span>
+    </div>
+    <span class="chip">${c.categoria}</span>
+  </div>
+  <div class="cultivo-body">
+    <div><strong>Días a cosecha:</strong> ${c.dias}</div>
+    <div><strong>Luz:</strong> ${c.luz}</div>
+    <div><strong>Riego:</strong> ${c.riego}</div>
+    <div><strong>Tiesto / suelo:</strong> ${c.tiesto}</div>
+    <div><strong>Profundidad de siembra:</strong> ${c.profundidad}</div>
+    <div><strong>Plagas frecuentes:</strong> ${c.plagas.join(", ")}</div>
+  </div>
+  ${
+    GERMINACION_POR_CULTIVO[c.id]
+      ? `<div class="cultivo-actions">
+           <button class="btn-secondary btn"
+             data-id="${c.id}"
+             data-action="germinacion">
+             🔁 Ver germinación / reproducción
+           </button>
+         </div>`
+      : ""
+  }
+`;
 
     function setupCatalogo() {
       const input = document.getElementById("catalogoBusqueda");
