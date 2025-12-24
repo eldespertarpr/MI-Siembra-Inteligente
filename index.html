@@ -3055,12 +3055,10 @@ const GERMINACION_POR_CULTIVO = {
       });
     }
 
-    /*********************
+  /*********************
      * Catálogo: render + búsqueda
      *********************/
-`;
-
-function renderCatalogo(filtroTexto = "") {
+    function renderCatalogo(filtroTexto = "") {
       const listEl = document.getElementById("catalogoList");
       if (!listEl) return;
 
@@ -3155,7 +3153,9 @@ function renderCatalogo(filtroTexto = "") {
           );
         });
       }
-    }
+            }
+
+
 
     /*********************
      * Navegación
