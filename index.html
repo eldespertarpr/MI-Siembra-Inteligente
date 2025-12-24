@@ -2192,60 +2192,60 @@
     }
 
     // Calcula frecuencia de riego y fecha estimada de cosecha desde el catálogo
-    function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
-      let frecuenciaRiego = null;
-      let fechaCosechaEstimada = null;
+function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
+  let frecuenciaRiego = null;
+  let fechaCosechaEstimada = null;
 
-      if (!nombre) return { frecuenciaRiego, fechaCosechaEstimada };
+  if (!nombre) return { frecuenciaRiego, fechaCosechaEstimada };
 
-      const nombreLower = nombre.trim().toLowerCase();
-      const cultivoCatalogo = CATALOGO_CULTIVOS.find(
-        c => c.nombre.toLowerCase() === nombreLower
-      );
+  const nombreLower = nombre.trim().toLowerCase();
+  const cultivoCatalogo = CATALOGO_CULTIVOS.find(
+    c => c.nombre.toLowerCase() === nombreLower
+  );
 
-      if (cultivoCatalogo) {
-        const riegoTexto = (cultivoCatalogo.riego || "").toLowerCase();
+  if (cultivoCatalogo) {
+    const riegoTexto = (cultivoCatalogo.riego || "").toLowerCase();
 
-        if (
-          riegoTexto.includes("siempre ligeramente") ||
-          riegoTexto.includes("constantemente húmedo") ||
-          riegoTexto.includes("constantemente humedo") ||
-          riegoTexto.includes("siempre húmedo") ||
-          riegoTexto.includes("suelo siempre")
-        ) {
-          frecuenciaRiego = 2;
-        } else if (riegoTexto.includes("abundante")) {
-          frecuenciaRiego = 2;
-        } else if (
-          riegoTexto.includes("poca exigencia") ||
-          riegoTexto.includes("sequía") ||
-          riegoTexto.includes("sequia") ||
-          riegoTexto.includes("escaso") ||
-          riegoTexto.includes("toler")
-        ) {
-          frecuenciaRiego = 4;
-        } else if (
-          riegoTexto.includes("moderado") ||
-          riegoTexto.includes("regular")
-        ) {
-          frecuenciaRiego = 3;
-        } else if (riegoTexto) {
-          frecuenciaRiego = 3;
-        }
+    if (
+      riegoTexto.includes("siempre ligeramente") ||
+      riegoTexto.includes("constantemente húmedo") ||
+      riegoTexto.includes("constantemente humedo") ||
+      riegoTexto.includes("siempre húmedo") ||
+      riegoTexto.includes("suelo siempre")
+    ) {
+      frecuenciaRiego = 2;
+    } else if (riegoTexto.includes("abundante")) {
+      frecuenciaRiego = 2;
+    } else if (
+      riegoTexto.includes("poca exigencia") ||
+      riegoTexto.includes("sequía") ||
+      riegoTexto.includes("sequia") ||
+      riegoTexto.includes("escaso") ||
+      riegoTexto.includes("toler")
+    ) {
+      frecuenciaRiego = 4;
+    } else if (
+      riegoTexto.includes("moderado") ||
+      riegoTexto.includes("regular")
+    ) {
+      frecuenciaRiego = 3;
+    } else if (riegoTexto) {
+      frecuenciaRiego = 3;
+    }
 
-        if (fechaSiembraISO && cultivoCatalogo.dias) {
-          const match = cultivoCatalogo.dias.match(/(\d+)/);
-          if (match) {
-            const dias = parseInt(match[1], 10);
-            if (Number.isFinite(dias) && dias > 0) {
-              fechaCosechaEstimada = addDays(fechaSiembraISO, dias);
-            }
-          }
+    if (fechaSiembraISO && cultivoCatalogo.dias) {
+      const match = cultivoCatalogo.dias.match(/(\d+)/);
+      if (match) {
+        const dias = parseInt(match[1], 10);
+        if (Number.isFinite(dias) && dias > 0) {
+          fechaCosechaEstimada = addDays(fechaSiembraISO, dias);
         }
       }
-
-      return { frecuenciaRiego, fechaCosechaEstimada };
     }
+  }
+
+  return { frecuenciaRiego, fechaCosechaEstimada };
+}
 
     /*********************
      * Plagas (datos base)
