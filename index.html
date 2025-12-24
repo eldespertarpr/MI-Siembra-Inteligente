@@ -1229,8 +1229,8 @@
       <span>📲</span> Instalar
     </button>
   </div>
-
-  <script>
+  
+ <script>
     /*********************
      * Datos y utilidades
      *********************/
@@ -1263,7 +1263,7 @@
         if (!raw) return { ...DEFAULT_SETTINGS };
         const parsed = JSON.parse(raw);
         return { ...DEFAULT_SETTINGS, ...parsed };
-      } catch {
+      } catch (e) {
         return { ...DEFAULT_SETTINGS };
       }
     }
@@ -1278,7 +1278,7 @@
         if (!raw) return [];
         const arr = JSON.parse(raw);
         return Array.isArray(arr) ? arr : [];
-      } catch {
+      } catch (e) {
         return [];
       }
     }
@@ -1293,7 +1293,7 @@
         if (!raw) return [];
         const arr = JSON.parse(raw);
         return Array.isArray(arr) ? arr : [];
-      } catch {
+      } catch (e) {
         return [];
       }
     }
@@ -1303,14 +1303,14 @@
     }
 
     function formatDate(dateStr) {
-  if (!dateStr) return "Sin fecha";
-  const d = new Date(dateStr + "T00:00:00");
-  if (Number.isNaN(d.getTime())) return dateStr;
-  const meses = [
-    "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"
-  ];
-  return `${d.getDate().toString().padStart(2, "0")} ${meses[d.getMonth()]} ${d.getFullYear()}`;
-}
+      if (!dateStr) return "Sin fecha";
+      const d = new Date(dateStr + "T00:00:00");
+      if (Number.isNaN(d.getTime())) return dateStr;
+      const meses = [
+        "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"
+      ];
+      return `${d.getDate().toString().padStart(2, "0")} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+    }
 
     function todayISO() {
       const d = new Date();
@@ -1376,11 +1376,11 @@
 
           let estadoLabel;
           if (diasRestantes > 0) {
-            estadoLabel = \`faltan \${diasRestantes} día(s)\`;
+            estadoLabel = `faltan ${diasRestantes} día(s)`;
           } else if (diasRestantes === 0) {
             estadoLabel = "toca hoy";
           } else {
-            estadoLabel = \`vencido hace \${Math.abs(diasRestantes)} día(s)\`;
+            estadoLabel = `vencido hace ${Math.abs(diasRestantes)} día(s)`;
           }
 
           return {
@@ -2192,60 +2192,60 @@
     }
 
     // Calcula frecuencia de riego y fecha estimada de cosecha desde el catálogo
-function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
-  let frecuenciaRiego = null;
-  let fechaCosechaEstimada = null;
+    function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
+      let frecuenciaRiego = null;
+      let fechaCosechaEstimada = null;
 
-  if (!nombre) return { frecuenciaRiego, fechaCosechaEstimada };
+      if (!nombre) return { frecuenciaRiego, fechaCosechaEstimada };
 
-  const nombreLower = nombre.trim().toLowerCase();
-  const cultivoCatalogo = CATALOGO_CULTIVOS.find(
-    c => c.nombre.toLowerCase() === nombreLower
-  );
+      const nombreLower = nombre.trim().toLowerCase();
+      const cultivoCatalogo = CATALOGO_CULTIVOS.find(
+        c => c.nombre.toLowerCase() === nombreLower
+      );
 
-  if (cultivoCatalogo) {
-    const riegoTexto = (cultivoCatalogo.riego || "").toLowerCase();
+      if (cultivoCatalogo) {
+        const riegoTexto = (cultivoCatalogo.riego || "").toLowerCase();
 
-    if (
-      riegoTexto.includes("siempre ligeramente") ||
-      riegoTexto.includes("constantemente húmedo") ||
-      riegoTexto.includes("constantemente humedo") ||
-      riegoTexto.includes("siempre húmedo") ||
-      riegoTexto.includes("suelo siempre")
-    ) {
-      frecuenciaRiego = 2;
-    } else if (riegoTexto.includes("abundante")) {
-      frecuenciaRiego = 2;
-    } else if (
-      riegoTexto.includes("poca exigencia") ||
-      riegoTexto.includes("sequía") ||
-      riegoTexto.includes("sequia") ||
-      riegoTexto.includes("escaso") ||
-      riegoTexto.includes("toler")
-    ) {
-      frecuenciaRiego = 4;
-    } else if (
-      riegoTexto.includes("moderado") ||
-      riegoTexto.includes("regular")
-    ) {
-      frecuenciaRiego = 3;
-    } else if (riegoTexto) {
-      frecuenciaRiego = 3;
-    }
+        if (
+          riegoTexto.includes("siempre ligeramente") ||
+          riegoTexto.includes("constantemente húmedo") ||
+          riegoTexto.includes("constantemente humedo") ||
+          riegoTexto.includes("siempre húmedo") ||
+          riegoTexto.includes("suelo siempre")
+        ) {
+          frecuenciaRiego = 2;
+        } else if (riegoTexto.includes("abundante")) {
+          frecuenciaRiego = 2;
+        } else if (
+          riegoTexto.includes("poca exigencia") ||
+          riegoTexto.includes("sequía") ||
+          riegoTexto.includes("sequia") ||
+          riegoTexto.includes("escaso") ||
+          riegoTexto.includes("toler")
+        ) {
+          frecuenciaRiego = 4;
+        } else if (
+          riegoTexto.includes("moderado") ||
+          riegoTexto.includes("regular")
+        ) {
+          frecuenciaRiego = 3;
+        } else if (riegoTexto) {
+          frecuenciaRiego = 3;
+        }
 
-    if (fechaSiembraISO && cultivoCatalogo.dias) {
-      const match = cultivoCatalogo.dias.match(/(\d+)/);
-      if (match) {
-        const dias = parseInt(match[1], 10);
-        if (Number.isFinite(dias) && dias > 0) {
-          fechaCosechaEstimada = addDays(fechaSiembraISO, dias);
+        if (fechaSiembraISO && cultivoCatalogo.dias) {
+          const match = cultivoCatalogo.dias.match(/(\d+)/);
+          if (match) {
+            const dias = parseInt(match[1], 10);
+            if (Number.isFinite(dias) && dias > 0) {
+              fechaCosechaEstimada = addDays(fechaSiembraISO, dias);
+            }
+          }
         }
       }
-    }
-  }
 
-  return { frecuenciaRiego, fechaCosechaEstimada };
-}
+      return { frecuenciaRiego, fechaCosechaEstimada };
+    }
 
     /*********************
      * Plagas (datos base)
@@ -2481,8 +2481,10 @@ function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
           cardRecord.style.display = "block";
           listRecord.innerHTML = "";
 
+          const hoyISO2 = todayISO();
+
           pendientesAbono.forEach(c => {
-            const dias = daysBetween(c.ultimaFertilizacion, hoyISO);
+            const dias = daysBetween(c.ultimaFertilizacion, hoyISO2);
             const li = document.createElement("li");
             li.textContent = `Abono · ${c.nombre} — último abono hace ${dias} día(s). Frecuencia: cada ${c.frecuenciaAbonoDias} día(s).`;
             listRecord.appendChild(li);
@@ -2490,7 +2492,7 @@ function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
 
           pendientesRiego.forEach(c => {
             const base = c.ultimoRiego || c.fechaSiembra || c.creadoEl;
-            const dias = base ? daysBetween(base, hoyISO) : "?";
+            const dias = base ? daysBetween(base, hoyISO2) : "?";
             const freq = c.frecuenciaRiegoDias || "?";
             const li = document.createElement("li");
             li.textContent = `Riego · ${c.nombre} — último riego hace ${dias} día(s). Frecuencia: cada ${freq} día(s).`;
@@ -3512,6 +3514,7 @@ function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       setupOpciones();
       setupCatalogo();
     });
+  
   </script>
 </body>
 </html>
