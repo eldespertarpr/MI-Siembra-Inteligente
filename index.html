@@ -2125,7 +2125,41 @@
         imagen: "img/pina.jpg"
       }
     ];
+function setupCatalogo() {
+  const input = document.getElementById("catalogoBusqueda");
+  const listEl = document.getElementById("catalogoList");
 
+  if (input) {
+    input.addEventListener("input", () => {
+      renderCatalogo(input.value);
+    });
+  }
+
+  if (listEl) {
+    listEl.addEventListener("click", ev => {
+      const btn = ev.target.closest("button[data-action='germinacion']");
+      if (!btn) return;
+
+      const id = btn.getAttribute("data-id");
+      const info = GERMINACION_POR_CULTIVO[id];
+      if (!info) {
+        alert("Todavía no tengo la guía de germinación para este cultivo.");
+        return;
+      }
+
+      const textoPasos = info.pasos
+        .map((p, i) => `${i + 1}. ${p}`)
+        .join("\n");
+
+      alert(
+        `${info.titulo}\n\n` +
+        `Método principal: ${info.metodo}\n\n` +
+        `Pasos:\n${textoPasos}\n\n` +
+        `Tip: ${info.tip}`
+      );
+    });
+  }
+        }
     // Frecuencia orientativa de abono por cultivo (en días)
     const FERTILIZACION_FRECUENCIAS = {
       tomate: 21,
