@@ -3439,96 +3439,33 @@ const GERMINACION_POR_CULTIVO = {
      * Pesticidas y preparados
      *********************/
     function renderPesticidas() {
-      const listEl = document.getElementById("pesticidasList");
-      if (!listEl) return;
+  const listEl = document.getElementById("pesticidasList");
+  if (!listEl) return;
 
-      const data = [
-        {
-          nombre: "Jabón potásico",
-          paraQue: "Pulgones, mosca blanca y otros insectos de cutícula blanda.",
-          ingredientes:
-            "• 1–2 cucharadas soperas (10–20 ml) de jabón potásico líquido\n• 1 litro de agua",
-          preparacion:
-            "Disolver bien el jabón potásico en el litro de agua, mezclando hasta que quede uniforme.",
-          aplicacion:
-            "Pulverizar sobre la planta, especialmente el envés de las hojas, preferiblemente al atardecer. Evitar aplicar a pleno sol.",
-          advertencias:
-            "No usar más concentración 'por si acaso'. Si la planta es muy delicada, probar primero en pocas hojas y observar 24–48 horas."
-        },
-        {
-          nombre: "Aceite de neem (uso hortícola)",
-          paraQue:
-            "Apoyo contra varias plagas chupadoras (pulgones, mosca blanca, algunos escarabajos).",
-          ingredientes:
-            "• 1–3 ml de aceite de neem\n• 1 ml de jabón neutro o potásico (emulsionante)\n• 1 litro de agua",
-          preparacion:
-            "Mezclar el aceite de neem con el jabón, luego verter en el litro de agua y agitar bien hasta emulsionar.",
-          aplicacion:
-            "Pulverizar sobre hojas y tallos finos al atardecer, evitando horas de sol fuerte. Repetir cada 7–10 días si es necesario.",
-          advertencias:
-            "Usar como referencia suave y ajustar siempre a las indicaciones de la etiqueta del producto que compres. No aplicar en exceso ni más concentrado."
-        },
-        {
-          nombre: "Infusión de ajo y ají",
-          paraQue:
-            "Repelente suave de insectos chupadores y algunos hongos superficiales.",
-          ingredientes:
-            "• 3–4 dientes de ajo\n• 1 ají picante pequeño\n• 1 litro de agua",
-          preparacion:
-            "Triturar o licuar el ajo y el ají con parte del agua, completar hasta 1 litro, dejar reposar unas horas y colar muy bien. Antes de usar, diluir 1 parte de infusión en 3 partes de agua.",
-          aplicacion:
-            "Pulverizar sobre hojas y tallos al atardecer, evitando mojar en exceso flores muy delicadas.",
-          advertencias:
-            "El olor es fuerte; evitar usar cerca de personas muy sensibles. Probar primero en una planta o pocas hojas."
-        },
-        {
-          nombre: "Bicarbonato para hongos de hoja",
-          paraQue:
-            "Apoyo contra oídio y algunas manchas superficiales en hojas.",
-          ingredientes:
-            "• 1/2 cucharadita de bicarbonato (2–3 g)\n• 1–2 gotas de jabón neutro\n• 1 litro de agua",
-          preparacion:
-            "Disolver el bicarbonato en el litro de agua, añadir las gotas de jabón y mezclar suavemente.",
-          aplicacion:
-            "Pulverizar una capa fina sobre las hojas afectadas, preferiblemente al atardecer y en días sin lluvia.",
-          advertencias:
-            "No aplicar muy seguido ni en dosis más altas para evitar quemaduras. Probar primero en pocas hojas."
-        },
-        {
-          nombre: "Tierra de diatomeas (grado alimentario)",
-          paraQue:
-            "Insectos rastreros como babosas pequeñas, hormigas y otros que caminan por el suelo.",
-          ingredientes:
-            "• Tierra de diatomeas grado alimentario\n• Aplicación en seco",
-          preparacion:
-            "Usar directamente tal como viene el producto, asegurándose de que sea grado alimentario o apto para huerto.",
-          aplicacion:
-            "Espolvorear una capa fina alrededor de las plantas, sobre el sustrato seco. Renovar después de lluvia o riegos fuertes.",
-          advertencias:
-            "Evitar respirar el polvo directamente y no aplicar en días de mucho viento. Mantener fuera del alcance de niños y mascotas."
-        }
-      ];
+  const data = [ /* ... */ ];
 
-      listEl.innerHTML = "";
-      data.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "plaga-card";
-        div.innerHTML = `
-          <div class="media-item-title">💧 ${p.nombre}</div>
-          <div class="media-item-body"><strong>¿Para qué sirve?</strong> ${p.paraQue}</div>
-          <div class="media-item-body"><strong>Ingredientes (por litro):</strong><br>${p.ingredientes.replace(/\n/g,"<br>")}</div>
-          <div class="media-item-body"><strong>Preparación:</strong> ${p.preparacion}</div>
-          <div class="media-item-body"><strong>Cómo aplicar:</strong> ${p.aplicacion}</div>
-          <div class="media-item-body"><strong>Advertencias:</strong> ${p.advertencias}</div>
-        `;
-        listEl.appendChild(div);
-      });
+  listEl.innerHTML = "";
+  data.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "plaga-card";
+    div.innerHTML = `
+      <div class="media-item-title">💧 ${p.nombre}</div>
+      <div class="media-item-body"><strong>¿Para qué sirve?</strong> ${p.paraQue}</div>
+      <div class="media-item-body"><strong>Ingredientes (por litro):</strong><br>${p.ingredientes.replace(/\n/g,"<br>")}</div>
+      <div class="media-item-body"><strong>Preparación:</strong> ${p.preparacion}</div>
+      <div class="media-item-body"><strong>Cómo aplicar:</strong> ${p.aplicacion}</div>
+      <div class="media-item-body"><strong>Advertencias:</strong> ${p.advertencias}</div>
+    `;
+    listEl.appendChild(div);
+  });
+} // 👈 ESTA llave faltaba
 
-      /*********************
-     * Catálogo: render + búsqueda
-     *********************/
-    function renderCatalogo(filtroTexto = "") {
-      const listEl = document.getElementById("catalogoList");
+/*********************
+ * Catálogo: render + búsqueda
+ *********************/
+function renderCatalogo(filtroTexto = "") {
+  // ...
+}
       if (!listEl) return;
 
       const filtro = filtroTexto.trim().toLowerCase();
