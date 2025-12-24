@@ -1303,14 +1303,14 @@
     }
 
     function formatDate(dateStr) {
-      if (!dateStr) return "Sin fecha";
-      const d = new Date(dateStr + "T00:00:00");
-      if (Number.isNaN(d.getTime())) return dateStr;
-      const meses = [
-        "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"
-      ];
-      return \`\${d.getDate().toString().padStart(2, "0")} \${meses[d.getMonth()]} \${d.getFullYear()}\`;
-    }
+  if (!dateStr) return "Sin fecha";
+  const d = new Date(dateStr + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return dateStr;
+  const meses = [
+    "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"
+  ];
+  return `${d.getDate().toString().padStart(2, "0")} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+}
 
     function todayISO() {
       const d = new Date();
