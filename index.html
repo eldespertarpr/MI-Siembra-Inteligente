@@ -3177,11 +3177,11 @@ function renderCatalogo(filtroTexto = "") {
           if (!btn) return;
 
           const id = btn.getAttribute("data-id");
-          const info = GERMINACION_POR_CULTIVO[id];
-          if (!info) {
-            alert("Todavía no tengo la guía de germinación para este cultivo.");
-            return;
-          }
+const info = getInfoGerminacion(id);
+if (!info) {
+  alert("Todavía no tengo la guía de germinación para este cultivo.");
+  return;
+}
 
           const textoPasos = info.pasos
             .map((p, i) => `${i + 1}. ${p}`)
