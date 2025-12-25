@@ -2748,233 +2748,130 @@ function getInfoGerminacion(cultivoId) {
     }
 
     // RENDER MI HUERTO (lista de cultivos)
-    function renderCultivos() {
-      const listEl = document.getElementById("cultivosList");
-      const chip = document.getElementById("cultivosCountChip");
-      const resumenEl = document.getElementById("huertoAbonoResumen");
-      if (!listEl) return;
+function renderCultivos() {
+  const listEl = document.getElementById("cultivosList");
+  const chip = document.getElementById("cultivosCountChip");
+  const resumenEl = document.getElementById("huertoAbonoResumen");
+  if (!listEl) return;
 
-      const count = stateCultivos.length;
-      if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
+  const count = stateCultivos.length;
+  if (chip) {
+    chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
+  }
 
-      const hoyISO = todayISO();
-
-      function estadoAbono(cultivo) {
-        if (!cultivo.ultimaFertilizacion || !cultivo.frecuenciaAbonoDias) return null;
-        const diasDesde = daysBetween(cultivo.ultimaFertilizacion, hoyISO);
-        const diasRestantes = cultivo.frecuenciaAbonoDias - diasDesde;
-        if (diasRestantes > 5) return "alDia";
-        if (diasRestantes >= 0) return "proximo";
-        return "atrasado";
-      }
-
-      // Resumen de abonos en chips
-      if (resumenEl) {
-        if (!count) {
-          resumenEl.innerHTML = "";
-        } else {
-          const { alDia, porVencer, atrasados } = getResumenAbono();
-          resumenEl.innerHTML = `
-            <button type="button" class="chip" id="chipAlDia">
-              <span>✅</span> Al día: ${alDia}
-            </button>
-            <button type="button" class="chip" id="chipProx">
-              <span>⏰</span> Próx. 5 días: ${porVencer}
-            </button>
-            <button type="button" class="chip chip-danger" id="chipAtrasados">
-              <span>⚠️</span> Atrasados: ${atrasados}
-            </button>
-          `;
-
-          function mostrarGrupo(grupo) {
-            const nombres = stateCultivos
-              .filter(c => estadoAbono(c) === grupo)
-              .map(c => `• ${c.nombre}`);
-            if (!nombres.length) {
-              alert("No hay cultivos en ese grupo ahora mismo.");
-              return;
-            }
-            const titulo =
-              grupo === "alDia"
-                ? "Cultivos al día:"
-                : grupo === "proximo"
-                ? "Cultivos que tocarán en los próximos 5 días:"
-                : "Cultivos atrasados:";
-            alert(titulo + "\n\n" + nombres.join("\n"));
-          }
-
-          const chipAlDia = document.getElementById("chipAlDia");
-          const chipProx = document.getElementById("chipProx");
-          const chipAtr = document.getElementById("chipAtrasados");
-
-          if (chipAlDia)
-            chipAlDia.addEventListener("click", () => mostrarGrupo("alDia"));
-          if (chipProx)
-            chipProx.addEventListener("click", () => mostrarGrupo("proximo"));
-          if (chipAtr)
-            chipAtr.addEventListener("click", () => mostrarGrupo("atrasado"));
-        }
-      }
-
-      if (!count) {
-        listEl.innerHTML =
-          '<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>';
-        return;
-      }
-
-      listEl.innerHTML = "";
-      stateCultivos.forEach(c => {
-        const est = estadoAbono(c);
-
-        let claseEstado = "";
-        if (est === "alDia") claseEstado = " cultivo-card--ok";
-        else if (est === "proximo") claseEstado = " cultivo-card--alerta";
-        else if (est === "atrasado") claseEstado = " cultivo-card--critico";
-
-        const card = document.createElement("div");
-        card.className = "cultivo-card" + claseEstado;
-
-        const tipoLabelMap = {
-          hoja: "Hoja",
-          fruto: "Fruto",
-          raiz: "Raíz",
-          tuberculo: "Tubérculo",
-          aromaticas: "Aromáticas",
-          otro: "Otro"
-        };
-        const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
-
-        const ultimaAbonoTexto = c.ultimaFertilizacion
-          ? formatDate(c.ultimaFertilizacion)
-          : "Sin registro";
-        const frecuenciaAbonoTexto = c.frecuenciaAbonoDias
-          ? c.frecuenciaAbonoDias + " días"
-          : "No definida";
-
-        const ultimoRiegoTexto = c.ultimoRiego
-          ? formatDate(c.ultimoRiego)
-          : "Sin registro";
-        const frecuenciaRiegoTexto = c.frecuenciaRiegoDias
-          ? c.frecuenciaRiegoDias + " días"
-          : "No definida";
-
-        const fechaCosechaTexto = c.fechaCosechaEstimada
-          ? formatDate(c.fechaCosechaEstimada)
-          : "No definida";
-
-        let etiquetaEstado = "";
-        if (est === "alDia") etiquetaEstado = "✅ Al día";
-        else if (est === "proximo") etiquetaEstado = "⏰ Próx. 5 días";
-        else if (est === "atrasado") etiquetaEstado = "⚠️ Atrasado";
-
-        card.innerHTML = `
-          <div class="cultivo-header">
-            <div class="cultivo-title">
-              <span>🌿</span>
-              <span>${c.nombre}</span>
-            </div>
-            <span class="chip">${tipoLabel}</span>
-          </div>
-          <div class="cultivo-body">
-            <div><strong>Variedad:</strong> ${c.variedad || "Sin especificar"}</div>
-            <div><strong>Fecha de siembra:</strong> ${formatDate(c.fechaSiembra)}</div>
-            <div><strong>Ubicación / notas cortas:</strong> ${
-              c.notas ? c.notas.slice(0, 140) : "—"
-            }</div>
-            <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
-            <div><strong>Último abono:</strong> ${ultimaAbonoTexto}</div>
-            <div><strong>Frecuencia de abono:</strong> ${frecuenciaAbonoTexto}</div>
-            <div><strong>Último riego:</strong> ${ultimoRiegoTexto}</div>
-            <div><strong>Frecuencia de riego:</strong> ${frecuenciaRiegoTexto}</div>
-            <div><strong>Fecha est. cosecha:</strong> ${fechaCosechaTexto}</div>
-          </div>
-          ${
-            etiquetaEstado
-              ? `<div class="cultivo-notas"><strong>Estado de abono:</strong> ${etiquetaEstado}</div>`
-              : ""
-          }
-          ${
-          <div class="cultivo-actions">
-            <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
-            <button class="btn-secondary btn" data-id="${c.id}" data-action="riego">💦 Registrar riego hoy</button>
-            <button class="btn-secondary btn" data-id="${c.id}" data-action="abono">💧 Registrar abono hoy</button>
-            <button class="btn-secondary btn" data-id="${c.id}" data-action="plaga">🐛 Plagas de este cultivo</button>
-            <button class="btn-danger btn" data-id="${c.id}" data-action="borrar">🗑 Eliminar</button>
-          </div>
-        `;
-
-        listEl.appendChild(card);
-      });
+  // Resumen rápido de abonos en chips (solo visual)
+  if (resumenEl) {
+    if (!count) {
+      resumenEl.innerHTML = "";
+    } else {
+      const { alDia, porVencer, atrasados } = getResumenAbono();
+      resumenEl.innerHTML = `
+        <span class="chip"><span>✅</span> Al día: ${alDia}</span>
+        <span class="chip"><span>⏰</span> Próx. 5 días: ${porVencer}</span>
+        <span class="chip chip-danger"><span>⚠️</span> Atrasados: ${atrasados}</span>
+      `;
     }
+  }
 
-    /*********************
-     * Calendario (con catálogo)
-     *********************/
-    function renderCalendario(monthIndex = 5) {
-      const listEl = document.getElementById("calendarList");
-      const emptyEl = document.getElementById("calendarEmpty");
-      if (!listEl || !emptyEl) return;
+  if (!count) {
+    listEl.innerHTML =
+      '<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>';
+    return;
+  }
 
-      const data = getCalendarData(stateSettings, monthIndex);
+  const hoyISO = todayISO();
 
-      listEl.innerHTML = "";
+  function estadoAbono(cultivo) {
+    if (!cultivo.ultimaFertilizacion || !cultivo.frecuenciaAbonoDias) return null;
+    const diasDesde = daysBetween(cultivo.ultimaFertilizacion, hoyISO);
+    const diasRestantes = cultivo.frecuenciaAbonoDias - diasDesde;
+    if (diasRestantes > 5) return "alDia";
+    if (diasRestantes >= 0) return "proximo";
+    return "atrasado";
+  }
 
-      // 1) Bloque básico de calendario
-      if (data.length) {
-        emptyEl.style.display = "none";
+  listEl.innerHTML = "";
 
-        data.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "calendar-item";
-          div.innerHTML = `
-            <div class="calendar-item-title">
-              <span>${item.titulo}</span>
-              <span class="chip">${item.tipo}</span>
-            </div>
-            <div>${item.detalle}</div>
-          `;
-          listEl.appendChild(div);
-        });
-      } else {
-        emptyEl.style.display = "block";
+  stateCultivos.forEach(c => {
+    const est = estadoAbono(c);
+    let claseEstado = "";
+    if (est === "alDia") claseEstado = " cultivo-card--ok";
+    else if (est === "proximo") claseEstado = " cultivo-card--alerta";
+    else if (est === "atrasado") claseEstado = " cultivo-card--critico";
+
+    const tipoLabelMap = {
+      hoja: "Hoja",
+      fruto: "Fruto",
+      raiz: "Raíz",
+      tuberculo: "Tubérculo",
+      aromaticas: "Aromáticas",
+      otro: "Otro"
+    };
+    const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
+
+    const ultimaAbonoTexto = c.ultimaFertilizacion
+      ? formatDate(c.ultimaFertilizacion)
+      : "Sin registro";
+    const frecuenciaAbonoTexto = c.frecuenciaAbonoDias
+      ? c.frecuenciaAbonoDias + " días"
+      : "No definida";
+
+    const ultimoRiegoTexto = c.ultimoRiego
+      ? formatDate(c.ultimoRiego)
+      : "Sin registro";
+    const frecuenciaRiegoTexto = c.frecuenciaRiegoDias
+      ? c.frecuenciaRiegoDias + " días"
+      : "No definida";
+
+    const fechaCosechaTexto = c.fechaCosechaEstimada
+      ? formatDate(c.fechaCosechaEstimada)
+      : "No definida";
+
+    let etiquetaEstado = "";
+    if (est === "alDia") etiquetaEstado = "✅ Al día";
+    else if (est === "proximo") etiquetaEstado = "⏰ Próx. 5 días";
+    else if (est === "atrasado") etiquetaEstado = "⚠️ Atrasado";
+
+    const card = document.createElement("div");
+    card.className = "cultivo-card" + claseEstado;
+    card.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <span>🌿</span>
+          <span>${c.nombre}</span>
+        </div>
+        <span class="chip">${tipoLabel}</span>
+      </div>
+      <div class="cultivo-body">
+        <div><strong>Variedad:</strong> ${c.variedad || "Sin especificar"}</div>
+        <div><strong>Fecha de siembra:</strong> ${formatDate(c.fechaSiembra)}</div>
+        <div><strong>Ubicación / notas cortas:</strong> ${
+          c.notas ? c.notas.slice(0, 140) : "—"
+        }</div>
+        <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
+        <div><strong>Último abono:</strong> ${ultimaAbonoTexto}</div>
+        <div><strong>Frecuencia de abono:</strong> ${frecuenciaAbonoTexto}</div>
+        <div><strong>Último riego:</strong> ${ultimoRiegoTexto}</div>
+        <div><strong>Frecuencia de riego:</strong> ${frecuenciaRiegoTexto}</div>
+        <div><strong>Fecha est. cosecha:</strong> ${fechaCosechaTexto}</div>
+      </div>
+      ${
+        etiquetaEstado
+          ? `<div class="cultivo-notas"><strong>Estado de abono:</strong> ${etiquetaEstado}</div>`
+          : ""
       }
+      <div class="cultivo-actions">
+        <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
+        <button class="btn-secondary btn" data-id="${c.id}" data-action="riego">💦 Registrar riego hoy</button>
+        <button class="btn-secondary btn" data-id="${c.id}" data-action="abono">💧 Registrar abono hoy</button>
+        <button class="btn-secondary btn" data-id="${c.id}" data-action="plaga">🐛 Plagas de este cultivo</button>
+        <button class="btn-danger btn" data-id="${c.id}" data-action="borrar">🗑 Eliminar</button>
+      </div>
+    `;
 
-      // 2) Sugerencias extra desde el catálogo (ajustadas por hemisferio)
-      const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
-
-      const sugeridos = CATALOGO_CULTIVOS.filter(
-        c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo)
-      );
-
-      if (sugeridos.length) {
-        const separador = document.createElement("div");
-        separador.className = "divider-soft";
-        listEl.appendChild(separador);
-
-        const tituloExtra = document.createElement("p");
-        tituloExtra.className = "muted";
-        tituloExtra.textContent =
-          "Desde el catálogo: cultivos recomendados para este mes.";
-        listEl.appendChild(tituloExtra);
-
-        sugeridos.forEach(c => {
-          const div = document.createElement("div");
-          div.className = "calendar-item";
-          div.innerHTML = `
-            <div class="calendar-item-title">
-              <span>${c.nombre}</span>
-              <span class="chip">${c.categoria || "Cultivo"}</span>
-            </div>
-            <div>
-              Días a cosecha: ${c.dias}. Luz: ${c.luz}.
-              Plagas frecuentes: ${c.plagas.join(", ")}.
-            </div>
-          `;
-          listEl.appendChild(div);
-        });
-      }
+    listEl.appendChild(card);
+  });
     }
-
     /*********************
      * Diario
      *********************/
