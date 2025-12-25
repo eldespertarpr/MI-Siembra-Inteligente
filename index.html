@@ -2970,11 +2970,51 @@ function renderCultivos() {
     /*********************
      * Pesticidas y preparados
      *********************/
-    function renderPesticidas() {
+function renderPesticidas() {
   const listEl = document.getElementById("pesticidasList");
   if (!listEl) return;
 
-  const data = [ /* ... */ ];
+  const data = [
+    {
+      id: "jabon_potasico",
+      nombre: "Jabón potásico suave",
+      paraQue: "Apoya el control de pulgones, mosca blanca y cochinillas en hojas.",
+      ingredientes:
+        "1 cucharada de jabón potásico líquido\n1 litro de agua limpia",
+      preparacion:
+        "Mezcla el jabón potásico con el agua hasta que quede bien disuelto.",
+      aplicacion:
+        "Pulveriza al atardecer, mojando bien el envés de las hojas. Repite cada 5–7 días si hace falta.",
+      advertencias:
+        "No apliques a pleno sol ni mezcles con otros productos sin probar antes en una hoja."
+    },
+    {
+      id: "infusion_ajo_aji",
+      nombre: "Infusión de ajo y ají",
+      paraQue: "Funciona como repelente suave para varias plagas de hoja.",
+      ingredientes:
+        "3–4 dientes de ajo\n1 ají picante pequeño\n1 litro de agua\nUn chorrito de jabón neutro (opcional, como adherente)",
+      preparacion:
+        "Licua ajo y ají con parte del agua, cuela y completa hasta 1 litro. Añade unas gotas de jabón neutro si quieres que se adhiera mejor.",
+      aplicacion:
+        "Rocía sobre hojas sanas y ligeramente afectadas, siempre al final de la tarde.",
+      advertencias:
+        "Prueba primero en una parte pequeña de la planta. No uses en exceso en días muy calurosos."
+    },
+    {
+      id: "aceite_horticola",
+      nombre: "Aceite hortícola (comercial)",
+      paraQue: "Ayuda a controlar cochinillas, ácaros y algunos insectos de hoja.",
+      ingredientes:
+        "Usa el producto tal como indica la etiqueta del fabricante.",
+      preparacion:
+        "Sigue las dosis de agua indicadas por el fabricante. Mezcla sólo la cantidad que vayas a usar en el día.",
+      aplicacion:
+        "Aplica al atardecer, mojando bien tallos y envés de hojas donde se acumulan las plagas.",
+      advertencias:
+        "Respeta siempre las indicaciones de seguridad, los plazos de seguridad antes de cosechar y no apliques a pleno sol."
+    }
+  ];
 
   listEl.innerHTML = "";
   data.forEach(p => {
@@ -2983,13 +3023,14 @@ function renderCultivos() {
     div.innerHTML = `
       <div class="media-item-title">💧 ${p.nombre}</div>
       <div class="media-item-body"><strong>¿Para qué sirve?</strong> ${p.paraQue}</div>
-      <div class="media-item-body"><strong>Ingredientes (por litro):</strong><br>${p.ingredientes.replace(/\n/g,"<br>")}</div>
+      <div class="media-item-body"><strong>Ingredientes (por litro):</strong><br>${p.ingredientes.replace(/\n/g, "<br>")}</div>
       <div class="media-item-body"><strong>Preparación:</strong> ${p.preparacion}</div>
       <div class="media-item-body"><strong>Cómo aplicar:</strong> ${p.aplicacion}</div>
       <div class="media-item-body"><strong>Advertencias:</strong> ${p.advertencias}</div>
     `;
     listEl.appendChild(div);
   });
+}
 } // 👈 ESTA llave faltaba
 
 /*********************
