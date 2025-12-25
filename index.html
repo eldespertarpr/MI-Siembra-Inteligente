@@ -2248,7 +2248,106 @@ const GERMINACION_POR_CULTIVO = {
     tip: "Dale una estructura para trepar; es muy vigoroso."
   }
 };
-        
+     const GERMINACION_GENERIC = {
+  hoja: {
+    titulo: "Cultivos de hoja – germinación básica",
+    metodo: "Semilla directa o en almácigo, muy superficial.",
+    pasos: [
+      "Usar sustrato suelto y bien drenado.",
+      "Sembrar la semilla casi en superficie, apenas cubierta.",
+      "Mantener siempre ligeramente húmedo, sin charcos.",
+      "Trasplantar (si es almácigo) cuando tenga 3–4 hojas verdaderas."
+    ],
+    tip: "Prefieren sol suave o media sombra y riegos frecuentes."
+  },
+  fruto: {
+    titulo: "Cultivos de fruto – germinación básica",
+    metodo: "Semilla en almácigo o directa según el espacio.",
+    pasos: [
+      "Sembrar a 1–2 cm de profundidad según tamaño de semilla.",
+      "Mantener el sustrato húmedo, no encharcado.",
+      "Dar buena luz desde pequeños para que no se espiguen.",
+      "Trasplantar a tiesto grande o suelo cuando estén fuertes."
+    ],
+    tip: "Necesitan mucho sol y macetas profundas o suelo suelto."
+  },
+  raiz: {
+    titulo: "Raíces (zanahoria, rábano, etc.) – germinación básica",
+    metodo: "Siempre semilla directa en el sitio definitivo.",
+    pasos: [
+      "Aflojar bien el suelo a buena profundidad.",
+      "Sembrar muy superficial (0.5–1 cm).",
+      "Mantener humedad constante hasta que germinen.",
+      "Ralear dejando espacio entre plantas."
+    ],
+    tip: "No trasplantar: se deforman las raíces."
+  },
+  tuberculo: {
+    titulo: "Tubérculos – siembra básica",
+    metodo: "Trozos de tubérculo o estacas según el cultivo.",
+    pasos: [
+      "Elegir material sano, sin pudriciones.",
+      "Dejar orear si hace falta (como en papa o yuca).",
+      "Enterrar a buena profundidad en suelo suelto.",
+      "Mantener riego regular sin encharcar."
+    ],
+    tip: "Les va bien un suelo profundo y con buena materia orgánica."
+  },
+  aromatica: {
+    titulo: "Aromáticas – germinación básica",
+    metodo: "Semilla fina o esquejes, según especie.",
+    pasos: [
+      "Semilla: sembrar muy superficial y mantener humedad fina.",
+      "Esquejes: enterrar la parte baja en sustrato húmedo.",
+      "Colocar en lugar luminoso, sin sol muy fuerte al inicio.",
+      "Trasplantar cuando el cepellón esté firme."
+    ],
+    tip: "Muchas aromáticas prefieren maceta para controlarlas mejor."
+  },
+  frutal: {
+    titulo: "Frutales – establecimiento básico",
+    metodo: "Plantines o injertos, más que semilla.",
+    pasos: [
+      "Comprar plantín sano o injertado si es posible.",
+      "Hacer hoyo amplio, mejorar el suelo con materia orgánica.",
+      "Plantar al nivel del cuello de la planta.",
+      "Regar bien al inicio y tutorar si hace falta."
+    ],
+    tip: "Los frutales necesitan sitio fijo, sol y paciencia."
+  },
+  generico: {
+    titulo: "Germinación básica – guía general",
+    metodo: "Semilla directa o en bandeja según tamaño de planta.",
+    pasos: [
+      "Leer siempre las indicaciones del sobre de semilla.",
+      "Usar sustrato suelto y limpio.",
+      "Respetar profundidad aproximada de 2–3 veces el tamaño de la semilla.",
+      "Mantener humedad constante hasta que germinen."
+    ],
+    tip: "Si dudas, siembra algunas en almácigo y otras directo y observa."
+  }
+};
+
+function getInfoGerminacion(cultivoId) {
+  const cultivo = CATALOGO_CULTIVOS.find(c => c.id === cultivoId);
+  if (!cultivo) return null;
+
+  // 1) Específico por cultivo
+  if (GERMINACION_POR_CULTIVO[cultivoId]) {
+    return GERMINACION_POR_CULTIVO[cultivoId];
+  }
+
+  // 2) Genérico por categoría
+  const cat = (cultivo.categoria || "").toLowerCase();
+  if (cat.includes("hoja")) return GERMINACION_GENERIC.hoja;
+  if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
+  if (cat.includes("tubérculo") || cat.includes("tuberculo")) return GERMINACION_GENERIC.tuberculo;
+  if (cat.includes("aromática") || cat.includes("aromatica")) return GERMINACION_GENERIC.aromatica;
+  if (cat.includes("frutal") || cat.includes("fruto")) return GERMINACION_GENERIC.frutal;
+
+  // 3) Último recurso
+  return GERMINACION_GENERIC.generico;
+}   
     // Frecuencia orientativa de abono por cultivo (en días)
     const FERTILIZACION_FRECUENCIAS = {
       tomate: 21,
