@@ -2894,10 +2894,6 @@ function getInfoGerminacion(cultivoId) {
               : ""
           }
           ${
-            c.notas
-              ? `<div class="cultivo-notas"><strong>Notas:</strong> ${c.notas}</div>`
-              : ""
-          }
           <div class="cultivo-actions">
             <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
             <button class="btn-secondary btn" data-id="${c.id}" data-action="riego">💦 Registrar riego hoy</button>
