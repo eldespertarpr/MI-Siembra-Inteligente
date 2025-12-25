@@ -565,7 +565,6 @@
       gap: 6px;
     }
 
-    /* Miniatura de imagen del catálogo */
     .cultivo-thumb {
       width: 64px;
       height: 64px;
@@ -574,7 +573,6 @@
       flex-shrink: 0;
     }
 
-    /* Si el nombre es largo, que salte de línea sin salirse */
     .cultivo-title span {
       word-break: break-word;
     }
@@ -664,7 +662,6 @@
       border: 1px solid rgba(55,65,81,0.9);
     }
 
-    /* Tarjetas de plagas con resaltado */
     .plaga-card {
       border-radius: 14px;
       padding: 8px 10px;
@@ -685,8 +682,6 @@
       gap: 8px;
       margin-bottom: 2px;
     }
-
-    /* Plagas / Guías */
 
     .media-list {
       display: flex;
@@ -713,8 +708,6 @@
       color: var(--text-soft);
     }
 
-    /* FOOTER */
-
     footer {
       margin-top: 6px;
       font-size: 0.76rem;
@@ -728,8 +721,6 @@
       align-items: center;
       gap: 4px;
     }
-
-    /* Install button */
 
     #installBanner {
       position: fixed;
@@ -772,7 +763,7 @@
           <div class="app-tag">v17 · PWA</div>
         </div>
         <div class="app-subtitle" id="appSubtitle">
-          <!-- Se rellena desde JS -->
+          <!-- JS -->
         </div>
       </div>
     </header>
@@ -828,7 +819,6 @@
           Resumen rápido de tu huerto y acceso a las funciones principales.
         </p>
 
-        <!-- Estado rápido -->
         <div class="app-card">
           <div class="app-card-header">
             <div class="app-card-title">Estado rápido</div>
@@ -851,7 +841,7 @@
           </p>
         </div>
 
-        <!-- Recordatorios de abono/riego/cosecha -->
+        <!-- Recordatorios -->
         <div class="app-card" id="recordatoriosCard" style="display:none;">
           <div class="app-card-header">
             <div class="app-card-title">Recordatorios de abono y riego</div>
@@ -994,7 +984,6 @@
             <div class="chip" id="cultivosCountChip">0 cultivos</div>
           </div>
 
-          <!-- Resumen rápido de abonos en Mi huerto -->
           <div class="context-chips" id="huertoAbonoResumen"></div>
 
           <div class="cultivos-list" id="cultivosList"></div>
@@ -1031,7 +1020,6 @@
             <div class="chip" id="diarioCountChip">0 entradas</div>
           </div>
 
-          <!-- Filtros -->
           <div class="pill-group" id="diarioFiltros">
             <button class="pill pill--active" data-filtro="todos">Todo</button>
             <button class="pill" data-filtro="Riego">Riego</button>
@@ -1039,13 +1027,10 @@
             <button class="pill" data-filtro="General">General</button>
           </div>
 
-          <!-- Resumen de hoy -->
           <p class="muted" id="diarioResumenHoy"></p>
 
-          <!-- Lista -->
           <div class="diario-list" id="diarioList"></div>
 
-          <!-- Exportar diario -->
           <button class="btn-secondary btn btn-full" id="btnExportarDiario">
             <span>📤</span> Exportar diario (texto)
           </button>
@@ -1230,7 +1215,7 @@
     </button>
   </div>
   
- <script>
+  <script>
     /*********************
      * Datos y utilidades
      *********************/
@@ -1242,8 +1227,8 @@
 
     const DEFAULT_SETTINGS = {
       nombreHuerto: "Mi huerto",
-      clima: "tropical", // tropical | subtropical | templado
-      hemisferio: "norte" // norte | sur
+      clima: "tropical",
+      hemisferio: "norte"
     };
 
     const CLIMA_LABEL = {
@@ -1332,21 +1317,17 @@
       return d.toISOString().slice(0, 10);
     }
 
-    // Cultivos que YA deberían abonarse (toca hoy o está vencido)
     function getPendientesAbono() {
       const hoyISO = todayISO();
-
       return stateCultivos.filter(c => {
         if (!c.ultimaFertilizacion || !c.frecuenciaAbonoDias) return false;
         const diasDesde = daysBetween(c.ultimaFertilizacion, hoyISO);
-        return diasDesde >= c.frecuenciaAbonoDias; // ya toca o está pasado
+        return diasDesde >= c.frecuenciaAbonoDias;
       });
     }
 
-    // Cultivos pendientes de riego según último riego + frecuencia
     function getPendientesRiego() {
       const hoyISO = todayISO();
-
       return stateCultivos.filter(c => {
         if (!c.frecuenciaRiegoDias) return false;
         const base = c.ultimoRiego || c.fechaSiembra || c.creadoEl;
@@ -1356,7 +1337,6 @@
       });
     }
 
-    // Cultivos cuya fecha estimada de cosecha ya llegó o pasó
     function getCosechasHoy() {
       const hoyISO = todayISO();
       return stateCultivos.filter(
@@ -1364,7 +1344,6 @@
       );
     }
 
-    // Devuelve TODOS los cultivos con abono registrado, indicando si ya toca o cuántos días faltan
     function getRecordatoriosAbono() {
       const hoyISO = todayISO();
 
@@ -1390,15 +1369,13 @@
             estadoLabel
           };
         })
-        // Ordenar: primero los que están más urgentes (vencidos o que faltan menos días)
         .sort((a, b) => a.diasRestantes - b.diasRestantes);
     }
 
-    // Resumen rápido de abonos en Mi huerto
     function getResumenAbono() {
       const hoyISO = todayISO();
       let alDia = 0;
-      let porVencer = 0; // próximos 5 días
+      let porVencer = 0;
       let atrasados = 0;
 
       stateCultivos.forEach(c => {
@@ -1477,15 +1454,12 @@
     function ajustarMesPorHemisferio(settings, monthIndex) {
       const climaKey = settings.clima || "tropical";
       let mes = monthIndex;
-
-      // En climas templado/subtropical del hemisferio sur, invertimos estación (6 meses)
       if (
         settings.hemisferio === "sur" &&
         (climaKey === "templado" || climaKey === "subtropical")
       ) {
         mes = (monthIndex + 6) % 12;
       }
-
       return mes;
     }
 
@@ -2124,231 +2098,225 @@
         meses: [0,1,2,3,4,5,6,7,8,9,10,11],
         imagen: "img/pina.jpg"
       }
-      ];
+    ];
 
-   // Métodos de germinación / reproducción por cultivo
-const GERMINACION_POR_CULTIVO = {
-  tomate: {
-    titulo: "Tomate – germinación",
-    metodo: "Semilla en almácigo y luego trasplante.",
-    pasos: [
-      "Llenar bandeja o almácigo con sustrato suelto y bien drenado.",
-      "Sembrar la semilla a 0.5–1 cm de profundidad.",
-      "Mantener siempre ligeramente húmedo, sin encharcar.",
-      "Trasplantar cuando tenga 3–4 hojas verdaderas."
-    ],
-    tip: "Las plántulas al inicio prefieren luz filtrada, no sol directo fuerte."
-  },
+    /*********************
+     * Germinación / reproducción
+     *********************/
+    const GERMINACION_POR_CULTIVO = {
+      tomate: {
+        titulo: "Tomate – germinación",
+        metodo: "Semilla en almácigo y luego trasplante.",
+        pasos: [
+          "Llenar bandeja o almácigo con sustrato suelto y bien drenado.",
+          "Sembrar la semilla a 0.5–1 cm de profundidad.",
+          "Mantener siempre ligeramente húmedo, sin encharcar.",
+          "Trasplantar cuando tenga 3–4 hojas verdaderas."
+        ],
+        tip: "Las plántulas al inicio prefieren luz filtrada, no sol directo fuerte."
+      },
+      lechuga: {
+        titulo: "Lechuga – germinación",
+        metodo: "Semilla directa o en almácigo.",
+        pasos: [
+          "Sembrar muy superficial, apenas cubierta de sustrato.",
+          "Mantener el sustrato siempre húmedo.",
+          "Siembra en almácigo: trasplantar con 3–4 hojas.",
+          "Siembra directa: ralear, dejando espacio entre plantas."
+        ],
+        tip: "Germina mejor con temperaturas moderadas y sol suave."
+      },
+      calabacin_zucchini: {
+        titulo: "Calabacín / Zucchini – germinación",
+        metodo: "Semilla directa en el sitio definitivo o tiesto grande.",
+        pasos: [
+          "Hacer hoyos de 2–3 cm de profundidad.",
+          "Sembrar 2–3 semillas por hoyo y luego dejar la planta más fuerte.",
+          "Mantener el suelo húmedo pero sin charcos.",
+          "Dejar buen espacio entre plantas, se abren bastante."
+        ],
+        tip: "Evita mojar hojas todo el tiempo para no favorecer el oídio."
+      },
+      platano: {
+        titulo: "Plátano – reproducción",
+        metodo: "Hijuelos / cormos, no semilla.",
+        pasos: [
+          "Elegir hijuelos sanos, sin pudriciones.",
+          "Cortar el hijo y dejarlo orear unas horas.",
+          "Plantar enterrando bien el cormo en suelo con buen drenaje.",
+          "Regar para asentar la tierra y luego mantener humedad moderada."
+        ],
+        tip: "No lo pongas donde se empoce el agua."
+      },
+      gandules: {
+        titulo: "Gandules – germinación",
+        metodo: "Semilla directa.",
+        pasos: [
+          "Sembrar a 2–3 cm de profundidad.",
+          "Colocar 2–3 semillas por punto de siembra.",
+          "Mantener húmedo hasta que germinen.",
+          "Dejar solo la planta más vigorosa por punto."
+        ],
+        tip: "No abuses del nitrógeno: ya fijan nitrógeno en el suelo."
+      },
+      romero: {
+        titulo: "Romero – reproducción",
+        metodo: "Principalmente esquejes.",
+        pasos: [
+          "Cortar esquejes de 8–12 cm de ramas semileñosas.",
+          "Retirar hojas de la parte que va enterrada.",
+          "Clavar en sustrato muy drenante (arena + tierra).",
+          "Mantener apenas húmedo, en lugar luminoso sin sol fuerte."
+        ],
+        tip: "Odia el exceso de agua: mejor quedarse corto que pasarse."
+      },
+      menta: {
+        titulo: "Menta – reproducción",
+        metodo: "Esquejes o división de mata.",
+        pasos: [
+          "Cortar tallos de 10–15 cm con varias hojas.",
+          "Quitar las hojas de la parte inferior.",
+          "Poner en agua hasta que saque raíces o en sustrato húmedo.",
+          "Trasplantar a tiesto cuando tenga buen sistema de raíces."
+        ],
+        tip: "Es invasiva: mejor siempre en maceta."
+      },
+      papa: {
+        titulo: "Papa – siembra",
+        metodo: "Trozos de tubérculo con al menos 1–2 ojos.",
+        pasos: [
+          "Cortar la papa en trozos con ojos y dejarlos secar 1 día.",
+          "Sembrar a 10 cm de profundidad.",
+          "Cuando crece, ir aporcando (echando tierra al tallo).",
+          "Mantener riego regular sin encharcar."
+        ],
+        tip: "Rota el lugar de siembra para evitar plagas y enfermedades."
+      },
+      yuca: {
+        titulo: "Yuca – reproducción",
+        metodo: "Estacas de tallo.",
+        pasos: [
+          "Cortar tallos de 20–30 cm.",
+          "Dejar orear 1–2 días.",
+          "Enterrar 15–20 cm del tallo en suelo con buen drenaje.",
+          "Riego ligero al inicio; luego tolera bien sequía."
+        ],
+        tip: "Evita suelos pesados y encharcados."
+      },
+      chayote: {
+        titulo: "Chayote – germinación",
+        metodo: "El fruto entero se usa como semilla.",
+        pasos: [
+          "Elegir un chayote sano, sin golpes ni pudrición.",
+          "Dejarlo brotar en un lugar ventilado y sombreado.",
+          "Cuando el brote tenga buen tamaño, plantar el fruto de lado en suelo suelto.",
+          "Cubrir parcialmente con tierra y mantener el sustrato húmedo, sin encharcar."
+        ],
+        tip: "Dale una estructura para trepar; es muy vigoroso."
+      }
+    };
 
-  lechuga: {
-    titulo: "Lechuga – germinación",
-    metodo: "Semilla directa o en almácigo.",
-    pasos: [
-      "Sembrar muy superficial, apenas cubierta de sustrato.",
-      "Mantener el sustrato siempre húmedo.",
-      "Siembra en almácigo: trasplantar con 3–4 hojas.",
-      "Siembra directa: ralear, dejando espacio entre plantas."
-    ],
-    tip: "Germina mejor con temperaturas moderadas y sol suave."
-  },
+    const GERMINACION_GENERIC = {
+      hoja: {
+        titulo: "Cultivos de hoja – germinación básica",
+        metodo: "Semilla directa o en almácigo, muy superficial.",
+        pasos: [
+          "Usar sustrato suelto y bien drenado.",
+          "Sembrar la semilla casi en superficie, apenas cubierta.",
+          "Mantener siempre ligeramente húmedo, sin charcos.",
+          "Trasplantar (si es almácigo) cuando tenga 3–4 hojas verdaderas."
+        ],
+        tip: "Prefieren sol suave o media sombra y riegos frecuentes."
+      },
+      fruto: {
+        titulo: "Cultivos de fruto – germinación básica",
+        metodo: "Semilla en almácigo o directa según el espacio.",
+        pasos: [
+          "Sembrar a 1–2 cm de profundidad según tamaño de semilla.",
+          "Mantener el sustrato húmedo, no encharcado.",
+          "Dar buena luz desde pequeños para que no se espiguen.",
+          "Trasplantar a tiesto grande o suelo cuando estén fuertes."
+        ],
+        tip: "Necesitan mucho sol y macetas profundas o suelo suelto."
+      },
+      raiz: {
+        titulo: "Raíces – germinación básica",
+        metodo: "Siempre semilla directa en el sitio definitivo.",
+        pasos: [
+          "Aflojar bien el suelo a buena profundidad.",
+          "Sembrar muy superficial (0.5–1 cm).",
+          "Mantener humedad constante hasta que germinen.",
+          "Ralear dejando espacio entre plantas."
+        ],
+        tip: "No trasplantar: se deforman las raíces."
+      },
+      tuberculo: {
+        titulo: "Tubérculos – siembra básica",
+        metodo: "Trozos de tubérculo o estacas según el cultivo.",
+        pasos: [
+          "Elegir material sano, sin pudriciones.",
+          "Dejar orear si hace falta (como en papa o yuca).",
+          "Enterrar a buena profundidad en suelo suelto.",
+          "Mantener riego regular sin encharcar."
+        ],
+        tip: "Les va bien un suelo profundo y con buena materia orgánica."
+      },
+      aromatica: {
+        titulo: "Aromáticas – germinación básica",
+        metodo: "Semilla fina o esquejes, según especie.",
+        pasos: [
+          "Semilla: sembrar muy superficial y mantener humedad fina.",
+          "Esquejes: enterrar la parte baja en sustrato húmedo.",
+          "Colocar en lugar luminoso, sin sol muy fuerte al inicio.",
+          "Trasplantar cuando el cepellón esté firme."
+        ],
+        tip: "Muchas aromáticas prefieren maceta para controlarlas mejor."
+      },
+      frutal: {
+        titulo: "Frutales – establecimiento básico",
+        metodo: "Plantines o injertos, más que semilla.",
+        pasos: [
+          "Comprar plantín sano o injertado si es posible.",
+          "Hacer hoyo amplio, mejorar el suelo con materia orgánica.",
+          "Plantar al nivel del cuello de la planta.",
+          "Regar bien al inicio y tutorar si hace falta."
+        ],
+        tip: "Los frutales necesitan sitio fijo, sol y paciencia."
+      },
+      generico: {
+        titulo: "Germinación básica – guía general",
+        metodo: "Semilla directa o en bandeja según tamaño de planta.",
+        pasos: [
+          "Leer siempre las indicaciones del sobre de semilla.",
+          "Usar sustrato suelto y limpio.",
+          "Respetar profundidad aproximada de 2–3 veces el tamaño de la semilla.",
+          "Mantener humedad constante hasta que germinen."
+        ],
+        tip: "Si dudas, siembra algunas en almácigo y otras directo y observa."
+      }
+    };
 
-  calabacin_zucchini: {
-    titulo: "Calabacín / Zucchini – germinación",
-    metodo: "Semilla directa en el sitio definitivo o tiesto grande.",
-    pasos: [
-      "Hacer hoyos de 2–3 cm de profundidad.",
-      "Sembrar 2–3 semillas por hoyo y luego dejar la planta más fuerte.",
-      "Mantener el suelo húmedo pero sin charcos.",
-      "Dejar buen espacio entre plantas, se abren bastante."
-    ],
-    tip: "Evita mojar hojas todo el tiempo para no favorecer el oídio."
-  },
+    function getInfoGerminacion(cultivoId) {
+      const cultivo = CATALOGO_CULTIVOS.find(c => c.id === cultivoId);
+      if (!cultivo) return null;
 
-  platano: {
-    titulo: "Plátano – reproducción",
-    metodo: "Hijuelos / cormos, no semilla.",
-    pasos: [
-      "Elegir hijuelos sanos, sin pudriciones.",
-      "Cortar el hijo y dejarlo orear unas horas.",
-      "Plantar enterrando bien el cormo en suelo con buen drenaje.",
-      "Regar para asentar la tierra y luego mantener humedad moderada."
-    ],
-    tip: "No lo pongas donde se empoce el agua."
-  },
+      if (GERMINACION_POR_CULTIVO[cultivoId]) {
+        return GERMINACION_POR_CULTIVO[cultivoId];
+      }
 
-  gandules: {
-    titulo: "Gandules – germinación",
-    metodo: "Semilla directa.",
-    pasos: [
-      "Sembrar a 2–3 cm de profundidad.",
-      "Colocar 2–3 semillas por punto de siembra.",
-      "Mantener húmedo hasta que germinen.",
-      "Dejar solo la planta más vigorosa por punto."
-    ],
-    tip: "No abuses del nitrógeno: ya fijan nitrógeno en el suelo."
-  },
+      const cat = (cultivo.categoria || "").toLowerCase();
+      if (cat.includes("hoja")) return GERMINACION_GENERIC.hoja;
+      if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
+      if (cat.includes("tubérculo") || cat.includes("tuberculo")) return GERMINACION_GENERIC.tuberculo;
+      if (cat.includes("aromática") || cat.includes("aromatica")) return GERMINACION_GENERIC.aromatica;
+      if (cat.includes("frutal") || cat.includes("fruto")) return GERMINACION_GENERIC.frutal;
 
-  romero: {
-    titulo: "Romero – reproducción",
-    metodo: "Principalmente esquejes.",
-    pasos: [
-      "Cortar esquejes de 8–12 cm de ramas semileñosas.",
-      "Retirar hojas de la parte que va enterrada.",
-      "Clavar en sustrato muy drenante (arena + tierra).",
-      "Mantener apenas húmedo, en lugar luminoso sin sol fuerte."
-    ],
-    tip: "Odia el exceso de agua: mejor quedarse corto que pasarse."
-  },
+      return GERMINACION_GENERIC.generico;
+    }
 
-  menta: {
-    titulo: "Menta – reproducción",
-    metodo: "Esquejes o división de mata.",
-    pasos: [
-      "Cortar tallos de 10–15 cm con varias hojas.",
-      "Quitar las hojas de la parte inferior.",
-      "Poner en agua hasta que saque raíces o en sustrato húmedo.",
-      "Trasplantar a tiesto cuando tenga buen sistema de raíces."
-    ],
-    tip: "Es invasiva: mejor siempre en maceta."
-  },
-
-  papa: {
-    titulo: "Papa – siembra",
-    metodo: "Trozos de tubérculo con al menos 1–2 ojos.",
-    pasos: [
-      "Cortar la papa en trozos con ojos y dejarlos secar 1 día.",
-      "Sembrar a 10 cm de profundidad.",
-      "Cuando crece, ir aporcando (echando tierra al tallo).",
-      "Mantener riego regular sin encharcar."
-    ],
-    tip: "Rota el lugar de siembra para evitar plagas y enfermedades."
-  },
-
-  yuca: {
-    titulo: "Yuca – reproducción",
-    metodo: "Estacas de tallo.",
-    pasos: [
-      "Cortar tallos de 20–30 cm.",
-      "Dejar orear 1–2 días.",
-      "Enterrar 15–20 cm del tallo en suelo con buen drenaje.",
-      "Riego ligero al inicio; luego tolera bien sequía."
-    ],
-    tip: "Evita suelos pesados y encharcados."
-  },
-
-  chayote: {
-    titulo: "Chayote – germinación",
-    metodo: "El fruto entero se usa como semilla.",
-    pasos: [
-      "Elegir un chayote sano, sin golpes ni pudrición.",
-      "Dejarlo brotar en un lugar ventilado y sombreado.",
-      "Cuando el brote tenga buen tamaño, plantar el fruto de lado en suelo suelto.",
-      "Cubrir parcialmente con tierra y mantener el sustrato húmedo, sin encharcar."
-    ],
-    tip: "Dale una estructura para trepar; es muy vigoroso."
-  }
-};
-     const GERMINACION_GENERIC = {
-  hoja: {
-    titulo: "Cultivos de hoja – germinación básica",
-    metodo: "Semilla directa o en almácigo, muy superficial.",
-    pasos: [
-      "Usar sustrato suelto y bien drenado.",
-      "Sembrar la semilla casi en superficie, apenas cubierta.",
-      "Mantener siempre ligeramente húmedo, sin charcos.",
-      "Trasplantar (si es almácigo) cuando tenga 3–4 hojas verdaderas."
-    ],
-    tip: "Prefieren sol suave o media sombra y riegos frecuentes."
-  },
-  fruto: {
-    titulo: "Cultivos de fruto – germinación básica",
-    metodo: "Semilla en almácigo o directa según el espacio.",
-    pasos: [
-      "Sembrar a 1–2 cm de profundidad según tamaño de semilla.",
-      "Mantener el sustrato húmedo, no encharcado.",
-      "Dar buena luz desde pequeños para que no se espiguen.",
-      "Trasplantar a tiesto grande o suelo cuando estén fuertes."
-    ],
-    tip: "Necesitan mucho sol y macetas profundas o suelo suelto."
-  },
-  raiz: {
-    titulo: "Raíces (zanahoria, rábano, etc.) – germinación básica",
-    metodo: "Siempre semilla directa en el sitio definitivo.",
-    pasos: [
-      "Aflojar bien el suelo a buena profundidad.",
-      "Sembrar muy superficial (0.5–1 cm).",
-      "Mantener humedad constante hasta que germinen.",
-      "Ralear dejando espacio entre plantas."
-    ],
-    tip: "No trasplantar: se deforman las raíces."
-  },
-  tuberculo: {
-    titulo: "Tubérculos – siembra básica",
-    metodo: "Trozos de tubérculo o estacas según el cultivo.",
-    pasos: [
-      "Elegir material sano, sin pudriciones.",
-      "Dejar orear si hace falta (como en papa o yuca).",
-      "Enterrar a buena profundidad en suelo suelto.",
-      "Mantener riego regular sin encharcar."
-    ],
-    tip: "Les va bien un suelo profundo y con buena materia orgánica."
-  },
-  aromatica: {
-    titulo: "Aromáticas – germinación básica",
-    metodo: "Semilla fina o esquejes, según especie.",
-    pasos: [
-      "Semilla: sembrar muy superficial y mantener humedad fina.",
-      "Esquejes: enterrar la parte baja en sustrato húmedo.",
-      "Colocar en lugar luminoso, sin sol muy fuerte al inicio.",
-      "Trasplantar cuando el cepellón esté firme."
-    ],
-    tip: "Muchas aromáticas prefieren maceta para controlarlas mejor."
-  },
-  frutal: {
-    titulo: "Frutales – establecimiento básico",
-    metodo: "Plantines o injertos, más que semilla.",
-    pasos: [
-      "Comprar plantín sano o injertado si es posible.",
-      "Hacer hoyo amplio, mejorar el suelo con materia orgánica.",
-      "Plantar al nivel del cuello de la planta.",
-      "Regar bien al inicio y tutorar si hace falta."
-    ],
-    tip: "Los frutales necesitan sitio fijo, sol y paciencia."
-  },
-  generico: {
-    titulo: "Germinación básica – guía general",
-    metodo: "Semilla directa o en bandeja según tamaño de planta.",
-    pasos: [
-      "Leer siempre las indicaciones del sobre de semilla.",
-      "Usar sustrato suelto y limpio.",
-      "Respetar profundidad aproximada de 2–3 veces el tamaño de la semilla.",
-      "Mantener humedad constante hasta que germinen."
-    ],
-    tip: "Si dudas, siembra algunas en almácigo y otras directo y observa."
-  }
-};
-
-function getInfoGerminacion(cultivoId) {
-  const cultivo = CATALOGO_CULTIVOS.find(c => c.id === cultivoId);
-  if (!cultivo) return null;
-
-  // 1) Específico por cultivo
-  if (GERMINACION_POR_CULTIVO[cultivoId]) {
-    return GERMINACION_POR_CULTIVO[cultivoId];
-  }
-
-  // 2) Genérico por categoría
-  const cat = (cultivo.categoria || "").toLowerCase();
-  if (cat.includes("hoja")) return GERMINACION_GENERIC.hoja;
-  if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
-  if (cat.includes("tubérculo") || cat.includes("tuberculo")) return GERMINACION_GENERIC.tuberculo;
-  if (cat.includes("aromática") || cat.includes("aromatica")) return GERMINACION_GENERIC.aromatica;
-  if (cat.includes("frutal") || cat.includes("fruto")) return GERMINACION_GENERIC.frutal;
-
-  // 3) Último recurso
-  return GERMINACION_GENERIC.generico;
-}   
-    // Frecuencia orientativa de abono por cultivo (en días)
+    /*********************
+     * Frecuencias de abono / riego
+     *********************/
     const FERTILIZACION_FRECUENCIAS = {
       tomate: 21,
       lechuga: 14,
@@ -2400,20 +2368,16 @@ function getInfoGerminacion(cultivoId) {
       pina: 60
     };
 
-    // Devuelve frecuencia por nombre de cultivo (usando el catálogo).
     function getFrecuenciaAbonoParaNombre(nombre) {
-      if (!nombre) return 30; // valor por defecto
-
+      if (!nombre) return 30;
       const nombreLower = nombre.trim().toLowerCase();
       const cultivoCatalogo = CATALOGO_CULTIVOS.find(
         c => c.nombre.toLowerCase() === nombreLower
       );
       if (!cultivoCatalogo) return 30;
-
       return FERTILIZACION_FRECUENCIAS[cultivoCatalogo.id] || 30;
     }
 
-    // Calcula frecuencia de riego y fecha estimada de cosecha desde el catálogo
     function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       let frecuenciaRiego = null;
       let fechaCosechaEstimada = null;
@@ -2631,7 +2595,6 @@ function getInfoGerminacion(cultivoId) {
       if (calChip2) calChip2.textContent = climaText;
     }
 
-    // RENDER INICIO
     function renderInicio() {
       const cultivos = stateCultivos;
       const diario = stateDiario;
@@ -2683,7 +2646,6 @@ function getInfoGerminacion(cultivoId) {
         resumen.textContent = texto;
       }
 
-      // Bloque visual de recordatorios en Inicio
       const cardRecord = document.getElementById("recordatoriosCard");
       const listRecord = document.getElementById("recordatoriosList");
 
@@ -2731,7 +2693,6 @@ function getInfoGerminacion(cultivoId) {
         }
       }
 
-      // Resumen rápido del calendario para el mes actual
       const now = new Date();
       const monthIndex = now.getMonth();
       const data = getCalendarData(stateSettings, monthIndex);
@@ -2747,153 +2708,241 @@ function getInfoGerminacion(cultivoId) {
       }
     }
 
-    // RENDER MI HUERTO (lista de cultivos)
-function renderCultivos() {
-  const listEl = document.getElementById("cultivosList");
-  const chip = document.getElementById("cultivosCountChip");
-  const resumenEl = document.getElementById("huertoAbonoResumen");
-  if (!listEl) return;
+    function renderCultivos() {
+      const listEl = document.getElementById("cultivosList");
+      const chip = document.getElementById("cultivosCountChip");
+      const resumenEl = document.getElementById("huertoAbonoResumen");
+      if (!listEl) return;
 
-  const count = stateCultivos.length;
-  if (chip) {
-    chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
-  }
+      const count = stateCultivos.length;
+      if (chip) chip.textContent = `${count} cultivo${count === 1 ? "" : "s"}`;
 
-  // Resumen rápido de abonos en chips (solo visual)
-  if (resumenEl) {
-    if (!count) {
-      resumenEl.innerHTML = "";
-    } else {
-      const { alDia, porVencer, atrasados } = getResumenAbono();
-      resumenEl.innerHTML = `
-        <span class="chip"><span>✅</span> Al día: ${alDia}</span>
-        <span class="chip"><span>⏰</span> Próx. 5 días: ${porVencer}</span>
-        <span class="chip chip-danger"><span>⚠️</span> Atrasados: ${atrasados}</span>
-      `;
-    }
-  }
+      const hoyISO = todayISO();
 
-  if (!count) {
-    listEl.innerHTML =
-      '<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>';
-    return;
-  }
-
-  const hoyISO = todayISO();
-
-  function estadoAbono(cultivo) {
-    if (!cultivo.ultimaFertilizacion || !cultivo.frecuenciaAbonoDias) return null;
-    const diasDesde = daysBetween(cultivo.ultimaFertilizacion, hoyISO);
-    const diasRestantes = cultivo.frecuenciaAbonoDias - diasDesde;
-    if (diasRestantes > 5) return "alDia";
-    if (diasRestantes >= 0) return "proximo";
-    return "atrasado";
-  }
-
-  listEl.innerHTML = "";
-
-  stateCultivos.forEach(c => {
-    const est = estadoAbono(c);
-    let claseEstado = "";
-    if (est === "alDia") claseEstado = " cultivo-card--ok";
-    else if (est === "proximo") claseEstado = " cultivo-card--alerta";
-    else if (est === "atrasado") claseEstado = " cultivo-card--critico";
-
-    const tipoLabelMap = {
-      hoja: "Hoja",
-      fruto: "Fruto",
-      raiz: "Raíz",
-      tuberculo: "Tubérculo",
-      aromaticas: "Aromáticas",
-      otro: "Otro"
-    };
-    const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
-
-    const ultimaAbonoTexto = c.ultimaFertilizacion
-      ? formatDate(c.ultimaFertilizacion)
-      : "Sin registro";
-    const frecuenciaAbonoTexto = c.frecuenciaAbonoDias
-      ? c.frecuenciaAbonoDias + " días"
-      : "No definida";
-
-    const ultimoRiegoTexto = c.ultimoRiego
-      ? formatDate(c.ultimoRiego)
-      : "Sin registro";
-    const frecuenciaRiegoTexto = c.frecuenciaRiegoDias
-      ? c.frecuenciaRiegoDias + " días"
-      : "No definida";
-
-    const fechaCosechaTexto = c.fechaCosechaEstimada
-      ? formatDate(c.fechaCosechaEstimada)
-      : "No definida";
-
-    let etiquetaEstado = "";
-    if (est === "alDia") etiquetaEstado = "✅ Al día";
-    else if (est === "proximo") etiquetaEstado = "⏰ Próx. 5 días";
-    else if (est === "atrasado") etiquetaEstado = "⚠️ Atrasado";
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card" + claseEstado;
-    card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <span>🌿</span>
-          <span>${c.nombre}</span>
-        </div>
-        <span class="chip">${tipoLabel}</span>
-      </div>
-      <div class="cultivo-body">
-        <div><strong>Variedad:</strong> ${c.variedad || "Sin especificar"}</div>
-        <div><strong>Fecha de siembra:</strong> ${formatDate(c.fechaSiembra)}</div>
-        <div><strong>Ubicación / notas cortas:</strong> ${
-          c.notas ? c.notas.slice(0, 140) : "—"
-        }</div>
-        <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
-        <div><strong>Último abono:</strong> ${ultimaAbonoTexto}</div>
-        <div><strong>Frecuencia de abono:</strong> ${frecuenciaAbonoTexto}</div>
-        <div><strong>Último riego:</strong> ${ultimoRiegoTexto}</div>
-        <div><strong>Frecuencia de riego:</strong> ${frecuenciaRiegoTexto}</div>
-        <div><strong>Fecha est. cosecha:</strong> ${fechaCosechaTexto}</div>
-      </div>
-      ${
-        etiquetaEstado
-          ? `<div class="cultivo-notas"><strong>Estado de abono:</strong> ${etiquetaEstado}</div>`
-          : ""
+      function estadoAbono(cultivo) {
+        if (!cultivo.ultimaFertilizacion || !cultivo.frecuenciaAbonoDias) return null;
+        const diasDesde = daysBetween(cultivo.ultimaFertilizacion, hoyISO);
+        const diasRestantes = cultivo.frecuenciaAbonoDias - diasDesde;
+        if (diasRestantes > 5) return "alDia";
+        if (diasRestantes >= 0) return "proximo";
+        return "atrasado";
       }
-      <div class="cultivo-actions">
-        <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
-        <button class="btn-secondary btn" data-id="${c.id}" data-action="riego">💦 Registrar riego hoy</button>
-        <button class="btn-secondary btn" data-id="${c.id}" data-action="abono">💧 Registrar abono hoy</button>
-        <button class="btn-secondary btn" data-id="${c.id}" data-action="plaga">🐛 Plagas de este cultivo</button>
-        <button class="btn-danger btn" data-id="${c.id}" data-action="borrar">🗑 Eliminar</button>
-      </div>
-    `;
 
-    listEl.appendChild(card);
-  });
+      if (resumenEl) {
+        if (!count) {
+          resumenEl.innerHTML = "";
+        } else {
+          const { alDia, porVencer, atrasados } = getResumenAbono();
+          resumenEl.innerHTML = `
+            <button type="button" class="chip" id="chipAlDia">
+              <span>✅</span> Al día: ${alDia}
+            </button>
+            <button type="button" class="chip" id="chipProx">
+              <span>⏰</span> Próx. 5 días: ${porVencer}
+            </button>
+            <button type="button" class="chip chip-danger" id="chipAtrasados">
+              <span>⚠️</span> Atrasados: ${atrasados}
+            </button>
+          `;
+
+          function mostrarGrupo(grupo) {
+            const nombres = stateCultivos
+              .filter(c => estadoAbono(c) === grupo)
+              .map(c => `• ${c.nombre}`);
+            if (!nombres.length) {
+              alert("No hay cultivos en ese grupo ahora mismo.");
+              return;
+            }
+            const titulo =
+              grupo === "alDia"
+                ? "Cultivos al día:"
+                : grupo === "proximo"
+                ? "Cultivos que tocarán en los próximos 5 días:"
+                : "Cultivos atrasados:";
+            alert(titulo + "\n\n" + nombres.join("\n"));
+          }
+
+          const chipAlDia = document.getElementById("chipAlDia");
+          const chipProx = document.getElementById("chipProx");
+          const chipAtr = document.getElementById("chipAtrasados");
+
+          if (chipAlDia)
+            chipAlDia.addEventListener("click", () => mostrarGrupo("alDia"));
+          if (chipProx)
+            chipProx.addEventListener("click", () => mostrarGrupo("proximo"));
+          if (chipAtr)
+            chipAtr.addEventListener("click", () => mostrarGrupo("atrasado"));
+        }
+      }
+
+      if (!count) {
+        listEl.innerHTML =
+          '<p class="muted">Todavía no has registrado cultivos. Usa el formulario de arriba para añadir tu primera siembra.</p>';
+        return;
+      }
+
+      listEl.innerHTML = "";
+      stateCultivos.forEach(c => {
+        const est = estadoAbono(c);
+
+        let claseEstado = "";
+        if (est === "alDia") claseEstado = " cultivo-card--ok";
+        else if (est === "proximo") claseEstado = " cultivo-card--alerta";
+        else if (est === "atrasado") claseEstado = " cultivo-card--critico";
+
+        const card = document.createElement("div");
+        card.className = "cultivo-card" + claseEstado;
+
+        const tipoLabelMap = {
+          hoja: "Hoja",
+          fruto: "Fruto",
+          raiz: "Raíz",
+          tuberculo: "Tubérculo",
+          aromaticas: "Aromáticas",
+          otro: "Otro"
+        };
+        const tipoLabel = tipoLabelMap[c.tipo] || "Otro";
+
+        const ultimaAbonoTexto = c.ultimaFertilizacion
+          ? formatDate(c.ultimaFertilizacion)
+          : "Sin registro";
+        const frecuenciaAbonoTexto = c.frecuenciaAbonoDias
+          ? c.frecuenciaAbonoDias + " días"
+          : "No definida";
+
+        const ultimoRiegoTexto = c.ultimoRiego
+          ? formatDate(c.ultimoRiego)
+          : "Sin registro";
+        const frecuenciaRiegoTexto = c.frecuenciaRiegoDias
+          ? c.frecuenciaRiegoDias + " días"
+          : "No definida";
+
+        const fechaCosechaTexto = c.fechaCosechaEstimada
+          ? formatDate(c.fechaCosechaEstimada)
+          : "No definida";
+
+        let etiquetaEstado = "";
+        if (est === "alDia") etiquetaEstado = "✅ Al día";
+        else if (est === "proximo") etiquetaEstado = "⏰ Próx. 5 días";
+        else if (est === "atrasado") etiquetaEstado = "⚠️ Atrasado";
+
+        card.innerHTML = `
+          <div class="cultivo-header">
+            <div class="cultivo-title">
+              <span>🌿</span>
+              <span>${c.nombre}</span>
+            </div>
+            <span class="chip">${tipoLabel}</span>
+          </div>
+          <div class="cultivo-body">
+            <div><strong>Variedad:</strong> ${c.variedad || "Sin especificar"}</div>
+            <div><strong>Fecha de siembra:</strong> ${formatDate(c.fechaSiembra)}</div>
+            <div><strong>Ubicación / notas cortas:</strong> ${
+              c.notas ? c.notas.slice(0, 140) : "—"
+            }</div>
+            <div><strong>Registro creado:</strong> ${formatDate(c.creadoEl)}</div>
+            <div><strong>Último abono:</strong> ${ultimaAbonoTexto}</div>
+            <div><strong>Frecuencia de abono:</strong> ${frecuenciaAbonoTexto}</div>
+            <div><strong>Último riego:</strong> ${ultimoRiegoTexto}</div>
+            <div><strong>Frecuencia de riego:</strong> ${frecuenciaRiegoTexto}</div>
+            <div><strong>Fecha est. cosecha:</strong> ${fechaCosechaTexto}</div>
+          </div>
+          ${
+            etiquetaEstado
+              ? `<div class="cultivo-notas"><strong>Estado de abono:</strong> ${etiquetaEstado}</div>`
+              : ""
+          }
+          <div class="cultivo-actions">
+            <button class="btn-secondary btn" data-id="${c.id}" data-action="nota">✏️ Añadir nota en diario</button>
+            <button class="btn-secondary btn" data-id="${c.id}" data-action="riego">💦 Registrar riego hoy</button>
+            <button class="btn-secondary btn" data-id="${c.id}" data-action="abono">💧 Registrar abono hoy</button>
+            <button class="btn-secondary btn" data-id="${c.id}" data-action="plaga">🐛 Plagas de este cultivo</button>
+            <button class="btn-danger btn" data-id="${c.id}" data-action="borrar">🗑 Eliminar</button>
+          </div>
+        `;
+
+        listEl.appendChild(card);
+      });
     }
-    /*********************
-     * Diario
-     *********************/
+
+    function renderCalendario(monthIndex = 5) {
+      const listEl = document.getElementById("calendarList");
+      const emptyEl = document.getElementById("calendarEmpty");
+      if (!listEl || !emptyEl) return;
+
+      const data = getCalendarData(stateSettings, monthIndex);
+
+      listEl.innerHTML = "";
+
+      if (data.length) {
+        emptyEl.style.display = "none";
+
+        data.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "calendar-item";
+          div.innerHTML = `
+            <div class="calendar-item-title">
+              <span>${item.titulo}</span>
+              <span class="chip">${item.tipo}</span>
+            </div>
+            <div>${item.detalle}</div>
+          `;
+          listEl.appendChild(div);
+        });
+      } else {
+        emptyEl.style.display = "block";
+      }
+
+      const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
+
+      const sugeridos = CATALOGO_CULTIVOS.filter(
+        c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo)
+      );
+
+      if (sugeridos.length) {
+        const separador = document.createElement("div");
+        separador.className = "divider-soft";
+        listEl.appendChild(separador);
+
+        const tituloExtra = document.createElement("p");
+        tituloExtra.className = "muted";
+        tituloExtra.textContent =
+          "Desde el catálogo: cultivos recomendados para este mes.";
+        listEl.appendChild(tituloExtra);
+
+        sugeridos.forEach(c => {
+          const div = document.createElement("div");
+          div.className = "calendar-item";
+          div.innerHTML = `
+            <div class="calendar-item-title">
+              <span>${c.nombre}</span>
+              <span class="chip">${c.categoria || "Cultivo"}</span>
+            </div>
+            <div>
+              Días a cosecha: ${c.dias}. Luz: ${c.luz}.
+              Plagas frecuentes: ${c.plagas.join(", ")}.
+            </div>
+          `;
+          listEl.appendChild(div);
+        });
+      }
+    }
+
     function renderDiario() {
       const listEl = document.getElementById("diarioList");
       const chip = document.getElementById("diarioCountChip");
       const resumenHoyEl = document.getElementById("diarioResumenHoy");
       if (!listEl) return;
 
-      // Ordenar por fecha (más reciente primero)
       const arrOrdenada = [...stateDiario].sort((a, b) =>
         b.fecha.localeCompare(a.fecha)
       );
       const countTotal = arrOrdenada.length;
 
       if (chip) {
-        chip.textContent = `${countTotal} entrada${
-          countTotal === 1 ? "" : "s"
-        }`;
+        chip.textContent = `${countTotal} entrada${countTotal === 1 ? "" : "s"}`;
       }
 
-      // Resumen de hoy
       if (resumenHoyEl) {
         const hoy = todayISO();
         const hoyEntries = arrOrdenada.filter(e => e.fecha === hoy);
@@ -2904,8 +2953,7 @@ function renderCultivos() {
         } else {
           const riegos = hoyEntries.filter(e => e.tipo === "Riego").length;
           const abonos = hoyEntries.filter(e => e.tipo === "Abono").length;
-          const otros =
-            hoyEntries.length - riegos - abonos;
+          const otros = hoyEntries.length - riegos - abonos;
 
           const partes = [];
           if (riegos) partes.push(`${riegos} riego(s)`);
@@ -2916,7 +2964,6 @@ function renderCultivos() {
         }
       }
 
-      // Aplicar filtro actual
       const arrFiltrada = arrOrdenada.filter(e => {
         if (diarioFiltroActual === "todos") return true;
         return (e.tipo || "General") === diarioFiltroActual;
@@ -2943,9 +2990,6 @@ function renderCultivos() {
       });
     }
 
-    /*********************
-     * Plagas: render
-     *********************/
     function renderPlagas(highlightId) {
       const listEl = document.getElementById("plagasList");
       if (!listEl) return;
@@ -2967,166 +3011,149 @@ function renderCultivos() {
       });
     }
 
-    /*********************
-     * Pesticidas y preparados
-     *********************/
-function renderPesticidas() {
-  const listEl = document.getElementById("pesticidasList");
-  if (!listEl) return;
+    function renderPesticidas() {
+      const listEl = document.getElementById("pesticidasList");
+      if (!listEl) return;
 
-  const data = [
-    {
-      id: "jabon_potasico",
-      nombre: "Jabón potásico suave",
-      paraQue: "Apoya el control de pulgones, mosca blanca y cochinillas en hojas.",
-      ingredientes:
-        "1 cucharada de jabón potásico líquido\n1 litro de agua limpia",
-      preparacion:
-        "Mezcla el jabón potásico con el agua hasta que quede bien disuelto.",
-      aplicacion:
-        "Pulveriza al atardecer, mojando bien el envés de las hojas. Repite cada 5–7 días si hace falta.",
-      advertencias:
-        "No apliques a pleno sol ni mezcles con otros productos sin probar antes en una hoja."
-    },
-    {
-      id: "infusion_ajo_aji",
-      nombre: "Infusión de ajo y ají",
-      paraQue: "Funciona como repelente suave para varias plagas de hoja.",
-      ingredientes:
-        "3–4 dientes de ajo\n1 ají picante pequeño\n1 litro de agua\nUn chorrito de jabón neutro (opcional, como adherente)",
-      preparacion:
-        "Licua ajo y ají con parte del agua, cuela y completa hasta 1 litro. Añade unas gotas de jabón neutro si quieres que se adhiera mejor.",
-      aplicacion:
-        "Rocía sobre hojas sanas y ligeramente afectadas, siempre al final de la tarde.",
-      advertencias:
-        "Prueba primero en una parte pequeña de la planta. No uses en exceso en días muy calurosos."
-    },
-    {
-      id: "aceite_horticola",
-      nombre: "Aceite hortícola (comercial)",
-      paraQue: "Ayuda a controlar cochinillas, ácaros y algunos insectos de hoja.",
-      ingredientes:
-        "Usa el producto tal como indica la etiqueta del fabricante.",
-      preparacion:
-        "Sigue las dosis de agua indicadas por el fabricante. Mezcla sólo la cantidad que vayas a usar en el día.",
-      aplicacion:
-        "Aplica al atardecer, mojando bien tallos y envés de hojas donde se acumulan las plagas.",
-      advertencias:
-        "Respeta siempre las indicaciones de seguridad, los plazos de seguridad antes de cosechar y no apliques a pleno sol."
+      const data = [
+        {
+          nombre: "Jabón potásico / neutro suave",
+          paraQue: "Ayuda a controlar pulgones, mosca blanca y cochinillas en la parte aérea.",
+          ingredientes: "- 10–15 ml de jabón potásico o jabón neutro líquido\n- 1 litro de agua",
+          preparacion: "Mezcla el jabón en el agua hasta que quede bien disuelto.",
+          aplicacion: "Aplicar en pulverización fina sobre hojas (sobre todo envés) al atardecer, cada 5–7 días según necesidad.",
+          advertencias: "No usar dosis más concentradas; puede quemar hojas delicadas. No aplicar a pleno sol."
+        },
+        {
+          nombre: "Infusión de ajo y ají picante",
+          paraQue: "Repelente general para pulgones, orugas pequeñas y algunas plagas chupadoras.",
+          ingredientes: "- 3–4 dientes de ajo\n- 1 trocito de ají picante o 1/2 cdta de ají en polvo\n- 1 litro de agua\n- 3–5 ml de jabón neutro (opcional) como adherente",
+          preparacion: "Tritura el ajo y el ají en un poco de agua, deja reposar 12–24 h, cuela y completa hasta 1 litro. Añade el jabón si quieres que se adhiera mejor.",
+          aplicacion: "Pulverizar sobre hojas y tallos al atardecer, 1–2 veces por semana como prevención o cuando veas inicio de plaga.",
+          advertencias: "Prueba primero en pocas hojas. Evita contacto con ojos y piel; lávate bien las manos después."
+        },
+        {
+          nombre: "Bicarbonato para hongos de hoja",
+          paraQue: "Apoyo preventivo contra oídio y algunos hongos de superficie.",
+          ingredientes: "- 5 g (1 cucharadita) de bicarbonato de sodio\n- 1 litro de agua\n- 5 ml de jabón neutro (opcional)",
+          preparacion: "Disuelve el bicarbonato en el agua, añade el jabón y mezcla bien.",
+          aplicacion: "Pulverizar sobre hojas afectadas 1 vez por semana, siempre al atardecer y con clima seco.",
+          advertencias: "No excedas la dosis; demasiado bicarbonato puede quemar hojas. Suspende si ves amarilleo o quemaduras."
+        }
+      ];
+
+      listEl.innerHTML = "";
+      data.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "plaga-card";
+        div.innerHTML = `
+          <div class="media-item-title">💧 ${p.nombre}</div>
+          <div class="media-item-body"><strong>¿Para qué sirve?</strong> ${p.paraQue}</div>
+          <div class="media-item-body"><strong>Ingredientes (por litro):</strong><br>${p.ingredientes.replace(/\n/g,"<br>")}</div>
+          <div class="media-item-body"><strong>Preparación:</strong> ${p.preparacion}</div>
+          <div class="media-item-body"><strong>Cómo aplicar:</strong> ${p.aplicacion}</div>
+          <div class="media-item-body"><strong>Advertencias:</strong> ${p.advertencias}</div>
+        `;
+        listEl.appendChild(div);
+      });
     }
-  ];
 
-  listEl.innerHTML = "";
-  data.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "plaga-card";
-    div.innerHTML = `
-      <div class="media-item-title">💧 ${p.nombre}</div>
-      <div class="media-item-body"><strong>¿Para qué sirve?</strong> ${p.paraQue}</div>
-      <div class="media-item-body"><strong>Ingredientes (por litro):</strong><br>${p.ingredientes.replace(/\n/g, "<br>")}</div>
-      <div class="media-item-body"><strong>Preparación:</strong> ${p.preparacion}</div>
-      <div class="media-item-body"><strong>Cómo aplicar:</strong> ${p.aplicacion}</div>
-      <div class="media-item-body"><strong>Advertencias:</strong> ${p.advertencias}</div>
-    `;
-    listEl.appendChild(div);
-  });
-}
-} // 👈 ESTA llave faltaba
-/*********************
- * Catálogo: render + búsqueda
- *********************/
-function renderCatalogo(filtroTexto = "") {
-  const listEl = document.getElementById("catalogoList");
-  if (!listEl) return;
+    /*********************
+     * Catálogo: render + búsqueda
+     *********************/
+    function renderCatalogo(filtroTexto = "") {
+      const listEl = document.getElementById("catalogoList");
+      if (!listEl) return;
 
-  const filtro = filtroTexto.trim().toLowerCase();
-  const lista = CATALOGO_CULTIVOS.filter(c => {
-    if (!filtro) return true;
-    return (
-      c.nombre.toLowerCase().includes(filtro) ||
-      c.id.toLowerCase().includes(filtro)
-    );
-  });
+      const filtro = filtroTexto.trim().toLowerCase();
+      const lista = CATALOGO_CULTIVOS.filter(c => {
+        if (!filtro) return true;
+        return (
+          c.nombre.toLowerCase().includes(filtro) ||
+          c.id.toLowerCase().includes(filtro)
+        );
+      });
 
-  if (!lista.length) {
-    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
-    return;
-  }
-
-  listEl.innerHTML = "";
-  lista.forEach(c => {
-    const imgSrc = c.imagen || "img/placeholder.jpg";
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card";
-    card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <img
-            src="${imgSrc}"
-            alt="${c.nombre}"
-            class="cultivo-thumb"
-            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-          />
-          <span>🌱 ${c.nombre}</span>
-        </div>
-        <span class="chip">${c.categoria}</span>
-      </div>
-      <div class="cultivo-body">
-        <div><strong>Días a cosecha:</strong> ${c.dias}</div>
-        <div><strong>Luz:</strong> ${c.luz}</div>
-        <div><strong>Riego:</strong> ${c.riego}</div>
-        <div><strong>Tiesto / suelo:</strong> ${c.tiesto}</div>
-        <div><strong>Profundidad de siembra:</strong> ${c.profundidad}</div>
-        <div><strong>Plagas frecuentes:</strong> ${c.plagas.join(", ")}</div>
-      </div>
-      <div class="cultivo-actions">
-        <button class="btn-secondary btn"
-                data-id="${c.id}"
-                data-action="germinacion">
-          🔁 Ver germinación / reproducción
-        </button>
-      </div>
-    `;
-    listEl.appendChild(card);
-  });
-}
-
-function setupCatalogo() {
-  const input = document.getElementById("catalogoBusqueda");
-  const listEl = document.getElementById("catalogoList");
-
-  if (input) {
-    input.addEventListener("input", () => {
-      renderCatalogo(input.value);
-    });
-  }
-
-  if (listEl) {
-    listEl.addEventListener("click", ev => {
-      const btn = ev.target.closest("button[data-action='germinacion']");
-      if (!btn) return;
-
-      const id = btn.getAttribute("data-id");
-      const info = getInfoGerminacion(id);
-      if (!info) {
-        alert("Todavía no tengo la guía de germinación para este cultivo.");
+      if (!lista.length) {
+        listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
         return;
       }
 
-      const textoPasos = info.pasos
-        .map((p, i) => `${i + 1}. ${p}`)
-        .join("\n");
+      listEl.innerHTML = "";
+      lista.forEach(c => {
+        const imgSrc = c.imagen || "img/placeholder.jpg";
 
-      alert(
-        `${info.titulo}\n\n` +
-        `Método principal: ${info.metodo}\n\n` +
-        `Pasos:\n${textoPasos}\n\n` +
-        `Tip: ${info.tip}`
-      );
-    });
-  }
+        const card = document.createElement("div");
+        card.className = "cultivo-card";
+        card.innerHTML = `
+          <div class="cultivo-header">
+            <div class="cultivo-title">
+              <img
+                src="${imgSrc}"
+                alt="${c.nombre}"
+                class="cultivo-thumb"
+                onerror="this.onerror=null;this.src='img/placeholder.jpg';"
+              />
+              <span>🌱 ${c.nombre}</span>
+            </div>
+            <span class="chip">${c.categoria}</span>
+          </div>
+          <div class="cultivo-body">
+            <div><strong>Días a cosecha:</strong> ${c.dias}</div>
+            <div><strong>Luz:</strong> ${c.luz}</div>
+            <div><strong>Riego:</strong> ${c.riego}</div>
+            <div><strong>Tiesto / suelo:</strong> ${c.tiesto}</div>
+            <div><strong>Profundidad de siembra:</strong> ${c.profundidad}</div>
+            <div><strong>Plagas frecuentes:</strong> ${c.plagas.join(", ")}</div>
+          </div>
+          <div class="cultivo-actions">
+            <button class="btn-secondary btn"
+                    data-id="${c.id}"
+                    data-action="germinacion">
+              🔁 Ver germinación / reproducción
+            </button>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    function setupCatalogo() {
+      const input = document.getElementById("catalogoBusqueda");
+      const listEl = document.getElementById("catalogoList");
+
+      if (input) {
+        input.addEventListener("input", () => {
+          renderCatalogo(input.value);
+        });
       }
+
+      if (listEl) {
+        listEl.addEventListener("click", ev => {
+          const btn = ev.target.closest("button[data-action='germinacion']");
+          if (!btn) return;
+
+          const id = btn.getAttribute("data-id");
+          const info = getInfoGerminacion(id);
+          if (!info) {
+            alert("Todavía no tengo la guía de germinación para este cultivo.");
+            return;
+          }
+
+          const textoPasos = info.pasos
+            .map((p, i) => `${i + 1}. ${p}`)
+            .join("\n");
+
+          alert(
+            `${info.titulo}\n\n` +
+            `Método principal: ${info.metodo}\n\n` +
+            `Pasos:\n${textoPasos}\n\n` +
+            `Tip: ${info.tip}`
+          );
+        });
+      }
+    }
+
     /*********************
      * Navegación
      *********************/
@@ -3177,7 +3204,6 @@ function setupCatalogo() {
         });
       }
 
-      // Botón de recordatorios (abono, riego y cosecha)
       if (btnRecordatorios) {
         btnRecordatorios.addEventListener("click", () => {
           const recordatoriosAbono = getRecordatoriosAbono();
@@ -3258,23 +3284,10 @@ function setupCatalogo() {
       else renderCalendario(5);
     }
 
-    // Crea una entrada automática en el diario (riego / abono)
-    function agregarEntradaDiarioAuto(texto, tipo) {
-      const entrada = {
-        id: Date.now().toString(36),
-        fecha: todayISO(),
-        texto,
-        tipo: tipo || "Auto"
-      };
-      stateDiario.push(entrada);
-      saveDiario(stateDiario);
-    }
-
     function setupMiHuertoForm() {
       const btn = document.getElementById("btnAgregarCultivo");
       if (!btn) return;
 
-      // Crear cultivo nuevo
       btn.addEventListener("click", () => {
         const nombre = document.getElementById("cultivoNombre").value.trim();
         const variedad = document.getElementById("cultivoVariedad").value.trim();
@@ -3319,7 +3332,6 @@ function setupCatalogo() {
         alert("Cultivo guardado.");
       });
 
-      // Acciones en la lista de cultivos
       const list = document.getElementById("cultivosList");
       if (!list) return;
 
@@ -3352,7 +3364,6 @@ function setupCatalogo() {
             cultivo.frecuenciaAbonoDias = 30;
           }
 
-          // Registrar en diario
           stateDiario.push({
             id: Date.now().toString(36),
             fecha: todayISO(),
@@ -3381,7 +3392,6 @@ function setupCatalogo() {
             }
           }
 
-          // Registrar en diario
           stateDiario.push({
             id: Date.now().toString(36),
             fecha: todayISO(),
@@ -3429,7 +3439,6 @@ function setupCatalogo() {
     }
 
     function setupDiario() {
-      // Botón para guardar en el diario
       const btn = document.getElementById("btnGuardarDiario");
       if (!btn) return;
 
@@ -3456,7 +3465,6 @@ function setupCatalogo() {
         alert("Entrada guardada en el diario.");
       });
 
-      // Filtros del diario
       const filtros = document.querySelectorAll("#diarioFiltros .pill");
 
       filtros.forEach(filtro => {
@@ -3468,6 +3476,16 @@ function setupCatalogo() {
           renderDiario();
         });
       });
+
+      const btnExportarDiario = document.getElementById("btnExportarDiario");
+      if (btnExportarDiario) {
+        btnExportarDiario.addEventListener("click", () => {
+          const texto = stateDiario
+            .map(e => `${formatDate(e.fecha)} [${e.tipo || "General"}]: ${e.texto}`)
+            .join("\n");
+          prompt("Copia tu diario:", texto || "Sin entradas todavía.");
+        });
+      }
     }
 
     function setupOpciones() {
@@ -3637,7 +3655,6 @@ function setupCatalogo() {
       setupOpciones();
       setupCatalogo();
     });
-  
   </script>
 </body>
-</html>
+  </html>
