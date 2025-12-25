@@ -3148,15 +3148,13 @@ function renderCatalogo(filtroTexto = "") {
         <div><strong>Plagas frecuentes:</strong> ${c.plagas.join(", ")}</div>
       </div>
       ${
-        GERMINACION_POR_CULTIVO[c.id]
-          ? `<div class="cultivo-actions">
-              <button class="btn-secondary btn"
-                      data-id="${c.id}"
-                      data-action="germinacion">
-                🔁 Ver germinación / reproducción
-              </button>
-            </div>`
-          : ""
+        <div class="cultivo-actions">
+  <button class="btn-secondary btn"
+          data-id="${c.id}"
+          data-action="germinacion">
+    🔁 Ver germinación / reproducción
+  </button>
+</div>
       }
     `;
     listEl.appendChild(card);
