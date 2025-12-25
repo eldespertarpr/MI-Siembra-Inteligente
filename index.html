@@ -3032,7 +3032,6 @@ function renderPesticidas() {
   });
 }
 } // 👈 ESTA llave faltaba
-
 /*********************
  * Catálogo: render + búsqueda
  *********************/
@@ -3089,13 +3088,10 @@ function renderCatalogo(filtroTexto = "") {
         </button>
       </div>
     `;
-
-    // 👉 AQUÍ te faltaba esto:
     listEl.appendChild(card);
   });
 }
 
-// fuera de renderCatalogo:
 function setupCatalogo() {
   const input = document.getElementById("catalogoBusqueda");
   const listEl = document.getElementById("catalogoList");
