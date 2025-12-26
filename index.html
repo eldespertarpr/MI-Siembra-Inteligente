@@ -3091,6 +3091,26 @@
      * Catálogo: render + búsqueda
      *********************/
     function renderCatalogo(filtroTexto = "") {
+      function irACultivoEnCatalogo(nombreCultivo) {
+  // Cambiar a la pestaña Catálogo
+  const navBtn = document.querySelector('.nav-btn[data-section="catalogo"]');
+  if (navBtn) navBtn.click();
+
+  // Rellenar el buscador con el nombre
+  const input = document.getElementById("catalogoBusqueda");
+  if (input) {
+    input.value = nombreCultivo;
+  }
+
+  // Volver a pintar el catálogo filtrado
+  renderCatalogo(nombreCultivo);
+
+  // Hacer scroll hasta la sección catálogo
+  const section = document.getElementById("section-catalogo");
+  if (section && section.scrollIntoView) {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+      }
       const listEl = document.getElementById("catalogoList");
       if (!listEl) return;
 
