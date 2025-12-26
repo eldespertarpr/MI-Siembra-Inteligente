@@ -3768,7 +3768,65 @@ function setupOpciones() {
         }
       });
     }
+function exportarDiarioPDF() {
+  try {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      alert("No se pudo cargar la librería para PDF. Verifica tu conexión a internet.");
+      return;
+    }
 
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4"
+    });
+
+    const marginLeft = 10;
+    let y = 10;
+
+    doc.setFontSize(14);
+    doc.text("Mi Siembra Inteligente – Diario de huerto", marginLeft, y);
+    y += 8;
+
+    doc.setFontSize(10);
+    const fecha = new Date().toLocaleString();
+    doc.text(`Generado: ${fecha}`, marginLeft, y);
+    y += 8;
+
+    if (!stateDiario.length) {
+      doc.text("No hay entradas en el diario.", marginLeft, y);
+      doc.save("mi-siembra-diario.pdf");
+      return;
+    }
+
+    const entradasOrdenadas = [...stateDiario].sort((a, b) =>
+      a.fecha.localeCompare(b.fecha)
+    );
+
+    entradasOrdenadas.forEach(e => {
+      const encabezado = `${formatDate(e.fecha)} – ${e.tipo || "General"}`;
+      const texto = e.texto || "";
+
+      const lineasEncabezado = doc.splitTextToSize(encabezado, 190 - marginLeft * 2);
+      const lineasTexto = doc.splitTextToSize(texto, 190 - marginLeft * 2);
+
+      [...lineasEncabezado, ...lineasTexto, " "].forEach(line => {
+        if (y > 280) {
+          doc.addPage();
+          y = 10;
+        }
+        doc.text(line, marginLeft, y);
+        y += 4;
+      });
+    });
+
+    doc.save("mi-siembra-diario.pdf");
+  } catch (e) {
+    console.error(e);
+    alert("Ocurrió un problema al exportar el diario en PDF.");
+  }
+}
     /*********************
      * Inicio de la app
      *********************/
