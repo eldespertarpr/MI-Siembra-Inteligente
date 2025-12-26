@@ -3480,8 +3480,80 @@
 
           diarioFiltroActual = filtro.dataset.filtro || "todos";
           renderDiario();
+        });
+      });
+    }
+
+    function exportarDatosPDF() {
+      try {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          alert("No se pudo cargar la librería para PDF. Verifica tu conexión.");
+          return;
         }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+          orientation: "p",
+          unit: "mm",
+          format: "a4"
+        });
+
+        const marginLeft = 10;
+        const maxWidth = 190 - marginLeft * 2;
+        let y = 10;
+
+        doc.setFontSize(14);
+        doc.text("Mi Siembra Inteligente – Diario", marginLeft, y);
+        y += 8;
+
+        doc.setFontSize(10);
+        const fechaGen = new Date().toLocaleString();
+        doc.text(`Generado: ${fechaGen}`, marginLeft, y);
+        y += 8;
+
+        if (!stateDiario.length) {
+          doc.text("No tienes entradas guardadas en el diario.", marginLeft, y);
+          doc.save("mi-siembra-inteligente-diario.pdf");
+          return;
+        }
+
+        // Ordenar por fecha (de más vieja a más nueva)
+        const entradas = [...stateDiario].sort((a, b) =>
+          a.fecha.localeCompare(b.fecha)
+        );
+
+        entradas.forEach(e => {
+          if (y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+
+          doc.setFontSize(11);
+          const cabecera = `${formatDate(e.fecha)} · ${e.tipo || "General"}`;
+          doc.text(cabecera, marginLeft, y);
+          y += 5;
+
+          doc.setFontSize(10);
+          const lineas = doc.splitTextToSize(e.texto, maxWidth);
+          lineas.forEach(line => {
+            if (y > 280) {
+              doc.addPage();
+              y = 10;
+            }
+            doc.text(line, marginLeft + 2, y);
+            y += 4;
+          });
+
+          y += 2; // pequeño espacio entre entradas
+        });
+
+        doc.save("mi-siembra-inteligente-diario.pdf");
+      } catch (e) {
+        console.error(e);
+        alert("Ocurrió un problema al crear el PDF del diario.");
       }
+    }
+
 function setupOpciones() {
   const nombreInput = document.getElementById("nombreHuerto");
   const climaSelect = document.getElementById("climaSelect");
