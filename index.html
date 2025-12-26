@@ -3135,6 +3135,9 @@
     function setupCatalogo() {
       const input = document.getElementById("catalogoBusqueda");
       const listEl = document.getElementById("catalogoList");
+      const panel = document.getElementById("germinacionPanel");
+      const tituloEl = document.getElementById("germinacionTitulo");
+      const contenidoEl = document.getElementById("germinacionContenido");
 
       if (input) {
         input.addEventListener("input", () => {
@@ -3150,20 +3153,25 @@
           const id = btn.getAttribute("data-id");
           const info = getInfoGerminacion(id);
           if (!info) {
-            alert("Todavía no tengo la guía de germinación para este cultivo.");
+            if (panel) panel.style.display = "none";
             return;
           }
 
-          const textoPasos = info.pasos
-            .map((p, i) => `${i + 1}. ${p}`)
-            .join("\n");
+          if (panel && tituloEl && contenidoEl) {
+            tituloEl.textContent = info.titulo;
 
-          alert(
-            `${info.titulo}\n\n` +
-            `Método principal: ${info.metodo}\n\n` +
-            `Pasos:\n${textoPasos}\n\n` +
-            `Tip: ${info.tip}`
-          );
+            const pasosTexto = info.pasos
+              .map((p, i) => `${i + 1}. ${p}`)
+              .join("\n");
+
+            contenidoEl.textContent =
+              `Método principal: ${info.metodo}\n\n` +
+              `Pasos:\n${pasosTexto}\n\n` +
+              `Tip: ${info.tip}`;
+
+            panel.style.display = "block";
+            panel.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         });
       }
     }
