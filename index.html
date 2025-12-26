@@ -3861,6 +3861,80 @@ function exportarDiarioPDF() {
       setupOpciones();
       setupCatalogo();
     });
+    // ===== RESPALDO JSON =====
+
+  function exportarRespaldoJSON() {
+    const respaldo = {
+      settings: JSON.parse(localStorage.getItem('miSiembra_settings') || 'null'),
+      cultivos: JSON.parse(localStorage.getItem('miSiembra_cultivos') || '[]'),
+      diario: JSON.parse(localStorage.getItem('miSiembra_diario') || '[]')
+    };
+
+    const contenido = JSON.stringify(respaldo, null, 2);
+    const blob = new Blob([contenido], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    const fecha = new Date().toISOString().slice(0, 10);
+
+    enlace.href = url;
+    enlace.download = `mi-siembra-respaldo-${fecha}.json`;
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+    URL.revokeObjectURL(url);
+
+    alert('Respaldo (.json) exportado correctamente ✅');
+  }
+
+  function importarRespaldoJSON() {
+    const input = document.getElementById('inputRespaldoJSON');
+    if (!input) {
+      alert('No se encontró el campo de archivo para restaurar el respaldo.');
+      return;
+    }
+
+    input.value = ''; // permite elegir el mismo archivo otra vez
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+
+          if (!data || typeof data !== 'object') {
+            throw new Error('Formato de respaldo no válido');
+          }
+
+          const confirmar = confirm(
+            'Esto reemplazará los datos actuales de tu huerto por los del respaldo seleccionado. ¿Quieres continuar?'
+          );
+          if (!confirmar) return;
+
+          if (data.settings) {
+            localStorage.setItem('miSiembra_settings', JSON.stringify(data.settings));
+          }
+          if (Array.isArray(data.cultivos)) {
+            localStorage.setItem('miSiembra_cultivos', JSON.stringify(data.cultivos));
+          }
+          if (Array.isArray(data.diario)) {
+            localStorage.setItem('miSiembra_diario', JSON.stringify(data.diario));
+          }
+
+          alert('Respaldo restaurado correctamente. Se recargará la app.');
+          location.reload();
+        } catch (err) {
+          console.error(err);
+          alert('No se pudo leer el archivo de respaldo. Usa un .json generado por Mi Siembra Inteligente.');
+        }
+      };
+
+      reader.readAsText(file);
+    };
+
+    input.click();
+  }
   </script>
 </body>
   </html>
