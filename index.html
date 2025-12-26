@@ -3133,46 +3133,56 @@
     }
 
     function setupCatalogo() {
-      const input = document.getElementById("catalogoBusqueda");
-      const listEl = document.getElementById("catalogoList");
-      const panel = document.getElementById("germinacionPanel");
-      const tituloEl = document.getElementById("germinacionTitulo");
-      const contenidoEl = document.getElementById("germinacionContenido");
+  const input = document.getElementById("catalogoBusqueda");
+  const listEl = document.getElementById("catalogoList");
 
-      if (input) {
-        input.addEventListener("input", () => {
-          renderCatalogo(input.value);
-        });
+  if (input) {
+    input.addEventListener("input", () => {
+      renderCatalogo(input.value);
+    });
+  }
+
+  if (listEl) {
+    listEl.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("button[data-action='germinacion']");
+      if (!btn) return;
+
+      const id = btn.getAttribute("data-id");
+      const info = getInfoGerminacion(id);
+      if (!info) {
+        alert("Todavía no tengo la guía de germinación para este cultivo.");
+        return;
       }
 
-      if (listEl) {
-        listEl.addEventListener("click", ev => {
-          const btn = ev.target.closest("button[data-action='germinacion']");
-          if (!btn) return;
+      const card = btn.closest(".cultivo-card");
+      if (!card) return;
 
-          const id = btn.getAttribute("data-id");
-          const info = getInfoGerminacion(id);
-          if (!info) {
-            if (panel) panel.style.display = "none";
-            return;
-          }
-
-          if (panel && tituloEl && contenidoEl) {
-            tituloEl.textContent = info.titulo;
-
-            const pasosTexto = info.pasos
-              .map((p, i) => `${i + 1}. ${p}`)
-              .join("\n");
-
-            contenidoEl.textContent =
-              `Método principal: ${info.metodo}\n\n` +
-              `Pasos:\n${pasosTexto}\n\n` +
-              `Tip: ${info.tip}`;
-
-            panel.style.display = "block";
-          }
-        });
+      let panel = card.querySelector(".germinacion-panel");
+      if (!panel) {
+        panel = document.createElement("div");
+        panel.className = "germinacion-panel";
+        card.appendChild(panel);
       }
+
+      // si ya está visible, lo ocultamos (toggle)
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+        return;
+      }
+
+      const pasosHtml = info.pasos
+        .map((p, i) => `${i + 1}. ${p}`)
+        .join("<br>");
+
+      panel.innerHTML = `
+        <div class="media-item-title">${info.titulo}</div>
+        <div class="media-item-body"><strong>Método principal:</strong> ${info.metodo}</div>
+        <div class="media-item-body"><strong>Pasos:</strong><br>${pasosHtml}</div>
+        <div class="media-item-body"><strong>Tip:</strong> ${info.tip}</div>
+      `;
+      panel.style.display = "block";
+    });
+  }
     }
 
     /*********************
