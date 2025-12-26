@@ -3898,6 +3898,17 @@ function exportarDiarioPDF() {
   setupMiHuertoForm();
   setupDiario();
   setupOpciones();
+      const calendarList = document.getElementById("calendarList");
+  if (calendarList) {
+    calendarList.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("button[data-cultivo]");
+      if (!btn) return;
+      const nombre = btn.getAttribute("data-cultivo");
+      if (nombre) {
+        irACultivoEnCatalogo(nombre);
+      }
+    });
+  }
   setupCatalogo();
   setupCalendarioLinks();   // 👈 añade esta línea
 });
