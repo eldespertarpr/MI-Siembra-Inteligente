@@ -3481,18 +3481,7 @@
           diarioFiltroActual = filtro.dataset.filtro || "todos";
           renderDiario();
         });
-      });
-
-      const btnExportarDiario = document.getElementById("btnExportarDiario");
-      if (btnExportarDiario) {
-        btnExportarDiario.addEventListener("click", () => {
-          const texto = stateDiario
-            .map(e => `${formatDate(e.fecha)} [${e.tipo || "General"}]: ${e.texto}`)
-            .join("\n");
-          prompt("Copia tu diario:", texto || "Sin entradas todavía.");
-        });
       }
-    }
 function setupOpciones() {
   const nombreInput = document.getElementById("nombreHuerto");
   const climaSelect = document.getElementById("climaSelect");
