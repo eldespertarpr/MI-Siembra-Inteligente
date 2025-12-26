@@ -3858,79 +3858,134 @@ function exportarDiarioPDF() {
       setupCatalogo();
     });
     // ===== RESPALDO JSON =====
+function exportarRespaldoJSON() {
+  const respaldo = {
+    settings: stateSettings,
+    cultivos: stateCultivos,
+    diario: stateDiario
+  };
 
-  function exportarRespaldoJSON() {
-    const respaldo = {
-      settings: JSON.parse(localStorage.getItem('miSiembra_settings') || 'null'),
-      cultivos: JSON.parse(localStorage.getItem('miSiembra_cultivos') || '[]'),
-      diario: JSON.parse(localStorage.getItem('miSiembra_diario') || '[]')
-    };
+  const contenido = JSON.stringify(respaldo, null, 2);
+  const blob = new Blob([contenido], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement("a");
+  const fecha = new Date().toISOString().slice(0, 10);
 
-    const contenido = JSON.stringify(respaldo, null, 2);
-    const blob = new Blob([contenido], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const enlace = document.createElement('a');
-    const fecha = new Date().toISOString().slice(0, 10);
+  enlace.href = url;
+  enlace.download = `mi-siembra-respaldo-${fecha}.json`;
+  document.body.appendChild(enlace);
+  enlace.click();
+  document.body.removeChild(enlace);
+  URL.revokeObjectURL(url);
 
-    enlace.href = url;
-    enlace.download = `mi-siembra-respaldo-${fecha}.json`;
-    document.body.appendChild(enlace);
-    enlace.click();
-    document.body.removeChild(enlace);
-    URL.revokeObjectURL(url);
+  alert("Respaldo (.json) exportado correctamente ✅");
+}
 
-    alert('Respaldo (.json) exportado correctamente ✅');
+function importarRespaldoJSON() {
+  const input = document.getElementById("inputRespaldoJSON");
+  if (!input) {
+    alert("No se encontró el campo de archivo para restaurar el respaldo.");
+    return;
   }
 
-  function importarRespaldoJSON() {
-    const input = document.getElementById('inputRespaldoJSON');
-    if (!input) {
-      alert('No se encontró el campo de archivo para restaurar el respaldo.');
-      return;
-    }
+  input.value = "";
+  input.onchange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    input.value = ''; // permite elegir el mismo archivo otra vez
-    input.onchange = (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const data = JSON.parse(e.target.result);
-
-          if (!data || typeof data !== 'object') {
-            throw new Error('Formato de respaldo no válido');
-          }
-
-          const confirmar = confirm(
-            'Esto reemplazará los datos actuales de tu huerto por los del respaldo seleccionado. ¿Quieres continuar?'
-          );
-          if (!confirmar) return;
-
-          if (data.settings) {
-            localStorage.setItem('miSiembra_settings', JSON.stringify(data.settings));
-          }
-          if (Array.isArray(data.cultivos)) {
-            localStorage.setItem('miSiembra_cultivos', JSON.stringify(data.cultivos));
-          }
-          if (Array.isArray(data.diario)) {
-            localStorage.setItem('miSiembra_diario', JSON.stringify(data.diario));
-          }
-
-          alert('Respaldo restaurado correctamente. Se recargará la app.');
-          location.reload();
-        } catch (err) {
-          console.error(err);
-          alert('No se pudo leer el archivo de respaldo. Usa un .json generado por Mi Siembra Inteligente.');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data || typeof data !== "object") {
+          throw new Error("Formato de respaldo no válido");
         }
-      };
 
-      reader.readAsText(file);
+        const confirmar = confirm(
+          "Esto reemplazará los datos actuales de tu huerto por los del respaldo seleccionado. ¿Quieres continuar?"
+        );
+        if (!confirmar) return;
+
+        // Ajustes
+        if (data.settings) {
+          stateSettings = { ...DEFAULT_SETTINGS, ...data.settings };
+          saveSettings(stateSettings);
+        }
+
+        // Cultivos
+        if (Array.isArray(data.cultivos)) {
+          stateCultivos = data.cultivos;
+          saveCultivos(stateCultivos);
+        } else {
+          stateCultivos = [];
+          saveCultivos(stateCultivos);
+        }
+
+        // Diario
+        if (Array.isArray(data.diario)) {
+          stateDiario = data.diario;
+          saveDiario(stateDiario);
+        } else {
+          stateDiario = [];
+          saveDiario(stateDiario);
+        }
+
+        // Refrescar UI
+        updateHeader();
+        updateSettingsContexts();
+        renderCultivos();
+        renderDiario();
+        renderInicio();
+        renderCalendario(new Date().getMonth());
+
+        alert("Respaldo restaurado correctamente ✅");
+      } catch (err) {
+        console.error(err);
+        alert("No se pudo leer el archivo de respaldo. Usa un .json generado por Mi Siembra Inteligente.");
+      }
     };
 
-    input.click();
+    reader.readAsText(file);
+  };
+
+  input.click();
+}
+
+// ===== BORRAR TODO (botón rojo) =====
+function borrarTodo() {
+  if (!confirm("Esto borrará ajustes, cultivos y diario en este dispositivo. ¿Seguro que quieres continuar?")) {
+    return;
   }
+
+  // Borrar del almacenamiento
+  localStorage.removeItem(STORAGE_KEYS.settings);
+  localStorage.removeItem(STORAGE_KEYS.cultivos);
+  localStorage.removeItem(STORAGE_KEYS.diario);
+
+  // Resetear estado en memoria
+  stateSettings = { ...DEFAULT_SETTINGS };
+  stateCultivos = [];
+  stateDiario = [];
+
+  // Actualizar campos de Opciones
+  const nombreInput = document.getElementById("nombreHuerto");
+  const climaSelect = document.getElementById("climaSelect");
+  const hemisSelect = document.getElementById("hemisferioSelect");
+
+  if (nombreInput) nombreInput.value = stateSettings.nombreHuerto;
+  if (climaSelect) climaSelect.value = stateSettings.clima;
+  if (hemisSelect) hemisSelect.value = stateSettings.hemisferio;
+
+  // Volver a pintar todo
+  updateHeader();
+  updateSettingsContexts();
+  renderCultivos();
+  renderDiario();
+  renderInicio();
+  renderCalendario(new Date().getMonth());
+
+  alert("Se borraron todos los datos. Empezarás de cero 🌱");
+}
   </script>
 </body>
   </html>
