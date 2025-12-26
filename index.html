@@ -3883,22 +3883,24 @@ function exportarDiarioPDF() {
      * Inicio de la app
      *********************/
     document.addEventListener("DOMContentLoaded", () => {
-      updateHeader();
-      updateSettingsContexts();
-      renderCultivos();
-      renderDiario();
-      renderInicio();
-      renderCalendario(new Date().getMonth());
-      renderPlagas();
-      renderPesticidas();
-      renderCatalogo();
+  updateHeader();
+  updateSettingsContexts();
+  renderCultivos();
+  renderDiario();
+  renderInicio();
+  renderCalendario(new Date().getMonth());
+  renderPlagas();
+  renderPesticidas();
+  renderCatalogo();
 
-      setupNavigation();
-      setupMesesPills();
-      setupMiHuertoForm();
-      setupDiario();
-      setupOpciones();
-      setupCatalogo();
+  setupNavigation();
+  setupMesesPills();
+  setupMiHuertoForm();
+  setupDiario();
+  setupOpciones();
+  setupCatalogo();
+  setupCalendarioLinks();   // 👈 añade esta línea
+});
     });
     // ===== RESPALDO JSON =====
 function exportarRespaldoJSON() {
