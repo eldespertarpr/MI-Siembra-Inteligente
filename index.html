@@ -3488,117 +3488,154 @@
         });
       }
     }
+function setupOpciones() {
+  const nombreInput = document.getElementById("nombreHuerto");
+  const climaSelect = document.getElementById("climaSelect");
+  const hemisSelect = document.getElementById("hemisferioSelect");
 
-    function setupOpciones() {
-      const nombreInput = document.getElementById("nombreHuerto");
-      const climaSelect = document.getElementById("climaSelect");
-      const hemisSelect = document.getElementById("hemisferioSelect");
+  if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
+  if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
+  if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
 
-      if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
-      if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
-      if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
+  const btnGuardar = document.getElementById("btnGuardarConfig");
+  if (btnGuardar) {
+    btnGuardar.addEventListener("click", () => {
+      const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
+      const nuevoClima = climaSelect.value || "tropical";
+      const nuevoHemis = hemisSelect.value || "norte";
 
-      const btnGuardar = document.getElementById("btnGuardarConfig");
-      if (btnGuardar) {
-        btnGuardar.addEventListener("click", () => {
-          const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
-          const nuevoClima = climaSelect.value || "tropical";
-          const nuevoHemis = hemisSelect.value || "norte";
+      stateSettings = {
+        ...stateSettings,
+        nombreHuerto: nuevoNombre,
+        clima: nuevoClima,
+        hemisferio: nuevoHemis
+      };
+      saveSettings(stateSettings);
+      updateHeader();
+      updateSettingsContexts();
+      renderInicio();
+      renderCalendario(new Date().getMonth());
+      alert("Configuración guardada.");
+    });
+  }
 
-          stateSettings = {
-            ...stateSettings,
-            nombreHuerto: nuevoNombre,
-            clima: nuevoClima,
-            hemisferio: nuevoHemis
-          };
+  const btnExportar = document.getElementById("btnExportar");
+  if (btnExportar) {
+    btnExportar.addEventListener("click", () => {
+      try {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+          alert("No se pudo cargar la librería para PDF. Verifica tu conexión a internet.");
+          return;
+        }
+
+        const exportObj = {
+          settings: stateSettings,
+          cultivos: stateCultivos,
+          diario: stateDiario
+        };
+        const jsonText = JSON.stringify(exportObj, null, 2);
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+          orientation: "p",
+          unit: "mm",
+          format: "a4"
+        });
+
+        const marginLeft = 10;
+        let y = 10;
+
+        doc.setFontSize(14);
+        doc.text("Mi Siembra Inteligente – Respaldo", marginLeft, y);
+        y += 8;
+
+        doc.setFontSize(10);
+        const fecha = new Date().toLocaleString();
+        doc.text(`Generado: ${fecha}`, marginLeft, y);
+        y += 8;
+
+        doc.setFontSize(10);
+        const lineas = doc.splitTextToSize(jsonText, 190 - marginLeft * 2);
+
+        lineas.forEach(line => {
+          if (y > 280) {
+            doc.addPage();
+            y = 10;
+          }
+          doc.text(line, marginLeft, y);
+          y += 4;
+        });
+
+        doc.save("mi-siembra-inteligente-respaldo.pdf");
+      } catch (e) {
+        console.error(e);
+        alert("Ocurrió un problema al crear el PDF. Intenta de nuevo.");
+      }
+    });
+  }
+
+  const btnImportar = document.getElementById("btnImportar");
+  if (btnImportar) {
+    btnImportar.addEventListener("click", () => {
+      const texto = prompt("Pega aquí un backup exportado previamente (JSON):");
+      if (!texto) return;
+      try {
+        const data = JSON.parse(texto);
+        if (data.settings) {
+          stateSettings = { ...DEFAULT_SETTINGS, ...data.settings };
           saveSettings(stateSettings);
-          updateHeader();
-          updateSettingsContexts();
-          renderInicio();
-          renderCalendario(new Date().getMonth());
-          alert("Configuración guardada.");
-        });
+        }
+        if (Array.isArray(data.cultivos)) {
+          stateCultivos = data.cultivos;
+          saveCultivos(stateCultivos);
+        }
+        if (Array.isArray(data.diario)) {
+          stateDiario = data.diario;
+          saveDiario(stateDiario);
+        }
+
+        if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
+        if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
+        if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
+        updateHeader();
+        updateSettingsContexts();
+        renderCultivos();
+        renderDiario();
+        renderInicio();
+        renderCalendario(new Date().getMonth());
+        alert("Datos importados correctamente.");
+      } catch (e) {
+        alert("El texto no parece un backup válido.");
       }
+    });
+  }
 
-      const btnExportar = document.getElementById("btnExportar");
-      if (btnExportar) {
-        btnExportar.addEventListener("click", () => {
-          const exportObj = {
-            settings: stateSettings,
-            cultivos: stateCultivos,
-            diario: stateDiario
-          };
-          const texto = JSON.stringify(exportObj, null, 2);
-          prompt("Copia este texto para guardar una copia de seguridad:", texto);
-        });
+  const btnBorrarTodo = document.getElementById("btnBorrarTodo");
+  if (btnBorrarTodo) {
+    btnBorrarTodo.addEventListener("click", () => {
+      if (!confirm("Esto borrará todos los datos del huerto en este dispositivo. ¿Continuar?")) {
+        return;
       }
+      localStorage.removeItem(STORAGE_KEYS.settings);
+      localStorage.removeItem(STORAGE_KEYS.cultivos);
+      localStorage.removeItem(STORAGE_KEYS.diario);
+      stateSettings = { ...DEFAULT_SETTINGS };
+      stateCultivos = [];
+      stateDiario = [];
 
-      const btnImportar = document.getElementById("btnImportar");
-      if (btnImportar) {
-        btnImportar.addEventListener("click", () => {
-          const texto = prompt("Pega aquí un backup exportado previamente:");
-          if (!texto) return;
-          try {
-            const data = JSON.parse(texto);
-            if (data.settings) {
-              stateSettings = { ...DEFAULT_SETTINGS, ...data.settings };
-              saveSettings(stateSettings);
-            }
-            if (Array.isArray(data.cultivos)) {
-              stateCultivos = data.cultivos;
-              saveCultivos(stateCultivos);
-            }
-            if (Array.isArray(data.diario)) {
-              stateDiario = data.diario;
-              saveDiario(stateDiario);
-            }
-
-            if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
-            if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
-            if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
-            updateHeader();
-            updateSettingsContexts();
-            renderCultivos();
-            renderDiario();
-            renderInicio();
-            renderCalendario(new Date().getMonth());
-            alert("Datos importados correctamente.");
-          } catch (e) {
-            alert("El texto no parece un backup válido.");
-          }
-        });
-      }
-
-      const btnBorrarTodo = document.getElementById("btnBorrarTodo");
-      if (btnBorrarTodo) {
-        btnBorrarTodo.addEventListener("click", () => {
-          if (
-            !confirm(
-              "Esto borrará todos los datos del huerto en este dispositivo. ¿Continuar?"
-            )
-          ) {
-            return;
-          }
-          localStorage.removeItem(STORAGE_KEYS.settings);
-          localStorage.removeItem(STORAGE_KEYS.cultivos);
-          localStorage.removeItem(STORAGE_KEYS.diario);
-          stateSettings = { ...DEFAULT_SETTINGS };
-          stateCultivos = [];
-          stateDiario = [];
-
-          if (nombreInput) nombreInput.value = stateSettings.nombreHuerto;
-          if (climaSelect) climaSelect.value = stateSettings.clima;
-          if (hemisSelect) hemisSelect.value = stateSettings.hemisferio;
-          updateHeader();
-          updateSettingsContexts();
-          renderCultivos();
-          renderDiario();
-          renderInicio();
-          renderCalendario(new Date().getMonth());
-          alert("Datos borrados. Empezarás de cero.");
-        });
-      }
-    }
+      if (nombreInput) nombreInput.value = stateSettings.nombreHuerto;
+      if (climaSelect) climaSelect.value = stateSettings.clima;
+      if (hemisSelect) hemisSelect.value = stateSettings.hemisferio;
+      updateHeader();
+      updateSettingsContexts();
+      renderCultivos();
+      renderDiario();
+      renderInicio();
+      renderCalendario(new Date().getMonth());
+      alert("Datos borrados. Empezarás de cero.");
+    });
+  }
+}
 
     /*********************
      * PWA: service worker + instalar
