@@ -3358,7 +3358,20 @@
       );
       if (target) target.click();
       else renderCalendario(5);
-    }
+    }function setupCalendarioLinks() {
+  const calendarList = document.getElementById("calendarList");
+  if (!calendarList) return;
+
+  calendarList.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button[data-cultivo]");
+    if (!btn) return;
+
+    const nombre = btn.getAttribute("data-cultivo");
+    if (!nombre) return;
+
+    irACultivoEnCatalogo(nombre);
+  });
+}
 
     function setupMiHuertoForm() {
       const btn = document.getElementById("btnAgregarCultivo");
