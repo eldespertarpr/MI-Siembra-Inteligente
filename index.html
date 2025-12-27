@@ -2194,66 +2194,75 @@
     }
 
     function renderDiario() {
-      const listEl = document.getElementById("diarioList");
-      const chip = document.getElementById("diarioCountChip");
-      const resumenHoyEl = document.getElementById("diarioResumenHoy");
-      if (!listEl) return;
+  const listEl = document.getElementById("diarioList");
+  const chip = document.getElementById("diarioCountChip");
+  const resumenHoyEl = document.getElementById("diarioResumenHoy");
+  if (!listEl) return;
 
-      const arrOrdenada = [...stateDiario].sort((a, b) =>
-        b.fecha.localeCompare(a.fecha)
-      );
-      const countTotal = arrOrdenada.length;
+  const arrOrdenada = [...stateDiario].sort((a, b) =>
+    b.fecha.localeCompare(a.fecha)
+  );
+  const countTotal = arrOrdenada.length;
 
-      if (chip) {
-        chip.textContent = `${countTotal} entrada${countTotal === 1 ? "" : "s"}`;
-      }
+  if (chip) {
+    chip.textContent = `${countTotal} entrada${countTotal === 1 ? "" : "s"}`;
+  }
 
-      const hoy = todayISO();
-      if (resumenHoyEl) {
-        const hoyEntries = arrOrdenada.filter(e => e.fecha === hoy);
+  if (resumenHoyEl) {
+    const hoy = todayISO();
+    const hoyEntries = arrOrdenada.filter(e => e.fecha === hoy);
 
-        if (!hoyEntries.length) {
-          resumenHoyEl.textContent =
-            "Hoy aún no has registrado nada en el diario.";
-        } else {
-          const riegos = hoyEntries.filter(e => e.tipo === "Riego").length;
-          const abonos = hoyEntries.filter(e => e.tipo === "Abono").length;
-          const otros = hoyEntries.length - riegos - abonos;
+    if (!hoyEntries.length) {
+      resumenHoyEl.textContent =
+        "Hoy aún no has registrado nada en el diario.";
+    } else {
+      const riegos = hoyEntries.filter(e => e.tipo === "Riego").length;
+      const abonos = hoyEntries.filter(e => e.tipo === "Abono").length;
+      const otros = hoyEntries.length - riegos - abonos;
 
-          const partes = [];
-          if (riegos) partes.push(`${riegos} riego(s)`);
-          if (abonos) partes.push(`${abonos} abono(s)`);
-          if (otros) partes.push(`${otros} nota(s) general(es)`);
+      const partes = [];
+      if (riegos) partes.push(`${riegos} riego(s)`);
+      if (abonos) partes.push(`${abonos} abono(s)`);
+      if (otros) partes.push(`${otros} nota(s) general(es)`);
 
-          resumenHoyEl.textContent = `Hoy registraste: ${partes.join(", ")}.`;
-        }
-      }
-
-      const arrFiltrada = arrOrdenada.filter(e => {
-        if (diarioFiltroActual === "todos") return true;
-        return (e.tipo || "General") === diarioFiltroActual;
-      });
-
-      if (!arrFiltrada.length) {
-        listEl.innerHTML =
-          '<p class="muted">No hay entradas que coincidan con el filtro seleccionado.</p>';
-        return;
-      }
-
-      listEl.innerHTML = "";
-      arrFiltrada.forEach(e => {
-        const div = document.createElement("div");
-        div.className = "diario-item";
-        div.innerHTML = `
-          <div class="diario-item-header">
-            <span><strong>${formatDate(e.fecha)}</strong></span>
-            <span class="chip">${e.tipo || "General"}</span>
-          </div>
-          <div>${e.texto}</div>
-        `;
-        listEl.appendChild(div);
-      });
+      resumenHoyEl.textContent = `Hoy registraste: ${partes.join(", ")}.`;
     }
+  }
+
+  const arrFiltrada = arrOrdenada.filter(e => {
+    if (diarioFiltroActual === "todos") return true;
+    return (e.tipo || "General") === diarioFiltroActual;
+  });
+
+  if (!arrFiltrada.length) {
+    listEl.innerHTML =
+      '<p class="muted">No hay entradas que coincidan con el filtro seleccionado.</p>';
+    return;
+  }
+
+  listEl.innerHTML = "";
+  arrFiltrada.forEach(e => {
+    const div = document.createElement("div");
+    div.className = "diario-item";
+    div.innerHTML = `
+      <div class="diario-item-header">
+        <span><strong>${formatDate(e.fecha)}</strong></span>
+        <div>
+          <span class="chip">${e.tipo || "General"}</span>
+          <button
+            class="btn btn-secondary"
+            data-action="editar-diario"
+            data-id="${e.id}"
+            style="padding:4px 8px;font-size:0.7rem;margin-left:6px;">
+            ✏️ Editar
+          </button>
+        </div>
+      </div>
+      <div>${e.texto}</div>
+    `;
+    listEl.appendChild(div);
+  });
+}
 
     function renderPlagas(highlightId) {
       const listEl = document.getElementById("plagasList");
