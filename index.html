@@ -825,18 +825,96 @@
         <p class="section-subtitle">
           Lista de cultivos con información rápida y guía de germinación / reproducción.
         </p>
+<div class="app-card">
+    <!-- Buscador del catálogo -->
+    <div class="field">
+      <label for="catalogoBusqueda">Buscar cultivo</label>
+      <input
+        type="text"
+        id="catalogoBusqueda"
+        placeholder="Ej. tomate, lechuga, plátano..."
+      />
+    </div>
 
-        <div class="app-card">
-          <div class="field">
-            <label for="catalogoBusqueda">Buscar cultivo</label>
-            <input
-              type="text"
-              id="catalogoBusqueda"
-              placeholder="Ej. tomate, lechuga, plátano..."
-            />
-          </div>
-          <div class="cultivos-list" id="catalogoList"></div>
-        </div>
+    <!-- Botón para mostrar/ocultar el formulario de cultivo manual -->
+    <div class="field-row" style="margin-top: 0.75rem;">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        id="btnToggleNuevoCultivo"
+      >
+        ➕ Añadir cultivo manual
+      </button>
+    </div>
+
+    <!-- Lista de resultados del catálogo -->
+    <div class="cultivos-list" id="catalogoList"></div>
+
+    <!-- Formulario para crear un cultivo manual -->
+    <div
+      class="app-card"
+      id="nuevoCultivoCard"
+      style="margin-top: 1rem; display: none;"
+    >
+      <h3>Nuevo cultivo</h3>
+
+      <div class="field">
+        <label for="nuevoCultivoNombre">Nombre del cultivo</label>
+        <input
+          type="text"
+          id="nuevoCultivoNombre"
+          placeholder="Ej. cilantro criollo"
+        />
+      </div>
+
+      <div class="field">
+        <label for="nuevoCultivoDiasGerminacion">
+          Días de germinación (opcional)
+        </label>
+        <input
+          type="number"
+          id="nuevoCultivoDiasGerminacion"
+          min="0"
+          placeholder="Ej. 7"
+        />
+      </div>
+
+      <div class="field">
+        <label for="nuevoCultivoDiasCosecha">
+          Días hasta cosecha (opcional)
+        </label>
+        <input
+          type="number"
+          id="nuevoCultivoDiasCosecha"
+          min="0"
+          placeholder="Ej. 90"
+        />
+      </div>
+
+      <div class="field-row">
+        <button
+          type="button"
+          class="btn"
+          id="btnGuardarNuevoCultivo"
+        >
+          Guardar cultivo
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          id="btnCancelarNuevoCultivo"
+        >
+          Cancelar
+        </button>
+      </div>
+
+      <p class="field-help">
+        El cultivo se guardará en este dispositivo para futuras búsquedas.
+      </p>
+    </div>
+</div>
+        
       </section>
 
       <!-- MI HUERTO -->
