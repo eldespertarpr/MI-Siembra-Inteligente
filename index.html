@@ -2605,43 +2605,103 @@
     }
 
     function setupDiario() {
-      const btn = document.getElementById("btnGuardarDiario");
-      if (btn) {
-        btn.addEventListener("click", () => {
-          const campo = document.getElementById("diarioTexto");
-          const texto = (campo.value || "").trim();
-          if (!texto) {
-            alert("Escribe algo antes de guardar.");
-            return;
-          }
+  const btn = document.getElementById("btnGuardarDiario");
+  const campo = document.getElementById("diarioTexto");
+  const filtros = document.querySelectorAll("#diarioFiltros .pill");
+  const listEl = document.getElementById("diarioList");
 
-          const entrada = {
-            id: Date.now().toString(36),
-            fecha: todayISO(),
-            texto,
-            tipo: "General"
-          };
+  if (!btn || !campo) return;
 
-          stateDiario.push(entrada);
-          saveDiario(stateDiario);
-          campo.value = "";
-          renderDiario();
-          renderInicio();
-          alert("Entrada guardada en el diario ✅");
-        });
+  // Guardar / actualizar entrada
+  btn.addEventListener("click", () => {
+    const texto = campo.value.trim();
+    if (!texto) {
+      alert("Escribe algo antes de guardar.");
+      return;
+    }
+
+    const tituloCard = document.querySelector(
+      '#section-diario .app-card .app-card-title'
+    );
+
+    // MODO EDICIÓN
+    if (diarioEnEdicionId) {
+      const idx = stateDiario.findIndex(e => e.id === diarioEnEdicionId);
+      if (idx !== -1) {
+        stateDiario[idx].texto = texto;
+        saveDiario(stateDiario);
       }
 
-      const filtros = document.querySelectorAll("#diarioFiltros .pill");
-      filtros.forEach(filtro => {
-        filtro.addEventListener("click", () => {
-          filtros.forEach(b => b.classList.remove("pill--active"));
-          filtro.classList.add("pill--active");
+      diarioEnEdicionId = null;
+      campo.value = "";
+      if (tituloCard) tituloCard.textContent = "Nueva entrada";
+      btn.innerHTML = '<span>💾</span> Guardar en el diario';
 
-          diarioFiltroActual = filtro.dataset.filtro || "todos";
-          renderDiario();
-        });
-      });
+      renderDiario();
+      renderInicio();
+      alert("Entrada actualizada.");
+      return;
     }
+
+    // MODO NUEVA ENTRADA
+    const entrada = {
+      id: Date.now().toString(36),
+      fecha: todayISO(),
+      texto,
+      tipo: "General"
+    };
+
+    stateDiario.push(entrada);
+    saveDiario(stateDiario);
+    campo.value = "";
+    renderDiario();
+    renderInicio();
+    alert("Entrada guardada en el diario.");
+  });
+
+  // Filtros (igual que antes)
+  if (filtros && filtros.length) {
+    filtros.forEach(filtro => {
+      filtro.addEventListener("click", () => {
+        filtros.forEach(b => b.classList.remove("pill--active"));
+        filtro.classList.add("pill--active");
+
+        diarioFiltroActual = filtro.dataset.filtro || "todos";
+        renderDiario();
+      });
+    });
+  }
+
+  // Click en "✏️ Editar" dentro de la lista
+  if (listEl) {
+    listEl.addEventListener("click", ev => {
+      const btnEditar = ev.target.closest("button[data-action='editar-diario']");
+      if (!btnEditar) return;
+
+      const id = btnEditar.getAttribute("data-id");
+      const entrada = stateDiario.find(e => e.id === id);
+      if (!entrada) return;
+
+      diarioEnEdicionId = id;
+
+      campo.value = entrada.texto || "";
+      campo.focus();
+
+      const tituloCard = document.querySelector(
+        '#section-diario .app-card .app-card-title'
+      );
+      if (tituloCard) tituloCard.textContent = "Editar entrada";
+
+      btn.innerHTML = '<span>💾</span> Actualizar entrada';
+
+      // Opcional: subir hasta el formulario
+      const section = document.getElementById("section-diario");
+      if (section && section.scrollIntoView) {
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+}
 
     function setupOpciones() {
       const nombreInput = document.getElementById("nombreHuerto");
