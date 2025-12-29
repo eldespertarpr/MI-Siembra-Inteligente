@@ -858,40 +858,104 @@
     >
       <h3>Nuevo cultivo</h3>
 
+      <div class="form-grid form-grid--2">
+        <div class="field">
+          <label for="nuevoCultivoNombre">Nombre del cultivo *</label>
+          <input
+            type="text"
+            id="nuevoCultivoNombre"
+            placeholder="Ej. cilantro criollo"
+          />
+        </div>
+        <div class="field">
+          <label for="nuevoCultivoCategoria">Categoría</label>
+          <select id="nuevoCultivoCategoria">
+            <option value="Hoja">Hoja</option>
+            <option value="Fruto">Fruto</option>
+            <option value="Raíz">Raíz</option>
+            <option value="Tubérculo">Tubérculo</option>
+            <option value="Aromática">Aromática</option>
+            <option value="Frutal perenne">Frutal perenne</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grid form-grid--2">
+        <div class="field">
+          <label for="nuevoCultivoDiasGerminacion">
+            Días de germinación (opcional)
+          </label>
+          <input
+            type="number"
+            id="nuevoCultivoDiasGerminacion"
+            min="0"
+            placeholder="Ej. 7"
+          />
+        </div>
+        <div class="field">
+          <label for="nuevoCultivoDiasCosecha">
+            Días hasta cosecha (opcional)
+          </label>
+          <input
+            type="number"
+            id="nuevoCultivoDiasCosecha"
+            min="0"
+            placeholder="Ej. 90"
+          />
+        </div>
+      </div>
+
+      <div class="form-grid form-grid--2">
+        <div class="field">
+          <label for="nuevoCultivoLuz">Luz</label>
+          <input
+            type="text"
+            id="nuevoCultivoLuz"
+            placeholder="Ej. Sol directo (6–8 h)"
+          />
+        </div>
+        <div class="field">
+          <label for="nuevoCultivoRiego">Riego</label>
+          <input
+            type="text"
+            id="nuevoCultivoRiego"
+            placeholder="Ej. Suelo siempre ligeramente húmedo"
+          />
+        </div>
+      </div>
+
+      <div class="form-grid form-grid--2">
+        <div class="field">
+          <label for="nuevoCultivoTiesto">Tiesto / suelo</label>
+          <input
+            type="text"
+            id="nuevoCultivoTiesto"
+            placeholder="Ej. Maceta 5+ galones o suelo directo"
+          />
+        </div>
+        <div class="field">
+          <label for="nuevoCultivoProfundidad">Profundidad de siembra</label>
+          <input
+            type="text"
+            id="nuevoCultivoProfundidad"
+            placeholder="Ej. 0.5–1 cm"
+          />
+        </div>
+      </div>
+
       <div class="field">
-        <label for="nuevoCultivoNombre">Nombre del cultivo</label>
+        <label for="nuevoCultivoPlagas">
+          Plagas frecuentes (separadas por coma)
+        </label>
         <input
           type="text"
-          id="nuevoCultivoNombre"
-          placeholder="Ej. cilantro criollo"
+          id="nuevoCultivoPlagas"
+          placeholder="Ej. pulgones, babosas, hongos"
         />
       </div>
 
-      <div class="field">
-        <label for="nuevoCultivoDiasGerminacion">
-          Días de germinación (opcional)
-        </label>
-        <input
-          type="number"
-          id="nuevoCultivoDiasGerminacion"
-          min="0"
-          placeholder="Ej. 7"
-        />
-      </div>
-
-      <div class="field">
-        <label for="nuevoCultivoDiasCosecha">
-          Días hasta cosecha (opcional)
-        </label>
-        <input
-          type="number"
-          id="nuevoCultivoDiasCosecha"
-          min="0"
-          placeholder="Ej. 90"
-        />
-      </div>
-
-      <div class="field-row">
+      <div class="field-row" style="margin-top: 0.75rem;">
         <button
           type="button"
           class="btn"
@@ -909,9 +973,11 @@
         </button>
       </div>
 
-      <p class="field-help">
-        El cultivo se guardará en este dispositivo para futuras búsquedas.
+      <p class="field-help" style="font-size:0.78rem;margin-top:6px;">
+        El cultivo se guardará en este dispositivo y aparecerá en el catálogo
+        como <strong>“Cultivo personalizado”</strong>.
       </p>
+    </div>
     </div>
 </div>
         
