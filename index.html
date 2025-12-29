@@ -3151,74 +3151,7 @@
   
 // ===== Cultivos personalizados en catálogo (botón "Añadir cultivo manual") =====
 const CUSTOM_CULTIVOS_KEY = "msi-custom-cultivos";
-const LS_CULTIVOS_PERSONALES = "cultivos_personales_v1";
 
-function cargarCultivosPersonales() {
-  const data = localStorage.getItem(LS_CULTIVOS_PERSONALES);
-  return data ? JSON.parse(data) : [];
-}
-
-function guardarCultivosPersonales(lista) {
-  localStorage.setItem(LS_CULTIVOS_PERSONALES, JSON.stringify(lista));
-}
-
-// 1. Mezclar cultivos base + personalizados al iniciar
-let cultivosBase = CATALOGOS_CULTIVOS; // como se llame tu array actual
-let cultivosPersonales = cargarCultivosPersonales();
-let cultivos = [...cultivosBase, ...cultivosPersonales];
-
-// 2. Abrir/cerrar modal
-const modalCP = document.getElementById("modal-cultivo-personal");
-document.getElementById("btn-cultivo-personal").onclick = () => {
-  modalCP.classList.remove("oculto");
-};
-document.getElementById("cp-cancelar").onclick = () => {
-  modalCP.classList.add("oculto");
-};
-
-// 3. Guardar nuevo cultivo
-document.getElementById("cp-guardar").onclick = () => {
-  const nombre = document.getElementById("cp-nombre").value.trim();
-  const variedad = document.getElementById("cp-variedad").value.trim();
-  const mesesTexto = document.getElementById("cp-meses").value.trim();
-
-  if (!nombre) {
-    alert("Escribe al menos el nombre del cultivo.");
-    return;
-  }
-
-  const meses = mesesTexto
-    ? mesesTexto.split(",").map(n => parseInt(n.trim(), 10)).filter(n => !isNaN(n))
-    : [];
-
-  const nuevoCultivo = {
-    id: "cp_" + Date.now(),
-    nombre: variedad ? `${nombre} (${variedad})` : nombre,
-    tipo: "personalizado",
-    mesesSiembra: meses,
-    // Resto de campos mínimos que use tu app:
-    // clima, diasCosecha, etc., con valores neutros:
-    clima: "cualquiera",
-    diasCosechaMin: null,
-    diasCosechaMax: null
-  };
-
-  const lista = cargarCultivosPersonales();
-  lista.push(nuevoCultivo);
-  guardarCultivosPersonales(lista);
-
-  // actualizar catálogos en memoria
-  cultivosPersonales = lista;
-  cultivos = [...cultivosBase, ...cultivosPersonales];
-
-  // aquí llama a tu función que repinta la lista/tarjetas de cultivos
-  renderizarListaCultivos(cultivos);
-
-  modalCP.classList.add("oculto");
-  document.getElementById("cp-nombre").value = "";
-  document.getElementById("cp-variedad").value = "";
-  document.getElementById("cp-meses").value = "";
-};
 function loadCustomCultivos() {
   try {
     const raw = localStorage.getItem(CUSTOM_CULTIVOS_KEY);
