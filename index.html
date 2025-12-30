@@ -3345,7 +3345,9 @@ function buildCustomCultivoFromUI() {
   const tiesto = (document.getElementById("nuevoCultivoTiesto")?.value || "").trim() || "—";
   const profundidad = (document.getElementById("nuevoCultivoProfundidad")?.value || "").trim() || "—";
   const plagasStr = (document.getElementById("nuevoCultivoPlagas")?.value || "").trim();
-
+// Meses seleccionados (si no selecciona ninguno = todo el año)
+let meses = getMesesSeleccionadosUI();
+if (!meses.length) meses = allMonths();
   if (!nombre) {
     alert("Escribe el nombre del cultivo.");
     return null;
