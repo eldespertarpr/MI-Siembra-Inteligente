@@ -3373,6 +3373,7 @@ function buildCustomCultivoFromUI() {
     diasCosecha: Number.isFinite(diasC) && diasC > 0 ? diasC : null
   };
 }
+    setupNuevoCultivoMesesPills();
 function setupNuevoCultivoMesesPills() {
   const wrap = document.getElementById("nuevoCultivoMesesPills");
   if (!wrap) return;
@@ -3383,7 +3384,7 @@ function setupNuevoCultivoMesesPills() {
     b.classList.toggle("pill--active");
   });
 }
-
+<div class="pill-group" id="nuevoCultivoMesesPills"> ... </div>
 function getMesesSeleccionadosUI() {
   return Array.from(document.querySelectorAll("#nuevoCultivoMesesPills .pill.pill--active"))
     .map(b => parseInt(b.dataset.mes, 10))
@@ -3397,11 +3398,11 @@ function setMesesSeleccionadosUI(meses) {
     b.classList.toggle("pill--active", set.has(m));
   });
 }
-setupNuevoCultivoMesesPills();
 function allMonths() {
   return [0,1,2,3,4,5,6,7,8,9,10,11];
           }
 function clearCustomCultivoUI() {
+  setMesesSeleccionadosUI([]);
   const ids = [
     "nuevoCultivoNombre",
     "nuevoCultivoDiasGerminacion",
@@ -3418,6 +3419,7 @@ function clearCustomCultivoUI() {
   });
   const cat = document.getElementById("nuevoCultivoCategoria");
   if (cat) cat.value = 
+    setupNuevoCultivoMesesPills();
 function setupCultivoManualUI() {
   const btnToggle = document.getElementById("btnToggleNuevoCultivo");
   const card = document.getElementById("nuevoCultivoCard");
