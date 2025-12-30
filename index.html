@@ -3396,7 +3396,7 @@ function setupCultivoManualUI() {
   });
 
   btnGuardar.addEventListener("click", () => {
-    const cultivo = buildCustomCultivoFromUI();
+    const cultivo = buildCustomCultivoFromUI(customEditId || undefined);
     if (!cultivo) return;
 
     // Cargar lista actual, deduplicar por nombre (case-insensitive), guardar
