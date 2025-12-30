@@ -3092,12 +3092,13 @@
               saveCultivos(stateCultivos);
             }
 
-            if (Array.isArray(data.diario)
-              stateDiario = data.diario;
-              saveDiario(stateDiario);
-            } else {
-              stateDiario = [];
-              saveDiario(stateDiario);
+            if (Array.isArray(data.diario)) {
+  stateDiario = data.diario;
+  saveDiario(stateDiario);
+} else {
+  stateDiario = [];
+  saveDiario(stateDiario);
+            
             }
 
             updateHeader();
