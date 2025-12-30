@@ -3355,7 +3355,8 @@ function buildCustomCultivoFromUI() {
 
   // En tu UI, "dias" se muestra como “Días a cosecha”
   const diasTexto = Number.isFinite(diasC) && diasC > 0 ? `${diasC} días` : "—";
-
+let meses = getMesesSeleccionadosUI();
+if (!meses.length) meses = allMonths();
   return {
     id,
     nombre,
