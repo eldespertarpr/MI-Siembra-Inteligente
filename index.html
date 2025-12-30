@@ -3214,1591 +3214,190 @@
       setupCatalogo();
       setupCalendarioLinks();
     });
-  
-// ===== Cultivos personalizados en catálogo (botón "Añadir cultivo manual") =====
-const CUSTOM_CULTIVOS_KEY = "msi-custom-cultivos";
+    // ==== Cultivos personalizados en catálogo (botón "Añadir cultivo manual") ====
 
-function loadCustomCultivos() {
+// Clave de almacenamiento para cultivos creados por el usuario
+const STORAGE_CUSTOM_CULTIVOS = 'mi_siembra_custom_cultivos_v17';
+
+// Aseguramos que exista el catálogo global
+if (!Array.isArray(window.catalogoCultivos)) {
+  window.catalogoCultivos = [];
+}
+
+let cultivosPersonalizados = [];
+
+// Cargar cultivos personalizados de localStorage
+function cargarCultivosPersonalizados() {
   try {
-    const raw = localStorage.getItem(CUSTOM_CULTIVOS_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch (e) {
-    return [];
+    const raw = localStorage.getItem(STORAGE_CUSTOM_CULTIVOS);
+    if (!raw) {
+      cultivosPersonalizados = [];
+      return;
+    }
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      cultivosPersonalizados = parsed.map(c => ({
+        ...c,
+        esPersonalizado: true
+      }));
+    } else {
+      cultivosPersonalizados = [];
+    }
+  } catch (err) {
+    console.error('Error leyendo cultivos personalizados:', err);
+    cultivosPersonalizados = [];
   }
 }
 
-function saveCustomCultivos(list) {
+// Guardar cultivos personalizados en localStorage
+function guardarCultivosPersonalizados() {
   try {
-    localStorage.setItem(CUSTOM_CULTIVOS_KEY, JSON.stringify(list || []));
-  } catch (e) {
-    console.error(e);
+    const plain = cultivosPersonalizados.map(({ esPersonalizado, ...rest }) => rest);
+    localStorage.setItem(STORAGE_CUSTOM_CULTIVOS, JSON.stringify(plain));
+  } catch (err) {
+    console.error('Error guardando cultivos personalizados:', err);
   }
 }
 
-// Estado en memoria de cultivos personalizados
-let stateCustomCultivos = loadCustomCultivos();
-
-/* ==== getInfoGerminacion sobrescrito para incluir personalizados ==== */
-function getInfoGerminacion(cultivoId) {
-  const cultivoBase =
-    CATALOGO_CULTIVOS.find(c => c.id === cultivoId) ||
-    (stateCustomCultivos || []).find(c => c.id === cultivoId);
-
-  if (!cultivoBase) return GERMINACION_GENERIC.generico;
-
-  if (GERMINACION_POR_CULTIVO[cultivoId]) {
-    return GERMINACION_POR_CULTIVO[cultivoId];
-  }
-
-  const cat = (cultivoBase.categoria || "").toLowerCase();
-
-  if (cat.includes("hoja")) return GERMINACION_GENERIC.hoja;
-  if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
-  if (cat.includes("tubérc") || cat.includes("tuberc")) return GERMINACION_GENERIC.tuberculo;
-  if (cat.includes("aromática") || cat.includes("aromatica"))
-    return GERMINACION_GENERIC.aromatica;
-  if (cat.includes("frutal") || cat.includes("fruto")) return GERMINACION_GENERIC.frutal;
-
-  return GERMINACION_GENERIC.generico;
+// Mezclar cultivos base + personalizados en el catálogo global
+function integrarCultivosPersonalizadosEnCatalogo() {
+  const baseSinPersonalizados = window.catalogoCultivos.filter(c => !c.esPersonalizado);
+  window.catalogoCultivos = [...baseSinPersonalizados, ...cultivosPersonalizados];
 }
 
-/* ==== Catálogo: mezcla base + personalizados ==== */
-function renderCatalogo(filtroTexto = "") {
-  const listEl = document.getElementById("catalogoList");
-  if (!listEl) return;
+// Crear objeto “cultivo” a partir del formulario
+function crearCultivoPersonalizadoDesdeForm(form) {
+  const nombre = (form.elements['cultivoNombre']?.value || '').trim();
+  const categoria = (form.elements['cultivoCategoria']?.value || 'otro').trim();
+  const clima = (form.elements['cultivoClima']?.value || 'tropical').trim();
+  const hemisferio = (form.elements['cultivoHemisferio']?.value || 'norte').trim();
+  const mesesStr = (form.elements['cultivoMeses']?.value || '').trim();
+  const diasCosechaStr = (form.elements['cultivoDiasCosecha']?.value || '').trim();
+  const notas = (form.elements['cultivoNotas']?.value || '').trim();
 
-  const filtro = (filtroTexto || "").trim().toLowerCase();
-  const base = CATALOGO_CULTIVOS.concat(stateCustomCultivos || []);
+  if (!nombre) {
+    alert('Escribe el nombre del cultivo.');
+    return null;
+  }
 
-  const lista = base.filter(c => {
-    if (!filtro) return true;
-    return (
-      (c.nombre || "").toLowerCase().includes(filtro) ||
-      (c.id || "").toLowerCase().includes(filtro)
+  // Meses separados por coma: 1,2,3...
+  const meses = mesesStr
+    .split(',')
+    .map(m => m.trim())
+    .filter(Boolean)
+    .map(m => {
+      const n = Number(m);
+      return Number.isFinite(n) && n >= 1 && n <= 12 ? n : null;
+    })
+    .filter(m => m !== null);
+
+  const diasCosechaNum = parseInt(diasCosechaStr, 10);
+  const diasCosecha = Number.isFinite(diasCosechaNum) && diasCosechaNum > 0
+    ? diasCosechaNum
+    : undefined;
+
+  const id = `custom-${Date.now()}`;
+
+  // Ajusta esta estructura para que coincida con tus objetos del catálogo base
+  const cultivo = {
+    id,
+    nombre,
+    categoria,          // ej: "hortaliza", "fruto", "tuberculo"...
+    clima,              // ej: "tropical", "subtropical", "templado"
+    hemisferio,         // "norte" o "sur"
+    mesesSiembra: meses.length ? meses : undefined,
+    diasCosecha,
+    notas,
+    esPersonalizado: true
+  };
+
+  return cultivo;
+}
+
+// ==== UI: modal y formulario para añadir cultivo manual ====
+
+// Estos selectores asumen que en tu HTML tienes:
+// - Un botón con data-open-cultivo-manual para abrir el modal
+// - Un botón con data-close-cultivo-manual para cerrarlo
+// - Un contenedor/overlay con id="modal-cultivo-manual"
+// - Un formulario con id="form-cultivo-manual"
+
+const botonAbrirCultivoManual = document.querySelector('[data-open-cultivo-manual]');
+const botonCerrarCultivoManual = document.querySelector('[data-close-cultivo-manual]');
+const modalCultivoManual = document.getElementById('modal-cultivo-manual');
+const formCultivoManual = document.getElementById('form-cultivo-manual');
+
+function mostrarModalCultivoManual() {
+  if (!modalCultivoManual) return;
+  modalCultivoManual.setAttribute('data-open', 'true');
+}
+
+function ocultarModalCultivoManual() {
+  if (!modalCultivoManual) return;
+  modalCultivoManual.removeAttribute('data-open');
+  if (formCultivoManual) formCultivoManual.reset();
+}
+
+// Abrir / cerrar modal
+if (botonAbrirCultivoManual && modalCultivoManual) {
+  botonAbrirCultivoManual.addEventListener('click', mostrarModalCultivoManual);
+}
+
+if (botonCerrarCultivoManual && modalCultivoManual) {
+  botonCerrarCultivoManual.addEventListener('click', ocultarModalCultivoManual);
+}
+
+// Cerrar si se hace click en el fondo del modal (overlay)
+if (modalCultivoManual) {
+  modalCultivoManual.addEventListener('click', (ev) => {
+    if (ev.target === modalCultivoManual) {
+      ocultarModalCultivoManual();
+    }
+  });
+}
+
+// Envío del formulario para crear el cultivo
+if (formCultivoManual) {
+  formCultivoManual.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+
+    const cultivo = crearCultivoPersonalizadoDesdeForm(formCultivoManual);
+    if (!cultivo) return;
+
+    // Evitar duplicados por nombre (case-insensitive)
+    const nombreLower = cultivo.nombre.toLowerCase();
+    cultivosPersonalizados = cultivosPersonalizados.filter(
+      c => c.nombre.toLowerCase() !== nombreLower
     );
-  });
 
-  if (!lista.length) {
-    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
-    return;
-  }
+    cultivosPersonalizados.push(cultivo);
+    guardarCultivosPersonalizados();
+    integrarCultivosPersonalizadosEnCatalogo();
 
-  listEl.innerHTML = "";
-  lista.forEach(c => {
-    const imgSrc = c.imagen || "img/placeholder.jpg";
-    const esPersonalizado = !!c.esPersonalizado;
+    // Refrescar la vista del catálogo si existe esa función
+    if (typeof renderCatalogoCultivos === 'function') {
+      renderCatalogoCultivos();
+    }
 
-    const diasTexto = c.dias || "Sin dato";
-    const luzTexto = c.luz || "Sin dato";
-    const riegoTexto = c.riego || "Sin dato";
-    const tiestoTexto = c.tiesto || "Sin dato";
-    const profundidadTexto = c.profundidad || "Sin dato";
-    const plagasTexto =
-      Array.isArray(c.plagas) && c.plagas.length
-        ? c.plagas.join(", ")
-        : "No especificado";
-
-    const chipExtra = esPersonalizado
-      ? '<span class="chip badge">Personalizado</span>'
-      : "";
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card";
-    card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <img
-            src="${imgSrc}"
-            alt="${c.nombre}"
-            class="cultivo-thumb"
-            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-          />
-          <span>🌱 ${c.nombre}</span>
-        </div>
-        <span class="chip">${c.categoria || "Cultivo"}</span>
-        ${chipExtra}
-      </div>
-      <div class="cultivo-body">
-        <div><strong>Días a cosecha:</strong> ${diasTexto}</div>
-        <div><strong>Luz:</strong> ${luzTexto}</div>
-        <div><strong>Riego:</strong> ${riegoTexto}</div>
-        <div><strong>Tiesto / suelo:</strong> ${tiestoTexto}</div>
-        <div><strong>Profundidad de siembra:</strong> ${profundidadTexto}</div>
-        <div><strong>Plagas frecuentes:</strong> ${plagasTexto}</div>
-      </div>
-      <div class="cultivo-actions">
-        <button class="btn-secondary btn"
-                data-id="${c.id}"
-                data-action="germinacion">
-          🔁 Ver germinación / reproducción
-        </button>
-        ${
-          esPersonalizado
-            ? `<button class="btn-danger btn"
-                       data-id="${c.id}"
-                       data-action="borrar-personalizado">
-                 🗑 Eliminar personalizado
-               </button>`
-            : ""
-        }
-      </div>
-    `;
-    listEl.appendChild(card);
+    ocultarModalCultivoManual();
   });
 }
 
-/* ==== setupCatalogo: buscador + germinación + botón "Añadir cultivo manual" ==== */
-function setupCatalogo() {
-  const input = document.getElementById("catalogoBusqueda");
-  const listEl = document.getElementById("catalogoList");
+// Carga inicial de cultivos personalizados y mezcla con el catálogo base
+cargarCultivosPersonalizados();
+integrarCultivosPersonalizadosEnCatalogo();
 
-  const btnToggle = document.getElementById("btnToggleNuevoCultivo");
-  const formCard = document.getElementById("nuevoCultivoCard");
-  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
-  const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
-  const nombreInput = document.getElementById("nuevoCultivoNombre");
-  const diasGermInput = document.getElementById("nuevoCultivoDiasGerminacion");
-  const diasCosechaInput = document.getElementById("nuevoCultivoDiasCosecha");
-
-  // Buscador
-  if (input) {
-    input.addEventListener("input", () => {
-      renderCatalogo(input.value);
-    });
-  }
-
-  // Clicks en las tarjetas (germinación + borrar personalizado)
-  if (listEl) {
-    listEl.addEventListener("click", ev => {
-      const btn = ev.target.closest("button[data-action]");
-      if (!btn) return;
-
-      const action = btn.getAttribute("data-action");
-      const id = btn.getAttribute("data-id");
-      if (!id) return;
-
-      if (action === "germinacion") {
-        const info = getInfoGerminacion(id);
-        if (!info) {
-          alert("Todavía no tengo la guía de germinación para este cultivo.");
-          return;
-        }
-
-        const card = btn.closest(".cultivo-card");
-        if (!card) return;
-
-        let panel = card.querySelector(".germinacion-panel");
-        if (!panel) {
-          panel = document.createElement("div");
-          panel.className = "germinacion-panel";
-          card.appendChild(panel);
-        }
-
-        if (panel.style.display === "block") {
-          panel.style.display = "none";
-          return;
-        }
-
-        const pasosHtml = (info.pasos || [])
-          .map((p, i) => `${i + 1}. ${p}`)
-          .join("<br>");
-
-        panel.innerHTML = `
-          <div class="media-item-title">${info.titulo}</div>
-          <div class="media-item-body"><strong>Método principal:</strong> ${info.metodo}</div>
-          <div class="media-item-body"><strong>Pasos:</strong><br>${pasosHtml}</div>
-          <div class="media-item-body"><strong>Tip:</strong> ${info.tip}</div>
-        `;
-        panel.style.display = "block";
-      } else if (action === "borrar-personalizado") {
-        const idx = stateCustomCultivos.findIndex(c => c.id === id);
-        if (idx === -1) return;
-        if (!confirm("¿Eliminar este cultivo personalizado del catálogo?")) return;
-
-        stateCustomCultivos.splice(idx, 1);
-        saveCustomCultivos(stateCustomCultivos);
-        renderCatalogo(input ? input.value : "");
-      }
-    });
-  }
-
-  // Mostrar / ocultar formulario
-  if (btnToggle && formCard) {
-    btnToggle.addEventListener("click", () => {
-      const visible = formCard.style.display === "block";
-      formCard.style.display = visible ? "none" : "block";
-    });
-  }
-
-  if (btnCancelar && formCard) {
-    btnCancelar.addEventListener("click", () => {
-      formCard.style.display = "none";
-      if (nombreInput) nombreInput.value = "";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-    });
-  }
-
-  // Guardar cultivo manual
-  if (btnGuardar) {
-    btnGuardar.addEventListener("click", () => {
-      const nombre = (nombreInput.value || "").trim();
-      const diasGerm = parseInt(diasGermInput.value, 10);
-      const diasCosecha = parseInt(diasCosechaInput.value, 10);
-
-      if (!nombre) {
-        alert("Escribe el nombre del cultivo.");
-        return;
-      }
-
-      const nuevo = {
-        id: "custom-" + Date.now().toString(36),
-        nombre,
-        categoria: "Cultivo personalizado",
-        dias: Number.isFinite(diasCosecha)
-          ? `${diasCosecha} días (hasta cosecha, aprox.)`
-          : "Sin dato",
-        luz: "Definido por el agricultor",
-        riego: "Definido por el agricultor",
-        tiesto: "",
-        profundidad: "",
-        plagas: [],
-        esPersonalizado: true,
-        diasGerminacion: Number.isFinite(diasGerm) ? diasGerm : null
-      };
-
-      stateCustomCultivos.push(nuevo);
-      saveCustomCultivos(stateCustomCultivos);
-
-      if (nombreInput) nombreInput.value = "";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-      if (formCard) formCard.style.display = "none";
-
-      const textoFiltro = input ? input.value : "";
-      renderCatalogo(textoFiltro || nombre);
-      alert("Cultivo añadido al catálogo ✅");
-    });
-  }
+// Si ya está definido el render, volvemos a pintar el catálogo
+if (typeof renderCatalogoCultivos === 'function') {
+  renderCatalogoCultivos();
 }
 
-/* ==== RESPALDO JSON actualizado (incluye customCultivos) ==== */
-function exportarRespaldoJSON() {
-  const respaldo = {
-    settings: stateSettings,
-    cultivos: stateCultivos,
-    diario: stateDiario,
-    customCultivos: stateCustomCultivos
-  };
+// ==== Fin cultivos personalizados en catálogo ====
 
-  const contenido = JSON.stringify(respaldo, null, 2);
-  const blob = new Blob([contenido], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const enlace = document.createElement("a");
-  const fecha = new Date().toISOString().slice(0, 10);
 
-  enlace.href = url;
-  enlace.download = `mi-siembra-respaldo-${fecha}.json`;
-  document.body.appendChild(enlace);
-  enlace.click();
-  document.body.removeChild(enlace);
-  URL.revokeObjectURL(url);
-
-  alert("Respaldo (.json) exportado correctamente ✅");
-}
-
-function importarRespaldoJSON() {
-  const input = document.getElementById("inputRespaldoJSON");
-  if (!input) {
-    alert("No se encontró el campo de archivo para restaurar el respaldo.");
-    return;
-  }
-
-  input.value = "";
-  input.onchange = event => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (!data || typeof data !== "object") {
-          throw new Error("Formato de respaldo no válido");
-        }
-
-        const confirmar = confirm(
-          "Esto reemplazará los datos actuales de tu huerto por los del respaldo seleccionado. ¿Quieres continuar?"
-        );
-        if (!confirmar) return;
-
-        if (data.settings) {
-          stateSettings = { ...DEFAULT_SETTINGS, ...data.settings };
-          saveSettings(stateSettings);
-        }
-
-        if (Array.isArray(data.cultivos)) {
-          stateCultivos = data.cultivos;
-          saveCultivos(stateCultivos);
-        } else {
-          stateCultivos = [];
-          saveCultivos(stateCultivos);
-        }
-
-        if (Array.isArray(data.diario)) {
-          stateDiario = data.diario;
-          saveDiario(stateDiario);
-        } else {
-          stateDiario = [];
-          saveDiario(stateDiario);
-        }
-
-        if (Array.isArray(data.customCultivos)) {
-          stateCustomCultivos = data.customCultivos;
-          saveCustomCultivos(stateCustomCultivos);
-        } else {
-          stateCustomCultivos = [];
-          saveCustomCultivos(stateCustomCultivos);
-        }
-
-        updateHeader();
-        updateSettingsContexts();
-        renderCultivos();
-        renderDiario();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        renderCatalogo();
-
-        alert("Respaldo restaurado correctamente ✅");
-      } catch (err) {
-        console.error(err);
-        alert(
-          "No se pudo leer el archivo de respaldo. Usa un .json generado por Mi Siembra Inteligente."
-        );
-      }
-    };
-
-    reader.readAsText(file);
-  };
-
-  input.click();
-}
-
-/* ==== BORRAR TODO actualizado (incluye customCultivos) ==== */
-function borrarTodo() {
-  if (
-// ==== Cultivos personalizados en catálogo (botón "Añadir cultivo manual") ====
-const CUSTOM_CULTIVOS_KEY = "msi-custom-cultivos";
-
-function loadCustomCultivos() {
-  try {
-    const raw = localStorage.getItem(CUSTOM_CULTIVOS_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
-}
-
-function saveCustomCultivos(list) {
-  try {
-    localStorage.setItem(CUSTOM_CULTIVOS_KEY, JSON.stringify(list || []));
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-// Estado de cultivos personalizados del catálogo
-let stateCustomCultivos = loadCustomCultivos();
-
-/* ==== getInfoGerminacion sobrescrito para incluir personalizados ==== */
-function getInfoGerminacion(cultivoId) {
-  const cultivoBase =
-    CATALOGO_CULTIVOS.find(c => c.id === cultivoId) ||
-    (stateCustomCultivos || []).find(c => c.id === cultivoId);
-
-  if (!cultivoBase) return GERMINACION_GENERIC.generico;
-
-  if (GERMINACION_POR_CULTIVO[cultivoId]) {
-    return GERMINACION_POR_CULTIVO[cultivoId];
-  }
-
-  const cat = (cultivoBase.categoria || "").toLowerCase();
-
-  if (cat.includes("hoja")) return GERMINACION_GENERIC.hoja;
-  if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
-  if (cat.includes("tubérc") || cat.includes("tuberc"))
-    return GERMINACION_GENERIC.tuberculo;
-  if (cat.includes("aromática") || cat.includes("aromatica"))
-    return GERMINACION_GENERIC.aromatica;
-  if (cat.includes("frutal") || cat.includes("fruto"))
-    return GERMINACION_GENERIC.frutal;
-
-  return GERMINACION_GENERIC.generico;
-}
-
-/* ==== Catálogo: base + personalizados ==== */
-function renderCatalogo(filtroTexto = "") {
-  const listEl = document.getElementById("catalogoList");
-  if (!listEl) return;
-
-  const filtro = (filtroTexto || "").trim().toLowerCase();
-  const base = CATALOGO_CULTIVOS.concat(stateCustomCultivos || []);
-
-  const lista = base.filter(c => {
-    if (!filtro) return true;
-    return (
-      (c.nombre || "").toLowerCase().includes(filtro) ||
-      (c.id || "").toLowerCase().includes(filtro)
-    );
-  });
-
-  if (!lista.length) {
-    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
-    return;
-  }
-
-  listEl.innerHTML = "";
-  lista.forEach(c => {
-    const imgSrc = c.imagen || "img/placeholder.jpg";
-    const esPersonalizado = !!c.esPersonalizado;
-
-    const diasTexto = c.dias || "Sin dato";
-    const luzTexto = c.luz || "Sin dato";
-    const riegoTexto = c.riego || "Sin dato";
-    const tiestoTexto = c.tiesto || "Sin dato";
-    const profundidadTexto = c.profundidad || "Sin dato";
-    const plagasTexto =
-      Array.isArray(c.plagas) && c.plagas.length
-        ? c.plagas.join(", ")
-        : "No especificado";
-
-    const chipExtra = esPersonalizado
-      ? '<span class="chip badge">Personalizado</span>'
-      : "";
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card";
-    card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <img
-            src="${imgSrc}"
-            alt="${c.nombre}"
-            class="cultivo-thumb"
-            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-          />
-          <span>🌱 ${c.nombre}</span>
-        </div>
-        <span class="chip">${c.categoria || "Cultivo"}</span>
-        ${chipExtra}
-      </div>
-      <div class="cultivo-body">
-        <div><strong>Días a cosecha:</strong> ${diasTexto}</div>
-        <div><strong>Luz:</strong> ${luzTexto}</div>
-        <div><strong>Riego:</strong> ${riegoTexto}</div>
-        <div><strong>Tiesto / suelo:</strong> ${tiestoTexto}</div>
-        <div><strong>Profundidad de siembra:</strong> ${profundidadTexto}</div>
-        <div><strong>Plagas frecuentes:</strong> ${plagasTexto}</div>
-      </div>
-      <div class="cultivo-actions">
-        <button class="btn-secondary btn"
-                data-id="${c.id}"
-                data-action="germinacion">
-          🔁 Ver germinación / reproducción
-        </button>
-        ${
-          esPersonalizado
-            ? `<button class="btn-danger btn"
-                       data-id="${c.id}"
-                       data-action="borrar-personalizado">
-                 🗑 Eliminar personalizado
-               </button>`
-            : ""
-        }
-      </div>
-    `;
-    listEl.appendChild(card);
-  });
-}
-
-/* ==== setupCatalogo actualizado ==== */
-function setupCatalogo() {
-  const input = document.getElementById("catalogoBusqueda");
-  const listEl = document.getElementById("catalogoList");
-
-  const btnToggle = document.getElementById("btnToggleNuevoCultivo");
-  const formCard = document.getElementById("nuevoCultivoCard");
-  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
-  const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
-
-  const nombreInput = document.getElementById("nuevoCultivoNombre");
-  const categoriaInput = document.getElementById("nuevoCultivoCategoria");
-  const diasGermInput = document.getElementById("nuevoCultivoDiasGerminacion");
-  const diasCosechaInput = document.getElementById("nuevoCultivoDiasCosecha");
-  const luzInput = document.getElementById("nuevoCultivoLuz");
-  const riegoInput = document.getElementById("nuevoCultivoRiego");
-  const tiestoInput = document.getElementById("nuevoCultivoTiesto");
-  const profundidadInput = document.getElementById("nuevoCultivoProfundidad");
-  const plagasInput = document.getElementById("nuevoCultivoPlagas");
-
-  // Buscador
-  if (input) {
-    input.addEventListener("input", () => {
-      renderCatalogo(input.value);
-    });
-  }
-
-  // Eventos en las tarjetas del catálogo
-  if (listEl) {
-    listEl.addEventListener("click", ev => {
-      const btn = ev.target.closest("button[data-action]");
-      if (!btn) return;
-
-      const action = btn.getAttribute("data-action");
-      const id = btn.getAttribute("data-id");
-      if (!id) return;
-
-      if (action === "germinacion") {
-        const info = getInfoGerminacion(id);
-        if (!info) {
-          alert("Todavía no tengo la guía de germinación para este cultivo.");
-          return;
-        }
-
-        const card = btn.closest(".cultivo-card");
-        if (!card) return;
-
-        let panel = card.querySelector(".germinacion-panel");
-        if (!panel) {
-          panel = document.createElement("div");
-          panel.className = "germinacion-panel";
-          card.appendChild(panel);
-        }
-
-        if (panel.style.display === "block") {
-          panel.style.display = "none";
-          return;
-        }
-
-        const pasosHtml = (info.pasos || [])
-          .map((p, i) => `${i + 1}. ${p}`)
-          .join("<br>");
-
-        panel.innerHTML = `
-          <div class="media-item-title">${info.titulo}</div>
-          <div class="media-item-body"><strong>Método principal:</strong> ${info.metodo}</div>
-          <div class="media-item-body"><strong>Pasos:</strong><br>${pasosHtml}</div>
-          <div class="media-item-body"><strong>Tip:</strong> ${info.tip}</div>
-        `;
-        panel.style.display = "block";
-      } else if (action === "borrar-personalizado") {
-        const idx = stateCustomCultivos.findIndex(c => c.id === id);
-        if (idx === -1) return;
-        if (!confirm("¿Eliminar este cultivo personalizado del catálogo?")) return;
-
-        stateCustomCultivos.splice(idx, 1);
-        saveCustomCultivos(stateCustomCultivos);
-        renderCatalogo(input ? input.value : "");
-      }
-    });
-  }
-
-  // Mostrar / ocultar formulario de nuevo cultivo
-  if (btnToggle && formCard) {
-    btnToggle.addEventListener("click", () => {
-      const visible = formCard.style.display === "block";
-      formCard.style.display = visible ? "none" : "block";
-    });
-  }
-
-  // Cancelar
-  if (btnCancelar && formCard) {
-    btnCancelar.addEventListener("click", () => {
-      formCard.style.display = "none";
-      if (nombreInput) nombreInput.value = "";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-      if (luzInput) luzInput.value = "";
-      if (riegoInput) riegoInput.value = "";
-      if (tiestoInput) tiestoInput.value = "";
-      if (profundidadInput) profundidadInput.value = "";
-      if (plagasInput) plagasInput.value = "";
-    });
-  }
-
-  // Guardar cultivo personalizado en catálogo
-  if (btnGuardar) {
-    btnGuardar.addEventListener("click", () => {
-      const nombre = (nombreInput.value || "").trim();
-      if (!nombre) {
-        alert("Escribe el nombre del cultivo.");
-        return;
-      }
-
-      const categoria =
-        (categoriaInput && categoriaInput.value) || "Cultivo personalizado";
-      const diasGerm = parseInt(diasGermInput.value, 10);
-      const diasCosecha = parseInt(diasCosechaInput.value, 10);
-      const luz = (luzInput.value || "").trim();
-      const riego = (riegoInput.value || "").trim();
-      const tiesto = (tiestoInput.value || "").trim();
-      const profundidad = (profundidadInput.value || "").trim();
-      const plagasRaw = (plagasInput.value || "").trim();
-
-      const plagasArr = plagasRaw
-        ? plagasRaw.split(",").map(t => t.trim()).filter(Boolean)
-        : [];
-
-      const nuevo = {
-        id: "custom-" + Date.now().toString(36),
-        nombre,
-        categoria,
-        dias: Number.isFinite(diasCosecha)
-          ? `${diasCosecha} días (hasta cosecha aprox.)`
-          : "Sin dato",
-        luz: luz || "Sin dato",
-        riego: riego || "Sin dato",
-        tiesto: tiesto || "Sin dato",
-        profundidad: profundidad || "Sin dato",
-        plagas: plagasArr,
-        esPersonalizado: true,
-        diasGerminacion: Number.isFinite(diasGerm) ? diasGerm : null
-      };
-
-      stateCustomCultivos.push(nuevo);
-      saveCustomCultivos(stateCustomCultivos);
-
-      // Limpiar campos
-      if (nombreInput) nombreInput.value = "";
-      if (categoriaInput) categoriaInput.value = "Hoja";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-      if (luzInput) luzInput.value = "";
-      if (riegoInput) riegoInput.value = "";
-      if (tiestoInput) tiestoInput.value = "";
-      if (profundidadInput) profundidadInput.value = "";
-      if (plagasInput) plagasInput.value = "";
-
-      formCard.style.display = "none";
-
-      const textoFiltro = input ? input.value : "";
-      renderCatalogo(textoFiltro || nombre);
-
-      alert("Cultivo añadido al catálogo ✅");
-    });
-  }
-}
-
-/* ==== RESPALDO JSON actualizado (incluye customCultivos) ==== */
-function exportarRespaldoJSON() {
-  const respaldo = {
-    settings: stateSettings,
-    cultivos: stateCultivos,
-    diario: stateDiario,
-    customCultivos: stateCustomCultivos
-  };
-
-  const contenido = JSON.stringify(respaldo, null, 2);
-  const blob = new Blob([contenido], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const enlace = document.createElement("a");
-  const fecha = new Date().toISOString().slice(0, 10);
-
-  enlace.href = url;
-  enlace.download = `mi-siembra-respaldo-${fecha}.json`;
-  document.body.appendChild(enlace);
-  enlace.click();
-  document.body.removeChild(enlace);
-  URL.revokeObjectURL(url);
-
-  alert("Respaldo (.json) exportado correctamente ✅");
-}
-
-function importarRespaldoJSON() {
-  const input = document.getElementById("inputRespaldoJSON");
-  if (!input) {
-    alert("No se encontró el campo de archivo para restaurar el respaldo.");
-    return;
-  }
-
-  input.value = "";
-  input.onchange = event => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (!data || typeof data !== "object") {
-          throw new Error("Formato de respaldo no válido");
-        }
-
-        const confirmar = confirm(
-          "Esto reemplazará los datos actuales de tu huerto por los del respaldo seleccionado. ¿Quieres continuar?"
-// ==== Cultivos personalizados en catálogo (botón "Añadir cultivo manual") ====
-const CUSTOM_CULTIVOS_KEY = "msi-custom-cultivos";
-
-function loadCustomCultivos() {
-  try {
-    const raw = localStorage.getItem(CUSTOM_CULTIVOS_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
-}
-
-function saveCustomCultivos(list) {
-  try {
-    localStorage.setItem(CUSTOM_CULTIVOS_KEY, JSON.stringify(list || []));
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-// Estado de cultivos personalizados del catálogo
-let stateCustomCultivos = loadCustomCultivos();
-
-/* ==== getInfoGerminacion sobrescrito para incluir personalizados ==== */
-function getInfoGerminacion(cultivoId) {
-  const cultivoBase =
-    CATALOGO_CULTIVOS.find(c => c.id === cultivoId) ||
-    (stateCustomCultivos || []).find(c => c.id === cultivoId);
-
-  if (!cultivoBase) return GERMINACION_GENERIC.generico;
-
-  if (GERMINACION_POR_CULTIVO[cultivoId]) {
-    return GERMINACION_POR_CULTIVO[cultivoId];
-  }
-
-  const cat = (cultivoBase.categoria || "").toLowerCase();
-
-  if (cat.includes("hoja")) return GERMINACION_GENERIC.hoja;
-  if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
-  if (cat.includes("tubérc") || cat.includes("tuberc"))
-    return GERMINACION_GENERIC.tuberculo;
-  if (cat.includes("aromática") || cat.includes("aromatica"))
-    return GERMINACION_GENERIC.aromatica;
-  if (cat.includes("frutal") || cat.includes("fruto"))
-    return GERMINACION_GENERIC.frutal;
-
-  return GERMINACION_GENERIC.generico;
-}
-
-/* ==== Catálogo: base + personalizados ==== */
-function renderCatalogo(filtroTexto = "") {
-  const listEl = document.getElementById("catalogoList");
-  if (!listEl) return;
-
-  const filtro = (filtroTexto || "").trim().toLowerCase();
-  const base = CATALOGO_CULTIVOS.concat(stateCustomCultivos || []);
-
-  const lista = base.filter(c => {
-    if (!filtro) return true;
-    return (
-      (c.nombre || "").toLowerCase().includes(filtro) ||
-      (c.id || "").toLowerCase().includes(filtro)
-    );
-  });
-
-  if (!lista.length) {
-    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
-    return;
-  }
-
-  listEl.innerHTML = "";
-  lista.forEach(c => {
-    const imgSrc = c.imagen || "img/placeholder.jpg";
-    const esPersonalizado = !!c.esPersonalizado;
-
-    const diasTexto = c.dias || "Sin dato";
-    const luzTexto = c.luz || "Sin dato";
-    const riegoTexto = c.riego || "Sin dato";
-    const tiestoTexto = c.tiesto || "Sin dato";
-    const profundidadTexto = c.profundidad || "Sin dato";
-    const plagasTexto =
-      Array.isArray(c.plagas) && c.plagas.length
-        ? c.plagas.join(", ")
-        : "No especificado";
-
-    const chipExtra = esPersonalizado
-      ? '<span class="chip badge">Personalizado</span>'
-      : "";
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card";
-    card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <img
-            src="${imgSrc}"
-            alt="${c.nombre}"
-            class="cultivo-thumb"
-            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-          />
-          <span>🌱 ${c.nombre}</span>
-        </div>
-        <span class="chip">${c.categoria || "Cultivo"}</span>
-        ${chipExtra}
-      </div>
-      <div class="cultivo-body">
-        <div><strong>Días a cosecha:</strong> ${diasTexto}</div>
-        <div><strong>Luz:</strong> ${luzTexto}</div>
-        <div><strong>Riego:</strong> ${riegoTexto}</div>
-        <div><strong>Tiesto / suelo:</strong> ${tiestoTexto}</div>
-        <div><strong>Profundidad de siembra:</strong> ${profundidadTexto}</div>
-        <div><strong>Plagas frecuentes:</strong> ${plagasTexto}</div>
-      </div>
-      <div class="cultivo-actions">
-        <button class="btn-secondary btn"
-                data-id="${c.id}"
-                data-action="germinacion">
-          🔁 Ver germinación / reproducción
-        </button>
-        ${
-          esPersonalizado
-            ? `<button class="btn-danger btn"
-                       data-id="${c.id}"
-                       data-action="borrar-personalizado">
-                 🗑 Eliminar personalizado
-               </button>`
-            : ""
-        }
-      </div>
-    `;
-    listEl.appendChild(card);
-  });
-}
-
-/* ==== setupCatalogo actualizado ==== */
-function setupCatalogo() {
-  const input = document.getElementById("catalogoBusqueda");
-  const listEl = document.getElementById("catalogoList");
-
-  const btnToggle = document.getElementById("btnToggleNuevoCultivo");
-  const formCard = document.getElementById("nuevoCultivoCard");
-  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
-  const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
-
-  const nombreInput = document.getElementById("nuevoCultivoNombre");
-  const categoriaInput = document.getElementById("nuevoCultivoCategoria");
-  const diasGermInput = document.getElementById("nuevoCultivoDiasGerminacion");
-  const diasCosechaInput = document.getElementById("nuevoCultivoDiasCosecha");
-  const luzInput = document.getElementById("nuevoCultivoLuz");
-  const riegoInput = document.getElementById("nuevoCultivoRiego");
-  const tiestoInput = document.getElementById("nuevoCultivoTiesto");
-  const profundidadInput = document.getElementById("nuevoCultivoProfundidad");
-  const plagasInput = document.getElementById("nuevoCultivoPlagas");
-
-  // Buscador
-  if (input) {
-    input.addEventListener("input", () => {
-      renderCatalogo(input.value);
-    });
-  }
-
-  // Eventos en las tarjetas del catálogo
-  if (listEl) {
-    listEl.addEventListener("click", ev => {
-      const btn = ev.target.closest("button[data-action]");
-      if (!btn) return;
-
-      const action = btn.getAttribute("data-action");
-      const id = btn.getAttribute("data-id");
-      if (!id) return;
-
-      if (action === "germinacion") {
-        const info = getInfoGerminacion(id);
-        if (!info) {
-          alert("Todavía no tengo la guía de germinación para este cultivo.");
-          return;
-        }
-
-        const card = btn.closest(".cultivo-card");
-        if (!card) return;
-
-        let panel = card.querySelector(".germinacion-panel");
-        if (!panel) {
-          panel = document.createElement("div");
-          panel.className = "germinacion-panel";
-          card.appendChild(panel);
-        }
-
-        if (panel.style.display === "block") {
-          panel.style.display = "none";
-          return;
-        }
-
-        const pasosHtml = (info.pasos || [])
-          .map((p, i) => `${i + 1}. ${p}`)
-          .join("<br>");
-
-        panel.innerHTML = `
-          <div class="media-item-title">${info.titulo}</div>
-          <div class="media-item-body"><strong>Método principal:</strong> ${info.metodo}</div>
-          <div class="media-item-body"><strong>Pasos:</strong><br>${pasosHtml}</div>
-          <div class="media-item-body"><strong>Tip:</strong> ${info.tip}</div>
-        `;
-        panel.style.display = "block";
-      } else if (action === "borrar-personalizado") {
-        const idx = stateCustomCultivos.findIndex(c => c.id === id);
-        if (idx === -1) return;
-        if (!confirm("¿Eliminar este cultivo personalizado del catálogo?")) return;
-
-        stateCustomCultivos.splice(idx, 1);
-        saveCustomCultivos(stateCustomCultivos);
-        renderCatalogo(input ? input.value : "");
-      }
-    });
-  }
-
-  // Mostrar / ocultar formulario de nuevo cultivo
-  if (btnToggle && formCard) {
-    btnToggle.addEventListener("click", () => {
-      const visible = formCard.style.display === "block";
-      formCard.style.display = visible ? "none" : "block";
-    });
-  }
-
-  // Cancelar
-  if (btnCancelar && formCard) {
-    btnCancelar.addEventListener("click", () => {
-      formCard.style.display = "none";
-      if (nombreInput) nombreInput.value = "";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-      if (luzInput) luzInput.value = "";
-      if (riegoInput) riegoInput.value = "";
-      if (tiestoInput) tiestoInput.value = "";
-      if (profundidadInput) profundidadInput.value = "";
-      if (plagasInput) plagasInput.value = "";
-    });
-  }
-
-  // Guardar cultivo personalizado en catálogo
-  if (btnGuardar) {
-    btnGuardar.addEventListener("click", () => {
-      const nombre = (nombreInput.value || "").trim();
-      if (!nombre) {
-        alert("Escribe el nombre del cultivo.");
-        return;
-      }
-
-      const categoria =
-        (categoriaInput && categoriaInput.value) || "Cultivo personalizado";
-      const diasGerm = parseInt(diasGermInput.value, 10);
-      const diasCosecha = parseInt(diasCosechaInput.value, 10);
-      const luz = (luzInput.value || "").trim();
-      const riego = (riegoInput.value || "").trim();
-      const tiesto = (tiestoInput.value || "").trim();
-      const profundidad = (profundidadInput.value || "").trim();
-      const plagasRaw = (plagasInput.value || "").trim();
-
-      const plagasArr = plagasRaw
-        ? plagasRaw.split(",").map(t => t.trim()).filter(Boolean)
-        : [];
-
-      const nuevo = {
-        id: "custom-" + Date.now().toString(36),
-        nombre,
-        categoria,
-        dias: Number.isFinite(diasCosecha)
-          ? `${diasCosecha} días (hasta cosecha aprox.)`
-          : "Sin dato",
-        luz: luz || "Sin dato",
-        riego: riego || "Sin dato",
-        tiesto: tiesto || "Sin dato",
-        profundidad: profundidad || "Sin dato",
-        plagas: plagasArr,
-        esPersonalizado: true,
-        diasGerminacion: Number.isFinite(diasGerm) ? diasGerm : null
-      };
-
-      stateCustomCultivos.push(nuevo);
-      saveCustomCultivos(stateCustomCultivos);
-
-      // Limpiar campos
-      if (nombreInput) nombreInput.value = "";
-      if (categoriaInput) categoriaInput.value = "Hoja";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-      if (luzInput) luzInput.value = "";
-      if (riegoInput) riegoInput.value = "";
-      if (tiestoInput) tiestoInput.value = "";
-      if (profundidadInput) profundidadInput.value = "";
-      if (plagasInput) plagasInput.value = "";
-
-      formCard.style.display = "none";
-
-      const textoFiltro = input ? input.value : "";
-      renderCatalogo(textoFiltro || nombre);
-
-      alert("Cultivo añadido al catálogo ✅");
-    });
-  }
-}
-
-/* ==== RESPALDO JSON actualizado (incluye customCultivos) ==== */
-function exportarRespaldoJSON() {
-  const respaldo = {
-    settings: stateSettings,
-    cultivos: stateCultivos,
-    diario: stateDiario,
-    customCultivos: stateCustomCultivos
-  };
-
-  const contenido = JSON.stringify(respaldo, null, 2);
-  const blob = new Blob([contenido], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const enlace = document.createElement("a");
-  const fecha = new Date().toISOString().slice(0, 10);
-
-  enlace.href = url;
-  enlace.download = `mi-siembra-respaldo-${fecha}.json`;
-  document.body.appendChild(enlace);
-  enlace.click();
-  document.body.removeChild(enlace);
-  URL.revokeObjectURL(url);
-
-  alert("Respaldo (.json) exportado correctamente ✅");
-}
-
-function importarRespaldoJSON() {
-  const input = document.getElementById("inputRespaldoJSON");
-  if (!input) {
-    alert("No se encontró el campo de archivo para restaurar el respaldo.");
-    return;
-  }
-
-  input.value = "";
-  input.onchange = event => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (!data || typeof data !== "object") {
-          throw new Error("Formato de respaldo no válido");
-        }
-
-        const confirmar = confirm(
-          "Esto reemplazará los datos actuales de tu huerto por los del respaldo seleccionado. ¿Quieres continuar?"
-        );
-        if (!confirmar) return;
-
-        if (data.settings) {
-          stateSettings = { ...DEFAULT_SETTINGS, ...data.settings };
-          saveSettings(stateSettings);
-        }
-
-        if (Array.isArray(data.cultivos)) {
-          stateCultivos = data.cultivos;
-          saveCultivos(stateCultivos);
-        } else {
-          stateCultivos = [];
-          saveCultivos(stateCultivos);
-        }
-
-        if (Array.isArray(data.diario)) {
-          stateDiario = data.diario;
-          saveDiario(stateDiario);
-        } else {
-          stateDiario = [];
-          saveDiario(stateDiario);
-        }
-
-        if (Array.isArray(data.customCultivos)) {
-          stateCustomCultivos = data.customCultivos;
-          saveCustomCultivos(stateCustomCultivos);
-        } else {
-          stateCustomCultivos = [];
-          saveCustomCultivos(stateCustomCultivos);
-        }
-
-        updateHeader();
-        updateSettingsContexts();
-        renderCultivos();
-        renderDiario();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        renderCatalogo();
-
-        alert("Respaldo restaurado correctamente ✅");
-      } catch (err) {
-        console.error(err);
-        alert(
-          "No se pudo leer el archivo de respaldo. Usa un .json generado por Mi Siembra Inteligente."
-        );
-      }
-    };
-
-    reader.readAsText(file);
-  };
-
-  input.click();
-}
-
-/* ==== BORRAR TODO actualizado ==== */
-function borrarTodo() {
-  if (
-    !confirm(
-      "Esto borrará ajustes, cultivos, diario y cultivos personalizados en este dispositivo. ¿Seguro que quieres continuar?"
-    )
-// ==== Cultivos personalizados en catálogo (botón "Añadir cultivo manual") ====
-const CUSTOM_CULTIVOS_KEY = "msi-custom-cultivos";
-
-function loadCustomCultivos() {
-  try {
-    const raw = localStorage.getItem(CUSTOM_CULTIVOS_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
-}
-
-function saveCustomCultivos(list) {
-  try {
-    localStorage.setItem(CUSTOM_CULTIVOS_KEY, JSON.stringify(list || []));
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-// Estado de cultivos personalizados del catálogo
-let stateCustomCultivos = loadCustomCultivos();
-
-/* ==== getInfoGerminacion sobrescrito para incluir personalizados ==== */
-function getInfoGerminacion(cultivoId) {
-  const cultivoBase =
-    CATALOGO_CULTIVOS.find(c => c.id === cultivoId) ||
-    (stateCustomCultivos || []).find(c => c.id === cultivoId);
-
-  if (!cultivoBase) return GERMINACION_GENERIC.generico;
-
-  if (GERMINACION_POR_CULTIVO[cultivoId]) {
-    return GERMINACION_POR_CULTIVO[cultivoId];
-  }
-
-  const cat = (cultivoBase.categoria || "").toLowerCase();
-
-  if (cat.includes("hoja")) return GERMINACION_GENERIC.hoja;
-  if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
-  if (cat.includes("tubérc") || cat.includes("tuberc"))
-    return GERMINACION_GENERIC.tuberculo;
-  if (cat.includes("aromática") || cat.includes("aromatica"))
-    return GERMINACION_GENERIC.aromatica;
-  if (cat.includes("frutal") || cat.includes("fruto"))
-    return GERMINACION_GENERIC.frutal;
-
-  return GERMINACION_GENERIC.generico;
-}
-
-/* ==== Catálogo: base + personalizados ==== */
-function renderCatalogo(filtroTexto = "") {
-  const listEl = document.getElementById("catalogoList");
-  if (!listEl) return;
-
-  const filtro = (filtroTexto || "").trim().toLowerCase();
-  const base = CATALOGO_CULTIVOS.concat(stateCustomCultivos || []);
-
-  const lista = base.filter(c => {
-    if (!filtro) return true;
-    return (
-      (c.nombre || "").toLowerCase().includes(filtro) ||
-      (c.id || "").toLowerCase().includes(filtro)
-    );
-  });
-
-  if (!lista.length) {
-    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${filtroTexto}".</p>`;
-    return;
-  }
-
-  listEl.innerHTML = "";
-  lista.forEach(c => {
-    const imgSrc = c.imagen || "img/placeholder.jpg";
-    const esPersonalizado = !!c.esPersonalizado;
-
-    const diasTexto = c.dias || "Sin dato";
-    const luzTexto = c.luz || "Sin dato";
-    const riegoTexto = c.riego || "Sin dato";
-    const tiestoTexto = c.tiesto || "Sin dato";
-    const profundidadTexto = c.profundidad || "Sin dato";
-    const plagasTexto =
-      Array.isArray(c.plagas) && c.plagas.length
-        ? c.plagas.join(", ")
-        : "No especificado";
-
-    const chipExtra = esPersonalizado
-      ? '<span class="chip badge">Personalizado</span>'
-      : "";
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card";
-    card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <img
-            src="${imgSrc}"
-            alt="${c.nombre}"
-            class="cultivo-thumb"
-            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-          />
-          <span>🌱 ${c.nombre}</span>
-        </div>
-        <span class="chip">${c.categoria || "Cultivo"}</span>
-        ${chipExtra}
-      </div>
-      <div class="cultivo-body">
-        <div><strong>Días a cosecha:</strong> ${diasTexto}</div>
-        <div><strong>Luz:</strong> ${luzTexto}</div>
-        <div><strong>Riego:</strong> ${riegoTexto}</div>
-        <div><strong>Tiesto / suelo:</strong> ${tiestoTexto}</div>
-        <div><strong>Profundidad de siembra:</strong> ${profundidadTexto}</div>
-        <div><strong>Plagas frecuentes:</strong> ${plagasTexto}</div>
-      </div>
-      <div class="cultivo-actions">
-        <button class="btn-secondary btn"
-                data-id="${c.id}"
-                data-action="germinacion">
-          🔁 Ver germinación / reproducción
-        </button>
-        ${
-          esPersonalizado
-            ? `<button class="btn-danger btn"
-                       data-id="${c.id}"
-                       data-action="borrar-personalizado">
-                 🗑 Eliminar personalizado
-               </button>`
-            : ""
-        }
-      </div>
-    `;
-    listEl.appendChild(card);
-  });
-}
-
-/* ==== setupCatalogo actualizado ==== */
-function setupCatalogo() {
-  const input = document.getElementById("catalogoBusqueda");
-  const listEl = document.getElementById("catalogoList");
-
-  const btnToggle = document.getElementById("btnToggleNuevoCultivo");
-  const formCard = document.getElementById("nuevoCultivoCard");
-  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
-  const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
-
-  const nombreInput = document.getElementById("nuevoCultivoNombre");
-  const categoriaInput = document.getElementById("nuevoCultivoCategoria");
-  const diasGermInput = document.getElementById("nuevoCultivoDiasGerminacion");
-  const diasCosechaInput = document.getElementById("nuevoCultivoDiasCosecha");
-  const luzInput = document.getElementById("nuevoCultivoLuz");
-  const riegoInput = document.getElementById("nuevoCultivoRiego");
-  const tiestoInput = document.getElementById("nuevoCultivoTiesto");
-  const profundidadInput = document.getElementById("nuevoCultivoProfundidad");
-  const plagasInput = document.getElementById("nuevoCultivoPlagas");
-
-  // Buscador
-  if (input) {
-    input.addEventListener("input", () => {
-      renderCatalogo(input.value);
-    });
-  }
-
-  // Eventos en las tarjetas del catálogo
-  if (listEl) {
-    listEl.addEventListener("click", ev => {
-      const btn = ev.target.closest("button[data-action]");
-      if (!btn) return;
-
-      const action = btn.getAttribute("data-action");
-      const id = btn.getAttribute("data-id");
-      if (!id) return;
-
-      if (action === "germinacion") {
-        const info = getInfoGerminacion(id);
-        if (!info) {
-          alert("Todavía no tengo la guía de germinación para este cultivo.");
-          return;
-        }
-
-        const card = btn.closest(".cultivo-card");
-        if (!card) return;
-
-        let panel = card.querySelector(".germinacion-panel");
-        if (!panel) {
-          panel = document.createElement("div");
-          panel.className = "germinacion-panel";
-          card.appendChild(panel);
-        }
-
-        if (panel.style.display === "block") {
-          panel.style.display = "none";
-          return;
-        }
-
-        const pasosHtml = (info.pasos || [])
-          .map((p, i) => `${i + 1}. ${p}`)
-          .join("<br>");
-
-        panel.innerHTML = `
-          <div class="media-item-title">${info.titulo}</div>
-          <div class="media-item-body"><strong>Método principal:</strong> ${info.metodo}</div>
-          <div class="media-item-body"><strong>Pasos:</strong><br>${pasosHtml}</div>
-          <div class="media-item-body"><strong>Tip:</strong> ${info.tip}</div>
-        `;
-        panel.style.display = "block";
-      } else if (action === "borrar-personalizado") {
-        const idx = stateCustomCultivos.findIndex(c => c.id === id);
-        if (idx === -1) return;
-        if (!confirm("¿Eliminar este cultivo personalizado del catálogo?")) return;
-
-        stateCustomCultivos.splice(idx, 1);
-        saveCustomCultivos(stateCustomCultivos);
-        renderCatalogo(input ? input.value : "");
-      }
-    });
-  }
-
-  // Mostrar / ocultar formulario de nuevo cultivo
-  if (btnToggle && formCard) {
-    btnToggle.addEventListener("click", () => {
-      const visible = formCard.style.display === "block";
-      formCard.style.display = visible ? "none" : "block";
-    });
-  }
-
-  // Cancelar
-  if (btnCancelar && formCard) {
-    btnCancelar.addEventListener("click", () => {
-      formCard.style.display = "none";
-      if (nombreInput) nombreInput.value = "";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-      if (luzInput) luzInput.value = "";
-      if (riegoInput) riegoInput.value = "";
-      if (tiestoInput) tiestoInput.value = "";
-      if (profundidadInput) profundidadInput.value = "";
-      if (plagasInput) plagasInput.value = "";
-    });
-  }
-
-  // Guardar cultivo personalizado en catálogo
-  if (btnGuardar) {
-    btnGuardar.addEventListener("click", () => {
-      const nombre = (nombreInput.value || "").trim();
-      if (!nombre) {
-        alert("Escribe el nombre del cultivo.");
-        return;
-      }
-
-      const categoria =
-        (categoriaInput && categoriaInput.value) || "Cultivo personalizado";
-      const diasGerm = parseInt(diasGermInput.value, 10);
-      const diasCosecha = parseInt(diasCosechaInput.value, 10);
-      const luz = (luzInput.value || "").trim();
-      const riego = (riegoInput.value || "").trim();
-      const tiesto = (tiestoInput.value || "").trim();
-      const profundidad = (profundidadInput.value || "").trim();
-      const plagasRaw = (plagasInput.value || "").trim();
-
-      const plagasArr = plagasRaw
-        ? plagasRaw.split(",").map(t => t.trim()).filter(Boolean)
-        : [];
-
-      const nuevo = {
-        id: "custom-" + Date.now().toString(36),
-        nombre,
-        categoria,
-        dias: Number.isFinite(diasCosecha)
-          ? `${diasCosecha} días (hasta cosecha aprox.)`
-          : "Sin dato",
-        luz: luz || "Sin dato",
-        riego: riego || "Sin dato",
-        tiesto: tiesto || "Sin dato",
-        profundidad: profundidad || "Sin dato",
-        plagas: plagasArr,
-        esPersonalizado: true,
-        diasGerminacion: Number.isFinite(diasGerm) ? diasGerm : null
-      };
-
-      stateCustomCultivos.push(nuevo);
-      saveCustomCultivos(stateCustomCultivos);
-
-      // Limpiar campos
-      if (nombreInput) nombreInput.value = "";
-      if (categoriaInput) categoriaInput.value = "Hoja";
-      if (diasGermInput) diasGermInput.value = "";
-      if (diasCosechaInput) diasCosechaInput.value = "";
-      if (luzInput) luzInput.value = "";
-      if (riegoInput) riegoInput.value = "";
-      if (tiestoInput) tiestoInput.value = "";
-      if (profundidadInput) profundidadInput.value = "";
-      if (plagasInput) plagasInput.value = "";
-
-      formCard.style.display = "none";
-
-      const textoFiltro = input ? input.value : "";
-      renderCatalogo(textoFiltro || nombre);
-
-      alert("Cultivo añadido al catálogo ✅");
-    });
-  }
-}
-
-/* ==== RESPALDO JSON actualizado (incluye customCultivos) ==== */
-function exportarRespaldoJSON() {
-  const respaldo = {
-    settings: stateSettings,
-    cultivos: stateCultivos,
-    diario: stateDiario,
-    customCultivos: stateCustomCultivos
-  };
-
-  const contenido = JSON.stringify(respaldo, null, 2);
-  const blob = new Blob([contenido], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const enlace = document.createElement("a");
-  const fecha = new Date().toISOString().slice(0, 10);
-
-  enlace.href = url;
-  enlace.download = `mi-siembra-respaldo-${fecha}.json`;
-  document.body.appendChild(enlace);
-  enlace.click();
-  document.body.removeChild(enlace);
-  URL.revokeObjectURL(url);
-
-  alert("Respaldo (.json) exportado correctamente ✅");
-}
-
-function importarRespaldoJSON() {
-  const input = document.getElementById("inputRespaldoJSON");
-  if (!input) {
-    alert("No se encontró el campo de archivo para restaurar el respaldo.");
-    return;
-  }
-
-  input.value = "";
-  input.onchange = event => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (!data || typeof data !== "object") {
-          throw new Error("Formato de respaldo no válido");
-        }
-
-        const confirmar = confirm(
-          "Esto reemplazará los datos actuales de tu huerto por los del respaldo seleccionado. ¿Quieres continuar?"
-        );
-        if (!confirmar) return;
-
-        if (data.settings) {
-          stateSettings = { ...DEFAULT_SETTINGS, ...data.settings };
-          saveSettings(stateSettings);
-        }
-
-        if (Array.isArray(data.cultivos)) {
-          stateCultivos = data.cultivos;
-          saveCultivos(stateCultivos);
-        } else {
-          stateCultivos = [];
-          saveCultivos(stateCultivos);
-        }
-
-        if (Array.isArray(data.diario)) {
-          stateDiario = data.diario;
-          saveDiario(stateDiario);
-        } else {
-          stateDiario = [];
-          saveDiario(stateDiario);
-        }
-
-        if (Array.isArray(data.customCultivos)) {
-          stateCustomCultivos = data.customCultivos;
-          saveCustomCultivos(stateCustomCultivos);
-        } else {
-          stateCustomCultivos = [];
-          saveCustomCultivos(stateCustomCultivos);
-        }
-
-        updateHeader();
-        updateSettingsContexts();
-        renderCultivos();
-        renderDiario();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        renderCatalogo();
-
-        alert("Respaldo restaurado correctamente ✅");
-      } catch (err) {
-        console.error(err);
-        alert(
-          "No se pudo leer el archivo de respaldo. Usa un .json generado por Mi Siembra Inteligente."
-        );
-      }
-    };
-
-    reader.readAsText(file);
-  };
-
-  input.click();
-}
-
-/* ==== BORRAR TODO actualizado ==== */
-function borrarTodo() {
-  if (
-    !confirm(
-      "Esto borrará ajustes, cultivos, diario y cultivos personalizados en este dispositivo. ¿Seguro que quieres continuar?"
-    )
-  ) {
-    return;
-  }
-
-  localStorage.removeItem(STORAGE_KEYS.settings);
-  localStorage.removeItem(STORAGE_KEYS.cultivos);
-  localStorage.removeItem(STORAGE_KEYS.diario);
-  localStorage.removeItem(CUSTOM_CULTIVOS_KEY);
-
-  stateSettings = { ...DEFAULT_SETTINGS };
-  stateCultivos = [];
-  stateDiario = [];
-  stateCustomCultivos = [];
-
-  const nombreInput = document.getElementById("nombreHuerto");
-  const climaSelect = document.getElementById("climaSelect");
-  const hemisSelect = document.getElementById("hemisferioSelect");
-
-  if (nombreInput) nombreInput.value = stateSettings.nombreHuerto;
-  if (climaSelect) climaSelect.value = stateSettings.clima;
-  if (hemisSelect) hemisSelect.value = stateSettings.hemisferio;
-
-  updateHeader();
-  updateSettingsContexts();
-  renderCultivos();
-  renderDiario();
-  renderInicio();
-  renderCalendario(new Date().getMonth());
-  renderCatalogo();
-
-  alert("Se borraron todos los datos. Empezarás de cero 🌱");
-}
+           
+    
+                  
   </script>
 </body>
               </html>
