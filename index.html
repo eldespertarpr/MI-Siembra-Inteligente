@@ -1902,8 +1902,8 @@
       if (cat.includes("raíz") || cat.includes("raiz")) return GERMINACION_GENERIC.raiz;
       if (cat.includes("tubérc") || cat.includes("tuberc")) return GERMINACION_GENERIC.tuberculo;
       if (cat.includes("aromática") || cat.includes("aromatica")) return GERMINACION_GENERIC.aromatica;
-      if (cat.includes("frutal") || cat.includes("fruto")) return GERMINACION_GENERIC.frutal;
-
+if (cat.includes("frutal")) return GERMINACION_GENERIC.frutal;
+if (cat.includes("fruto")) return GERMINACION_GENERIC.fruto;
       return GERMINACION_GENERIC.generico;
     }
 
