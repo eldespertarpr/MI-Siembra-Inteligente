@@ -3430,7 +3430,63 @@ function setupCultivoManualUI() {
     renderCatalogo(filtro);
   }
 })();
+let customEditId = null;
 
+function startEditCustomCultivo(cultivo) {
+  customEditId = cultivo.id;
+
+  const card = document.getElementById("nuevoCultivoCard");
+  if (card) card.style.display = "block";
+
+  const h3 = document.querySelector("#nuevoCultivoCard h3");
+  if (h3) h3.textContent = "Editar cultivo";
+
+  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
+  if (btnGuardar) btnGuardar.textContent = "Actualizar cultivo";
+
+  document.getElementById("nuevoCultivoNombre").value = cultivo.nombre || "";
+  document.getElementById("nuevoCultivoCategoria").value = cultivo.categoria || "Otro";
+
+  document.getElementById("nuevoCultivoDiasGerminacion").value =
+    cultivo.diasGerminacion || "";
+
+  document.getElementById("nuevoCultivoDiasCosecha").value =
+    cultivo.diasCosecha || "";
+
+  document.getElementById("nuevoCultivoLuz").value = cultivo.luz || "";
+  document.getElementById("nuevoCultivoRiego").value = cultivo.riego || "";
+  document.getElementById("nuevoCultivoTiesto").value = cultivo.tiesto || "";
+  document.getElementById("nuevoCultivoProfundidad").value = cultivo.profundidad || "";
+  document.getElementById("nuevoCultivoPlagas").value =
+    Array.isArray(cultivo.plagas) ? cultivo.plagas.join(", ") : "";
+
+  card.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById("nuevoCultivoNombre")?.focus();
+}
+
+function resetEditCustomCultivoUI() {
+  customEditId = null;
+
+  const h3 = document.querySelector("#nuevoCultivoCard h3");
+  if (h3) h3.textContent = "Nuevo cultivo";
+
+  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
+  if (btnGuardar) btnGuardar.textContent = "Guardar cultivo";
+}
+
+function deleteCustomCultivoById(id) {
+  let customList = loadCustomCultivos();
+  customList = customList.filter(c => c.id !== id);
+  saveCustomCultivos(customList);
+  injectCustomIntoCatalogo(customList);
+
+  if (customEditId === id) {
+    resetEditCustomCultivoUI();
+    const card = document.getElementById("nuevoCultivoCard");
+    if (card) card.style.display = "none";
+    clearCustomCultivoUI();
+  }
+}
 // ==== Fin cultivos personalizados en catálogo ====
                    
   </script>
