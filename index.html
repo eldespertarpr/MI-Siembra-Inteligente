@@ -3373,7 +3373,34 @@ function buildCustomCultivoFromUI() {
     diasCosecha: Number.isFinite(diasC) && diasC > 0 ? diasC : null
   };
 }
+function setupNuevoCultivoMesesPills() {
+  const wrap = document.getElementById("nuevoCultivoMesesPills");
+  if (!wrap) return;
 
+  wrap.addEventListener("click", (ev) => {
+    const b = ev.target.closest("button.pill[data-mes]");
+    if (!b) return;
+    b.classList.toggle("pill--active");
+  });
+}
+
+function getMesesSeleccionadosUI() {
+  return Array.from(document.querySelectorAll("#nuevoCultivoMesesPills .pill.pill--active"))
+    .map(b => parseInt(b.dataset.mes, 10))
+    .filter(n => Number.isFinite(n));
+}
+
+function setMesesSeleccionadosUI(meses) {
+  const set = new Set((meses || []).map(n => Number(n)));
+  document.querySelectorAll("#nuevoCultivoMesesPills .pill").forEach(b => {
+    const m = parseInt(b.dataset.mes, 10);
+    b.classList.toggle("pill--active", set.has(m));
+  });
+}
+
+function allMonths() {
+  return [0,1,2,3,4,5,6,7,8,9,10,11];
+          }
 function clearCustomCultivoUI() {
   const ids = [
     "nuevoCultivoNombre",
