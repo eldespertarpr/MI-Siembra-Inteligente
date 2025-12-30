@@ -3216,189 +3216,170 @@ if (cat.includes("fruto")) return GERMINACION_GENERIC.fruto;
       setupCalendarioLinks();
     });
     // ==== Cultivos personalizados en catálogo (botón "Añadir cultivo manual") ====
+const STORAGE_CUSTOM_CULTIVOS = "msi-custom-cultivos-v17";
 
-// Clave de almacenamiento para cultivos creados por el usuario
-const STORAGE_CUSTOM_CULTIVOS = 'mi_siembra_custom_cultivos_v17';
-
-// Aseguramos que exista el catálogo global
-if (!Array.isArray(window.catalogoCultivos)) {
-  window.catalogoCultivos = [];
-}
-
-let cultivosPersonalizados = [];
-
-// Cargar cultivos personalizados de localStorage
-function cargarCultivosPersonalizados() {
+function loadCustomCultivos() {
   try {
     const raw = localStorage.getItem(STORAGE_CUSTOM_CULTIVOS);
-    if (!raw) {
-      cultivosPersonalizados = [];
-      return;
-    }
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      cultivosPersonalizados = parsed.map(c => ({
-        ...c,
-        esPersonalizado: true
-      }));
-    } else {
-      cultivosPersonalizados = [];
-    }
-  } catch (err) {
-    console.error('Error leyendo cultivos personalizados:', err);
-    cultivosPersonalizados = [];
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    console.error("Error cargando cultivos personalizados:", e);
+    return [];
   }
 }
 
-// Guardar cultivos personalizados en localStorage
-function guardarCultivosPersonalizados() {
+function saveCustomCultivos(arr) {
   try {
-    const plain = cultivosPersonalizados.map(({ esPersonalizado, ...rest }) => rest);
-    localStorage.setItem(STORAGE_CUSTOM_CULTIVOS, JSON.stringify(plain));
-  } catch (err) {
-    console.error('Error guardando cultivos personalizados:', err);
+    localStorage.setItem(STORAGE_CUSTOM_CULTIVOS, JSON.stringify(arr));
+  } catch (e) {
+    console.error("Error guardando cultivos personalizados:", e);
   }
 }
 
-// Mezclar cultivos base + personalizados en el catálogo global
-function integrarCultivosPersonalizadosEnCatalogo() {
-  const baseSinPersonalizados = window.catalogoCultivos.filter(c => !c.esPersonalizado);
-  window.catalogoCultivos = [...baseSinPersonalizados, ...cultivosPersonalizados];
+function parsePlagas(str) {
+  return (str || "")
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean);
 }
 
-// Crear objeto “cultivo” a partir del formulario
-function crearCultivoPersonalizadoDesdeForm(form) {
-  const nombre = (form.elements['cultivoNombre']?.value || '').trim();
-  const categoria = (form.elements['cultivoCategoria']?.value || 'otro').trim();
-  const clima = (form.elements['cultivoClima']?.value || 'tropical').trim();
-  const hemisferio = (form.elements['cultivoHemisferio']?.value || 'norte').trim();
-  const mesesStr = (form.elements['cultivoMeses']?.value || '').trim();
-  const diasCosechaStr = (form.elements['cultivoDiasCosecha']?.value || '').trim();
-  const notas = (form.elements['cultivoNotas']?.value || '').trim();
+function removeCustomFromCatalogo() {
+  // Quita cualquier custom previamente inyectado
+  for (let i = CATALOGO_CULTIVOS.length - 1; i >= 0; i--) {
+    if (CATALOGO_CULTIVOS[i] && CATALOGO_CULTIVOS[i].esPersonalizado) {
+      CATALOGO_CULTIVOS.splice(i, 1);
+    }
+  }
+}
+
+function injectCustomIntoCatalogo(customList) {
+  removeCustomFromCatalogo();
+  customList.forEach(c => CATALOGO_CULTIVOS.push({ ...c, esPersonalizado: true }));
+}
+
+function buildCustomCultivoFromUI() {
+  const nombre = (document.getElementById("nuevoCultivoNombre")?.value || "").trim();
+  const categoria = (document.getElementById("nuevoCultivoCategoria")?.value || "Otro").trim();
+
+  const diasG = parseInt(document.getElementById("nuevoCultivoDiasGerminacion")?.value || "", 10);
+  const diasC = parseInt(document.getElementById("nuevoCultivoDiasCosecha")?.value || "", 10);
+
+  const luz = (document.getElementById("nuevoCultivoLuz")?.value || "").trim() || "—";
+  const riego = (document.getElementById("nuevoCultivoRiego")?.value || "").trim() || "—";
+  const tiesto = (document.getElementById("nuevoCultivoTiesto")?.value || "").trim() || "—";
+  const profundidad = (document.getElementById("nuevoCultivoProfundidad")?.value || "").trim() || "—";
+  const plagasStr = (document.getElementById("nuevoCultivoPlagas")?.value || "").trim();
 
   if (!nombre) {
-    alert('Escribe el nombre del cultivo.');
+    alert("Escribe el nombre del cultivo.");
     return null;
   }
 
-  // Meses separados por coma: 1,2,3...
-  const meses = mesesStr
-    .split(',')
-    .map(m => m.trim())
-    .filter(Boolean)
-    .map(m => {
-      const n = Number(m);
-      return Number.isFinite(n) && n >= 1 && n <= 12 ? n : null;
-    })
-    .filter(m => m !== null);
+  const id = `custom-${Date.now().toString(36)}`;
 
-  const diasCosechaNum = parseInt(diasCosechaStr, 10);
-  const diasCosecha = Number.isFinite(diasCosechaNum) && diasCosechaNum > 0
-    ? diasCosechaNum
-    : undefined;
+  // En tu UI, "dias" se muestra como “Días a cosecha”
+  const diasTexto = Number.isFinite(diasC) && diasC > 0 ? `${diasC} días` : "—";
 
-  const id = `custom-${Date.now()}`;
-
-  // Ajusta esta estructura para que coincida con tus objetos del catálogo base
-  const cultivo = {
+  return {
     id,
     nombre,
-    categoria,          // ej: "hortaliza", "fruto", "tuberculo"...
-    clima,              // ej: "tropical", "subtropical", "templado"
-    hemisferio,         // "norte" o "sur"
-    mesesSiembra: meses.length ? meses : undefined,
-    diasCosecha,
-    notas,
-    esPersonalizado: true
+    categoria,
+    dias: diasTexto,
+    luz,
+    riego,
+    tiesto,
+    profundidad,
+    plagas: parsePlagas(plagasStr),
+    meses: [0,1,2,3,4,5,6,7,8,9,10,11], // por defecto todo el año
+    imagen: "img/placeholder.jpg",
+    esPersonalizado: true,
+    diasGerminacion: Number.isFinite(diasG) && diasG > 0 ? diasG : null,
+    diasCosecha: Number.isFinite(diasC) && diasC > 0 ? diasC : null
   };
-
-  return cultivo;
 }
 
-// ==== UI: modal y formulario para añadir cultivo manual ====
-
-// Estos selectores asumen que en tu HTML tienes:
-// - Un botón con data-open-cultivo-manual para abrir el modal
-// - Un botón con data-close-cultivo-manual para cerrarlo
-// - Un contenedor/overlay con id="modal-cultivo-manual"
-// - Un formulario con id="form-cultivo-manual"
-
-const botonAbrirCultivoManual = document.querySelector('[data-open-cultivo-manual]');
-const botonCerrarCultivoManual = document.querySelector('[data-close-cultivo-manual]');
-const modalCultivoManual = document.getElementById('modal-cultivo-manual');
-const formCultivoManual = document.getElementById('form-cultivo-manual');
-
-function mostrarModalCultivoManual() {
-  if (!modalCultivoManual) return;
-  modalCultivoManual.setAttribute('data-open', 'true');
+function clearCustomCultivoUI() {
+  const ids = [
+    "nuevoCultivoNombre",
+    "nuevoCultivoDiasGerminacion",
+    "nuevoCultivoDiasCosecha",
+    "nuevoCultivoLuz",
+    "nuevoCultivoRiego",
+    "nuevoCultivoTiesto",
+    "nuevoCultivoProfundidad",
+    "nuevoCultivoPlagas"
+  ];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  const cat = document.getElementById("nuevoCultivoCategoria");
+  if (cat) cat.value = "Hoja";
 }
 
-function ocultarModalCultivoManual() {
-  if (!modalCultivoManual) return;
-  modalCultivoManual.removeAttribute('data-open');
-  if (formCultivoManual) formCultivoManual.reset();
-}
+function setupCultivoManualUI() {
+  const btnToggle = document.getElementById("btnToggleNuevoCultivo");
+  const card = document.getElementById("nuevoCultivoCard");
+  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
+  const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
+  const inputBusqueda = document.getElementById("catalogoBusqueda");
 
-// Abrir / cerrar modal
-if (botonAbrirCultivoManual && modalCultivoManual) {
-  botonAbrirCultivoManual.addEventListener('click', mostrarModalCultivoManual);
-}
+  if (!btnToggle || !card || !btnGuardar || !btnCancelar) return;
 
-if (botonCerrarCultivoManual && modalCultivoManual) {
-  botonCerrarCultivoManual.addEventListener('click', ocultarModalCultivoManual);
-}
-
-// Cerrar si se hace click en el fondo del modal (overlay)
-if (modalCultivoManual) {
-  modalCultivoManual.addEventListener('click', (ev) => {
-    if (ev.target === modalCultivoManual) {
-      ocultarModalCultivoManual();
+  btnToggle.addEventListener("click", () => {
+    const visible = card.style.display !== "none";
+    card.style.display = visible ? "none" : "block";
+    if (!visible) {
+      document.getElementById("nuevoCultivoNombre")?.focus();
+    } else {
+      clearCustomCultivoUI();
     }
   });
-}
 
-// Envío del formulario para crear el cultivo
-if (formCultivoManual) {
-  formCultivoManual.addEventListener('submit', (ev) => {
-    ev.preventDefault();
+  btnCancelar.addEventListener("click", () => {
+    card.style.display = "none";
+    clearCustomCultivoUI();
+  });
 
-    const cultivo = crearCultivoPersonalizadoDesdeForm(formCultivoManual);
+  btnGuardar.addEventListener("click", () => {
+    const cultivo = buildCustomCultivoFromUI();
     if (!cultivo) return;
 
-    // Evitar duplicados por nombre (case-insensitive)
+    // Cargar lista actual, deduplicar por nombre (case-insensitive), guardar
+    let customList = loadCustomCultivos();
     const nombreLower = cultivo.nombre.toLowerCase();
-    cultivosPersonalizados = cultivosPersonalizados.filter(
-      c => c.nombre.toLowerCase() !== nombreLower
-    );
+    customList = customList.filter(c => (c.nombre || "").toLowerCase() !== nombreLower);
+    customList.push(cultivo);
+    saveCustomCultivos(customList);
 
-    cultivosPersonalizados.push(cultivo);
-    guardarCultivosPersonalizados();
-    integrarCultivosPersonalizadosEnCatalogo();
+    // Inyectar al catálogo y refrescar vista
+    injectCustomIntoCatalogo(customList);
 
-    // Refrescar la vista del catálogo si existe esa función
-    if (typeof renderCatalogoCultivos === 'function') {
-      renderCatalogoCultivos();
-    }
+    const filtro = (inputBusqueda?.value || "").trim();
+    renderCatalogo(filtro);
 
-    ocultarModalCultivoManual();
+    card.style.display = "none";
+    clearCustomCultivoUI();
+    alert("Cultivo personalizado guardado ✅");
   });
 }
 
-// Carga inicial de cultivos personalizados y mezcla con el catálogo base
-cargarCultivosPersonalizados();
-integrarCultivosPersonalizadosEnCatalogo();
+// Inicializar: cargar e inyectar custom + conectar UI + re-render catálogo
+(() => {
+  const customList = loadCustomCultivos();
+  injectCustomIntoCatalogo(customList);
+  setupCultivoManualUI();
 
-// Si ya está definido el render, volvemos a pintar el catálogo
-if (typeof renderCatalogoCultivos === 'function') {
-  renderCatalogoCultivos();
-}
+  // Re-pintar el catálogo con lo que haya en el buscador (si hay)
+  const filtro = (document.getElementById("catalogoBusqueda")?.value || "").trim();
+  if (typeof renderCatalogo === "function") {
+    renderCatalogo(filtro);
+  }
+})();
 
 // ==== Fin cultivos personalizados en catálogo ====
-
-
-           
-    
-                  
+                   
   </script>
 </body>
               </html>
