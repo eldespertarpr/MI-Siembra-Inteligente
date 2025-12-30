@@ -2213,6 +2213,28 @@ if (cat.includes("fruto")) return GERMINACION_GENERIC.fruto;
       </div>
 
       <div class="cultivo-body">
+      <div class="field" style="margin-top: 10px;">
+  <label>Meses de siembra (para recomendaciones del Calendario)</label>
+
+  <div class="pill-group" id="nuevoCultivoMesesPills">
+    <button type="button" class="pill" data-mes="0">Ene</button>
+    <button type="button" class="pill" data-mes="1">Feb</button>
+    <button type="button" class="pill" data-mes="2">Mar</button>
+    <button type="button" class="pill" data-mes="3">Abr</button>
+    <button type="button" class="pill" data-mes="4">May</button>
+    <button type="button" class="pill" data-mes="5">Jun</button>
+    <button type="button" class="pill" data-mes="6">Jul</button>
+    <button type="button" class="pill" data-mes="7">Ago</button>
+    <button type="button" class="pill" data-mes="8">Sep</button>
+    <button type="button" class="pill" data-mes="9">Oct</button>
+    <button type="button" class="pill" data-mes="10">Nov</button>
+    <button type="button" class="pill" data-mes="11">Dic</button>
+  </div>
+
+  <p class="muted" style="margin-top:6px;">
+    Si no seleccionas ninguno, se asumirá <strong>todo el año</strong>.
+  </p>
+</div>
         <div><strong>Días a cosecha:</strong> ${c.dias}</div>
         <div><strong>Luz:</strong> ${c.luz}</div>
         <div><strong>Riego:</strong> ${c.riego}</div>
