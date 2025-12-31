@@ -3487,7 +3487,7 @@ let customEditId = null;
 
 function startEditCustomCultivo(cultivo) {
   customEditId = cultivo.id;
-
+setMesesSeleccionadosUI(Array.isArray(cultivo.meses) ? cultivo.meses : allMonths());
   const card = document.getElementById("nuevoCultivoCard");
   if (card) card.style.display = "block";
 
