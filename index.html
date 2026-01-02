@@ -4005,6 +4005,129 @@ function clearCustomCultivoUI() {
 
   setMesesSeleccionadosUI([]);
 }
+// ==== Cultivos personalizados en catálogo (v17) ====
+const STORAGE_CUSTOM_CULTIVOS = "msi-custom-cultivos-v17";
+let customEditId = null;
+
+function loadCustomCultivos() {
+  try {
+    const raw = localStorage.getItem(STORAGE_CUSTOM_CULTIVOS);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    console.error("Error cargando cultivos personalizados:", e);
+    return [];
+  }
+}
+
+function saveCustomCultivos(arr) {
+  try {
+    localStorage.setItem(STORAGE_CUSTOM_CULTIVOS, JSON.stringify(arr));
+  } catch (e) {
+    console.error("Error guardando cultivos personalizados:", e);
+  }
+}
+
+function parsePlagas(str) {
+  return (str || "").split(",").map(s => s.trim()).filter(Boolean);
+}
+
+function allMonths() { return [0,1,2,3,4,5,6,7,8,9,10,11]; }
+
+function setupNuevoCultivoMesesPills() {
+  const wrap = document.getElementById("nuevoCultivoMesesPills");
+  if (!wrap) return;
+
+  // evita duplicar listeners
+  if (wrap.dataset.bound === "1") return;
+  wrap.dataset.bound = "1";
+
+  wrap.addEventListener("click", (ev) => {
+    const b = ev.target.closest("button.pill[data-mes]");
+    if (!b) return;
+    b.classList.toggle("pill--active");
+  });
+}
+
+function getMesesSeleccionadosUI() {
+  return Array.from(document.querySelectorAll("#nuevoCultivoMesesPills .pill.pill--active"))
+    .map(b => parseInt(b.dataset.mes, 10))
+    .filter(n => Number.isFinite(n));
+}
+
+function setMesesSeleccionadosUI(meses) {
+  const set = new Set((meses || []).map(Number));
+  document.querySelectorAll("#nuevoCultivoMesesPills .pill").forEach(b => {
+    const m = parseInt(b.dataset.mes, 10);
+    b.classList.toggle("pill--active", set.has(m));
+  });
+}
+
+function removeCustomFromCatalogo() {
+  for (let i = CATALOGO_CULTIVOS.length - 1; i >= 0; i--) {
+    if (CATALOGO_CULTIVOS[i]?.esPersonalizado) CATALOGO_CULTIVOS.splice(i, 1);
+  }
+}
+
+function injectCustomIntoCatalogo(customList) {
+  removeCustomFromCatalogo();
+  customList.forEach(c => CATALOGO_CULTIVOS.push({ ...c, esPersonalizado: true }));
+}
+
+function buildCustomCultivoFromUI(existingId) {
+  const nombre = (document.getElementById("nuevoCultivoNombre")?.value || "").trim();
+  const categoria = (document.getElementById("nuevoCultivoCategoria")?.value || "Otro").trim();
+
+  const diasG = parseInt(document.getElementById("nuevoCultivoDiasGerminacion")?.value || "", 10);
+  const diasC = parseInt(document.getElementById("nuevoCultivoDiasCosecha")?.value || "", 10);
+
+  const luz = (document.getElementById("nuevoCultivoLuz")?.value || "").trim() || "—";
+  const riego = (document.getElementById("nuevoCultivoRiego")?.value || "").trim() || "—";
+  const tiesto = (document.getElementById("nuevoCultivoTiesto")?.value || "").trim() || "—";
+  const profundidad = (document.getElementById("nuevoCultivoProfundidad")?.value || "").trim() || "—";
+  const plagasStr = (document.getElementById("nuevoCultivoPlagas")?.value || "").trim();
+
+  if (!nombre) { alert("Escribe el nombre del cultivo."); return null; }
+
+  let meses = getMesesSeleccionadosUI();
+  if (!meses.length) meses = allMonths();
+
+  const id = existingId || `custom-${Date.now().toString(36)}`;
+  const diasTexto = Number.isFinite(diasC) && diasC > 0 ? `${diasC} días` : "—";
+
+  return {
+    id,
+    nombre,
+    categoria,
+    dias: diasTexto,
+    luz,
+    riego,
+    tiesto,
+    profundidad,
+    plagas: parsePlagas(plagasStr),
+    meses,
+    imagen: "img/placeholder.jpg",
+    esPersonalizado: true,
+    diasGerminacion: Number.isFinite(diasG) && diasG > 0 ? diasG : null,
+    diasCosecha: Number.isFinite(diasC) && diasC > 0 ? diasC : null
+  };
+}
+
+function clearCustomCultivoUI() {
+  [
+    "nuevoCultivoNombre","nuevoCultivoDiasGerminacion","nuevoCultivoDiasCosecha",
+    "nuevoCultivoLuz","nuevoCultivoRiego","nuevoCultivoTiesto",
+    "nuevoCultivoProfundidad","nuevoCultivoPlagas"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+
+  const cat = document.getElementById("nuevoCultivoCategoria");
+  if (cat) cat.value = "Otro";
+
+  setMesesSeleccionadosUI([]);
+}
 
 function resetEditCustomCultivoUI() {
   customEditId = null;
@@ -4060,6 +4183,8 @@ function setupCultivoManualUI() {
   const card = document.getElementById("nuevoCultivoCard");
   const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
   const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
+  const inputBusqueda = document.getElementById("catalogoBusqueda");
+
   if (!btnToggle || !card || !btnGuardar || !btnCancelar) return;
 
   setupNuevoCultivoMesesPills();
@@ -4068,7 +4193,10 @@ function setupCultivoManualUI() {
     const visible = card.style.display !== "none";
     card.style.display = visible ? "none" : "block";
     if (!visible) document.getElementById("nuevoCultivoNombre")?.focus();
-    else { clearCustomCultivoUI(); resetEditCustomCultivoUI(); }
+    else {
+      clearCustomCultivoUI();
+      resetEditCustomCultivoUI();
+    }
   });
 
   btnCancelar.addEventListener("click", () => {
@@ -4083,21 +4211,27 @@ function setupCultivoManualUI() {
 
     let customList = loadCustomCultivos();
     const idx = customList.findIndex(c => c.id === cultivo.id);
-    if (idx !== -1) customList[idx] = cultivo;
-    else customList.push(cultivo);
+
+    if (idx >= 0) {
+      customList[idx] = cultivo; // update por id
+    } else {
+      // evita duplicado por nombre (case-insensitive)
+      const nombreLower = (cultivo.nombre || "").toLowerCase();
+      customList = customList.filter(c => (c.nombre || "").toLowerCase() !== nombreLower);
+      customList.push(cultivo);
+    }
 
     saveCustomCultivos(customList);
     injectCustomIntoCatalogo(customList);
 
-    const filtro = (document.getElementById("catalogoBusqueda")?.value || "").trim();
-    renderCatalogo(filtro);
+    // refresca
+    const filtro = (inputBusqueda?.value || "").trim();
+    if (typeof renderCatalogo === "function") renderCatalogo(filtro);
 
-    const estabaEditando = !!customEditId;
     card.style.display = "none";
     clearCustomCultivoUI();
     resetEditCustomCultivoUI();
-
-    alert(estabaEditando ? "Cultivo actualizado ✅" : "Cultivo personalizado guardado ✅");
+    alert("Cultivo personalizado guardado ✅");
   });
 }
 
@@ -4106,7 +4240,7 @@ function initCustomCultivos() {
   injectCustomIntoCatalogo(customList);
   setupCultivoManualUI();
 }
-// ==== Fin cultivos personalizados ====
+// ==== FIN cultivos personalizados ====
 
   </script>
 </body>
