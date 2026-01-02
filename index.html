@@ -3387,7 +3387,6 @@ function setupNuevoCultivoMesesPills() {
     b.classList.toggle("pill--active");
   });
 }
-<div class="pill-group" id="nuevoCultivoMesesPills"> ... </div>
 function getMesesSeleccionadosUI() {
   return Array.from(document.querySelectorAll("#nuevoCultivoMesesPills .pill.pill--active"))
     .map(b => parseInt(b.dataset.mes, 10))
