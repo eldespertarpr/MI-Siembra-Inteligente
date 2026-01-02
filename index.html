@@ -956,12 +956,9 @@
       </div>
 
       <div class="field-row" style="margin-top: 0.75rem;">
-        <button
-          type="button"
-          class="btn"
-          id="btnGuardarNuevoCultivo"
-          <div class="field" style="margin-top: 10px;">
+        <div class="field" style="margin-top: 10px;">
   <label>Meses de siembra (para recomendaciones del Calendario)</label>
+
   <div class="pill-group" id="nuevoCultivoMesesPills">
     <button type="button" class="pill" data-mes="0">Ene</button>
     <button type="button" class="pill" data-mes="1">Feb</button>
@@ -976,19 +973,16 @@
     <button type="button" class="pill" data-mes="10">Nov</button>
     <button type="button" class="pill" data-mes="11">Dic</button>
   </div>
+
   <p class="muted" style="margin-top:6px;">
     Si no seleccionas ninguno, se asumirá <strong>todo el año</strong>.
   </p>
-      </div>
-        >
-          Guardar cultivo
-        </button>
+</div>
 
-        <button
-          type="button"
-          class="btn btn-secondary"
-          id="btnCancelarNuevoCultivo"
-        >
+<div class="field-row" style="margin-top: 0.75rem; display:flex; gap:8px; flex-wrap:wrap;">
+  <button type="button" class="btn" id="btnGuardarNuevoCultivo">Guardar cultivo</button>
+  <button type="button" class="btn btn-secondary" id="btnCancelarNuevoCultivo">Cancelar</button>
+</div>
           Cancelar
         </button>
       </div>
