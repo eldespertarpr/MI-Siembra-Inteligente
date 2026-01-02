@@ -1428,6 +1428,7 @@
       });
 
       btnGuardar.addEventListener("click", () => {
+        const wasEditing = Boolean(customEditId);
         const cultivo = buildCustomCultivoFromUI(customEditId);
         if (!cultivo) return;
 
