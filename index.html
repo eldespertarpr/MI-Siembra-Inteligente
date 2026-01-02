@@ -1538,7 +1538,15 @@
 
       listEl.innerHTML = "";
       const data = getCalendarData(stateSettings, monthIndex);
+const MESES_ABR = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+const mesAjustado = ajustarMesPorHemisferio(stateSettings, monthIndex);
 
+if (mesAjustado !== monthIndex) {
+  const info = document.createElement("p");
+  info.className = "muted";
+  info.textContent = `Hemisferio sur: ${MESES_ABR[monthIndex]} se interpreta como ${MESES_ABR[mesAjustado]} (+6m).`;
+  listEl.appendChild(info);
+}
       if (data.length) {
         emptyEl.style.display = "none";
         data.forEach(item => {
