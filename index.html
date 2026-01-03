@@ -1564,11 +1564,12 @@ if (mesAjustado !== monthIndex) {
       } else {
         emptyEl.style.display = "block";
       }
-
       const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
       const sugeridos = CATALOGO_CULTIVOS.filter(c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo));
-if (sugeridos.length) emptyEl.style.display = "none";
-      if (sugeridos.length) emptyEl.style.display = "none";
+
+      if (sugeridos.length) {
+        emptyEl.style.display = "none";
+
         const separador = document.createElement("div");
         separador.className = "divider-soft";
         listEl.appendChild(separador);
@@ -1596,7 +1597,6 @@ if (sugeridos.length) emptyEl.style.display = "none";
           listEl.appendChild(div);
         });
       }
-    }
 
     function irACultivoEnCatalogo(cultivoId) {
       const cultivo = CATALOGO_CULTIVOS.find(c => c.id === cultivoId);
