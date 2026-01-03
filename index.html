@@ -1435,10 +1435,8 @@
         let customList = loadCustomCultivos();
 
         if (customEditId) {
-          // Actualizar por id
           customList = customList.filter(c => c.id !== customEditId);
         } else {
-          // Deduplicar por nombre si es nuevo
           const nameLower = (cultivo.nombre || "").toLowerCase();
           customList = customList.filter(c => (c.nombre || "").toLowerCase() !== nameLower);
         }
@@ -1453,7 +1451,9 @@
         card.style.display = "none";
         clearCustomCultivoUI();
         resetEditCustomCultivoUI();
+
         alert(wasEditing ? "Cultivo actualizado ✅" : "Cultivo guardado ✅");
+      });
     }
 
     function initCustomCultivos() {
