@@ -1453,8 +1453,7 @@
         card.style.display = "none";
         clearCustomCultivoUI();
         resetEditCustomCultivoUI();
-        alert(customEditId ? "Cultivo actualizado ✅" : "Cultivo guardado ✅");
-      });
+        alert(wasEditing ? "Cultivo actualizado ✅" : "Cultivo guardado ✅");
     }
 
     function initCustomCultivos() {
