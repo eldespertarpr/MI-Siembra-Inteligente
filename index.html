@@ -2375,33 +2375,54 @@ if (mesAjustado !== monthIndex) {
     }
 
     function borrarTodo() {
-      if (!confirm("Esto borrará ajustes, cultivos y diario en este dispositivo. ¿Seguro?")) return;
+  if (!confirm("Esto borrará ajustes, cultivos y diario en este dispositivo. ¿Seguro?")) return;
 
-      localStorage.removeItem(STORAGE_KEYS.settings);
-      localStorage.removeItem(STORAGE_KEYS.cultivos);
-      localStorage.removeItem(STORAGE_KEYS.diario);
-      localStorage.removeItem(STORAGE_CUSTOM_CULTIVOS);
-      stateSettings = { ...DEFAULT_SETTINGS };
-      stateCultivos = [];
-      stateDiario = [];
+  // Borra storage principal
+  localStorage.removeItem(STORAGE_KEYS.settings);
+  localStorage.removeItem(STORAGE_KEYS.cultivos);
+  localStorage.removeItem(STORAGE_KEYS.diario);
 
-      const nombreInput = document.getElementById("nombreHuerto");
-      const climaSelect = document.getElementById("climaSelect");
-      const hemisSelect = document.getElementById("hemisferioSelect");
+  // Borra cultivos personalizados (y compat con versiones viejas)
+  localStorage.removeItem(STORAGE_CUSTOM_CULTIVOS);
+  ["msi-custom-cultivos", "msi-custom-cultivos-v16", "msi-custom-cultivos-v15"].forEach(k => {
+    try { localStorage.removeItem(k); } catch {}
+  });
 
-      if (nombreInput) nombreInput.value = stateSettings.nombreHuerto;
-      if (climaSelect) climaSelect.value = stateSettings.clima;
-      if (hemisSelect) hemisSelect.value = stateSettings.hemisferio;
+  // Resetea estado
+  stateSettings = { ...DEFAULT_SETTINGS };
+  stateCultivos = [];
+  stateDiario = [];
 
-      updateHeader();
-      updateSettingsContexts();
-      renderCultivos();
-      renderDiario();
-      renderInicio();
-      renderCalendario(new Date().getMonth());
+  // IMPORTANTÍSIMO: limpia personalizados del catálogo EN MEMORIA
+  injectCustomIntoCatalogo([]);     // <- quita esPersonalizado del array base
+  customEditId = null;
 
-      alert("Se borraron todos los datos. Empezarás de cero 🌱");
-    }
+  // Resetea UI de formulario personalizado
+  const card = document.getElementById("nuevoCultivoCard");
+  if (card) card.style.display = "none";
+  clearCustomCultivoUI();
+  resetEditCustomCultivoUI();
+
+  // Resetea inputs opciones
+  const nombreInput = document.getElementById("nombreHuerto");
+  const climaSelect = document.getElementById("climaSelect");
+  const hemisSelect = document.getElementById("hemisferioSelect");
+
+  if (nombreInput) nombreInput.value = stateSettings.nombreHuerto;
+  if (climaSelect) climaSelect.value = stateSettings.clima;
+  if (hemisSelect) hemisSelect.value = stateSettings.hemisferio;
+
+  // Re-render todo (incluye catálogo)
+  updateHeader();
+  updateSettingsContexts();
+  renderInicio();
+  renderCalendario(new Date().getMonth());
+  renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+  renderCultivos();
+  renderDiario();
+
+  alert("Se borraron todos los datos. Empezarás de cero 🌱");
+}
 
     /*********************
      * PWA: service worker + instalar
