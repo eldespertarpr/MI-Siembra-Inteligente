@@ -1805,12 +1805,18 @@ if (mesAjustado !== monthIndex) {
           <div class="diario-item-header">
             <span><strong>${escapeHTML(formatDate(e.fecha))}</strong></span>
             <div>
-              <span class="chip">${escapeHTML(e.tipo || "General")}</span>
-              <button class="btn btn-secondary" data-action="editar-diario" data-id="${escapeHTML(e.id)}"
-                      style="padding:4px 8px;font-size:0.7rem;margin-left:6px;">
-                ✏️ Editar
-              </button>
-            </div>
+  <span class="chip">${escapeHTML(e.tipo || "General")}</span>
+
+  <button class="btn btn-secondary" data-action="editar-diario" data-id="${escapeHTML(e.id)}"
+          style="padding:4px 8px;font-size:0.7rem;margin-left:6px;">
+    ✏️ Editar
+  </button>
+
+  <button class="btn btn-danger" data-action="borrar-diario" data-id="${escapeHTML(e.id)}"
+          style="padding:4px 8px;font-size:0.7rem;margin-left:6px;">
+    🗑 Borrar
+  </button>
+</div>
           </div>
           <div>${escapeHTML(e.texto || "")}</div>
         `;
