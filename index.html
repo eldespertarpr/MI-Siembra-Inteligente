@@ -1995,12 +1995,6 @@ if (mesAjustado !== monthIndex) {
 
     function setupMiHuertoForm() {
       const btn = document.getElementById("btnAgregarCultivo");
-  if (!btn) return;
-
-  // Evitar duplicar listeners si se llama 2 veces
-  if (btn.dataset.bound === "1") return;
-  btn.dataset.bound = "1";
-      const btn = document.getElementById("btnAgregarCultivo");
       if (!btn) return;
 
       btn.addEventListener("click", () => {
@@ -2040,9 +2034,7 @@ if (mesAjustado !== monthIndex) {
 
       const list = document.getElementById("cultivosList");
       if (!list) return;
-// Evitar duplicar listeners en la lista
-  if (list.dataset.bound === "1") return;
-  list.dataset.bound = "1";
+
       list.addEventListener("click", ev => {
         const b = ev.target.closest("button[data-id]");
         if (!b) return;
@@ -2568,4 +2560,4 @@ if (mesAjustado !== monthIndex) {
     });
   </script>
 </body>
-                  </html>
+  </html>
