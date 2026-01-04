@@ -2527,6 +2527,12 @@ if (mesAjustado !== monthIndex) {
      * Inicio app
      *********************/
     document.addEventListener("DOMContentLoaded", () => {
+  if (window.__MSI_INIT__) return;
+  window.__MSI_INIT__ = true;
+
+  // ... tu código actual
+});
+    document.addEventListener("DOMContentLoaded", () => {
       stateSettings = loadSettings();
       stateCultivos = loadCultivos();
       stateDiario = loadDiario();
