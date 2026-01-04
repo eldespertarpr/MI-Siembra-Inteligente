@@ -1532,71 +1532,77 @@
     }
 
     function renderCalendario(monthIndex) {
-      const listEl = document.getElementById("calendarList");
-      const emptyEl = document.getElementById("calendarEmpty");
-      if (!listEl || !emptyEl) return;
+  const listEl = document.getElementById("calendarList");
+  const emptyEl = document.getElementById("calendarEmpty");
+  if (!listEl || !emptyEl) return;
 
-      listEl.innerHTML = "";
-      const data = getCalendarData(stateSettings, monthIndex);
-const MESES_ABR = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-const mesAjustado = ajustarMesPorHemisferio(stateSettings, monthIndex);
+  listEl.innerHTML = "";
 
-if (mesAjustado !== monthIndex) {
-  const info = document.createElement("p");
-  info.className = "muted";
-  info.textContent = `Hemisferio sur: ${MESES_ABR[monthIndex]} se interpreta como ${MESES_ABR[mesAjustado]} (+6m).`;
-  listEl.appendChild(info);
-}
-      if (data.length) {
-        emptyEl.style.display = "none";
-        data.forEach(item => {
-          const div = document.createElement("div");
-          div.className = "calendar-item";
-          div.innerHTML = `
-            <div class="calendar-item-title">
-              <span>${escapeHTML(item.titulo)}</span>
-              <span class="chip">${escapeHTML(item.tipo)}</span>
-            </div>
-            <div>${escapeHTML(item.detalle)}</div>
-          `;
-          listEl.appendChild(div);
-        });
-      } else {
-        emptyEl.style.display = "block";
-      }
-      const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
-      const sugeridos = CATALOGO_CULTIVOS.filter(c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo));
+  const data = getCalendarData(stateSettings, monthIndex);
 
-      if (sugeridos.length) {
-        emptyEl.style.display = "none";
+  // Aviso si el mes se ajusta por hemisferio (solo en subtropical/templado)
+  const MESES_ABR = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+  const mesAjustado = ajustarMesPorHemisferio(stateSettings, monthIndex);
 
-        const separador = document.createElement("div");
-        separador.className = "divider-soft";
-        listEl.appendChild(separador);
+  if (mesAjustado !== monthIndex) {
+    const info = document.createElement("p");
+    info.className = "muted";
+    info.textContent = `Hemisferio sur: ${MESES_ABR[monthIndex]} se interpreta como ${MESES_ABR[mesAjustado]} (+6m).`;
+    listEl.appendChild(info);
+  }
 
-        const tituloExtra = document.createElement("p");
-        tituloExtra.className = "muted";
-        tituloExtra.textContent = "Desde el catálogo: cultivos recomendados para este mes.";
-        listEl.appendChild(tituloExtra);
+  if (data.length) {
+    emptyEl.style.display = "none";
+    data.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "calendar-item";
+      div.innerHTML = `
+        <div class="calendar-item-title">
+          <span>${escapeHTML(item.titulo)}</span>
+          <span class="chip">${escapeHTML(item.tipo)}</span>
+        </div>
+        <div>${escapeHTML(item.detalle)}</div>
+      `;
+      listEl.appendChild(div);
+    });
+  } else {
+    emptyEl.style.display = "block";
+  }
 
-        sugeridos.forEach(c => {
-          const div = document.createElement("div");
-          div.className = "calendar-item";
-          div.innerHTML = `
-            <div class="calendar-item-title">
-              <span>${escapeHTML(c.nombre)}</span>
-              <span class="chip">${escapeHTML(c.categoria)}</span>
-            </div>
-            <div>Días a cosecha: ${escapeHTML(c.dias)}. Luz: ${escapeHTML(c.luz)}.</div>
-            <div style="margin-top:6px;">
-              <button class="btn btn-secondary btn-full" data-action="ver-catalogo" data-id="${escapeHTML(c.id)}">
-                🔍 Ver en catálogo
-              </button>
-            </div>
-          `;
-          listEl.appendChild(div);
-        });
-      }
+  // Recomendaciones desde el catálogo (mes ajustado)
+  const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
+  const sugeridos = CATALOGO_CULTIVOS.filter(c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo));
+
+  if (sugeridos.length) {
+    emptyEl.style.display = "none";
+
+    const separador = document.createElement("div");
+    separador.className = "divider-soft";
+    listEl.appendChild(separador);
+
+    const tituloExtra = document.createElement("p");
+    tituloExtra.className = "muted";
+    tituloExtra.textContent = "Desde el catálogo: cultivos recomendados para este mes.";
+    listEl.appendChild(tituloExtra);
+
+    sugeridos.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "calendar-item";
+      div.innerHTML = `
+        <div class="calendar-item-title">
+          <span>${escapeHTML(c.nombre)}</span>
+          <span class="chip">${escapeHTML(c.categoria)}</span>
+        </div>
+        <div>Días a cosecha: ${escapeHTML(c.dias)}. Luz: ${escapeHTML(c.luz)}.</div>
+        <div style="margin-top:6px;">
+          <button class="btn btn-secondary btn-full" data-action="ver-catalogo" data-id="${escapeHTML(c.id)}">
+            🔍 Ver en catálogo
+          </button>
+        </div>
+      `;
+      listEl.appendChild(div);
+    });
+  }
 }
     function irACultivoEnCatalogo(cultivoId) {
       const cultivo = CATALOGO_CULTIVOS.find(c => c.id === cultivoId);
