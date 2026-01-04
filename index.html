@@ -2178,22 +2178,6 @@ function setupDiario() {
       const id = b.getAttribute("data-id");
       if (!id) return;
 
-      // EDITAR
-function setupDiario() {
-  const btn = document.getElementById("btnGuardarDiario");
-  const campo = document.getElementById("diarioTexto");
-  const filtros = document.querySelectorAll("#diarioFiltros .pill");
-  const listEl = document.getElementById("diarioList");
-
-  if (!btn || !campo || !listEl) return;
-
-  // ✅ Guardar / actualizar
-  btn.addEventListener("click", () => {
-    const texto = campo.value.trim();
-    if (!texto) { alert("Escribe algo antes de guardar."); return; }
-
-    const titleEl = document.getElementById("diarioFormTitle");
-
     // EDITANDO
     if (diarioEnEdicionId) {
       const idx = stateDiario.findIndex(e => e.id === diarioEnEdicionId);
