@@ -2040,7 +2040,9 @@ if (mesAjustado !== monthIndex) {
 
       const list = document.getElementById("cultivosList");
       if (!list) return;
-
+// Evitar duplicar listeners en la lista
+  if (list.dataset.bound === "1") return;
+  list.dataset.bound = "1";
       list.addEventListener("click", ev => {
         const b = ev.target.closest("button[data-id]");
         if (!b) return;
