@@ -2378,48 +2378,54 @@ function setupDiario() {
 }
 
     function importarRespaldoJSON() {
-      const input = document.getElementById("inputRespaldoJSON");
-      if (!input) { alert("No se encontró el campo de archivo para restaurar el respaldo."); return; }
+  const input = document.getElementById("inputRespaldoJSON");
+  if (!input) { alert("No se encontró el campo de archivo para restaurar el respaldo."); return; }
 
-      input.value = "";
-      input.onchange = event => {
-        const file = event.target.files[0];
-        if (!file) return;
+  input.value = "";
+  input.onchange = event => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = e => {
-          try {
-            const data = JSON.parse(e.target.result);
-            if (!data || typeof data !== "object") throw new Error("Formato inválido");
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data || typeof data !== "object") throw new Error("Formato inválido");
 
-            if (!confirm("Esto reemplazará los datos actuales por los del respaldo. ¿Continuar?")) return;
+        if (!confirm("Esto reemplazará los datos actuales por los del respaldo. ¿Continuar?")) return;
 
-            stateSettings = { ...DEFAULT_SETTINGS, ...(data.settings || {}) };
-            stateCultivos = Array.isArray(data.cultivos) ? data.cultivos : [];
-            stateDiario = Array.isArray(data.diario) ? data.diario : [];
+        stateSettings = { ...DEFAULT_SETTINGS, ...(data.settings || {}) };
+        stateCultivos = Array.isArray(data.cultivos) ? data.cultivos : [];
+        stateDiario   = Array.isArray(data.diario) ? data.diario : [];
 
-            saveSettings(stateSettings);
-            saveCultivos(stateCultivos);
-            saveDiario(stateDiario);
+        // 👇 RESTAURA personalizados (si el respaldo los trae)
+        const custom = Array.isArray(data.customCultivos) ? data.customCultivos : [];
+        saveCustomCultivos(custom);
+        injectCustomIntoCatalogo(custom);
 
-            updateHeader();
-            updateSettingsContexts();
-            renderCultivos();
-            renderDiario();
-            renderInicio();
-            renderCalendario(new Date().getMonth());
+        saveSettings(stateSettings);
+        saveCultivos(stateCultivos);
+        saveDiario(stateDiario);
 
-            alert("Respaldo restaurado correctamente ✅");
-          } catch (err) {
-            console.error(err);
-            alert("No se pudo leer el respaldo. Usa un .json exportado por esta app.");
-          }
-        };
-        reader.readAsText(file);
-      };
+        updateHeader();
+        updateSettingsContexts();
+        renderCultivos();
+        renderDiario();
+        renderInicio();
+        renderCalendario(new Date().getMonth());
+        renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
 
-      input.click();
-    }
+        alert("Respaldo restaurado correctamente ✅");
+      } catch (err) {
+        console.error(err);
+        alert("No se pudo leer el respaldo. Usa un .json exportado por esta app.");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  input.click();
+}
 
     function borrarTodo() {
   if (!confirm("Esto borrará ajustes, cultivos y diario en este dispositivo. ¿Seguro?")) return;
