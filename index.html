@@ -1995,6 +1995,12 @@ if (mesAjustado !== monthIndex) {
 
     function setupMiHuertoForm() {
       const btn = document.getElementById("btnAgregarCultivo");
+  if (!btn) return;
+
+  // Evitar duplicar listeners si se llama 2 veces
+  if (btn.dataset.bound === "1") return;
+  btn.dataset.bound = "1";
+      const btn = document.getElementById("btnAgregarCultivo");
       if (!btn) return;
 
       btn.addEventListener("click", () => {
