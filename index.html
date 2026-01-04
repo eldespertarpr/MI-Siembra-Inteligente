@@ -2161,30 +2161,56 @@ if (mesAjustado !== monthIndex) {
           diarioFiltroActual = f.dataset.filtro || "todos";
           renderDiario();
         });
-      });
 
       listEl?.addEventListener("click", ev => {
-        const b = ev.target.closest("button[data-action='editar-diario']");
-        if (!b) return;
+  const b = ev.target.closest("button[data-action]");
+  if (!b) return;
 
-        const id = b.getAttribute("data-id");
-        const entrada = stateDiario.find(e => e.id === id);
-        if (!entrada) return;
+  const action = b.getAttribute("data-action");
+  const id = b.getAttribute("data-id");
+  if (!id) return;
 
-        diarioEnEdicionId = id;
-        campo.value = entrada.texto || "";
-        campo.focus();
+  // EDITAR
+  if (action === "editar-diario") {
+    const entrada = stateDiario.find(e => e.id === id);
+    if (!entrada) return;
 
-        const titleEl = document.getElementById("diarioFormTitle");
-        if (titleEl) titleEl.textContent = "Editar entrada";
+    diarioEnEdicionId = id;
+    campo.value = entrada.texto || "";
+    campo.focus();
 
-        btn.innerHTML = '<span>💾</span> Actualizar entrada';
-        document.getElementById("diarioFormCard")?.scrollIntoView?.({ behavior: "smooth", block: "start" });
-      });
+    const titleEl = document.getElementById("diarioFormTitle");
+    if (titleEl) titleEl.textContent = "Editar entrada";
 
-      document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
+    btn.innerHTML = '<span>💾</span> Actualizar entrada';
+    document.getElementById("diarioFormCard")?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  // BORRAR
+  if (action === "borrar-diario") {
+    const entrada = stateDiario.find(e => e.id === id);
+    if (!entrada) return;
+
+    if (!confirm(`¿Borrar esta entrada del ${formatDate(entrada.fecha)}?`)) return;
+
+    stateDiario = stateDiario.filter(e => e.id !== id);
+    saveDiario(stateDiario);
+
+    // si estabas editando esa misma, resetea el form
+    if (diarioEnEdicionId === id) {
+      diarioEnEdicionId = null;
+      campo.value = "";
+      const titleEl = document.getElementById("diarioFormTitle");
+      if (titleEl) titleEl.textContent = "Nueva entrada";
+      btn.innerHTML = '<span>💾</span> Guardar en el diario';
     }
 
+    renderDiario();
+    renderInicio();
+    alert("Entrada borrada ✅");
+  }
+});
     function setupOpciones() {
       const nombreInput = document.getElementById("nombreHuerto");
       const climaSelect = document.getElementById("climaSelect");
