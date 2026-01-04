@@ -2179,44 +2179,108 @@ function setupDiario() {
       if (!id) return;
 
       // EDITAR
-      if (action === "editar-diario") {
-        const entrada = stateDiario.find(e => e.id === id);
-        if (!entrada) return;
+function setupDiario() {
+  const btn = document.getElementById("btnGuardarDiario");
+  const campo = document.getElementById("diarioTexto");
+  const filtros = document.querySelectorAll("#diarioFiltros .pill");
+  const listEl = document.getElementById("diarioList");
 
-        diarioEnEdicionId = id;
-        campo.value = entrada.texto || "";
-        campo.focus();
+  if (!btn || !campo || !listEl) return;
 
-        const titleEl = document.getElementById("diarioFormTitle");
-        if (titleEl) titleEl.textContent = "Editar entrada";
+  // ✅ Guardar / actualizar
+  btn.addEventListener("click", () => {
+    const texto = campo.value.trim();
+    if (!texto) { alert("Escribe algo antes de guardar."); return; }
 
-        btn.innerHTML = '<span>💾</span> Actualizar entrada';
-        document.getElementById("diarioFormCard")?.scrollIntoView?.({ behavior: "smooth", block: "start" });
-        return;
-      }
+    const titleEl = document.getElementById("diarioFormTitle");
 
-      // BORRAR
-      if (action === "borrar-diario") {
-        const entrada = stateDiario.find(e => e.id === id);
-        if (!entrada) return;
-
-        if (!confirm(`¿Borrar esta entrada del ${formatDate(entrada.fecha)}?`)) return;
-
-        stateDiario = stateDiario.filter(e => e.id !== id);
+    // EDITANDO
+    if (diarioEnEdicionId) {
+      const idx = stateDiario.findIndex(e => e.id === diarioEnEdicionId);
+      if (idx !== -1) {
+        stateDiario[idx].texto = texto;
         saveDiario(stateDiario);
-
-        if (diarioEnEdicionId === id) {
-          diarioEnEdicionId = null;
-          campo.value = "";
-          const titleEl = document.getElementById("diarioFormTitle");
-          if (titleEl) titleEl.textContent = "Nueva entrada";
-          btn.innerHTML = '<span>💾</span> Guardar en el diario';
-        }
-
-        renderDiario();
-        renderInicio();
-        alert("Entrada borrada ✅");
       }
+      diarioEnEdicionId = null;
+      campo.value = "";
+      if (titleEl) titleEl.textContent = "Nueva entrada";
+      btn.innerHTML = '<span>💾</span> Guardar en el diario';
+      renderDiario();
+      renderInicio();
+      alert("Entrada actualizada ✅");
+      return;
+    }
+
+    // NUEVA
+    stateDiario.push({ id: Date.now().toString(36), fecha: todayISO(), texto, tipo: "General" });
+    saveDiario(stateDiario);
+    campo.value = "";
+    renderDiario();
+    renderInicio();
+    alert("Entrada guardada ✅");
+  });
+
+  // ✅ Filtros (solo una vez)
+  filtros.forEach(f => {
+    f.addEventListener("click", () => {
+      filtros.forEach(b => b.classList.remove("pill--active"));
+      f.classList.add("pill--active");
+      diarioFiltroActual = f.dataset.filtro || "todos";
+      renderDiario();
+    });
+  });
+
+  // ✅ Clicks en lista: editar / borrar (solo un listener)
+  listEl.addEventListener("click", ev => {
+    const b = ev.target.closest("button[data-action]");
+    if (!b) return;
+
+    const action = b.getAttribute("data-action");
+    const id = b.getAttribute("data-id");
+    if (!id) return;
+
+    if (action === "editar-diario") {
+      const entrada = stateDiario.find(e => e.id === id);
+      if (!entrada) return;
+
+      diarioEnEdicionId = id;
+      campo.value = entrada.texto || "";
+      campo.focus();
+
+      const titleEl = document.getElementById("diarioFormTitle");
+      if (titleEl) titleEl.textContent = "Editar entrada";
+
+      btn.innerHTML = '<span>💾</span> Actualizar entrada';
+      document.getElementById("diarioFormCard")?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    if (action === "borrar-diario") {
+      const entrada = stateDiario.find(e => e.id === id);
+      if (!entrada) return;
+
+      if (!confirm(`¿Borrar esta entrada del ${formatDate(entrada.fecha)}?`)) return;
+
+      stateDiario = stateDiario.filter(e => e.id !== id);
+      saveDiario(stateDiario);
+
+      if (diarioEnEdicionId === id) {
+        diarioEnEdicionId = null;
+        campo.value = "";
+        const titleEl = document.getElementById("diarioFormTitle");
+        if (titleEl) titleEl.textContent = "Nueva entrada";
+        btn.innerHTML = '<span>💾</span> Guardar en el diario';
+      }
+
+      renderDiario();
+      renderInicio();
+      alert("Entrada borrada ✅");
+    }
+  });
+
+  // ✅ Conectar PDF del diario
+  document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
+}
     });
   }
 }
