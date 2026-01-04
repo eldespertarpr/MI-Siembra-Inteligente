@@ -10,7 +10,9 @@
   <meta name="theme-color" content="#22c55e" />
 
   <!-- jsPDF -->
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js">
+    
+  </script>
 
   <style>
     :root{
@@ -697,7 +699,6 @@
     <button class="btn btn-secondary" id="btnInstalarPwa"><span>📲</span> Instalar</button>
   </div>
 
-  <script>
     "use strict";
 
     /*********************
@@ -2230,104 +2231,705 @@ async function importarRespaldoJSON(file){
 
 // PDF (diario)
 function exportarDiarioPDF(){
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit:"pt", format:"letter" });
-    const margin = 40;
-    let y = 52;
 
-    doc.setFontSize(16);
-    doc.text(`Diario - ${stateSettings.nombreHuerto || "Mi huerto"}`, margin, y); y += 18;
+    /*********************
+     * Diario (completa)
+     *********************/
+    function renderDiario(){
+      const listEl = document.getElementById("diarioList");
+      const chip = document.getElementById("diarioCountChip");
+      const resumenHoyEl = document.getElementById("diarioResumenHoy");
+      if (!listEl) return;
 
-    doc.setFontSize(10);
-    doc.text(`Fecha: ${todayISO()}`, margin, y); y += 16;
+      const arrOrdenada = [...stateDiario].sort((a,b)=> (b.fecha||"").localeCompare(a.fecha||""));
+      const countTotal = arrOrdenada.length;
+      if (chip) chip.textContent = `${countTotal} entrada${countTotal===1?"":"s"}`;
 
-    const entries = [...stateDiario].sort((a,b)=>(b.fecha||"").localeCompare(a.fecha||""));
-    doc.setFontSize(11);
+      // Resumen hoy
+      if (resumenHoyEl) {
+        const hoy = todayISO();
+        const hoyEntries = arrOrdenada.filter(e => e.fecha === hoy);
+        if (!hoyEntries.length) resumenHoyEl.textContent = "Hoy aún no has registrado nada.";
+        else {
+          const tipos = {};
+          hoyEntries.forEach(e => { const t = e.tipo || "General"; tipos[t] = (tipos[t]||0) + 1; });
+          const parts = Object.entries(tipos).map(([k,v]) => `${v} ${k}`);
+          resumenHoyEl.textContent = `Hoy: ${parts.join(", ")}.`;
+        }
+      }
 
-    entries.slice(0, 80).forEach((e)=>{
-      const line1 = `${formatDate(e.fecha)} · ${e.tipo||"General"}`;
-      const body = (e.texto||"").replace(/\s+/g," ").trim();
-
-      if (y > 740) { doc.addPage(); y = 52; }
-
-      doc.setFont(undefined,"bold");
-      doc.text(line1, margin, y); y += 14;
-      doc.setFont(undefined,"normal");
-
-      const lines = doc.splitTextToSize(body, 520);
-      lines.forEach(ln=>{
-        if (y > 760) { doc.addPage(); y = 52; }
-        doc.text(ln, margin, y); y += 12;
+      const arrFiltrada = arrOrdenada.filter(e => {
+        if (diarioFiltroActual === "todos") return true;
+        return (e.tipo || "General") === diarioFiltroActual;
       });
-      y += 8;
+
+      if (!arrFiltrada.length) {
+        listEl.innerHTML = `<p class="muted">No hay entradas para el filtro seleccionado.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = "";
+      arrFiltrada.forEach(e => {
+        const card = document.createElement("div");
+        card.className = "diario-item";
+        card.innerHTML = `
+          <div class="diario-item-header">
+            <div>
+              <div style="font-weight:600">${escapeHTML(e.tipo || "General")}</div>
+              <div class="muted">${escapeHTML(formatDate(e.fecha))}</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary" data-action="editar-diario" data-id="${escapeHTML(e.id)}">✏️</button>
+              <button class="btn btn-danger" data-action="borrar-diario" data-id="${escapeHTML(e.id)}">🗑</button>
+            </div>
+          </div>
+          <div>${escapeHTML(e.texto || "")}</div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    /*********************
+     * Plagas y pesticidas (render)
+     *********************/
+    const PESTICIDAS_DATA = [
+      { nombre:"Jabón potásico", uso:"Pulgones, mosca blanca, cochinillas (contacto).", nota:"Aplicar al atardecer y repetir 3–5 días si hace falta." },
+      { nombre:"Aceite de neem", uso:"Repelente/antialimentario (plagas suaves).", nota:"No aplicar a pleno sol. Probar en pocas hojas primero." },
+      { nombre:"Bicarbonato (suave)", uso:"Oídio/manchas leves (preventivo).", nota:"Dosis baja y no abusar. Mejor con buena ventilación." },
+      { nombre:"Trampas amarillas", uso:"Mosca blanca, minadores (monitoreo).", nota:"Útiles para controlar población y medir actividad." }
+    ];
+
+    function renderPlagas(){
+      const el = document.getElementById("plagasList");
+      if (!el) return;
+      el.innerHTML = "";
+      PLAGAS_DATA.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "plaga-card";
+        div.innerHTML = `
+          <div class="media-item-title">🐛 ${escapeHTML(p.nombre)}</div>
+          <div class="media-item-body"><strong>Cómo se ve:</strong> ${escapeHTML(p.comoSeVe)}</div>
+          <div class="media-item-body"><strong>Manejo suave:</strong> ${escapeHTML(p.manejoSuave)}</div>
+          <div class="media-item-body"><strong>Casero:</strong> ${escapeHTML(p.preparadosCaseros)}</div>
+          <div class="media-item-body"><strong>Comercial:</strong> ${escapeHTML(p.productosComerciales)}</div>
+        `;
+        el.appendChild(div);
+      });
+    }
+
+    function renderPesticidas(){
+      const el = document.getElementById("pesticidasList");
+      if (!el) return;
+      el.innerHTML = "";
+      PESTICIDAS_DATA.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "plaga-card";
+        div.innerHTML = `
+          <div class="media-item-title">💧 ${escapeHTML(p.nombre)}</div>
+          <div class="media-item-body"><strong>Uso:</strong> ${escapeHTML(p.uso)}</div>
+          <div class="media-item-body"><strong>Nota:</strong> ${escapeHTML(p.nota)}</div>
+        `;
+        el.appendChild(div);
+      });
+    }
+
+    /*********************
+     * NAV
+     *********************/
+    function setupNav(){
+      const nav = document.querySelector(".nav");
+      if (!nav || nav.dataset.bound === "1") return;
+      nav.dataset.bound = "1";
+
+      nav.addEventListener("click", (ev) => {
+        const btn = ev.target.closest("button.nav-btn[data-section]");
+        if (!btn) return;
+        const target = btn.dataset.section;
+
+        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("nav-btn--active"));
+        btn.classList.add("nav-btn--active");
+
+        document.querySelectorAll(".section").forEach(s => s.classList.remove("section--active"));
+        document.getElementById(`section-${target}`)?.classList.add("section--active");
+
+        // renders suaves al entrar
+        if (target === "inicio") renderInicio();
+        if (target === "huerto") renderCultivos();
+        if (target === "diario") renderDiario();
+        if (target === "catalogo") renderCatalogo((document.getElementById("catalogoBusqueda")?.value||"").trim());
+        if (target === "plagas") renderPlagas();
+        if (target === "pesticidas") renderPesticidas();
+      });
+    }
+
+    /*********************
+     * Calendario
+     *********************/
+    function setupCalendario(){
+      const wrap = document.getElementById("mesesPills");
+      if (!wrap || wrap.dataset.bound === "1") return;
+      wrap.dataset.bound = "1";
+
+      // seleccionar mes actual al entrar
+      const nowM = new Date().getMonth();
+      const pills = wrap.querySelectorAll("button.pill[data-mes]");
+      pills.forEach(p => p.classList.remove("pill--active"));
+      wrap.querySelector(`button.pill[data-mes="${nowM}"]`)?.classList.add("pill--active");
+      renderCalendario(nowM);
+
+      wrap.addEventListener("click", (ev) => {
+        const b = ev.target.closest("button.pill[data-mes]");
+        if (!b) return;
+        pills.forEach(p => p.classList.remove("pill--active"));
+        b.classList.add("pill--active");
+        const m = parseInt(b.dataset.mes,10);
+        if (Number.isFinite(m)) renderCalendario(m);
+      });
+
+      // botón “Ver en catálogo” dentro del calendario
+      document.getElementById("calendarList")?.addEventListener("click", (ev) => {
+        const b = ev.target.closest("button[data-action='ver-catalogo'][data-id]");
+        if (!b) return;
+        irACultivoEnCatalogo(b.dataset.id);
+      });
+    }
+
+    /*********************
+     * Catálogo (events)
+     *********************/
+    function setupCatalogo(){
+      const input = document.getElementById("catalogoBusqueda");
+      const list = document.getElementById("catalogoList");
+      if (input && input.dataset.bound !== "1"){
+        input.dataset.bound = "1";
+        input.addEventListener("input", () => renderCatalogo(input.value));
+      }
+
+      if (!list || list.dataset.bound === "1") return;
+      list.dataset.bound = "1";
+
+      list.addEventListener("click", (ev) => {
+        const btn = ev.target.closest("button[data-action][data-id]");
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const id = btn.dataset.id;
+
+        if (action === "germinacion"){
+          const card = btn.closest(".cultivo-card");
+          const panel = card?.querySelector(".germinacion-panel");
+          if (!panel) return;
+
+          const info = getInfoGerminacion(id);
+          if (!info) { showToast("No hay info de germinación"); return; }
+
+          const visible = panel.style.display === "block";
+          if (visible){ panel.style.display = "none"; panel.innerHTML = ""; return; }
+
+          panel.style.display = "block";
+          panel.innerHTML = `
+            <div style="font-weight:600;margin-bottom:6px;">${escapeHTML(info.titulo)}</div>
+            <div><strong>Método:</strong> ${escapeHTML(info.metodo)}</div>
+            <div style="margin-top:6px;"><strong>Pasos:</strong></div>
+            <ul style="margin:6px 0 0 18px;">
+              ${(info.pasos||[]).map(x=>`<li>${escapeHTML(x)}</li>`).join("")}
+            </ul>
+            <div style="margin-top:6px;"><strong>Tip:</strong> ${escapeHTML(info.tip||"—")}</div>
+          `;
+          return;
+        }
+
+        if (action === "editar-custom"){
+          const customList = loadCustomCultivos();
+          const cultivo = customList.find(c => c.id === id);
+          if (cultivo) startEditCustomCultivo(cultivo);
+          return;
+        }
+
+        if (action === "borrar-custom"){
+          if (confirm("¿Borrar este cultivo personalizado?")) {
+            deleteCustomCultivoById(id);
+            renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+            showToast("Borrado ✅");
+          }
+          return;
+        }
+      });
+    }
+
+    /*********************
+     * Mi huerto (events)
+     *********************/
+    function setupMiHuerto(){
+      const btn = document.getElementById("btnAgregarCultivo");
+      const list = document.getElementById("cultivosList");
+      if (btn && btn.dataset.bound !== "1"){
+        btn.dataset.bound = "1";
+        btn.addEventListener("click", () => {
+          const nombre = (document.getElementById("cultivoNombre")?.value||"").trim();
+          if (!nombre) { alert("Escribe el nombre del cultivo."); return; }
+
+          const variedad = (document.getElementById("cultivoVariedad")?.value||"").trim();
+          const tipo = document.getElementById("cultivoTipo")?.value || "otro";
+          const fechaSiembra = document.getElementById("cultivoFecha")?.value || todayISO();
+          const frecR = Number(document.getElementById("cultivoFrecuenciaRiego")?.value || "");
+          const frecA = Number(document.getElementById("cultivoFrecuenciaAbono")?.value || "");
+          const notas = (document.getElementById("cultivoNotas")?.value||"").trim();
+
+          const { fechaCosechaEstimada } = getRiegoYCosechaParaNombre(nombre, fechaSiembra);
+
+          const item = {
+            id: `c-${Date.now().toString(36)}`,
+            nombre, variedad, tipo,
+            fechaSiembra,
+            frecuenciaRiegoDias: Number.isFinite(frecR) && frecR>0 ? frecR : null,
+            frecuenciaAbonoDias: Number.isFinite(frecA) && frecA>0 ? frecA : null,
+            ultimoRiego: null,
+            ultimaFertilizacion: null,
+            fechaCosechaEstimada: fechaCosechaEstimada || null,
+            notas,
+            creadoEl: todayISO()
+          };
+
+          stateCultivos = [...stateCultivos, item];
+          saveCultivos(stateCultivos);
+
+          // limpiar
+          document.getElementById("cultivoNombre").value = "";
+          document.getElementById("cultivoVariedad").value = "";
+          document.getElementById("cultivoFrecuenciaRiego").value = "";
+          document.getElementById("cultivoFrecuenciaAbono").value = "";
+          document.getElementById("cultivoNotas").value = "";
+
+          renderCultivos();
+          renderInicio();
+          showToast("Cultivo guardado ✅");
+        });
+      }
+
+      if (!list || list.dataset.bound === "1") return;
+      list.dataset.bound = "1";
+
+      list.addEventListener("click", (ev) => {
+        const btn = ev.target.closest("button[data-action][data-id]");
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const action = btn.dataset.action;
+        const idx = stateCultivos.findIndex(x => x.id === id);
+        if (idx < 0) return;
+
+        const c = stateCultivos[idx];
+
+        if (action === "nota"){
+          const n = prompt("Editar notas:", c.notas || "");
+          if (n === null) return;
+          c.notas = n.trim();
+        }
+
+        if (action === "riego"){
+          c.ultimoRiego = todayISO();
+        }
+
+        if (action === "abono"){
+          c.ultimaFertilizacion = todayISO();
+        }
+
+        if (action === "plaga"){
+          const n = prompt("Anota plaga observada:", "");
+          if (n && n.trim()) {
+            // también al diario
+            stateDiario.push({ id:`d-${Date.now().toString(36)}`, tipo:"Plagas", fecha: todayISO(), texto:`${c.nombre}: ${n.trim()}` });
+            saveDiario(stateDiario);
+          }
+        }
+
+        if (action === "borrar"){
+          if (!confirm(`¿Eliminar "${c.nombre}"?`)) return;
+          stateCultivos.splice(idx,1);
+        }
+
+        saveCultivos(stateCultivos);
+        renderCultivos();
+        renderInicio();
+      });
+    }
+
+    /*********************
+     * Diario (events)
+     *********************/
+    function setupDiario(){
+      const btn = document.getElementById("btnGuardarDiario");
+      const list = document.getElementById("diarioList");
+      const filtros = document.getElementById("diarioFiltros");
+      const btnPdf = document.getElementById("btnExportarDiarioPdf");
+
+      if (btn && btn.dataset.bound !== "1"){
+        btn.dataset.bound = "1";
+        btn.addEventListener("click", () => {
+          const tipo = document.getElementById("diarioTipo")?.value || "General";
+          const fecha = document.getElementById("diarioFecha")?.value || todayISO();
+          const texto = (document.getElementById("diarioTexto")?.value||"").trim();
+          if (!texto) { alert("Escribe algo para el diario."); return; }
+
+          // si estás editando
+          if (diarioEnEdicionId){
+            const i = stateDiario.findIndex(x=>x.id===diarioEnEdicionId);
+            if (i>=0){
+              stateDiario[i] = { ...stateDiario[i], tipo, fecha, texto };
+            }
+            diarioEnEdicionId = null;
+            document.getElementById("diarioFormTitle").textContent = "Nueva entrada";
+          } else {
+            stateDiario.push({ id:`d-${Date.now().toString(36)}`, tipo, fecha, texto });
+          }
+
+          saveDiario(stateDiario);
+          document.getElementById("diarioTexto").value = "";
+          renderDiario();
+          renderInicio();
+          showToast("Diario guardado ✅");
+        });
+      }
+
+      if (filtros && filtros.dataset.bound !== "1"){
+        filtros.dataset.bound = "1";
+        filtros.addEventListener("click",(ev)=>{
+          const b = ev.target.closest("button.pill[data-filtro]");
+          if (!b) return;
+          document.querySelectorAll("#diarioFiltros .pill").forEach(x=>x.classList.remove("pill--active"));
+          b.classList.add("pill--active");
+          diarioFiltroActual = b.dataset.filtro;
+          renderDiario();
+        });
+      }
+
+      if (list && list.dataset.bound !== "1"){
+        list.dataset.bound = "1";
+        list.addEventListener("click",(ev)=>{
+          const b = ev.target.closest("button[data-action][data-id]");
+          if (!b) return;
+          const id = b.dataset.id;
+          const act = b.dataset.action;
+          const i = stateDiario.findIndex(x=>x.id===id);
+          if (i<0) return;
+
+          if (act === "borrar-diario"){
+            if (!confirm("¿Borrar esta entrada?")) return;
+            stateDiario.splice(i,1);
+            saveDiario(stateDiario);
+            renderDiario();
+            renderInicio();
+            return;
+          }
+
+          if (act === "editar-diario"){
+            const e = stateDiario[i];
+            diarioEnEdicionId = e.id;
+            document.getElementById("diarioTipo").value = e.tipo || "General";
+            document.getElementById("diarioFecha").value = e.fecha || todayISO();
+            document.getElementById("diarioTexto").value = e.texto || "";
+            document.getElementById("diarioFormTitle").textContent = "Editar entrada";
+            document.getElementById("diarioTexto")?.focus();
+            return;
+          }
+        });
+      }
+
+      if (btnPdf && btnPdf.dataset.bound !== "1"){
+        btnPdf.dataset.bound = "1";
+        btnPdf.addEventListener("click", exportDiarioPDF);
+      }
+    }
+
+    /*********************
+     * Export PDF (simple)
+     *********************/
+    function exportDiarioPDF(){
+      const jspdf = window.jspdf?.jsPDF;
+      if (!jspdf) { alert("jsPDF no cargó."); return; }
+      const doc = new jspdf({ unit:"pt", format:"letter" });
+
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(16);
+      doc.text("Mi Siembra Inteligente - Diario", 40, 50);
+
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(11);
+
+      const arr = [...stateDiario].sort((a,b)=> (b.fecha||"").localeCompare(a.fecha||""));
+      let y = 80;
+
+      arr.forEach(e=>{
+        const header = `${e.fecha || ""} · ${e.tipo || "General"}`;
+        const body = e.texto || "";
+        const lines = doc.splitTextToSize(body, 520);
+
+        if (y > 740){ doc.addPage(); y = 50; }
+
+        doc.setFont("helvetica","bold");
+        doc.text(header, 40, y); y += 16;
+        doc.setFont("helvetica","normal");
+
+        lines.forEach(line=>{
+          if (y > 740){ doc.addPage(); y = 50; }
+          doc.text(line, 40, y); y += 14;
+        });
+
+        y += 10;
+      });
+
+      doc.save("mi-siembra-diario.pdf");
+    }
+
+    /*********************
+     * Opciones + Clima (Open-Meteo)
+     *********************/
+    function loadWeatherFromCache(){
+      const w = loadJSON(STORAGE_WEATHER, null);
+      if (!w || typeof w !== "object") return;
+      const chip = document.getElementById("climaAhoraChip");
+      if (chip && w.tempC != null) chip.textContent = `Clima: ${Math.round(w.tempC)}°C`;
+    }
+
+    async function updateWeather(){
+      const geo = loadGeo();
+      if (!geo) { showToast("Primero guarda tu ubicación 📍"); return; }
+
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${geo.lat}&longitude=${geo.lon}&current=temperature_2m,precipitation&timezone=auto`;
+      const res = await fetch(url, { cache:"no-store" });
+      if (!res.ok) throw new Error("Weather fetch error");
+      const data = await res.json();
+
+      const tempC = data?.current?.temperature_2m;
+      saveJSON(STORAGE_WEATHER, { tempC, at: Date.now(), label: geo.label || "" });
+
+      const chip = document.getElementById("climaAhoraChip");
+      if (chip && tempC != null) chip.textContent = `Clima: ${Math.round(tempC)}°C`;
+
+      const st = document.getElementById("climaStatusChip");
+      if (st) st.textContent = "OK ✅";
+
+      showToast("Clima actualizado ✅");
+    }
+
+    function pedirUbicacion(){
+      if (!navigator.geolocation) { alert("Geolocalización no disponible."); return; }
+
+      const st = document.getElementById("climaStatusChip");
+      if (st) st.textContent = "Buscando...";
+
+      navigator.geolocation.getCurrentPosition((pos)=>{
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const geo = { lat, lon, label:"" };
+        saveGeo(geo);
+        if (st) st.textContent = "Guardada 📍";
+        showToast("Ubicación guardada ✅");
+      }, ()=>{
+        if (st) st.textContent = "Error";
+        alert("No se pudo obtener ubicación.");
+      }, { enableHighAccuracy:false, timeout:10000 });
+    }
+
+    function setupOpciones(){
+      const nombre = document.getElementById("nombreHuerto");
+      const clima = document.getElementById("climaSelect");
+      const hemi = document.getElementById("hemisferioSelect");
+
+      if (nombre) nombre.value = stateSettings.nombreHuerto || "";
+      if (clima) clima.value = stateSettings.clima || "tropical";
+      if (hemi) hemi.value = stateSettings.hemisferio || "norte";
+
+      const btnSave = document.getElementById("btnGuardarConfig");
+      if (btnSave && btnSave.dataset.bound !== "1"){
+        btnSave.dataset.bound = "1";
+        btnSave.addEventListener("click", ()=>{
+          stateSettings = {
+            nombreHuerto: (nombre?.value || "Mi huerto").trim() || "Mi huerto",
+            clima: clima?.value || "tropical",
+            hemisferio: hemi?.value || "norte"
+          };
+          saveSettings(stateSettings);
+          updateHeader();
+          updateSettingsContexts();
+          renderInicio();
+          showToast("Configuración guardada ✅");
+        });
+      }
+
+      const b1 = document.getElementById("btnPedirUbicacion");
+      if (b1 && b1.dataset.bound !== "1"){
+        b1.dataset.bound = "1";
+        b1.addEventListener("click", pedirUbicacion);
+      }
+
+      const b2 = document.getElementById("btnActualizarClima");
+      if (b2 && b2.dataset.bound !== "1"){
+        b2.dataset.bound = "1";
+        b2.addEventListener("click", ()=> updateWeather().catch(()=>showToast("No se pudo actualizar clima")));
+      }
+
+      const btnExportJson = document.getElementById("btnExportarJson");
+      if (btnExportJson && btnExportJson.dataset.bound !== "1"){
+        btnExportJson.dataset.bound = "1";
+        btnExportJson.addEventListener("click", ()=>{
+          const payload = {
+            settings: stateSettings,
+            cultivos: stateCultivos,
+            diario: stateDiario,
+            customCultivos: loadCustomCultivos(),
+            geo: loadGeo()
+          };
+          const blob = new Blob([JSON.stringify(payload,null,2)], { type:"application/json" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "mi-siembra-respaldo.json";
+          a.click();
+          URL.revokeObjectURL(a.href);
+        });
+      }
+
+      const input = document.getElementById("inputRespaldoJSON");
+      const btnImport = document.getElementById("btnImportarJson");
+      if (btnImport && input && btnImport.dataset.bound !== "1"){
+        btnImport.dataset.bound = "1";
+        btnImport.addEventListener("click", ()=> input.click());
+        input.addEventListener("change", async ()=>{
+          const file = input.files?.[0];
+          if (!file) return;
+          try {
+            const txt = await file.text();
+            const obj = JSON.parse(txt);
+
+            if (obj.settings) { stateSettings = { ...DEFAULT_SETTINGS, ...obj.settings }; saveSettings(stateSettings); }
+            if (Array.isArray(obj.cultivos)) { stateCultivos = obj.cultivos; saveCultivos(stateCultivos); }
+            if (Array.isArray(obj.diario)) { stateDiario = obj.diario; saveDiario(stateDiario); }
+            if (Array.isArray(obj.customCultivos)) { saveCustomCultivos(obj.customCultivos); injectCustomIntoCatalogo(obj.customCultivos); }
+            if (obj.geo && typeof obj.geo === "object") { saveGeo(obj.geo); }
+
+            updateHeader();
+            updateSettingsContexts();
+            renderInicio();
+            renderCultivos();
+            renderDiario();
+            renderCatalogo("");
+            showToast("Respaldo restaurado ✅");
+          } catch {
+            alert("Respaldo inválido.");
+          } finally {
+            input.value = "";
+          }
+        });
+      }
+
+      const btnBorrar = document.getElementById("btnBorrarTodo");
+      if (btnBorrar && btnBorrar.dataset.bound !== "1"){
+        btnBorrar.dataset.bound = "1";
+        btnBorrar.addEventListener("click", ()=>{
+          if (!confirm("¿Borrar TODO (cultivos, diario, config y personalizados)?")) return;
+          localStorage.removeItem(STORAGE_KEYS.settings);
+          localStorage.removeItem(STORAGE_KEYS.cultivos);
+          localStorage.removeItem(STORAGE_KEYS.diario);
+          localStorage.removeItem(STORAGE_CUSTOM_CULTIVOS);
+          localStorage.removeItem(STORAGE_GEO);
+          localStorage.removeItem(STORAGE_WEATHER);
+
+          stateSettings = loadSettings();
+          stateCultivos = loadCultivos();
+          stateDiario = loadDiario();
+
+          injectCustomIntoCatalogo(loadCustomCultivos());
+          updateHeader();
+          updateSettingsContexts();
+          renderInicio();
+          renderCultivos();
+          renderDiario();
+          renderCatalogo("");
+          loadWeatherFromCache();
+
+          showToast("Todo borrado ✅");
+        });
+      }
+    }
+
+    /*********************
+     * PWA install banner
+     *********************/
+    let deferredPrompt = null;
+    function setupPwaInstall(){
+      const banner = document.getElementById("installBanner");
+      const btn = document.getElementById("btnInstalarPwa");
+      if (!banner || !btn) return;
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        banner.classList.remove("hidden");
+      });
+
+      if (btn.dataset.bound !== "1") {
+        btn.dataset.bound = "1";
+        btn.addEventListener("click", async () => {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();
+          try { await deferredPrompt.userChoice; } catch {}
+          deferredPrompt = null;
+          banner.classList.add("hidden");
+        });
+      }
+
+      window.addEventListener("appinstalled", () => {
+        banner.classList.add("hidden");
+        deferredPrompt = null;
+        showToast("Instalada ✅");
+      });
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js").catch(()=>{});
+      }
+    }
+
+    /*********************
+     * INIT
+     *********************/
+    function initDefaults(){
+      const f1 = document.getElementById("cultivoFecha");
+      if (f1 && !f1.value) f1.value = todayISO();
+
+      const f2 = document.getElementById("diarioFecha");
+      if (f2 && !f2.value) f2.value = todayISO();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      bindToastClose();
+
+      stateSettings = loadSettings();
+      stateCultivos = loadCultivos();
+      stateDiario = loadDiario();
+
+      updateHeader();
+      updateSettingsContexts();
+
+      initCustomCultivos();
+
+      setupNav();
+      setupCalendario();
+      setupCatalogo();
+      setupMiHuerto();
+      setupDiario();
+      setupOpciones();
+      setupPwaInstall();
+      initDefaults();
+
+      renderInicio();
+      renderCultivos();
+      renderDiario();
+      renderCatalogo("");
+      renderPlagas();
+      renderPesticidas();
+
+      loadWeatherFromCache();
+      if (loadGeo()) updateWeather().catch(()=>{});
     });
 
-    doc.save(`diario-${todayISO()}.pdf`);
-    showToast("PDF listo ✅");
-  } catch {
-    alert("No se pudo exportar PDF. Verifica que jsPDF cargó.");
-  }
-}
-
-// PDF (datos)
-function exportarDatosPDF(){
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit:"pt", format:"letter" });
-    const margin = 40;
-    let y = 52;
-
-    doc.setFontSize(16);
-    doc.text(`Mi Siembra Inteligente - Resumen`, margin, y); y += 18;
-
-    doc.setFontSize(10);
-    doc.text(`Huerto: ${stateSettings.nombreHuerto || "Mi huerto"} · Fecha: ${todayISO()}`, margin, y); y += 18;
-
-    doc.setFontSize(12);
-    doc.text(`Cultivos (${stateCultivos.length})`, margin, y); y += 14;
-
-    doc.setFontSize(10);
-    stateCultivos.slice(0, 60).forEach(c=>{
-      const line = `• ${c.nombre} (${formatDate(c.fechaSiembra)}) riego:${c.frecuenciaRiegoDias||"—"} abono:${c.frecuenciaAbonoDias||"—"}`;
-      const lines = doc.splitTextToSize(line, 520);
-      lines.forEach(ln=>{
-        if (y > 760) { doc.addPage(); y = 52; }
-        doc.text(ln, margin, y); y += 12;
-      });
-    });
-
-    doc.save(`msi-datos-${todayISO()}.pdf`);
-    showToast("PDF listo ✅");
-  } catch {
-    alert("No se pudo exportar PDF. Verifica que jsPDF cargó.");
-  }
-}
-
-/*********************
- * NAV (secciones)
- *********************/
-function setupNav(){
-  const nav = document.querySelector(".nav");
-  if (!nav || nav.dataset.bound === "1") return;
-  nav.dataset.bound = "1";
-
-  nav.addEventListener("click",(ev)=>{
-    const btn = ev.target.closest("button.nav-btn[data-section]");
-    if (!btn) return;
-
-    const target = btn.dataset.section;
-    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("nav-btn--active"));
-    btn.classList.add("nav-btn--active");
-
-    document.querySelectorAll(".section").forEach(s=>s.classList.remove("section--active"));
-    document.getElementById(`section-${target}`)?.classList.add("section--active");
-
-    // render suave al cambiar
-    if (target === "inicio") renderInicio();
-    if (target === "huerto") renderCultivos();
-    if (target === "diario") renderDiario();
-    if (target === "catalogo") renderCatalogo((document.getElementById("catalogoBusqueda")?.value||"").trim());
-  });
-}
-</script>
+<!-- FIN PARTE 2 -->
+          </script>
