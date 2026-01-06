@@ -2491,14 +2491,13 @@
   alert("Se borraron todos los datos. Empezarás de cero 🌱");
 }
 
-    /*********************
-     * PWA: service worker + instalar
-     *********************/
-<script>
+/*********************
+ * PWA: service worker + instalar
+ *********************/
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+      await navigator.serviceWorker.register("./sw.js", { scope: "./" });
 
       let reloaded = false;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -2511,6 +2510,6 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
-</script>
+  </script>
 </body>
   </html>
