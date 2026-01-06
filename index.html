@@ -2494,73 +2494,28 @@
     /*********************
      * PWA: service worker + instalar
      *********************/
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js").catch(err => console.error("Error registrando SW:", err));
+    <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+
+      // Si hay una actualización esperando, recarga al activarse
+      reg.addEventListener("updatefound", () => {
+        const installing = reg.installing;
+        if (!installing) return;
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "activated") {
+            // Recarga para servir lo nuevo
+            window.location.reload();
+          }
+        });
       });
+    } catch (err) {
+      console.error("Error registrando SW:", err);
     }
-
-    let deferredPrompt = null;
-    const installBanner = document.getElementById("installBanner");
-    const installBtn = document.getElementById("btnInstalarPwa");
-
-    window.addEventListener("beforeinstallprompt", e => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBanner?.classList.remove("hidden");
-    });
-
-    installBtn?.addEventListener("click", async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      installBanner?.classList.add("hidden");
-    });
-
-    /*********************
-     * Calendario -> catálogo
-     *********************/
-    function setupCalendarioLinksSafe() {
-      const calendarList = document.getElementById("calendarList");
-      if (!calendarList) return;
-      if (calendarList.dataset.bound === "1") return;
-      calendarList.dataset.bound = "1";
-      setupCalendarioLinks();
-    }
-
-    /*********************
-     * Inicio app
-     *********************/
-    document.addEventListener("DOMContentLoaded", () => {
-  if (window.__MSI_INIT__) return;
-  window.__MSI_INIT__ = true;
-
-  stateSettings = loadSettings();
-  stateCultivos = loadCultivos();
-  stateDiario = loadDiario();
-
-  initCustomCultivos();
-
-  updateHeader();
-  updateSettingsContexts();
-
-  renderInicio();
-  renderCalendario(new Date().getMonth());
-  renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
-  renderCultivos();
-  renderDiario();
-  renderPlagas();
-  renderPesticidas();
-
-  setupNavigation();
-  setupMesesPills();
-  setupMiHuertoForm();
-  setupDiario();
-  setupOpciones();
-  setupCatalogo();
-  setupCalendarioLinksSafe();
-});
-  </script>
+  });
+}
+</script>
 </body>
   </html>
