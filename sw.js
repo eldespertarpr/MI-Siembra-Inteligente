@@ -1,10 +1,10 @@
 /* sw.js */
-const CACHE_NAME = "msi-v17-04"; // <-- SUBE ESTO cuando hagas cambios
+const CACHE_NAME = "msi-v17-05";
 const CORE_ASSETS = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./img/placeholder.jpg"
+  "/MI-Siembra-Inteligente/",
+  "/MI-Siembra-Inteligente/index.html",
+  "/MI-Siembra-Inteligente/manifest.json",
+  "/MI-Siembra-Inteligente/img/placeholder.jpg"
 ];
 
 // Instala y cachea lo básico
