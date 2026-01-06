@@ -2536,34 +2536,31 @@
   if (window.__MSI_INIT__) return;
   window.__MSI_INIT__ = true;
 
-  // ... tu código actual
+  stateSettings = loadSettings();
+  stateCultivos = loadCultivos();
+  stateDiario = loadDiario();
+
+  initCustomCultivos();
+
+  updateHeader();
+  updateSettingsContexts();
+
+  renderInicio();
+  renderCalendario(new Date().getMonth());
+  renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+  renderCultivos();
+  renderDiario();
+  renderPlagas();
+  renderPesticidas();
+
+  setupNavigation();
+  setupMesesPills();
+  setupMiHuertoForm();
+  setupDiario();
+  setupOpciones();
+  setupCatalogo();
+  setupCalendarioLinksSafe();
 });
-    document.addEventListener("DOMContentLoaded", () => {
-      stateSettings = loadSettings();
-      stateCultivos = loadCultivos();
-      stateDiario = loadDiario();
-
-      initCustomCultivos(); // <-- IMPORTANT: antes de renderCalendario / renderCatalogo
-
-      updateHeader();
-      updateSettingsContexts();
-
-      renderInicio();
-      renderCalendario(new Date().getMonth());
-      renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
-      renderCultivos();
-      renderDiario();
-      renderPlagas();
-      renderPesticidas();
-
-      setupNavigation();
-      setupMesesPills();
-      setupMiHuertoForm();
-      setupDiario();
-      setupOpciones();
-      setupCatalogo();
-      setupCalendarioLinksSafe();
-    });
   </script>
 </body>
   </html>
