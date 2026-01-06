@@ -2510,6 +2510,43 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
+    /*********************
+ * INIT (ARRANQUE)
+ *********************/
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    // Estado + header
+    updateHeader();
+    updateSettingsContexts();
+
+    // Setups
+    setupNavigation();
+    setupMesesPills();
+    setupCalendarioLinks();
+    setupCatalogo();
+    setupMiHuertoForm();
+    setupDiario();
+    setupOpciones();
+
+    // Custom cultivos
+    initCustomCultivos();
+
+    // Render inicial
+    renderCatalogo("");
+    renderCultivos();
+    renderDiario();
+    renderPlagas();
+    renderPesticidas();
+    renderInicio();
+
+    // Fecha por defecto en "Mi huerto"
+    const f = document.getElementById("cultivoFecha");
+    if (f && !f.value) f.value = todayISO();
+  } catch (e) {
+    console.error("Fallo en INIT:", e);
+    alert("Error arrancando la app. Abre la consola para ver el detalle.");
+  }
+});
   </script>
 </body>
   </html>
