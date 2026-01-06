@@ -1,5 +1,5 @@
 /* sw.js */
-const CACHE_NAME = "msi-v17-03"; // <-- SUBE ESTO cuando hagas cambios
+const CACHE_NAME = "msi-v17-04"; // <-- SUBE ESTO cuando hagas cambios
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -11,7 +11,11 @@ const CORE_ASSETS = [
 self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      // addAll puede fallar si 1 asset no existe; esto te deja ver mejor el error
+      await cache.addAll(CORE_ASSETS);
+    })()
   );
 });
 
@@ -19,46 +23,59 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(
-      keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : Promise.resolve()))
-    );
+    await Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)));
     await self.clients.claim();
   })());
 });
 
-// Estrategia:
-// - HTML: Network-first (para que siempre agarre lo nuevo)
-// - Imágenes/CSS/JS: Cache-first (rápido)
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
   // Solo mismo origen
-  if (url.origin !== location.origin) return;
+  if (url.origin !== self.location.origin) return;
 
-  // HTML -> network first
-  if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
+  // Solo GET (evita problemas con POST/PUT/etc)
+  if (req.method !== "GET") return;
+
+  // NO cachear /sw.js (evita que se quede “pegado”)
+  if (url.pathname.endsWith("/sw.js")) return;
+
+  // HTML / navegación -> Network first + fallback
+  const accept = req.headers.get("accept") || "";
+  const isHTML = req.mode === "navigate" || accept.includes("text/html");
+
+  if (isHTML) {
     event.respondWith((async () => {
       try {
-        const fresh = await fetch(req);
+        // Importante: esto evita “caches viejos” cuando Github sirve algo raro
+        const fresh = await fetch(req, { cache: "no-store" });
+
+        // Cachea como index.html (clave estable) para que el fallback funcione
         const cache = await caches.open(CACHE_NAME);
-        cache.put(req, fresh.clone());
+        cache.put("./index.html", fresh.clone());
+
         return fresh;
-      } catch {
-        const cached = await caches.match(req);
-        return cached || caches.match("./index.html");
+      } catch (err) {
+        // Fallback offline
+        const cachedIndex = await caches.match("./index.html");
+        return cachedIndex || new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain" } });
       }
     })());
     return;
   }
 
-  // Resto -> cache first
+  // Assets (css/js/img/font) -> Cache first + rellena cache
   event.respondWith((async () => {
     const cached = await caches.match(req);
     if (cached) return cached;
+
     const fresh = await fetch(req);
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(req, fresh.clone());
+    // Cachea solo si fue exitoso
+    if (fresh && fresh.ok) {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(req, fresh.clone());
+    }
     return fresh;
   })());
 });
