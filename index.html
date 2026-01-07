@@ -1903,19 +1903,27 @@
      * Setups (event listeners)
      *********************/
     function setupNavigation() {
-      const navButtons = document.querySelectorAll(".nav-btn");
-      navButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const section = btn.getAttribute("data-section");
-          if (!section) return;
+  const nav = document.querySelector(".nav");
+  if (!nav) return;
+  if (nav.dataset.bound === "1") return;
+  nav.dataset.bound = "1";
 
-          navButtons.forEach(b => b.classList.toggle("nav-btn--active", b === btn));
-          document.querySelectorAll(".section").forEach(sec => {
-            sec.classList.toggle("section--active", sec.id === `section-${section}`);
-          });
-        });
-      });
-    }
+  nav.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".nav-btn[data-section]");
+    if (!btn) return;
+
+    const section = btn.getAttribute("data-section");
+    if (!section) return;
+
+    nav.querySelectorAll(".nav-btn").forEach(b =>
+      b.classList.toggle("nav-btn--active", b === btn)
+    );
+
+    document.querySelectorAll(".section").forEach(sec => {
+      sec.classList.toggle("section--active", sec.id === `section-${section}`);
+    });
+  });
+}
 
     function setupMesesPills() {
       const pills = document.querySelectorAll("#mesesPills .pill");
