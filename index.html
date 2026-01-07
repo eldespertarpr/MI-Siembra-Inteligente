@@ -1924,24 +1924,30 @@
     });
   });
 }
-
     function setupMesesPills() {
-      const pills = document.querySelectorAll("#mesesPills .pill");
-      if (!pills.length) return;
+  const wrap = document.getElementById("mesesPills");
+  if (!wrap) return;
+  if (wrap.dataset.bound === "1") return;
+  wrap.dataset.bound = "1";
 
-      pills.forEach(p => {
-        p.addEventListener("click", () => {
-          pills.forEach(other => other.classList.toggle("pill--active", other === p));
-          const month = parseInt(p.getAttribute("data-mes"), 10);
-          renderCalendario(month);
-        });
-      });
+  wrap.addEventListener("click", (ev) => {
+    const pill = ev.target.closest(".pill[data-mes]");
+    if (!pill) return;
 
-      const currentMonth = new Date().getMonth();
-      const target = Array.from(pills).find(p => parseInt(p.dataset.mes, 10) === currentMonth);
-      if (target) target.click();
-      else renderCalendario(5);
-    }
+    wrap.querySelectorAll(".pill").forEach(p =>
+      p.classList.toggle("pill--active", p === pill)
+    );
+
+    const month = parseInt(pill.dataset.mes, 10);
+    if (Number.isFinite(month)) renderCalendario(month);
+  });
+
+  // Selección inicial (solo una vez)
+  const currentMonth = new Date().getMonth();
+  const target = wrap.querySelector(`.pill[data-mes="${currentMonth}"]`);
+  if (target) target.click();
+  else renderCalendario(5);
+}
 
     function setupCatalogo() {
       const input = document.getElementById("catalogoBusqueda");
