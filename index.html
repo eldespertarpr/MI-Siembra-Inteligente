@@ -1744,14 +1744,7 @@ const bodyHtml = infoRows.length
         <span class="chip">${escapeHTML(c.categoria || "Otro")}</span>
       </div>
 
-      <div class="cultivo-body">
-        <div><strong>Días a cosecha:</strong> ${vDias}</div>
-        <div><strong>Luz:</strong> ${vLuz}</div>
-        <div><strong>Riego:</strong> ${vRiego}</div>
-        <div><strong>Tiesto / suelo:</strong> ${vTiesto}</div>
-        <div><strong>Profundidad:</strong> ${vProf}</div>
-        <div><strong>Plagas:</strong> ${vPlagas}</div>
-      </div>
+      ${bodyHtml}
 
       <div class="cultivo-actions">
         <button class="btn btn-secondary" data-action="germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
