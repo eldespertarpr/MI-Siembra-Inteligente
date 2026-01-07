@@ -1340,8 +1340,7 @@ const profundidad = (document.getElementById("nuevoCultivoProfundidad")?.value |
       if (!meses.length) meses = allMonths();
 
       const id = existingId || `custom-${Date.now().toString(36)}`;
-      const diasTexto = Number.isFinite(diasC) && diasC > 0 ? `${diasC} días` : "—";
-
+      const diasTexto = Number.isFinite(diasC) && diasC > 0 ? `${diasC} días` : null;
       return {
         id,
         nombre,
