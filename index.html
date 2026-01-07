@@ -1979,53 +1979,51 @@ function setupCatalogo() {
   listEl.dataset.bound = "1";
 
   listEl.addEventListener("click", ev => {
-    // (tu código actual aquí igual)
-        const btn = ev.target.closest("button[data-action]");
-        if (!btn) return;
+    const btn = ev.target.closest("button[data-action]");
+    if (!btn) return;
 
-        const action = btn.getAttribute("data-action");
-        const id = btn.getAttribute("data-id");
+    const action = btn.getAttribute("data-action");
+    const id = btn.getAttribute("data-id");
 
-        if (action === "germinacion") {
-          const info = getInfoGerminacion(id);
-          if (!info) { alert("Todavía no tengo la guía de germinación para este cultivo."); return; }
+    if (action === "germinacion") {
+      const info = getInfoGerminacion(id);
+      if (!info) { alert("Todavía no tengo la guía de germinación para este cultivo."); return; }
 
-          const card = btn.closest(".cultivo-card");
-          if (!card) return;
+      const card = btn.closest(".cultivo-card");
+      if (!card) return;
 
-          const panel = card.querySelector(".germinacion-panel");
-          if (!panel) return;
+      const panel = card.querySelector(".germinacion-panel");
+      if (!panel) return;
 
-          if (panel.style.display === "block") { panel.style.display = "none"; return; }
+      if (panel.style.display === "block") { panel.style.display = "none"; return; }
 
-          const pasosHtml = info.pasos.map((p, i) => `${i + 1}. ${escapeHTML(p)}`).join("<br>");
-          panel.innerHTML = `
-            <div class="media-item-title">${escapeHTML(info.titulo)}</div>
-            <div class="media-item-body"><strong>Método principal:</strong> ${escapeHTML(info.metodo)}</div>
-            <div class="media-item-body"><strong>Pasos:</strong><br>${pasosHtml}</div>
-            <div class="media-item-body"><strong>Tip:</strong> ${escapeHTML(info.tip)}</div>
-          `;
-          panel.style.display = "block";
-          return;
-        }
-
-        if (action === "editar-custom") {
-          const cultivo = CATALOGO_CULTIVOS.find(c => c.id === id && c.esPersonalizado);
-          if (!cultivo) { alert("Ese cultivo no es personalizado o no existe."); return; }
-          startEditCustomCultivo(cultivo);
-          return;
-        }
-
-        if (action === "borrar-custom") {
-          const cultivo = CATALOGO_CULTIVOS.find(c => c.id === id && c.esPersonalizado);
-          if (!cultivo) { alert("Ese cultivo no es personalizado o no existe."); return; }
-          if (!confirm(`¿Borrar el cultivo personalizado "${cultivo.nombre}"?`)) return;
-          deleteCustomCultivoById(id);
-          const filtro = (document.getElementById("catalogoBusqueda")?.value || "").trim();
-          renderCatalogo(filtro);
-        }
-      });
+      const pasosHtml = info.pasos.map((p, i) => `${i + 1}. ${escapeHTML(p)}`).join("<br>");
+      panel.innerHTML = `
+        <div class="media-item-title">${escapeHTML(info.titulo)}</div>
+        <div class="media-item-body"><strong>Método:</strong> ${escapeHTML(info.metodo)}</div>
+        <div class="media-item-body"><strong>Pasos:</strong><br>${pasosHtml}</div>
+        <div class="media-item-body"><strong>Tip:</strong> ${escapeHTML(info.tip)}</div>
+      `;
+      panel.style.display = "block";
+      return;
     }
+
+    if (action === "editar-custom") {
+      const cultivo = CATALOGO_CULTIVOS.find(c => c.id === id && c.esPersonalizado);
+      if (!cultivo) { alert("Ese cultivo no es personalizado o no existe."); return; }
+      startEditCustomCultivo(cultivo);
+      return;
+    }
+
+    if (action === "borrar-custom") {
+      const cultivo = CATALOGO_CULTIVOS.find(c => c.id === id && c.esPersonalizado);
+      if (!cultivo) { alert("Ese cultivo no es personalizado o no existe."); return; }
+      if (!confirm(`¿Borrar el cultivo personalizado "${cultivo.nombre}"?`)) return;
+      deleteCustomCultivoById(id);
+      renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+    }
+  });
+}
 
     function setupCalendarioLinks() {
   const calendarList = document.getElementById("calendarList");
