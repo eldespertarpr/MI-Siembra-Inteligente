@@ -2117,7 +2117,7 @@
           if (!entrada) return;
 
           const texto = entrada.trim().toLowerCase();
-          const plaga = PLAGAS_DATA.find(p => p.nombre.toLowerCase().includes(texto));
+          const plaga = PLAGAS_DATA.find(p => normText(p.nombre).includes(normText(texto)));
           if (!plaga) { alert("No encontré esa plaga. Prueba: pulgones, mosca blanca, araña roja, etc."); return; }
 
           document.querySelector('.nav-btn[data-section="plagas"]')?.click();
