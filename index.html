@@ -1716,7 +1716,18 @@ function renderCatalogo(filtroTexto = "") {
 
     const card = document.createElement("div");
     card.className = "cultivo-card";
+const infoRows = [];
 
+if (isFilled(c.dias)) infoRows.push(`<div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias)}</div>`);
+if (isFilled(c.luz)) infoRows.push(`<div><strong>Luz:</strong> ${escapeHTML(c.luz)}</div>`);
+if (isFilled(c.riego)) infoRows.push(`<div><strong>Riego:</strong> ${escapeHTML(c.riego)}</div>`);
+if (isFilled(c.tiesto)) infoRows.push(`<div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto)}</div>`);
+if (isFilled(c.profundidad)) infoRows.push(`<div><strong>Profundidad:</strong> ${escapeHTML(c.profundidad)}</div>`);
+if (isFilled(plagasTxt)) infoRows.push(`<div><strong>Plagas:</strong> ${escapeHTML(plagasTxt)}</div>`);
+
+const bodyHtml = infoRows.length
+  ? `<div class="cultivo-body">${infoRows.join("")}</div>`
+  : `<div class="cultivo-body"><span class="chip chip--muted">Sin datos</span></div>`;
     card.innerHTML = `
       <div class="cultivo-header">
         <div class="cultivo-title">
