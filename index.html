@@ -1743,13 +1743,13 @@ function renderCatalogo(filtroTexto = "") {
   const filtro = filtroTexto.trim().toLowerCase();
 
   let lista = CATALOGO_CULTIVOS.filter(c => {
-    if (!filtro) return true;
-    return (
-      (c.nombre || "").toLowerCase().includes(filtro) ||
-      (c.id || "").toLowerCase().includes(filtro) ||
-      (c.categoria || "").toLowerCase().includes(filtro)
-    );
-  });
+  if (!filtro) return true;
+  return (
+    (c.nombre || "").toLowerCase().includes(filtro) ||
+    (c.id || "").toLowerCase().includes(filtro) ||
+    (c.categoria || "").toLowerCase().includes(filtro)
+  );
+});
 
   // ORDEN: por categoría y luego por nombre
   lista.sort((a, b) => catSortKey(a).localeCompare(catSortKey(b), "es", { sensitivity: "base" }));
