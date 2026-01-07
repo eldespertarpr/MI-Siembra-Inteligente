@@ -1615,7 +1615,10 @@ dias: diasTexto,
           <span>${escapeHTML(c.nombre)}</span>
           <span class="chip">${escapeHTML(c.categoria)}</span>
         </div>
-        <div>Días a cosecha: ${escapeHTML(c.dias)}. Luz: ${escapeHTML(c.luz)}.</div>
+        <div>
+  ${isFilled(c.dias) ? `Días a cosecha: ${escapeHTML(c.dias)}.` : ``}
+  ${isFilled(c.luz) ? ` Luz: ${escapeHTML(c.luz)}.` : ``}
+</div>
         <div style="margin-top:6px;">
           <button class="btn btn-secondary btn-full" data-action="ver-catalogo" data-id="${escapeHTML(c.id)}">
             🔍 Ver en catálogo
