@@ -1671,19 +1671,23 @@ dias: diasTexto,
       const section = document.getElementById("section-catalogo");
       section?.scrollIntoView?.({ behavior: "smooth", block: "start" });
     }
-
-    function renderCatalogo(filtroTexto = "") {
+function renderCatalogo(filtroTexto = "") {
   const listEl = document.getElementById("catalogoList");
   if (!listEl) return;
 
   const filtro = filtroTexto.trim().toLowerCase();
-  const lista = CATALOGO_CULTIVOS.filter(c => {
+
+  let lista = CATALOGO_CULTIVOS.filter(c => {
     if (!filtro) return true;
     return (
       (c.nombre || "").toLowerCase().includes(filtro) ||
-      (c.id || "").toLowerCase().includes(filtro)
+      (c.id || "").toLowerCase().includes(filtro) ||
+      (c.categoria || "").toLowerCase().includes(filtro)
     );
   });
+
+  // ORDEN: por categoría y luego por nombre
+  lista.sort((a, b) => catSortKey(a).localeCompare(catSortKey(b), "es", { sensitivity: "base" }));
 
   if (!lista.length) {
     listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${escapeHTML(filtroTexto)}".</p>`;
@@ -1691,50 +1695,52 @@ dias: diasTexto,
   }
 
   listEl.innerHTML = "";
+
   lista.forEach(c => {
     const imgSrc = c.imagen || "img/placeholder.jpg";
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card";
+    const icon = getCategoriaIcon(c.categoria);
 
     const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "";
 
-    // Acciones: germinación siempre, editar/borrar solo si es personalizado
     const accionesExtra = c.esPersonalizado ? `
       <button class="btn btn-secondary" data-action="editar-custom" data-id="${escapeHTML(c.id)}">✏️ Editar</button>
       <button class="btn btn-danger" data-action="borrar-custom" data-id="${escapeHTML(c.id)}">🗑 Borrar</button>
     ` : "";
 
+    const vDias  = isFilled(c.dias) ? escapeHTML(c.dias) : chipSinDatos();
+    const vLuz   = isFilled(c.luz) ? escapeHTML(c.luz) : chipSinDatos();
+    const vRiego = isFilled(c.riego) ? escapeHTML(c.riego) : chipSinDatos();
+    const vTiesto = isFilled(c.tiesto) ? escapeHTML(c.tiesto) : chipSinDatos();
+    const vProf = isFilled(c.profundidad) ? escapeHTML(c.profundidad) : chipSinDatos();
+    const vPlagas = isFilled(plagasTxt) ? escapeHTML(plagasTxt) : chipSinDatos();
+
+    const card = document.createElement("div");
+    card.className = "cultivo-card";
+
     card.innerHTML = `
       <div class="cultivo-header">
         <div class="cultivo-title">
           <img
-  src="${escapeHTML(imgSrc)}"
-  alt=""
-  class="cultivo-thumb"
-  loading="lazy"
-  decoding="async"
-  onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-/>
-          <span>🌱 ${escapeHTML(c.nombre)}</span>
+            src="${escapeHTML(imgSrc)}"
+            alt=""
+            class="cultivo-thumb"
+            loading="lazy"
+            decoding="async"
+            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
+          />
+          <span>${icon} ${escapeHTML(c.nombre || "Cultivo")}</span>
         </div>
-        <span class="chip">${escapeHTML(c.categoria || "—")}</span>
+        <span class="chip">${escapeHTML(c.categoria || "Otro")}</span>
       </div>
 
-      ${
-        (isFilled(c.dias) || isFilled(c.luz) || isFilled(c.riego) || isFilled(c.tiesto) || isFilled(c.profundidad) || (Array.isArray(c.plagas) && c.plagas.length))
-        ? `
-          <div class="cultivo-body">
-            ${isFilled(c.dias) ? `<div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias)}</div>` : ``}
-            ${isFilled(c.luz) ? `<div><strong>Luz:</strong> ${escapeHTML(c.luz)}</div>` : ``}
-            ${isFilled(c.riego) ? `<div><strong>Riego:</strong> ${escapeHTML(c.riego)}</div>` : ``}
-            ${isFilled(c.tiesto) ? `<div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto)}</div>` : ``}
-            ${isFilled(c.profundidad) ? `<div><strong>Profundidad:</strong> ${escapeHTML(c.profundidad)}</div>` : ``}
-            ${(Array.isArray(c.plagas) && c.plagas.length) ? `<div><strong>Plagas:</strong> ${escapeHTML(plagasTxt)}</div>` : ``}
-          </div>
-        `
-        : `<p class="muted" style="margin:6px 0 0;">Sin datos adicionales.</p>`
-      }
+      <div class="cultivo-body">
+        <div><strong>Días a cosecha:</strong> ${vDias}</div>
+        <div><strong>Luz:</strong> ${vLuz}</div>
+        <div><strong>Riego:</strong> ${vRiego}</div>
+        <div><strong>Tiesto / suelo:</strong> ${vTiesto}</div>
+        <div><strong>Profundidad:</strong> ${vProf}</div>
+        <div><strong>Plagas:</strong> ${vPlagas}</div>
+      </div>
 
       <div class="cultivo-actions">
         <button class="btn btn-secondary" data-action="germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
@@ -1746,7 +1752,7 @@ dias: diasTexto,
 
     listEl.appendChild(card);
   });
-    }
+}
 
     function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       let frecuenciaRiego = null;
