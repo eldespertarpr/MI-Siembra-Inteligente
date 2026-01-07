@@ -2014,16 +2014,18 @@ function setupCatalogo() {
     }
 
     function setupCalendarioLinks() {
-      const calendarList = document.getElementById("calendarList");
-      if (!calendarList) return;
+  const calendarList = document.getElementById("calendarList");
+  if (!calendarList) return;
+  if (calendarList.dataset.bound === "1") return;
+  calendarList.dataset.bound = "1";
 
-      calendarList.addEventListener("click", ev => {
-        const btn = ev.target.closest("button[data-action='ver-catalogo']");
-        if (!btn) return;
-        const id = btn.getAttribute("data-id");
-        if (id) irACultivoEnCatalogo(id);
-      });
-    }
+  calendarList.addEventListener("click", ev => {
+    const btn = ev.target.closest("button[data-action='ver-catalogo']");
+    if (!btn) return;
+    const id = btn.getAttribute("data-id");
+    if (id) irACultivoEnCatalogo(id);
+  });
+}
 
     function setupMiHuertoForm() {
       const btn = document.getElementById("btnAgregarCultivo");
