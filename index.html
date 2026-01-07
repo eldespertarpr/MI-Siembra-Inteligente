@@ -1400,7 +1400,7 @@
 
       if (customEditId === id) {
         resetEditCustomCultivoUI();
-        document.getElementById("nuevoCultivoCard").style.display = "none";
+        document.getElementById("nuevoCultivoCard")?.style && (document.getElementById("nuevoCultivoCard").style.display = "none");
         clearCustomCultivoUI();
       }
     }
