@@ -2497,6 +2497,22 @@ if (saveBtn) saveBtn.dataset.bound = "1";
 /*********************
  * PWA: service worker + instalar
  *********************/
+let deferredPwaPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+  document.getElementById("installBanner")?.classList.remove("hidden");
+});
+
+document.getElementById("btnInstalarPwa")?.addEventListener("click", async () => {
+  if (!deferredPwaPrompt) return;
+  deferredPwaPrompt.prompt();
+  await deferredPwaPrompt.userChoice;
+  deferredPwaPrompt = null;
+  document.getElementById("installBanner")?.classList.add("hidden");
+});
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
@@ -2510,25 +2526,8 @@ if ("serviceWorker" in navigator) {
       });
     } catch (err) {
       console.error("Error registrando SW:", err);
-      let deferredPwaPrompt = null;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPwaPrompt = e;
-
-  const banner = document.getElementById("installBanner");
-  banner?.classList.remove("hidden");
-});
-
-document.getElementById("btnInstalarPwa")?.addEventListener("click", async () => {
-  if (!deferredPwaPrompt) return;
-
-  deferredPwaPrompt.prompt();
-  await deferredPwaPrompt.userChoice;
-
-  deferredPwaPrompt = null;
-  document.getElementById("installBanner")?.classList.add("hidden");
-});
+    }
+  });
 }
     /*********************
  * INIT (ARRANQUE)
