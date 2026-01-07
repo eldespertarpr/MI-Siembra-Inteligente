@@ -1328,10 +1328,10 @@
       const diasG = parseInt(document.getElementById("nuevoCultivoDiasGerminacion")?.value || "", 10);
       const diasC = parseInt(document.getElementById("nuevoCultivoDiasCosecha")?.value || "", 10);
 
-      const luz = (document.getElementById("nuevoCultivoLuz")?.value || "").trim() || "—";
-      const riego = (document.getElementById("nuevoCultivoRiego")?.value || "").trim() || "—";
-      const tiesto = (document.getElementById("nuevoCultivoTiesto")?.value || "").trim() || "—";
-      const profundidad = (document.getElementById("nuevoCultivoProfundidad")?.value || "").trim() || "—";
+      const luz = (document.getElementById("nuevoCultivoLuz")?.value || "").trim() || null;
+const riego = (document.getElementById("nuevoCultivoRiego")?.value || "").trim() || null;
+const tiesto = (document.getElementById("nuevoCultivoTiesto")?.value || "").trim() || null;
+const profundidad = (document.getElementById("nuevoCultivoProfundidad")?.value || "").trim() || null;
       const plagasStr = (document.getElementById("nuevoCultivoPlagas")?.value || "").trim();
 
       if (!nombre) { alert("Escribe el nombre del cultivo."); return null; }
