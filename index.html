@@ -1320,7 +1320,12 @@
       removeCustomFromCatalogo();
       customList.forEach(c => CATALOGO_CULTIVOS.push({ ...c, esPersonalizado: true }));
     }
-
+// Helper: valida si un valor tiene contenido real
+function isFilled(v){
+  if (v === null || v === undefined) return false;
+  const s = String(v).trim();
+  return s !== "" && s !== "—" && s.toLowerCase() !== "null";
+}
     function buildCustomCultivoFromUI(existingId) {
       const nombre = (document.getElementById("nuevoCultivoNombre")?.value || "").trim();
       const categoria = (document.getElementById("nuevoCultivoCategoria")?.value || "Otro").trim();
