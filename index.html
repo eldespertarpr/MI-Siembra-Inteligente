@@ -1775,6 +1775,48 @@ function closeCatSheet(){
       section?.scrollIntoView?.({ behavior: "smooth", block: "start" });
     }
 let categoriaActiva = "Todas";
+
+function getCategoriasUnicas(){
+  const set = new Set(["Todas"]);
+  (CATALOGO_CULTIVOS || []).forEach(c => set.add((c.categoria || "Otro").trim() || "Otro"));
+  return Array.from(set);
+}
+
+function openCatSheet(){
+  const back = document.getElementById("catSheetBackdrop");
+  const sheet = document.getElementById("catSheet");
+  const list = document.getElementById("catSheetList");
+  if (!back || !sheet || !list) return;
+
+  list.innerHTML = "";
+  getCategoriasUnicas().forEach(cat => {
+    const chip = document.createElement("div");
+    chip.className = "sheet-chip" + (cat === categoriaActiva ? " active" : "");
+    chip.textContent = cat;
+    chip.onclick = () => {
+      categoriaActiva = cat;
+
+      // Cambia texto del botón de categorías
+      const btn = document.querySelector(".btn-categorias");
+      if (btn) btn.textContent = cat === "Todas" ? "🌱 Categorías" : `🌱 ${cat}`;
+
+      closeCatSheet();
+      const input = document.getElementById("catalogoBusqueda");
+      renderCatalogo(input ? input.value : "");
+    };
+    list.appendChild(chip);
+  });
+
+  back.hidden = false;
+  sheet.hidden = false;
+}
+
+function closeCatSheet(){
+  const back = document.getElementById("catSheetBackdrop");
+  const sheet = document.getElementById("catSheet");
+  if (back) back.hidden = true;
+  if (sheet) sheet.hidden = true;
+}
 function renderCatalogo(filtroTexto = "") {
   const listEl = document.getElementById("catalogoList");
   if (!listEl) return;
