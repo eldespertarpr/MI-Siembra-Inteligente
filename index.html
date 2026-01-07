@@ -1710,67 +1710,6 @@ function renderCatalogo(filtroTexto = "") {
     listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${escapeHTML(filtroTexto)}".</p>`;
     return;
   }
-
-  listEl.innerHTML = "";
-
-  lista.forEach(c => {
-    const imgSrc = c.imagen || "img/placeholder.jpg";
-    const icon = getCategoriaIcon(c.categoria);
-
-    const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "";
-
-    const accionesExtra = c.esPersonalizado ? `
-      <button class="btn btn-secondary" data-action="editar-custom" data-id="${escapeHTML(c.id)}">✏️ Editar</button>
-      <button class="btn btn-danger" data-action="borrar-custom" data-id="${escapeHTML(c.id)}">🗑 Borrar</button>
-    ` : "";
-
-    const vDias  = isFilled(c.dias) ? escapeHTML(c.dias) : chipSinDatos();
-    const vLuz   = isFilled(c.luz) ? escapeHTML(c.luz) : chipSinDatos();
-    const vRiego = isFilled(c.riego) ? escapeHTML(c.riego) : chipSinDatos();
-    const vTiesto = isFilled(c.tiesto) ? escapeHTML(c.tiesto) : chipSinDatos();
-    const vProf = isFilled(c.profundidad) ? escapeHTML(c.profundidad) : chipSinDatos();
-    const vPlagas = isFilled(plagasTxt) ? escapeHTML(plagasTxt) : chipSinDatos();
-
-    const card = document.createElement("div");
-    card.className = "cultivo-card";
-const infoRows = [];
-
-if (isFilled(c.dias)) infoRows.push(`<div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias)}</div>`);
-if (isFilled(c.luz)) infoRows.push(`<div><strong>Luz:</strong> ${escapeHTML(c.luz)}</div>`);
-if (isFilled(c.riego)) infoRows.push(`<div><strong>Riego:</strong> ${escapeHTML(c.riego)}</div>`);
-if (isFilled(c.tiesto)) infoRows.push(`<div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto)}</div>`);
-if (isFilled(c.profundidad)) infoRows.push(`<div><strong>Profundidad:</strong> ${escapeHTML(c.profundidad)}</div>`);
-if (isFilled(plagasTxt)) infoRows.push(`<div><strong>Plagas:</strong> ${escapeHTML(plagasTxt)}</div>`);
-
-const bodyHtml = infoRows.length
-  ? `<div class="cultivo-body">${infoRows.join("")}</div>`
-  : `<div class="cultivo-body"><span class="chip chip--muted">Sin datos</span></div>`;
-    card.innerHTML = `
-  <div class="cultivo-header">
-    <div class="cultivo-title">
-      <img
-        src="${escapeHTML(imgSrc)}"
-        alt=""
-        class="cultivo-thumb"
-        loading="lazy"
-        decoding="async"
-        onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-      />
-      <span>${icon} ${escapeHTML(c.nombre || "Cultivo")}</span>
-    </div>
-    <span class="chip">${escapeHTML(categoria)}</span>
-  </div>
-
-  ${bodyHtml}
-
-  <div class="cultivo-actions">
-    <button class="btn btn-secondary" data-action="germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
-    ${accionesExtra}
-  </div>
-
-  <div class="germinacion-panel"></div>
-`;
-
   listEl.innerHTML = "";
 
   let categoriaActual = null;
