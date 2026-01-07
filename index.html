@@ -2925,16 +2925,14 @@ function getCategoriasDesdeCultivos(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const btnOpen = document.getElementById("btnCategorias"); // TU botón "Categorías"
-  const btnClose = document.getElementById("btnCerrarCatSheet");
-  const bd = document.getElementById("catSheetBackdrop");
+  const btn = document.getElementById("btnCategorias");
+  if (!btn) console.log("❌ No existe #btnCategorias");
 
-  if (btnOpen) {
-    btnOpen.addEventListener("click", () => {
-      buildCatSheetList(getCategoriasDesdeCultivos());
-      openCatSheet();
-    });
-  }
+  btn?.addEventListener("click", () => {
+    console.log("✅ Click Categorías");
+    openCatSheet();
+  });
+});
 
   if (btnClose) btnClose.addEventListener("click", closeCatSheet);
   if (bd) bd.addEventListener("click", closeCatSheet);
