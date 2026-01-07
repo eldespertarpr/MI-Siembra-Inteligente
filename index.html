@@ -1700,15 +1700,6 @@ dias: diasTexto,
   });
     }
 
-function setupCatalogo() {
-  const input = document.getElementById("catalogoBusqueda");
-  if (!input) return;
-
-  input.addEventListener("input", () => {
-    renderCatalogo(input.value);
-  });
-}
-
     function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       let frecuenciaRiego = null;
       let fechaCosechaEstimada = null;
