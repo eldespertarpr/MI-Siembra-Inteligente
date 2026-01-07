@@ -1746,34 +1746,30 @@ const bodyHtml = infoRows.length
   ? `<div class="cultivo-body">${infoRows.join("")}</div>`
   : `<div class="cultivo-body"><span class="chip chip--muted">Sin datos</span></div>`;
     card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <img
-            src="${escapeHTML(imgSrc)}"
-            alt=""
-            class="cultivo-thumb"
-function renderCatalogo(filtroTexto = "") {
-  const listEl = document.getElementById("catalogoList");
-  if (!listEl) return;
+  <div class="cultivo-header">
+    <div class="cultivo-title">
+      <img
+        src="${escapeHTML(imgSrc)}"
+        alt=""
+        class="cultivo-thumb"
+        loading="lazy"
+        decoding="async"
+        onerror="this.onerror=null;this.src='img/placeholder.jpg';"
+      />
+      <span>${icon} ${escapeHTML(c.nombre || "Cultivo")}</span>
+    </div>
+    <span class="chip">${escapeHTML(categoria)}</span>
+  </div>
 
-  const filtro = filtroTexto.trim().toLowerCase();
+  ${bodyHtml}
 
-  let lista = CATALOGO_CULTIVOS.filter(c => {
-    if (!filtro) return true;
-    return (
-      (c.nombre || "").toLowerCase().includes(filtro) ||
-      (c.id || "").toLowerCase().includes(filtro) ||
-      (c.categoria || "").toLowerCase().includes(filtro)
-    );
-  });
+  <div class="cultivo-actions">
+    <button class="btn btn-secondary" data-action="germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
+    ${accionesExtra}
+  </div>
 
-  // ORDEN: por categoría y luego por nombre
-  lista.sort((a, b) => catSortKey(a).localeCompare(catSortKey(b), "es", { sensitivity: "base" }));
-
-  if (!lista.length) {
-    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${escapeHTML(filtroTexto)}".</p>`;
-    return;
-  }
+  <div class="germinacion-panel"></div>
+`;
 
   listEl.innerHTML = "";
 
@@ -1783,16 +1779,13 @@ function renderCatalogo(filtroTexto = "") {
     const categoria = (c.categoria || "Otro").trim();
     const categoriaKey = categoria.toLowerCase();
 
-    // 👉 Encabezado por categoría (solo cuando cambia)
     if (categoriaKey !== categoriaActual) {
       categoriaActual = categoriaKey;
 
       const header = document.createElement("div");
       header.className = "catalogo-categoria-title";
-
-      const icon = getCategoriaIcon(categoria);
       header.innerHTML = `
-        <span>${icon} ${escapeHTML(categoria)}</span>
+        <span>${getCategoriaIcon(categoria)} ${escapeHTML(categoria)}</span>
         <span class="chip">Categoría</span>
       `;
       listEl.appendChild(header);
@@ -1800,7 +1793,6 @@ function renderCatalogo(filtroTexto = "") {
 
     const imgSrc = c.imagen || "img/placeholder.jpg";
     const icon = getCategoriaIcon(c.categoria);
-
     const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "";
 
     const accionesExtra = c.esPersonalizado ? `
@@ -1824,8 +1816,34 @@ function renderCatalogo(filtroTexto = "") {
     card.className = "cultivo-card";
 
     card.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <img
+            src="${escapeHTML(imgSrc)}"
+            alt=""
+            class="cultivo-thumb"
+            loading="lazy"
+            decoding="async"
+            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
+          />
+          <span>${icon} ${escapeHTML(c.nombre || "Cultivo")}</span>
+        </div>
+        <span class="chip">${escapeHTML(categoria)}</span>
+      </div>
 
+      ${bodyHtml}
 
+      <div class="cultivo-actions">
+        <button class="btn btn-secondary" data-action="germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
+        ${accionesExtra}
+      </div>
+
+      <div class="germinacion-panel"></div>
+    `;
+
+    listEl.appendChild(card);
+  });
+}
     function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       let frecuenciaRiego = null;
       let fechaCosechaEstimada = null;
