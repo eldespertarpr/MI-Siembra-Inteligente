@@ -2849,6 +2849,96 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("Error arrancando la app. Abre la consola para ver el detalle.");
   }
 });
+    function openCatSheet(){
+  const bd = document.getElementById("catSheetBackdrop");
+  const sh = document.getElementById("catSheet");
+  if (!bd || !sh) return;
+
+  bd.hidden = false;
+  sh.hidden = false;
+
+  // forzar reflow para animación si usas CSS con transform
+  requestAnimationFrame(() => {
+    bd.classList.add("show");
+    sh.classList.add("show");
+  });
+}
+
+function closeCatSheet(){
+  const bd = document.getElementById("catSheetBackdrop");
+  const sh = document.getElementById("catSheet");
+  if (!bd || !sh) return;
+
+  bd.classList.remove("show");
+  sh.classList.remove("show");
+  setTimeout(() => {
+    bd.hidden = true;
+    sh.hidden = true;
+  }, 180);
+}
+
+function buildCatSheetList(categorias){
+  const list = document.getElementById("catSheetList");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  // Botón "Todas"
+  const allBtn = document.createElement("button");
+  allBtn.type = "button";
+  allBtn.className = "sheet-chip";
+  allBtn.textContent = "Todas";
+  allBtn.onclick = () => {
+    // ajusta a TU función real de filtro
+    if (typeof setCatalogCategoria === "function") setCatalogCategoria("");
+    closeCatSheet();
+  };
+  list.appendChild(allBtn);
+
+  (categorias || []).forEach(cat => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "sheet-chip";
+    b.textContent = cat;
+    b.onclick = () => {
+      if (typeof setCatalogCategoria === "function") setCatalogCategoria(cat);
+      closeCatSheet();
+    };
+    list.appendChild(b);
+  });
+}
+
+function getCategoriasDesdeCultivos(){
+  // CAMBIA estos nombres si en tu app se llaman distinto:
+  // catalogCultivos / customCultivos / etc.
+  const base = (window.catalogCultivos || []);
+  const custom = (window.customCultivos || []);
+  const all = [...base, ...custom];
+
+  const set = new Set();
+  all.forEach(c => {
+    const cat = (c.categoria || "").trim();
+    if (cat) set.add(cat);
+  });
+
+  return Array.from(set).sort((a,b)=>a.localeCompare(b));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnOpen = document.getElementById("btnCategorias"); // TU botón "Categorías"
+  const btnClose = document.getElementById("btnCerrarCatSheet");
+  const bd = document.getElementById("catSheetBackdrop");
+
+  if (btnOpen) {
+    btnOpen.addEventListener("click", () => {
+      buildCatSheetList(getCategoriasDesdeCultivos());
+      openCatSheet();
+    });
+  }
+
+  if (btnClose) btnClose.addEventListener("click", closeCatSheet);
+  if (bd) bd.addEventListener("click", closeCatSheet);
+});
   </script>
 </body>
   </html>
