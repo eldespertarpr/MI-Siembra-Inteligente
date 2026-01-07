@@ -1675,12 +1675,13 @@ dias: diasTexto,
       <div class="cultivo-header">
         <div class="cultivo-title">
           <img
-            src="${escapeHTML(imgSrc)}"
-            alt=""
-            class="cultivo-thumb"
-            loading="lazy"
-            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-          />
+  src="${escapeHTML(imgSrc)}"
+  alt=""
+  class="cultivo-thumb"
+  loading="lazy"
+  decoding="async"
+  onerror="this.onerror=null;this.src='img/placeholder.jpg';"
+/>
           <span>🌱 ${escapeHTML(c.nombre)}</span>
         </div>
         <span class="chip">${escapeHTML(c.categoria || "—")}</span>
