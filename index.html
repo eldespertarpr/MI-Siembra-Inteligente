@@ -1331,7 +1331,7 @@
         id,
         nombre,
         categoria,
-        dias: diasTexto,
+ appearanias: diasTexto,
         luz,
         riego,
         tiesto,
@@ -1949,14 +1949,23 @@
   else renderCalendario(5);
 }
 
-    function setupCatalogo() {
-      const input = document.getElementById("catalogoBusqueda");
-      const listEl = document.getElementById("catalogoList");
+function setupCatalogo() {
+  const input = document.getElementById("catalogoBusqueda");
+  const listEl = document.getElementById("catalogoList");
 
-      if (input) input.addEventListener("input", () => renderCatalogo(input.value));
-      if (!listEl) return;
+  if (input) {
+    if (input.dataset.bound !== "1") {
+      input.dataset.bound = "1";
+      input.addEventListener("input", () => renderCatalogo(input.value));
+    }
+  }
 
-      listEl.addEventListener("click", ev => {
+  if (!listEl) return;
+  if (listEl.dataset.bound === "1") return;
+  listEl.dataset.bound = "1";
+
+  listEl.addEventListener("click", ev => {
+    // (tu código actual aquí igual)
         const btn = ev.target.closest("button[data-action]");
         if (!btn) return;
 
