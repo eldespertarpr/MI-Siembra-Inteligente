@@ -1727,7 +1727,43 @@ dias: diasTexto,
 
       const navBtn = document.querySelector('.nav-btn[data-section="catalogo"]');
       if (navBtn) navBtn.click();
+function getCategoriasUnicas(){
+  const set = new Set(["Todas"]);
+  (CATALOGO_CULTIVOS || []).forEach(c => set.add((c.categoria || "Otro").trim() || "Otro"));
+  return Array.from(set);
+}
 
+function openCatSheet(){
+  const back = document.getElementById("catSheetBackdrop");
+  const sheet = document.getElementById("catSheet");
+  const list = document.getElementById("catSheetList");
+  if (!back || !sheet || !list) return;
+
+  list.innerHTML = "";
+  getCategoriasUnicas().forEach(cat => {
+    const chip = document.createElement("div");
+    chip.className = "sheet-chip" + (cat === categoriaActiva ? " active" : "");
+    chip.textContent = cat;
+    chip.onclick = () => {
+      categoriaActiva = cat;
+      closeCatSheet();
+
+      const input = document.getElementById("catalogoBusqueda");
+      renderCatalogo(input ? input.value : "");
+    };
+    list.appendChild(chip);
+  });
+
+  back.hidden = false;
+  sheet.hidden = false;
+}
+
+function closeCatSheet(){
+  const back = document.getElementById("catSheetBackdrop");
+  const sheet = document.getElementById("catSheet");
+  if (back) back.hidden = true;
+  if (sheet) sheet.hidden = true;
+}
       const input = document.getElementById("catalogoBusqueda");
       if (input) input.value = textoBusqueda;
 
