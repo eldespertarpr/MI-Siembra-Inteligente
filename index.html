@@ -1402,7 +1402,14 @@
 
     function setupCultivoManualUI() {
       const btnToggle = document.getElementById("btnToggleNuevoCultivo");
-      const card = document.getElementById("nuevoCultivoCard");
+      if (customEditId === id) {
+  resetEditCustomCultivoUI();
+
+  const cardEl = document.getElementById("nuevoCultivoCard");
+  if (cardEl) cardEl.style.display = "none";
+
+  clearCustomCultivoUI();
+      }
       const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
       const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
 
