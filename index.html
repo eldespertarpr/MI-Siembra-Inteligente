@@ -2517,8 +2517,25 @@ if ("serviceWorker" in navigator) {
       });
     } catch (err) {
       console.error("Error registrando SW:", err);
-    }
-  });
+      let deferredPwaPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPwaPrompt = e;
+
+  const banner = document.getElementById("installBanner");
+  banner?.classList.remove("hidden");
+});
+
+document.getElementById("btnInstalarPwa")?.addEventListener("click", async () => {
+  if (!deferredPwaPrompt) return;
+
+  deferredPwaPrompt.prompt();
+  await deferredPwaPrompt.userChoice;
+
+  deferredPwaPrompt = null;
+  document.getElementById("installBanner")?.classList.add("hidden");
+});
 }
     /*********************
  * INIT (ARRANQUE)
