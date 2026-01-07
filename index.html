@@ -440,15 +440,29 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-    }
-
     .cultivo-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0; /* para que el texto pueda partirse */
+}
+
+/* Miniatura de imagen del catálogo */
+.cultivo-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Si el nombre es largo, que salte de línea sin salirse */
+.cultivo-title span {
+  word-break: break-word;
+}
 
     .cultivo-thumb {
       width: 56px;
