@@ -2239,34 +2239,40 @@ function setupCatalogo() {
   document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
     }
     function setupOpciones() {
-      const nombreInput = document.getElementById("nombreHuerto");
-      const climaSelect = document.getElementById("climaSelect");
-      const hemisSelect = document.getElementById("hemisferioSelect");
+  const section = document.getElementById("section-opciones");
+  if (!section) return;
+  if (section.dataset.bound === "1") return;
+  section.dataset.bound = "1";
 
-      if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
-      if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
-      if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
+  const nombreInput = document.getElementById("nombreHuerto");
+  const climaSelect = document.getElementById("climaSelect");
+  const hemisSelect = document.getElementById("hemisferioSelect");
+  if (!nombreInput || !climaSelect || !hemisSelect) return;
 
-      document.getElementById("btnGuardarConfig")?.addEventListener("click", () => {
-        const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
-        const nuevoClima = climaSelect.value || "tropical";
-        const nuevoHemis = hemisSelect.value || "norte";
+  nombreInput.value = stateSettings.nombreHuerto || "";
+  climaSelect.value = stateSettings.clima || "tropical";
+  hemisSelect.value = stateSettings.hemisferio || "norte";
 
-        stateSettings = { ...stateSettings, nombreHuerto: nuevoNombre, clima: nuevoClima, hemisferio: nuevoHemis };
-        saveSettings(stateSettings);
+  document.getElementById("btnGuardarConfig")?.addEventListener("click", () => {
+    const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
+    const nuevoClima = climaSelect.value || "tropical";
+    const nuevoHemis = hemisSelect.value || "norte";
 
-        updateHeader();
-        updateSettingsContexts();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        alert("Configuración guardada ✅");
-      });
+    stateSettings = { ...stateSettings, nombreHuerto: nuevoNombre, clima: nuevoClima, hemisferio: nuevoHemis };
+    saveSettings(stateSettings);
 
-      document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
-      document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
-      document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
-      document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
-    }
+    updateHeader();
+    updateSettingsContexts();
+    renderInicio();
+    renderCalendario(new Date().getMonth());
+    alert("Configuración guardada ✅");
+  });
+
+  document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
+  document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
+  document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
+  document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
+}
 
     /*********************
      * PDF y respaldo
