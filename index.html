@@ -1824,34 +1824,7 @@ function renderCatalogo(filtroTexto = "") {
     card.className = "cultivo-card";
 
     card.innerHTML = `
-      <div class="cultivo-header">
-        <div class="cultivo-title">
-          <img
-            src="${escapeHTML(imgSrc)}"
-            alt=""
-            class="cultivo-thumb"
-            loading="lazy"
-            decoding="async"
-            onerror="this.onerror=null;this.src='img/placeholder.jpg';"
-          />
-          <span>${icon} ${escapeHTML(c.nombre || "Cultivo")}</span>
-        </div>
-        <span class="chip">${escapeHTML(categoria)}</span>
-      </div>
 
-      ${bodyHtml}
-
-      <div class="cultivo-actions">
-        <button class="btn btn-secondary" data-action="germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
-        ${accionesExtra}
-      </div>
-
-      <div class="germinacion-panel"></div>
-    `;
-
-    listEl.appendChild(card);
-  });
-}
 
     function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       let frecuenciaRiego = null;
