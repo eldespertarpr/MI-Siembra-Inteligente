@@ -2242,6 +2242,9 @@
   document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
     }
     function setupOpciones() {
+      const saveBtn = document.getElementById("btnGuardarConfig");
+if (saveBtn?.dataset.bound === "1") return;
+if (saveBtn) saveBtn.dataset.bound = "1";
       const nombreInput = document.getElementById("nombreHuerto");
       const climaSelect = document.getElementById("climaSelect");
       const hemisSelect = document.getElementById("hemisferioSelect");
