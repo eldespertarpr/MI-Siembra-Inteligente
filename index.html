@@ -1752,13 +1752,91 @@ const bodyHtml = infoRows.length
             src="${escapeHTML(imgSrc)}"
             alt=""
             class="cultivo-thumb"
+function renderCatalogo(filtroTexto = "") {
+  const listEl = document.getElementById("catalogoList");
+  if (!listEl) return;
+
+  const filtro = filtroTexto.trim().toLowerCase();
+
+  let lista = CATALOGO_CULTIVOS.filter(c => {
+    if (!filtro) return true;
+    return (
+      (c.nombre || "").toLowerCase().includes(filtro) ||
+      (c.id || "").toLowerCase().includes(filtro) ||
+      (c.categoria || "").toLowerCase().includes(filtro)
+    );
+  });
+
+  // ORDEN: por categoría y luego por nombre
+  lista.sort((a, b) => catSortKey(a).localeCompare(catSortKey(b), "es", { sensitivity: "base" }));
+
+  if (!lista.length) {
+    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${escapeHTML(filtroTexto)}".</p>`;
+    return;
+  }
+
+  listEl.innerHTML = "";
+
+  let categoriaActual = null;
+
+  lista.forEach(c => {
+    const categoria = (c.categoria || "Otro").trim();
+    const categoriaKey = categoria.toLowerCase();
+
+    // 👉 Encabezado por categoría (solo cuando cambia)
+    if (categoriaKey !== categoriaActual) {
+      categoriaActual = categoriaKey;
+
+      const header = document.createElement("div");
+      header.className = "catalogo-categoria-title";
+
+      const icon = getCategoriaIcon(categoria);
+      header.innerHTML = `
+        <span>${icon} ${escapeHTML(categoria)}</span>
+        <span class="chip">Categoría</span>
+      `;
+      listEl.appendChild(header);
+    }
+
+    const imgSrc = c.imagen || "img/placeholder.jpg";
+    const icon = getCategoriaIcon(c.categoria);
+
+    const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "";
+
+    const accionesExtra = c.esPersonalizado ? `
+      <button class="btn btn-secondary" data-action="editar-custom" data-id="${escapeHTML(c.id)}">✏️ Editar</button>
+      <button class="btn btn-danger" data-action="borrar-custom" data-id="${escapeHTML(c.id)}">🗑 Borrar</button>
+    ` : "";
+
+    const infoRows = [];
+    if (isFilled(c.dias)) infoRows.push(`<div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias)}</div>`);
+    if (isFilled(c.luz)) infoRows.push(`<div><strong>Luz:</strong> ${escapeHTML(c.luz)}</div>`);
+    if (isFilled(c.riego)) infoRows.push(`<div><strong>Riego:</strong> ${escapeHTML(c.riego)}</div>`);
+    if (isFilled(c.tiesto)) infoRows.push(`<div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto)}</div>`);
+    if (isFilled(c.profundidad)) infoRows.push(`<div><strong>Profundidad:</strong> ${escapeHTML(c.profundidad)}</div>`);
+    if (isFilled(plagasTxt)) infoRows.push(`<div><strong>Plagas:</strong> ${escapeHTML(plagasTxt)}</div>`);
+
+    const bodyHtml = infoRows.length
+      ? `<div class="cultivo-body">${infoRows.join("")}</div>`
+      : `<div class="cultivo-body"><span class="chip chip--muted">Sin datos</span></div>`;
+
+    const card = document.createElement("div");
+    card.className = "cultivo-card";
+
+    card.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <img
+            src="${escapeHTML(imgSrc)}"
+            alt=""
+            class="cultivo-thumb"
             loading="lazy"
             decoding="async"
             onerror="this.onerror=null;this.src='img/placeholder.jpg';"
           />
           <span>${icon} ${escapeHTML(c.nombre || "Cultivo")}</span>
         </div>
-        <span class="chip">${escapeHTML(c.categoria || "Otro")}</span>
+        <span class="chip">${escapeHTML(categoria)}</span>
       </div>
 
       ${bodyHtml}
