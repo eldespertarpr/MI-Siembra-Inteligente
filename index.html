@@ -1692,13 +1692,13 @@ dias: diasTexto,
       </div>
 
       <div class="cultivo-body">
-        <div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias || "—")}</div>
-        <div><strong>Luz:</strong> ${escapeHTML(c.luz || "—")}</div>
-        <div><strong>Riego:</strong> ${escapeHTML(c.riego || "—")}</div>
-        <div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto || "—")}</div>
-        <div><strong>Profundidad:</strong> ${escapeHTML(c.profundidad || "—")}</div>
-        <div><strong>Plagas:</strong> ${escapeHTML(plagasTxt)}</div>
-      </div>
+  ${isFilled(c.dias) ? `<div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias)}</div>` : ``}
+  ${isFilled(c.luz) ? `<div><strong>Luz:</strong> ${escapeHTML(c.luz)}</div>` : ``}
+  ${isFilled(c.riego) ? `<div><strong>Riego:</strong> ${escapeHTML(c.riego)}</div>` : ``}
+  ${isFilled(c.tiesto) ? `<div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto)}</div>` : ``}
+  ${isFilled(c.profundidad) ? `<div><strong>Profundidad:</strong> ${escapeHTML(c.profundidad)}</div>` : ``}
+  ${isFilled(plagasTxt) ? `<div><strong>Plagas:</strong> ${escapeHTML(plagasTxt)}</div>` : ``}
+</div>
 
       <div class="cultivo-actions">
         <button class="btn btn-secondary" data-action="germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
