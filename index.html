@@ -1741,9 +1741,12 @@ function renderCatalogo(filtroTexto = "") {
   if (!listEl) return;
 
   const filtro = filtroTexto.trim().toLowerCase();
+let lista = CATALOGO_CULTIVOS.filter(c => {
+  // Filtro por categoría seleccionada
+  if (categoriaActiva !== "Todas" && (c.categoria || "") !== categoriaActiva) return false;
 
-  let lista = CATALOGO_CULTIVOS.filter(c => {
   if (!filtro) return true;
+
   return (
     (c.nombre || "").toLowerCase().includes(filtro) ||
     (c.id || "").toLowerCase().includes(filtro) ||
