@@ -1401,67 +1401,60 @@
     }
 
     function setupCultivoManualUI() {
-      const btnToggle = document.getElementById("btnToggleNuevoCultivo");
-      if (customEditId === id) {
-  resetEditCustomCultivoUI();
+  const btnToggle = document.getElementById("btnToggleNuevoCultivo");
+  const card = document.getElementById("nuevoCultivoCard");
+  const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
+  const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
 
-  const cardEl = document.getElementById("nuevoCultivoCard");
-  if (cardEl) cardEl.style.display = "none";
+  if (!btnToggle || !card || !btnGuardar || !btnCancelar) return;
 
-  clearCustomCultivoUI();
-      }
-      const btnGuardar = document.getElementById("btnGuardarNuevoCultivo");
-      const btnCancelar = document.getElementById("btnCancelarNuevoCultivo");
+  setupNuevoCultivoMesesPills();
 
-      if (!btnToggle || !card || !btnGuardar || !btnCancelar) return;
+  // Evitar duplicar listeners
+  if (btnToggle.dataset.bound === "1") return;
+  btnToggle.dataset.bound = "1";
 
-      setupNuevoCultivoMesesPills();
+  btnToggle.addEventListener("click", () => {
+    const visible = card.style.display !== "none";
+    card.style.display = visible ? "none" : "block";
+    if (!visible) document.getElementById("nuevoCultivoNombre")?.focus();
+    else { clearCustomCultivoUI(); resetEditCustomCultivoUI(); }
+  });
 
-      // Evitar duplicar listeners si llamas dos veces
-      if (btnToggle.dataset.bound === "1") return;
-      btnToggle.dataset.bound = "1";
+  btnCancelar.addEventListener("click", () => {
+    card.style.display = "none";
+    clearCustomCultivoUI();
+    resetEditCustomCultivoUI();
+  });
 
-      btnToggle.addEventListener("click", () => {
-        const visible = card.style.display !== "none";
-        card.style.display = visible ? "none" : "block";
-        if (!visible) document.getElementById("nuevoCultivoNombre")?.focus();
-        else { clearCustomCultivoUI(); resetEditCustomCultivoUI(); }
-      });
+  btnGuardar.addEventListener("click", () => {
+    const wasEditing = Boolean(customEditId);
+    const cultivo = buildCustomCultivoFromUI(customEditId);
+    if (!cultivo) return;
 
-      btnCancelar.addEventListener("click", () => {
-        card.style.display = "none";
-        clearCustomCultivoUI();
-        resetEditCustomCultivoUI();
-      });
+    let customList = loadCustomCultivos();
 
-      btnGuardar.addEventListener("click", () => {
-        const wasEditing = Boolean(customEditId);
-        const cultivo = buildCustomCultivoFromUI(customEditId);
-        if (!cultivo) return;
-
-        let customList = loadCustomCultivos();
-
-        if (customEditId) {
-          customList = customList.filter(c => c.id !== customEditId);
-        } else {
-          const nameLower = (cultivo.nombre || "").toLowerCase();
-          customList = customList.filter(c => (c.nombre || "").toLowerCase() !== nameLower);
-        }
-
-        customList.push(cultivo);
-        saveCustomCultivos(customList);
-        injectCustomIntoCatalogo(customList);
-
-        const filtro = (document.getElementById("catalogoBusqueda")?.value || "").trim();
-        renderCatalogo(filtro);
-
-        card.style.display = "none";
-        clearCustomCultivoUI();
-        resetEditCustomCultivoUI();
-
-        alert(wasEditing ? "Cultivo actualizado ✅" : "Cultivo guardado ✅");
-      });
+    if (customEditId) {
+      customList = customList.filter(c => c.id !== customEditId);
+    } else {
+      const nameLower = (cultivo.nombre || "").toLowerCase();
+      customList = customList.filter(c => (c.nombre || "").toLowerCase() !== nameLower);
     }
+
+    customList.push(cultivo);
+    saveCustomCultivos(customList);
+    injectCustomIntoCatalogo(customList);
+
+    const filtro = (document.getElementById("catalogoBusqueda")?.value || "").trim();
+    renderCatalogo(filtro);
+
+    card.style.display = "none";
+    clearCustomCultivoUI();
+    resetEditCustomCultivoUI();
+
+    alert(wasEditing ? "Cultivo actualizado ✅" : "Cultivo guardado ✅");
+  });
+}
 
     function initCustomCultivos() {
       const customList = loadCustomCultivos();
