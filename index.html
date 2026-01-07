@@ -1774,6 +1774,7 @@ function closeCatSheet(){
       const section = document.getElementById("section-catalogo");
       section?.scrollIntoView?.({ behavior: "smooth", block: "start" });
     }
+let categoriaActiva = "Todas";
 function renderCatalogo(filtroTexto = "") {
   const listEl = document.getElementById("catalogoList");
   if (!listEl) return;
