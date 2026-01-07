@@ -2028,51 +2028,27 @@ function setupCatalogo() {
 }
 
     function setupMiHuertoForm() {
-      const btn = document.getElementById("btnAgregarCultivo");
-      if (!btn) return;
+  const btn = document.getElementById("btnAgregarCultivo");
+  if (!btn) return;
+  if (btn.dataset.bound === "1") return;
+  btn.dataset.bound = "1";
 
-      btn.addEventListener("click", () => {
-        const nombre = (document.getElementById("cultivoNombre").value || "").trim();
-        const variedad = (document.getElementById("cultivoVariedad").value || "").trim();
-        const tipo = document.getElementById("cultivoTipo").value || "otro";
-        const fechaSiembra = document.getElementById("cultivoFecha").value || todayISO();
-        const notas = (document.getElementById("cultivoNotas").value || "").trim();
+  btn.addEventListener("click", () => {
+    // tu código igual...
+  });
 
-        if (!nombre) { alert("Por favor escribe al menos el nombre del cultivo."); return; }
+  const list = document.getElementById("cultivosList");
+  if (!list) return;
+  if (list.dataset.bound === "1") return;
+  list.dataset.bound = "1";
 
-        const extra = getRiegoYCosechaParaNombre(nombre, fechaSiembra);
-
-        const nuevo = {
-          id: Date.now().toString(36),
-          nombre, variedad, tipo, fechaSiembra, notas,
-          creadoEl: todayISO(),
-          ultimaFertilizacion: null,
-          frecuenciaAbonoDias: 30,
-          ultimoRiego: null,
-          frecuenciaRiegoDias: extra.frecuenciaRiego,
-          fechaCosechaEstimada: extra.fechaCosechaEstimada || null
-        };
-
-        stateCultivos.push(nuevo);
-        saveCultivos(stateCultivos);
-
-        document.getElementById("cultivoNombre").value = "";
-        document.getElementById("cultivoVariedad").value = "";
-        document.getElementById("cultivoFecha").value = "";
-        document.getElementById("cultivoNotas").value = "";
-
-        renderCultivos();
-        renderInicio();
-        alert("Cultivo guardado ✅");
-      });
-
-      const list = document.getElementById("cultivosList");
-      if (!list) return;
-
-      list.addEventListener("click", ev => {
+  list.addEventListener("click", ev => {
+    // tu código igual...
+  });
+}
         const b = ev.target.closest("button[data-id]");
         if (!b) return;
-        const id = b.getAttribute("data-id");
+        const id = b.getAttribappearan9a-id");
         const action = b.getAttribute("data-action");
         const cultivo = stateCultivos.find(c => c.id === id);
         if (!cultivo) return;
