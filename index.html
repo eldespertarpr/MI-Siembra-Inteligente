@@ -1746,6 +1746,8 @@ function openCatSheet(){
     chip.textContent = cat;
     chip.onclick = () => {
       categoriaActiva = cat;
+      const btn = document.getElementById("btnCategorias");
+if (btn) btn.textContent = cat === "Todas" ? "Categorías" : cat;
       closeCatSheet();
 
       const input = document.getElementById("catalogoBusqueda");
