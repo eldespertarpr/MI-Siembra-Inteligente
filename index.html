@@ -1667,7 +1667,7 @@ dias: diasTexto,
     const card = document.createElement("div");
     card.className = "cultivo-card";
 
-    const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "—";
+    const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "";
 
     // Acciones: germinación siempre, editar/borrar solo si es personalizado
     const accionesExtra = c.esPersonalizado ? `
