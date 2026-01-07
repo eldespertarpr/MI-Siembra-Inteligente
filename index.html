@@ -988,7 +988,29 @@
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#39;");
     }
+function chipSinDatos(){
+  return `<span class="chip chip--muted">Sin datos</span>`;
+}
 
+function getCategoriaIcon(categoria){
+  const c = String(categoria || "").toLowerCase();
+  if (c.includes("hoja")) return "🥬";
+  if (c.includes("raíz") || c.includes("raiz")) return "🥕";
+  if (c.includes("tubér") || c.includes("tuber")) return "🥔";
+  if (c.includes("arom")) return "🌿";
+  if (c.includes("frutal") || c.includes("cítrico") || c.includes("citric")) return "🌳";
+  if (c.includes("fruto")) return "🍅";
+  if (c.includes("bulbo")) return "🧅";
+  if (c.includes("grano")) return "🌽";
+  if (c.includes("legumin")) return "🫘";
+  return "🌱";
+}
+
+function catSortKey(c){
+  const cat = String(c?.categoria || "zzzz").toLowerCase();
+  const nom = String(c?.nombre || "").toLowerCase();
+  return `${cat}||${nom}`;
+}
     /*********************
      * Storage
      *********************/
