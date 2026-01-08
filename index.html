@@ -956,34 +956,6 @@
 
   </script>
     "use strict";
-    
-// ===== Guard: errores globales claros =====
-window.addEventListener("error", (e) => {
-  console.error("💥 JS Error:", e.message, "\nArchivo:", e.filename, "\nLínea:", e.lineno, "Col:", e.colno, "\n", e.error);
-  alert(`Error: ${e.message}\n(Línea ${e.lineno})\nAbre la consola para ver el detalle.`);
-});
-
-window.addEventListener("unhandledrejection", (e) => {
-  console.error("💥 Promise rejection:", e.reason);
-  alert("Error interno (promesa). Abre la consola para ver el detalle.");
-});
-    /*********************
-     * Helpers (seguridad básica de HTML)
-     *********************/
-    function escapeHTML(str) {
-      return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-      function normText(s) {
-  return String(s || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, ""); // quita acentos/ñ
-      }
 
     /*********************
      * Storage
