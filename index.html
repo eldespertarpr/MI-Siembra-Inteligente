@@ -2874,6 +2874,36 @@ function init() {
   renderAll();
   setActiveSection("inicio");
 }
+    // ===== PARCHE MENU: asegura que los iconos cambien de sección =====
+function forceNavFallback() {
+  const navBtns = document.querySelectorAll(".nav-btn");
+  const sections = document.querySelectorAll(".section");
+
+  if (!navBtns.length || !sections.length) {
+    console.warn("No encuentro .nav-btn o .section");
+    return;
+  }
+
+  navBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.section;
+      // marcar botón activo
+      navBtns.forEach(b => b.classList.remove("nav-btn--active"));
+      btn.classList.add("nav-btn--active");
+
+      // mostrar sección correcta
+      sections.forEach(s => s.classList.remove("section--active"));
+      const target = document.getElementById(`section-${key}`);
+      if (target) target.classList.add("section--active");
+      else console.warn("No existe section-", key);
+    });
+  });
+
+  console.log("✅ Menú conectado (fallback).");
+}
+
+// corre el parche pase lo que pase
+document.addEventListener("DOMContentLoaded", forceNavFallback);
 document.addEventListener("DOMContentLoaded", init);
     document.addEventListener("DOMContentLoaded", () => {
   // 1) Evita submit accidental
