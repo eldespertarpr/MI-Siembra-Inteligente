@@ -2915,23 +2915,7 @@ if ("serviceWorker" in navigator) {
     if (fa && lastA) {
       const d = daysBetween(lastA, hoy);
       if (d !== null) overdueA = d - fa;
-    }
-
-    // Score: prioriza vencidos. Si no está vencido, prioriza el más cercano.
-    const scoreR = overdueR === null ? -9999 : (overdueR > 0 ? 1000 + overdueR : -Math.abs(overdueR));
-    const scoreA = overdueA === null ? -9999 : (overdueA > 0 ? 800 + overdueA : -Math.abs(overdueA));
-
-    const score = Math.max(scoreR, scoreA); // lo más urgente del cultivo
-    const tipoUrgente = (scoreR >= scoreA) ? "riego" : "abono";
-
-    return { c, score, tipoUrgente, overdueR, overdueA };
-  });
-
-  ranked.sort((x, y) => y.score - x.score);
-  return ranked[0];
- function quickRegistrar(tipo) {
-  // tipo: "riego" | "abono"
-  const hoy = todayISO();
+     const hoy = todayISO();
 
   if (!Array.isArray(stateCultivos) || stateCultivos.length === 0) {
     toast("No hay cultivos registrados todavía.");
