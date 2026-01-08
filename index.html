@@ -2875,6 +2875,23 @@ function init() {
   setActiveSection("inicio");
 }
 document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", () => {
+  // 1) Evita submit accidental
+  document.querySelectorAll("button").forEach(b => {
+    if (!b.hasAttribute("type")) b.setAttribute("type", "button");
+  });
+
+  // 2) Delegación para clicks en iconos/SVG dentro del botón
+  const nav = document.querySelector(".nav");
+  if (nav) {
+    nav.addEventListener("click", (ev) => {
+      const btn = ev.target.closest(".nav-btn[data-section]");
+      if (!btn) return;
+      ev.preventDefault();
+      setActiveSection(btn.dataset.section);
+    }, true);
+  }
+});
 </script>
 </body>
 </html>
