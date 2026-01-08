@@ -2864,33 +2864,7 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
-    // ===== Acciones rápidas (Inicio) =====
-function quickRegistrar(tipo) {
-  // tipo: "riego" | "abono"
-  const hoy = todayISO();
 
-  if (!Array.isArray(stateCultivos) || stateCultivos.length === 0) {
-    toast("No hay cultivos registrados todavía.");
-    return;
-  }
-
-  const cultivo = getCultivoUrgente ? getCultivoUrgente() : stateCultivos[0];
-  if (!cultivo) {
-    toast("No hay cultivos disponibles.");
-    return;
-  }
-
-  if (tipo === "riego") {
-    cultivo.ultimoRiego = hoy;
-  } else if (tipo === "abono") {
-    cultivo.ultimaFertilizacion = hoy;
-  }
-
-  saveState();
-  updateAccionesRapidasUI?.();
-  renderInicio?.();
-  toast(`✅ ${tipo === "riego" ? "Riego" : "Abono"} registrado: ${cultivo.nombre}`);
-}
     function getCultivoUrgente() {
   const hoy = todayISO();
   if (!Array.isArray(stateCultivos) || !stateCultivos.length) return null;
@@ -2955,7 +2929,33 @@ function quickRegistrar(tipo) {
 
   ranked.sort((x, y) => y.score - x.score);
   return ranked[0];
+ function quickRegistrar(tipo) {
+  // tipo: "riego" | "abono"
+  const hoy = todayISO();
+
+  if (!Array.isArray(stateCultivos) || stateCultivos.length === 0) {
+    toast("No hay cultivos registrados todavía.");
+    return;
+  }
+
+  const cultivo = getCultivoUrgente ? getCultivoUrgente() : stateCultivos[0];
+  if (!cultivo) {
+    toast("No hay cultivos disponibles.");
+    return;
+  }
+
+  if (tipo === "riego") {
+    cultivo.ultimoRiego = hoy;
+  } else if (tipo === "abono") {
+    cultivo.ultimaFertilizacion = hoy;
+  }
+
+  saveState();
+  updateAccionesRapidasUI?.();
+  renderInicio?.();
+  toast(`✅ ${tipo === "riego" ? "Riego" : "Abono"} registrado: ${cultivo.nombre}`);
     }
+    
     /*********************
  * INIT (ARRANQUE)
  *********************/
