@@ -954,7 +954,7 @@
     <button class="btn btn-secondary" id="btnInstalarPwa"><span>📲</span> Instalar</button>
   </div>
 
-  <script>
+  </script>
     "use strict";
     
 // ===== Guard: errores globales claros =====
@@ -976,7 +976,8 @@ window.addEventListener("unhandledrejection", (e) => {
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");}
+        .replaceAll("'", "&#39;");
+    }
       function normText(s) {
   return String(s || "")
     .toLowerCase()
