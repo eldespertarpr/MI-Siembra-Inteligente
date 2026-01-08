@@ -966,7 +966,8 @@
   </div>    <!-- Banner instalar PWA -->    <div id="installBanner" class="hidden">  
     <span>Instala <strong>Mi Siembra Inteligente</strong> en tu dispositivo</span>  
     <button class="btn btn-secondary" id="btnInstalarPwa"><span>📲</span> Instalar</button>  
-  </div>    <script>  
+  </div>   
+    <script>  
     "use strict";  
   
     // ===== Guard: errores globales claros =====  
@@ -1662,3 +1663,368 @@
         alert(wasEditing ? "Cultivo actualizado ✅" : "Cultivo guardado ✅");  
       });  
     }
+<script>
+/* ... TODO tu script existente ... */
+
+/* ✅ CIERRA setupCultivoManualUI() y pega esto luego */
+
+/*********************
+ * Pesticidas (datos base)
+ *********************/
+const PESTICIDAS_DATA = [
+  { nombre: "Jabón potásico", uso: "Pulgones, mosca blanca, ácaros (contacto).", nota: "Aplicar al atardecer; prueba en pocas hojas primero." },
+  { nombre: "Aceite de neem", uso: "Repelente/antialimentario suave.", nota: "Evitar sol fuerte; seguir etiqueta." },
+  { nombre: "Bicarbonato (suave)", uso: "Apoyo contra oídio/manchas.", nota: "No abusar; alterna y mejora ventilación." }
+];
+
+/*********************
+ * NAV (cambio de secciones)
+ *********************/
+function setActiveSection(sectionKey) {
+  document.querySelectorAll(".nav-btn").forEach(b => {
+    b.classList.toggle("nav-btn--active", b.dataset.section === sectionKey);
+  });
+
+  document.querySelectorAll(".section").forEach(sec => sec.classList.remove("section--active"));
+  const target = document.getElementById(`section-${sectionKey}`);
+  if (target) target.classList.add("section--active");
+
+  if (sectionKey === "inicio") renderInicio();
+  if (sectionKey === "calendario") renderCalendario();
+  if (sectionKey === "catalogo") renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+  if (sectionKey === "huerto") renderCultivos();
+  if (sectionKey === "diario") renderDiario();
+  if (sectionKey === "plagas") renderPlagas();
+  if (sectionKey === "pesticidas") renderPesticidas();
+  if (sectionKey === "opciones") renderOpciones();
+  // "guias" no necesita render especial: solo mostrar sección
+}
+
+function bindNav() {
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    if (btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", () => setActiveSection(btn.dataset.section));
+  });
+}
+
+/*********************
+ * Header subtitle
+ *********************/
+function renderHeader() {
+  const el = document.getElementById("appSubtitle");
+  if (!el) return;
+  const n = escapeHTML(stateSettings.nombreHuerto || DEFAULT_SETTINGS.nombreHuerto);
+  const clima = CLIMA_LABEL[stateSettings.clima] || "tropical";
+  const hem = HEMISFERIO_LABEL[stateSettings.hemisferio] || "hemisferio norte";
+  el.innerHTML =
+    `<span>🏡 <strong>${n}</strong></span>` +
+    `<span class="app-subtitle-dot"></span>` +
+    `<span>🌦️ ${escapeHTML(clima)}</span>` +
+    `<span class="app-subtitle-dot"></span>` +
+    `<span>🧭 ${escapeHTML(hem)}</span>`;
+}
+
+/*********************
+ * INICIO
+ *********************/
+function renderInicio() {
+  document.getElementById("estadoCultivosCount").textContent = String(stateCultivos.length || 0);
+
+  const hoy = todayISO();
+  const entradasHoy = (stateDiario || []).filter(e => e?.fecha === hoy).length;
+  document.getElementById("estadoEntradasCount").textContent = String(entradasHoy);
+
+  const resumen = document.getElementById("estadoResumen");
+  if (resumen) {
+    resumen.textContent = !stateCultivos.length
+      ? 'Aún no has registrado cultivos. Usa "Mi huerto" para añadir tu primera siembra.'
+      : (getPendientes({ rangeDays: 0 }).length ? `Hoy tienes pendientes. Atiende riego/abono.` : "Hoy no tienes pendientes ✅");
+  }
+
+  const chip = document.getElementById("estadoClimaChip");
+  if (chip) chip.textContent = `Clima ${CLIMA_LABEL[stateSettings.clima] || "tropical"}`;
+
+  renderPendientesEnInicio();
+  updateAccionesRapidasUI();
+}
+
+/*********************
+ * CALENDARIO
+ *********************/
+let calendarioMesActual = new Date().getMonth();
+
+function isRecommendedForMonth(cultivo, settings, monthIndex) {
+  const mesA = ajustarMesPorHemisferio(settings, monthIndex);
+  const meses = Array.isArray(cultivo.meses) ? cultivo.meses : [];
+  return meses.includes(mesA);
+}
+
+function renderCalendario() {
+  const chip = document.getElementById("calendarioClimaChip2");
+  if (chip) chip.textContent = `Clima ${CLIMA_LABEL[stateSettings.clima] || "tropical"}`;
+
+  const list = document.getElementById("calendarList");
+  const empty = document.getElementById("calendarEmpty");
+  if (!list || !empty) return;
+
+  document.querySelectorAll("#mesesPills .pill").forEach(p => {
+    p.classList.toggle("pill--active", parseInt(p.dataset.mes, 10) === calendarioMesActual);
+  });
+
+  const base = getCalendarData(stateSettings, calendarioMesActual);
+
+  const catalogoRecs = CATALOGO_CULTIVOS
+    .filter(c => isRecommendedForMonth(c, stateSettings, calendarioMesActual))
+    .slice(0, 10)
+    .map(c => ({
+      titulo: c.nombre,
+      tipo: c.categoria || "—",
+      detalle: c.esPersonalizado ? "Recomendación por meses (personalizado)." : "Recomendación por meses (catálogo)."
+    }));
+
+  const merged = [...base, ...catalogoRecs];
+
+  list.innerHTML = "";
+  if (!merged.length) { empty.style.display = "block"; return; }
+  empty.style.display = "none";
+
+  merged.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "calendar-item";
+    div.innerHTML = `
+      <div class="calendar-item-title">
+        <span>${escapeHTML(item.titulo || "—")}</span>
+        <span class="chip">${escapeHTML(item.tipo || "—")}</span>
+      </div>
+      <div class="muted">${escapeHTML(item.detalle || "")}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function bindCalendario() {
+  const wrap = document.getElementById("mesesPills");
+  if (!wrap || wrap.dataset.bound === "1") return;
+  wrap.dataset.bound = "1";
+  wrap.addEventListener("click", (ev) => {
+    const b = ev.target.closest("button.pill[data-mes]");
+    if (!b) return;
+    calendarioMesActual = parseInt(b.dataset.mes, 10);
+    renderCalendario();
+  });
+}
+
+/*********************
+ * CATALOGO
+ *********************/
+function renderCatalogo(filtro = "") {
+  const list = document.getElementById("catalogoList");
+  if (!list) return;
+
+  const q = normText(filtro);
+  const items = CATALOGO_CULTIVOS.filter(c => {
+    if (!q) return true;
+    return normText(c.nombre).includes(q) || normText(c.categoria).includes(q);
+  });
+
+  list.innerHTML = "";
+  if (!items.length) { list.innerHTML = `<div class="muted">No se encontraron cultivos.</div>`; return; }
+
+  items.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "cultivo-card";
+    const pl = Array.isArray(c.plagas) ? c.plagas.join(", ") : "—";
+    const badge = c.esPersonalizado ? `<span class="chip badge">Personalizado</span>` : `<span class="chip">Catálogo</span>`;
+    card.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <img class="cultivo-thumb" src="${escapeHTML(c.imagen || "img/placeholder.jpg")}" alt="${escapeHTML(c.nombre)}" onerror="this.src='img/placeholder.jpg';" />
+          <div>
+            <div>${escapeHTML(c.nombre)}</div>
+            <div class="muted">${escapeHTML(c.categoria || "—")} · ${escapeHTML(c.dias || "—")}</div>
+          </div>
+        </div>
+        ${badge}
+      </div>
+
+      <div class="cultivo-body">
+        <div><strong>Luz:</strong> ${escapeHTML(c.luz || "—")}</div>
+        <div><strong>Riego:</strong> ${escapeHTML(c.riego || "—")}</div>
+        <div><strong>Tiesto:</strong> ${escapeHTML(c.tiesto || "—")}</div>
+        <div><strong>Prof:</strong> ${escapeHTML(c.profundidad || "—")}</div>
+        <div style="grid-column:1/-1;"><strong>Plagas:</strong> ${escapeHTML(pl)}</div>
+      </div>
+
+      <div class="cultivo-actions">
+        <button class="btn btn-secondary" data-action="toggle-germinacion" data-id="${escapeHTML(c.id)}">🌱 Germinación</button>
+        ${c.esPersonalizado ? `
+          <button class="btn btn-secondary" data-action="edit-custom" data-id="${escapeHTML(c.id)}">✏️ Editar</button>
+          <button class="btn btn-danger" data-action="delete-custom" data-id="${escapeHTML(c.id)}">🗑️ Borrar</button>
+        ` : ""}
+      </div>
+
+      <div class="germinacion-panel" id="germ-${escapeHTML(c.id)}"></div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function toggleGerminacionUI(cultivoId) {
+  const panel = document.getElementById(`germ-${cultivoId}`);
+  if (!panel) return;
+
+  const isOpen = panel.style.display === "block";
+  if (isOpen) { panel.style.display = "none"; return; }
+
+  const info = getInfoGerminacion(cultivoId);
+  if (!info) { panel.innerHTML = `<div class="muted">No hay info de germinación.</div>`; panel.style.display = "block"; return; }
+
+  const pasos = Array.isArray(info.pasos) ? info.pasos.map(p => `• ${p}`).join("\n") : "";
+  panel.innerHTML = `
+    <div><strong>${escapeHTML(info.titulo || "Guía")}</strong></div>
+    <div class="muted">${escapeHTML(info.metodo || "")}</div>
+    <div style="margin-top:6px; white-space:pre-line;">${escapeHTML(pasos)}</div>
+    ${info.tip ? `<div class="muted" style="margin-top:6px;"><strong>Tip:</strong> ${escapeHTML(info.tip)}</div>` : ""}
+  `;
+  panel.style.display = "block";
+}
+
+function bindCatalogo() {
+  const input = document.getElementById("catalogoBusqueda");
+  if (input && input.dataset.bound !== "1") {
+    input.dataset.bound = "1";
+    input.addEventListener("input", () => renderCatalogo(input.value.trim()));
+  }
+
+  const list = document.getElementById("catalogoList");
+  if (!list || list.dataset.bound === "1") return;
+  list.dataset.bound = "1";
+
+  list.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("button[data-action]");
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+
+    if (action === "toggle-germinacion") toggleGerminacionUI(id);
+
+    if (action === "edit-custom") {
+      const custom = loadCustomCultivos().find(x => x.id === id);
+      if (custom) startEditCustomCultivo(custom);
+    }
+
+    if (action === "delete-custom") {
+      if (confirm("¿Borrar este cultivo personalizado?")) {
+        deleteCustomCultivoById(id);
+        renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+        renderCalendario();
+      }
+    }
+  });
+}
+
+/*********************
+ * MI HUERTO + DIARIO + PLAGAS + PESTICIDAS + OPCIONES
+ * (usa lo que ya definiste en tu versión anterior; aquí va solo lo mínimo: binds + init)
+ *********************/
+function renderPlagas() {
+  const wrap = document.getElementById("plagasList");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  PLAGAS_DATA.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "plaga-card";
+    div.innerHTML = `
+      <div class="media-item-title">${escapeHTML(p.nombre)}</div>
+      <div class="media-item-body"><strong>Cómo se ve:</strong> ${escapeHTML(p.comoSeVe)}</div>
+      <div class="media-item-body"><strong>Manejo suave:</strong> ${escapeHTML(p.manejoSuave)}</div>
+      <div class="media-item-body"><strong>Casero:</strong> ${escapeHTML(p.preparadosCaseros)}</div>
+      <div class="media-item-body"><strong>Comercial:</strong> ${escapeHTML(p.productosComerciales)}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function renderPesticidas() {
+  const wrap = document.getElementById("pesticidasList");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  PESTICIDAS_DATA.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "plaga-card";
+    div.innerHTML = `
+      <div class="media-item-title">${escapeHTML(p.nombre)}</div>
+      <div class="media-item-body"><strong>Uso:</strong> ${escapeHTML(p.uso)}</div>
+      <div class="media-item-body"><strong>Nota:</strong> ${escapeHTML(p.nota)}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+function renderOpciones() {
+  const n = document.getElementById("nombreHuerto");
+  const c = document.getElementById("climaSelect");
+  const h = document.getElementById("hemisferioSelect");
+  if (n) n.value = stateSettings.nombreHuerto || DEFAULT_SETTINGS.nombreHuerto;
+  if (c) c.value = stateSettings.clima || DEFAULT_SETTINGS.clima;
+  if (h) h.value = stateSettings.hemisferio || DEFAULT_SETTINGS.hemisferio;
+}
+
+function bindAccionesRapidas() {
+  const r = document.getElementById("btnQuickRiego");
+  const a = document.getElementById("btnQuickAbono");
+  if (r && r.dataset.bound !== "1") { r.dataset.bound = "1"; r.addEventListener("click", () => quickRegistrar("riego")); }
+  if (a && a.dataset.bound !== "1") { a.dataset.bound = "1"; a.addEventListener("click", () => quickRegistrar("abono")); }
+}
+
+let deferredPrompt = null;
+function bindPWAInstall() {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("installBanner")?.classList.remove("hidden");
+  });
+
+  const btn = document.getElementById("btnInstalarPwa");
+  if (btn && btn.dataset.bound !== "1") {
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch {}
+      deferredPrompt = null;
+      document.getElementById("installBanner")?.classList.add("hidden");
+    });
+  }
+}
+
+function renderAll() {
+  renderHeader();
+  injectCustomIntoCatalogo(loadCustomCultivos());
+  renderInicio();
+  renderCalendario();
+  renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+  // Si ya tienes renderCultivos/renderDiario/binds en tu script, se llamarán desde setActiveSection cuando entres.
+}
+
+function init() {
+  injectCustomIntoCatalogo(loadCustomCultivos());
+  bindNav();
+  bindCalendario();
+  bindCatalogo();
+  bindAccionesRapidas();
+  bindPWAInstall();
+  setupCultivoManualUI();
+
+  const f = document.getElementById("cultivoFecha");
+  if (f && !f.value) f.value = todayISO();
+
+  renderAll();
+  setActiveSection("inicio");
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
