@@ -1703,6 +1703,141 @@ saveCultivos(stateCultivos); // opcional, pero recomendado para “migrar” def
     }
 
     function renderInicio() {
+      function daysBetween(isoA, isoB) {
+  // isoA/isoB: "YYYY-MM-DD"
+  const a = new Date(isoA + "T00:00:00");
+  const b = new Date(isoB + "T00:00:00");
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return null;
+  const ms = b.getTime() - a.getTime();
+  return Math.floor(ms / (1000 * 60 * 60 * 24));
+}
+
+function getCultivoUrgente() {
+  const hoy = todayISO();
+  if (!Array.isArray(stateCultivos) || !stateCultivos.length) return null;
+
+  // Calcula "urgencia" por riego y abono (si tienen frecuencia)
+  const ranked = stateCultivos.map(c => {
+    const fr = Number.isFinite(c.frecuenciaRiegoDias) ? c.frecuenciaRiegoDias : null;
+    const fa = Number.isFinite(c.frecuenciaAbonoDias) ? c.frecuenciaAbonoDias : null;
+
+    const lastR = c.ultimoRiego || c.fechaSiembra || c.creadoEl || null;
+    const lastA = c.ultimaFertilizacion || c.fechaSiembra || c.creadoEl || null;
+
+    let overdueR = null;
+    let overdueA = null;
+
+    if (fr && lastR) {
+      const d = daysBetween(lastR, hoy);
+      if (d !== null) overdueR = d - fr; // >0 = vencido
+    }
+    if (fa && lastA) {
+      const d = daysBetween(lastA, hoy);
+      if (d !== null) overdueA = d - fa;
+    }
+
+    // Score: prioriza vencidos. Si no está vencido, prioriza el más cercano.
+    const scoreR = overdueR === null ? -9999 : (overdueR > 0 ? 1000 + overdueR : -Math.abs(overdueR));
+    const scoreA = overdueA === null ? -9999 : (overdueA > 0 ? 800 + overdueA : -Math.abs(overdueA));
+
+    const score = Math.max(scoreR, scoreA); // lo más urgente del cultivo
+    const tipoUrgente = (scoreR >= scoreA) ? "riego" : "abono";
+
+    return { c, score, tipoUrgente, overdueR, overdueA };
+  });
+
+  ranked.sort((x, y) => y.score - x.score);
+  return ranked[0];
+}
+
+function updateAccionesRapidasUI() {
+  const chip = document.getElementById("accionesRapidasChip");
+  const desc = document.getElementById("accionesRapidasDesc");
+  const det  = document.getElementById("accionesRapidasDetalle");
+  const btnR = document.getElementById("btnQuickRiego");
+  const btnA = document.getElementById("btnQuickAbono");
+
+  if (!chip || !desc || !det || !btnR || !btnA) return;
+
+  if (!stateCultivos.length) {
+    chip.textContent = "Sin cultivos";
+    desc.textContent = 'Primero añade un cultivo en "Mi huerto".';
+    det.textContent = "—";
+    btnR.disabled = true; btnA.disabled = true;
+    btnR.style.opacity = 0.55; btnA.style.opacity = 0.55;
+    return;
+  }
+
+  const urgente = getCultivoUrgente();
+  if (!urgente) {
+    chip.textContent = "Listo";
+    desc.textContent = "No hay pendientes por ahora.";
+    det.textContent = "—";
+    btnR.disabled = false; btnA.disabled = false;
+    btnR.style.opacity = 1; btnA.style.opacity = 1;
+    return;
+  }
+
+  const nombre = urgente.c.nombre + (urgente.c.variedad ? ` (${urgente.c.variedad})` : "");
+  chip.textContent = `Prioridad: ${urgente.tipoUrgente === "riego" ? "Riego" : "Abono"}`;
+
+  // Detalle de vencimiento
+  const rTxt = (urgente.overdueR === null) ? "Riego: —"
+    : (urgente.overdueR > 0 ? `Riego vencido por ${urgente.overdueR} día(s)` : `Riego en ${Math.abs(urgente.overdueR)} día(s)`);
+  const aTxt = (urgente.overdueA === null) ? "Abono: —"
+    : (urgente.overdueA > 0 ? `Abono vencido por ${urgente.overdueA} día(s)` : `Abono en ${Math.abs(urgente.overdueA)} día(s)`);
+
+  desc.textContent = `Cultivo sugerido: ${nombre}`;
+  det.textContent = `${rTxt} · ${aTxt}`;
+
+  // Habilita siempre (son acciones manuales)
+  btnR.disabled = false; btnA.disabled = false;
+  btnR.style.opacity = 1; btnA.style.opacity = 1;
+
+  // Guarda el ID para que los botones sepan a cuál aplicar
+  btnR.dataset.id = urgente.c.id;
+  btnA.dataset.id = urgente.c.id;
+}
+
+function quickRegistrar(tipo) {
+  const btn = (tipo === "riego") ? document.getElementById("btnQuickRiego") : document.getElementById("btnQuickAbono");
+  const id = btn?.dataset?.id;
+  if (!id) { alert("No hay un cultivo seleccionado para registrar."); return; }
+
+  const cultivo = stateCultivos.find(c => c.id === id);
+  if (!cultivo) { alert("No encontré el cultivo."); return; }
+
+  const hoy = todayISO();
+
+  if (tipo === "riego") {
+    cultivo.ultimoRiego = hoy;
+    stateDiario.push({
+      id: Date.now().toString(36),
+      fecha: hoy,
+      texto: `Riego registrado para ${cultivo.nombre}${cultivo.variedad ? ` (${cultivo.variedad})` : ""}.`,
+      tipo: "Riego"
+    });
+    alert("Riego registrado ✅");
+  } else {
+    cultivo.ultimaFertilizacion = hoy;
+    stateDiario.push({
+      id: Date.now().toString(36),
+      fecha: hoy,
+      texto: `Abono registrado para ${cultivo.nombre}${cultivo.variedad ? ` (${cultivo.variedad})` : ""}.`,
+      tipo: "Abono"
+    });
+    alert("Abono registrado ✅");
+  }
+
+  saveCultivos(stateCultivos);
+  saveDiario(stateDiario);
+
+  // Refresca UI completa relacionada
+  renderCultivos();
+  renderDiario();
+  renderInicio();
+  updateAccionesRapidasUI();
+}
       const cultivosCount = stateCultivos.length;
       const hoyISO = todayISO();
       const entradasHoy = stateDiario.filter(e => e.fecha === hoyISO).length;
