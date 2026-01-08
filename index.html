@@ -1711,7 +1711,6 @@ saveCultivos(stateCultivos); // opcional, pero recomendado para “migrar” def
   const ms = b.getTime() - a.getTime();
   return Math.floor(ms / (1000 * 60 * 60 * 24));
 }
-
 function getCultivoUrgente() {
   const hoy = todayISO();
   if (!Array.isArray(stateCultivos) || !stateCultivos.length) return null;
@@ -2885,7 +2884,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Custom cultivos
     initCustomCultivos();
-
+// Acciones rápidas (Inicio) - listeners
+document.getElementById("btnQuickRiego")?.addEventListener("click", () => quickRegistrar("riego"));
+document.getElementById("btnQuickAbono")?.addEventListener("click", () => quickRegistrar("abono"));
+updateAccionesRapidasUI();
     // Render inicial
     renderCatalogo("");
     renderCultivos();
