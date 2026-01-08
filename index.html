@@ -1987,30 +1987,886 @@ function bindPWAInstall() {
     btn.addEventListener("click", async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
-      try { await deferredPrompt.userChoice; } catch {}
-      deferredPrompt = null;
-      document.getElementById("installBanner")?.classList.add("hidden");
+<script>
+"use strict";
+
+/* =========================
+   GUARD errores globales
+========================= */
+window.addEventListener("error", (e) => {
+  console.error("💥 JS Error:", e.message, "\nArchivo:", e.filename, "\nLínea:", e.lineno, "\nCol:", e.colno, "\n", e.error);
+  alert(`Error: ${e.message}\n(Línea ${e.lineno})\nAbre consola para ver detalles.`);
+});
+window.addEventListener("unhandledrejection", (e) => {
+  console.error("💥 Promise rejection:", e.reason);
+  alert("Error interno (promesa). Abre la consola para ver el detalle.");
+});
+
+/* =========================
+   HELPERS
+========================= */
+function escapeHTML(str) {
+  return String(str ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+function normText(s) {
+  return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+function todayISO() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+}
+function addDays(dateISO, days) {
+  if (!dateISO || !Number.isFinite(days)) return dateISO;
+  const d = new Date(dateISO + "T00:00:00");
+  if (Number.isNaN(d.getTime())) return dateISO;
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+function safeISO(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr + "T00:00:00");
+  return Number.isNaN(d.getTime()) ? null : dateStr;
+}
+function daysBetween(fromISO, toISO) {
+  const a = new Date(fromISO + "T00:00:00");
+  const b = new Date(toISO + "T00:00:00");
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return null;
+  return Math.floor((b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/* =========================
+   STORAGE
+========================= */
+const STORAGE_KEYS = { settings:"msi-settings", cultivos:"msi-cultivos", diario:"msi-diario" };
+const STORAGE_CUSTOM_CULTIVOS = "msi-custom-cultivos-v17";
+
+const DEFAULT_SETTINGS = { nombreHuerto:"Mi huerto", clima:"tropical", hemisferio:"norte" };
+const CLIMA_LABEL = { tropical:"tropical", subtropical:"subtropical/templado", templado:"templado/frío" };
+const HEMISFERIO_LABEL = { norte:"hemisferio norte", sur:"hemisferio sur" };
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.settings);
+    if (!raw) return { ...DEFAULT_SETTINGS };
+    const parsed = JSON.parse(raw);
+    return { ...DEFAULT_SETTINGS, ...(parsed && typeof parsed === "object" ? parsed : {}) };
+  } catch { return { ...DEFAULT_SETTINGS }; }
+}
+function saveSettings(settings) {
+  localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(settings));
+}
+function loadCultivos() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.cultivos);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveCultivos(list) {
+  localStorage.setItem(STORAGE_KEYS.cultivos, JSON.stringify(list));
+}
+function loadDiario() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.diario);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveDiario(list) {
+  localStorage.setItem(STORAGE_KEYS.diario, JSON.stringify(list));
+}
+function loadCustomCultivos() {
+  try {
+    const raw = localStorage.getItem(STORAGE_CUSTOM_CULTIVOS);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveCustomCultivos(arr) {
+  localStorage.setItem(STORAGE_CUSTOM_CULTIVOS, JSON.stringify(arr));
+}
+
+/* =========================
+   NORMALIZACION
+========================= */
+function normalizeCultivo(c) {
+  const hoy = todayISO();
+  const out = { ...c };
+
+  out.ultimoRiego = safeISO(out.ultimoRiego);
+  out.ultimaFertilizacion = safeISO(out.ultimaFertilizacion);
+  out.ultimaRotacion = safeISO(out.ultimaRotacion);
+
+  if (!Number.isFinite(out.frecuenciaRiegoDias) || out.frecuenciaRiegoDias <= 0) out.frecuenciaRiegoDias = 3;
+  if (!Number.isFinite(out.frecuenciaAbonoDias) || out.frecuenciaAbonoDias <= 0) out.frecuenciaAbonoDias = 30;
+
+  if (out.rotacionDias != null) {
+    const r = parseInt(out.rotacionDias, 10);
+    out.rotacionDias = Number.isFinite(r) && r > 0 ? r : null;
+  } else out.rotacionDias = null;
+
+  out.fechaSiembra = safeISO(out.fechaSiembra) || out.fechaSiembra || hoy;
+  out.creadoEl = safeISO(out.creadoEl) || out.creadoEl || hoy;
+
+  out.id = out.id || `c-${Date.now().toString(36)}`;
+  return out;
+}
+function normalizeAllCultivos(list) {
+  return Array.isArray(list) ? list.map(normalizeCultivo) : [];
+}
+
+/* =========================
+   ESTADO GLOBAL
+========================= */
+let stateSettings = loadSettings();
+let stateCultivos = normalizeAllCultivos(loadCultivos());
+let stateDiario = loadDiario();
+saveCultivos(stateCultivos);
+
+let diarioFiltroActual = "todos";
+let diarioEnEdicionId = null;
+
+/* =========================
+   CALENDARIO (base)
+========================= */
+const CALENDARIO_SIEMBRA = {
+  tropical: {
+    5: [
+      { titulo:"Re-siembra de lechugas", tipo:"Hoja", detalle:"Siembra escalonada cada 2–3 semanas para cosechas continuas." },
+      { titulo:"Rábanos", tipo:"Raíz", detalle:"Cosecha rápida (20–30 días). Perfectos para ocupar huecos libres." }
+    ],
+    6: [
+      { titulo:"Berenjena", tipo:"Fruto", detalle:"Le gustan las noches cálidas. Ideal para verano tropical." },
+      { titulo:"Ajíes y pimientos", tipo:"Fruto", detalle:"Sembrar en lugar soleado y con buen drenaje." }
+    ]
+  },
+  subtropical: { 5: [{ titulo:"Tomates de media estación", tipo:"Fruto", detalle:"Elige variedades adaptadas a tu región." }] },
+  templado: { 2: [{ titulo:"Lechugas de primavera", tipo:"Hoja", detalle:"Siembra temprana bajo protección ligera si hay riesgo de heladas." }] }
+};
+function ajustarMesPorHemisferio(settings, monthIndex) {
+  const climaKey = settings.clima || "tropical";
+  let mes = monthIndex;
+  if (settings.hemisferio === "sur" && (climaKey === "templado" || climaKey === "subtropical")) {
+    mes = (monthIndex + 6) % 12;
+  }
+  return mes;
+}
+function getCalendarData(settings, monthIndex) {
+  const climaKey = settings.clima || "tropical";
+  const mesAjustado = ajustarMesPorHemisferio(settings, monthIndex);
+  const base = CALENDARIO_SIEMBRA[climaKey] || {};
+  return base[mesAjustado] || [];
+}
+
+/* =========================
+   CATÁLOGO BASE (mínimo)
+========================= */
+const CATALOGO_CULTIVOS = [
+  { id:"tomate", nombre:"Tomate", categoria:"Fruto", dias:"70–90 días", luz:"Sol directo (6–8 h)", riego:"Regular, sin encharcar", tiesto:"Macetas profundas de 5+ galones", profundidad:"0.5–1 cm", plagas:["Pulgones","Mosca blanca","Orugas"], meses:[0,1,2,3,4,5,6,7], imagen:"img/tomate.jpg" },
+  { id:"lechuga", nombre:"Lechuga", categoria:"Hoja", dias:"45–60 días", luz:"Sol suave o sombra parcial", riego:"Suelo siempre ligeramente húmedo", tiesto:"Macetas anchas de 3+ galones", profundidad:"0.5 cm", plagas:["Babosas","Caracoles","Pulgones"], meses:[0,1,2,3,8,9,10,11], imagen:"img/lechuga.jpg" },
+  { id:"rabano", nombre:"Rábano", categoria:"Raíz", dias:"25–35 días", luz:"Sol directo o media sombra", riego:"Suelo constantemente húmedo", tiesto:"Macetas de 3+ galones", profundidad:"1 cm", plagas:["Pulguillas","Babosas"], meses:[0,1,2,3,8,9,10,11], imagen:"img/rabano.jpg" }
+];
+function removeCustomFromCatalogo() {
+  for (let i = CATALOGO_CULTIVOS.length - 1; i >= 0; i--) {
+    if (CATALOGO_CULTIVOS[i]?.esPersonalizado) CATALOGO_CULTIVOS.splice(i, 1);
+  }
+}
+function injectCustomIntoCatalogo(customList) {
+  removeCustomFromCatalogo();
+  (customList || []).forEach(c => CATALOGO_CULTIVOS.push({ ...c, esPersonalizado: true }));
+}
+
+/* =========================
+   PENDIENTES + ACCIONES RÁPIDAS
+========================= */
+function calcNextDate(ultimaISO, frecuenciaDias) {
+  const base = safeISO(ultimaISO) || todayISO();
+  return addDays(base, frecuenciaDias);
+}
+function getPendientes({ rangeDays = 0 } = {}) {
+  const hoy = todayISO();
+  const fin = rangeDays > 0 ? addDays(hoy, rangeDays) : hoy;
+  const items = [];
+
+  stateCultivos.forEach(c => {
+    const nombre = c.nombre || "Cultivo";
+
+    if (c.frecuenciaRiegoDias) {
+      const proxima = calcNextDate(c.ultimoRiego, c.frecuenciaRiegoDias);
+      const d = daysBetween(hoy, proxima);
+      if (proxima < hoy) {
+        const atras = daysBetween(proxima, hoy);
+        items.push({ tipo:"Riego", cultivoId:c.id, nombre, fecha:hoy, texto:`${nombre}: riego atrasado (${atras} día(s))` });
+      } else if (d !== null && proxima >= hoy && proxima <= fin) {
+        items.push({ tipo:"Riego", cultivoId:c.id, nombre, fecha:proxima, texto: d === 0 ? `${nombre}: riego hoy` : `${nombre}: riego en ${d} día(s)` });
+      }
+    }
+
+    if (c.frecuenciaAbonoDias) {
+      const proxima = calcNextDate(c.ultimaFertilizacion, c.frecuenciaAbonoDias);
+      const d = daysBetween(hoy, proxima);
+      if (proxima < hoy) {
+        const atras = daysBetween(proxima, hoy);
+        items.push({ tipo:"Abono", cultivoId:c.id, nombre, fecha:hoy, texto:`${nombre}: abono atrasado (${atras} día(s))` });
+      } else if (d !== null && proxima >= hoy && proxima <= fin) {
+        items.push({ tipo:"Abono", cultivoId:c.id, nombre, fecha:proxima, texto: d === 0 ? `${nombre}: abono hoy` : `${nombre}: abono en ${d} día(s)` });
+      }
+    }
+  });
+
+  items.sort((a,b) => (a.fecha || "").localeCompare(b.fecha || ""));
+  return items;
+}
+function renderPendientesEnInicio() {
+  const el = document.getElementById("pendientesHoy");
+  if (!el) return;
+
+  if (!stateCultivos.length) { el.textContent = "Pendientes: añade tu primer cultivo en “Mi huerto”."; return; }
+
+  const hoy = getPendientes({ rangeDays: 0 });
+  if (!hoy.length) { el.textContent = "Pendientes: nada para hoy ✅"; return; }
+
+  const top = hoy.slice(0,5).map(i => `• ${i.texto}`).join("\n");
+  el.innerHTML = `<strong>Pendientes hoy:</strong><br>${escapeHTML(top).replace(/\n/g,"<br>")}`;
+}
+function getCultivoUrgente() {
+  const hoy = todayISO();
+  if (!stateCultivos.length) return null;
+
+  const ranked = stateCultivos.map(c => {
+    const fr = Number.isFinite(c.frecuenciaRiegoDias) ? c.frecuenciaRiegoDias : null;
+    const fa = Number.isFinite(c.frecuenciaAbonoDias) ? c.frecuenciaAbonoDias : null;
+
+    const lastR = c.ultimoRiego || c.fechaSiembra || c.creadoEl || null;
+    const lastA = c.ultimaFertilizacion || c.fechaSiembra || c.creadoEl || null;
+
+    let overdueR = null, overdueA = null;
+    if (fr && lastR) { const d = daysBetween(lastR, hoy); if (d !== null) overdueR = d - fr; }
+    if (fa && lastA) { const d = daysBetween(lastA, hoy); if (d !== null) overdueA = d - fa; }
+
+    const scoreR = overdueR === null ? -9999 : (overdueR > 0 ? 1000 + overdueR : -Math.abs(overdueR));
+    const scoreA = overdueA === null ? -9999 : (overdueA > 0 ? 800 + overdueA : -Math.abs(overdueA));
+    const score = Math.max(scoreR, scoreA);
+    const tipoUrgente = (scoreR >= scoreA) ? "riego" : "abono";
+    return { c, score, tipoUrgente, overdueR, overdueA };
+  });
+
+  ranked.sort((x,y) => y.score - x.score);
+  return ranked[0];
+}
+function updateAccionesRapidasUI() {
+  const chip = document.getElementById("accionesRapidasChip");
+  const desc = document.getElementById("accionesRapidasDesc");
+  const det  = document.getElementById("accionesRapidasDetalle");
+  const btnR = document.getElementById("btnQuickRiego");
+  const btnA = document.getElementById("btnQuickAbono");
+  if (!chip || !desc || !det || !btnR || !btnA) return;
+
+  if (!stateCultivos.length) {
+    chip.textContent = "Sin cultivos";
+    desc.textContent = 'Primero añade un cultivo en "Mi huerto".';
+    det.textContent = "—";
+    btnR.disabled = true; btnA.disabled = true;
+    btnR.style.opacity = 0.55; btnA.style.opacity = 0.55;
+    return;
+  }
+
+  const urgente = getCultivoUrgente();
+  const nombre = urgente?.c?.nombre || "Cultivo";
+  chip.textContent = `Prioridad: ${urgente?.tipoUrgente === "abono" ? "Abono" : "Riego"}`;
+  desc.textContent = `Cultivo sugerido: ${nombre}`;
+  det.textContent = "Registra rápido desde aquí.";
+  btnR.disabled = false; btnA.disabled = false;
+  btnR.style.opacity = 1; btnA.style.opacity = 1;
+  btnR.dataset.id = urgente.c.id;
+  btnA.dataset.id = urgente.c.id;
+}
+function quickRegistrar(tipo) {
+  const btn = (tipo === "riego") ? document.getElementById("btnQuickRiego") : document.getElementById("btnQuickAbono");
+  const id = btn?.dataset?.id;
+  if (!id) { alert("No hay un cultivo seleccionado para registrar."); return; }
+  const cultivo = stateCultivos.find(c => c.id === id);
+  if (!cultivo) { alert("No encontré el cultivo."); return; }
+
+  const hoy = todayISO();
+  if (tipo === "riego") cultivo.ultimoRiego = hoy;
+  else cultivo.ultimaFertilizacion = hoy;
+
+  stateDiario.push({
+    id: Date.now().toString(36),
+    fecha: hoy,
+    texto: `${tipo === "riego" ? "Riego" : "Abono"} registrado para ${cultivo.nombre}.`,
+    tipo: tipo === "riego" ? "Riego" : "Abono"
+  });
+
+  saveCultivos(stateCultivos);
+  saveDiario(stateDiario);
+
+  renderCultivos();
+  renderDiario();
+  renderInicio();
+  updateAccionesRapidasUI();
+  alert(`${tipo === "riego" ? "Riego" : "Abono"} registrado ✅`);
+}
+
+/* =========================
+   PESTICIDAS DATA
+========================= */
+const PESTICIDAS_DATA = [
+  { nombre:"Jabón potásico", uso:"Pulgones, mosca blanca, ácaros (contacto).", nota:"Aplicar al atardecer; prueba en pocas hojas primero." },
+  { nombre:"Aceite de neem", uso:"Repelente/antialimentario suave.", nota:"Evitar sol fuerte; seguir etiqueta." },
+  { nombre:"Bicarbonato (suave)", uso:"Apoyo contra oídio/manchas.", nota:"No abusar; alterna y mejora ventilación." }
+];
+
+/* =========================
+   NAV (cambio de secciones)
+========================= */
+function setActiveSection(sectionKey) {
+  document.querySelectorAll(".nav-btn").forEach(b => {
+    b.classList.toggle("nav-btn--active", b.dataset.section === sectionKey);
+  });
+
+  document.querySelectorAll(".section").forEach(sec => sec.classList.remove("section--active"));
+  const target = document.getElementById(`section-${sectionKey}`);
+  if (target) target.classList.add("section--active");
+
+  if (sectionKey === "inicio") renderInicio();
+  if (sectionKey === "calendario") renderCalendario();
+  if (sectionKey === "catalogo") renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+  if (sectionKey === "huerto") renderCultivos();
+  if (sectionKey === "diario") renderDiario();
+  if (sectionKey === "plagas") renderPlagas();
+  if (sectionKey === "pesticidas") renderPesticidas();
+  if (sectionKey === "opciones") renderOpciones();
+}
+function bindNav() {
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    if (btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", () => setActiveSection(btn.dataset.section));
+  });
+}
+
+/* =========================
+   HEADER + INICIO
+========================= */
+function renderHeader() {
+  const el = document.getElementById("appSubtitle");
+  if (!el) return;
+  const n = escapeHTML(stateSettings.nombreHuerto || DEFAULT_SETTINGS.nombreHuerto);
+  const clima = CLIMA_LABEL[stateSettings.clima] || "tropical";
+  const hem = HEMISFERIO_LABEL[stateSettings.hemisferio] || "hemisferio norte";
+  el.innerHTML =
+    `<span>🏡 <strong>${n}</strong></span>` +
+    `<span class="app-subtitle-dot"></span>` +
+    `<span>🌦️ ${escapeHTML(clima)}</span>` +
+    `<span class="app-subtitle-dot"></span>` +
+    `<span>🧭 ${escapeHTML(hem)}</span>`;
+}
+function renderInicio() {
+  document.getElementById("estadoCultivosCount").textContent = String(stateCultivos.length || 0);
+  const hoy = todayISO();
+  const entradasHoy = (stateDiario || []).filter(e => e?.fecha === hoy).length;
+  document.getElementById("estadoEntradasCount").textContent = String(entradasHoy);
+
+  const resumen = document.getElementById("estadoResumen");
+  if (resumen) {
+    resumen.textContent = !stateCultivos.length
+      ? 'Aún no has registrado cultivos. Usa "Mi huerto" para añadir tu primera siembra.'
+      : (getPendientes({ rangeDays: 0 }).length ? "Hoy tienes pendientes. Atiende riego/abono." : "Hoy no tienes pendientes ✅");
+  }
+  const chip = document.getElementById("estadoClimaChip");
+  if (chip) chip.textContent = `Clima ${CLIMA_LABEL[stateSettings.clima] || "tropical"}`;
+
+  renderPendientesEnInicio();
+  updateAccionesRapidasUI();
+}
+
+/* =========================
+   CALENDARIO
+========================= */
+let calendarioMesActual = new Date().getMonth();
+function isRecommendedForMonth(cultivo, settings, monthIndex) {
+  const mesA = ajustarMesPorHemisferio(settings, monthIndex);
+  const meses = Array.isArray(cultivo.meses) ? cultivo.meses : [];
+  return meses.includes(mesA);
+}
+function renderCalendario() {
+  const chip = document.getElementById("calendarioClimaChip2");
+  if (chip) chip.textContent = `Clima ${CLIMA_LABEL[stateSettings.clima] || "tropical"}`;
+
+  const list = document.getElementById("calendarList");
+  const empty = document.getElementById("calendarEmpty");
+  if (!list || !empty) return;
+
+  document.querySelectorAll("#mesesPills .pill").forEach(p => {
+    p.classList.toggle("pill--active", parseInt(p.dataset.mes, 10) === calendarioMesActual);
+  });
+
+  const base = getCalendarData(stateSettings, calendarioMesActual);
+  const catalogoRecs = CATALOGO_CULTIVOS
+    .filter(c => isRecommendedForMonth(c, stateSettings, calendarioMesActual))
+    .slice(0, 10)
+    .map(c => ({ titulo:c.nombre, tipo:c.categoria || "—", detalle: c.esPersonalizado ? "Recomendación por meses (personalizado)." : "Recomendación por meses (catálogo)." }));
+
+  const merged = [...base, ...catalogoRecs];
+  list.innerHTML = "";
+  if (!merged.length) { empty.style.display = "block"; return; }
+  empty.style.display = "none";
+
+  merged.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "calendar-item";
+    div.innerHTML = `
+      <div class="calendar-item-title">
+        <span>${escapeHTML(item.titulo || "—")}</span>
+        <span class="chip">${escapeHTML(item.tipo || "—")}</span>
+      </div>
+      <div class="muted">${escapeHTML(item.detalle || "")}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+function bindCalendario() {
+  const wrap = document.getElementById("mesesPills");
+  if (!wrap || wrap.dataset.bound === "1") return;
+  wrap.dataset.bound = "1";
+  wrap.addEventListener("click", (ev) => {
+    const b = ev.target.closest("button.pill[data-mes]");
+    if (!b) return;
+    calendarioMesActual = parseInt(b.dataset.mes, 10);
+    renderCalendario();
+  });
+}
+
+/* =========================
+   CATALOGO (simple)
+========================= */
+function renderCatalogo(filtro = "") {
+  const list = document.getElementById("catalogoList");
+  if (!list) return;
+
+  const q = normText(filtro);
+  const items = CATALOGO_CULTIVOS.filter(c => !q || normText(c.nombre).includes(q) || normText(c.categoria).includes(q));
+
+  list.innerHTML = "";
+  if (!items.length) { list.innerHTML = `<div class="muted">No se encontraron cultivos.</div>`; return; }
+
+  items.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "cultivo-card";
+    const pl = Array.isArray(c.plagas) ? c.plagas.join(", ") : "—";
+    const badge = c.esPersonalizado ? `<span class="chip badge">Personalizado</span>` : `<span class="chip">Catálogo</span>`;
+    card.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <img class="cultivo-thumb" src="${escapeHTML(c.imagen || "img/placeholder.jpg")}" alt="${escapeHTML(c.nombre)}" onerror="this.src='img/placeholder.jpg';" />
+          <div>
+            <div>${escapeHTML(c.nombre)}</div>
+            <div class="muted">${escapeHTML(c.categoria || "—")} · ${escapeHTML(c.dias || "—")}</div>
+          </div>
+        </div>
+        ${badge}
+      </div>
+
+      <div class="cultivo-body">
+        <div><strong>Luz:</strong> ${escapeHTML(c.luz || "—")}</div>
+        <div><strong>Riego:</strong> ${escapeHTML(c.riego || "—")}</div>
+        <div><strong>Tiesto:</strong> ${escapeHTML(c.tiesto || "—")}</div>
+        <div><strong>Prof:</strong> ${escapeHTML(c.profundidad || "—")}</div>
+        <div style="grid-column:1/-1;"><strong>Plagas:</strong> ${escapeHTML(pl)}</div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+function bindCatalogo() {
+  const input = document.getElementById("catalogoBusqueda");
+  if (input && input.dataset.bound !== "1") {
+    input.dataset.bound = "1";
+    input.addEventListener("input", () => renderCatalogo(input.value.trim()));
+  }
+}
+
+/* =========================
+   MI HUERTO (completo)
+========================= */
+function renderCultivos() {
+  const list = document.getElementById("cultivosList");
+  const chip = document.getElementById("cultivosCountChip");
+  if (chip) chip.textContent = `${stateCultivos.length} cultivos`;
+  if (!list) return;
+
+  list.innerHTML = "";
+  if (!stateCultivos.length) {
+    list.innerHTML = `<div class="muted">Aún no hay cultivos registrados.</div>`;
+    return;
+  }
+
+  stateCultivos.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "cultivo-card";
+    const siembra = c.fechaSiembra ? c.fechaSiembra : "—";
+    div.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <div>
+            <div>${escapeHTML(c.nombre || "Cultivo")}${c.variedad ? ` <span class="muted">(${escapeHTML(c.variedad)})</span>` : ""}</div>
+            <div class="muted">Siembra: ${escapeHTML(siembra)} · Riego c/${c.frecuenciaRiegoDias}d · Abono c/${c.frecuenciaAbonoDias}d</div>
+          </div>
+        </div>
+        <span class="chip">ID: ${escapeHTML(c.id)}</span>
+      </div>
+      <div class="cultivo-actions">
+        <button class="btn btn-secondary" data-action="riego" data-id="${escapeHTML(c.id)}">💦 Riego</button>
+        <button class="btn btn-secondary" data-action="abono" data-id="${escapeHTML(c.id)}">💧 Abono</button>
+        <button class="btn btn-danger" data-action="delete" data-id="${escapeHTML(c.id)}">🗑️ Borrar</button>
+      </div>
+      ${c.notas ? `<div class="muted" style="margin-top:6px;">${escapeHTML(c.notas)}</div>` : ""}
+    `;
+    list.appendChild(div);
+  });
+}
+function bindHuerto() {
+  const btn = document.getElementById("btnAgregarCultivo");
+  if (btn && btn.dataset.bound !== "1") {
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", () => {
+      const nombre = (document.getElementById("cultivoNombre")?.value || "").trim();
+      if (!nombre) { alert("Escribe el nombre del cultivo."); return; }
+      const variedad = (document.getElementById("cultivoVariedad")?.value || "").trim();
+      const tipo = (document.getElementById("cultivoTipo")?.value || "otro").trim();
+      const fecha = (document.getElementById("cultivoFecha")?.value || todayISO()).trim();
+      const notas = (document.getElementById("cultivoNotas")?.value || "").trim();
+
+      const nuevo = normalizeCultivo({
+        id: `c-${Date.now().toString(36)}`,
+        nombre, variedad, tipo,
+        fechaSiembra: fecha,
+        notas,
+        creadoEl: todayISO(),
+        ultimoRiego: null,
+        ultimaFertilizacion: null,
+        frecuenciaRiegoDias: 3,
+        frecuenciaAbonoDias: 30
+      });
+
+      stateCultivos.unshift(nuevo);
+      saveCultivos(stateCultivos);
+
+      document.getElementById("cultivoNombre").value = "";
+      document.getElementById("cultivoVariedad").value = "";
+      document.getElementById("cultivoNotas").value = "";
+
+      renderCultivos();
+      renderInicio();
+      updateAccionesRapidasUI();
+      alert("Cultivo guardado ✅");
+    });
+  }
+
+  const list = document.getElementById("cultivosList");
+  if (list && list.dataset.bound !== "1") {
+    list.dataset.bound = "1";
+    list.addEventListener("click", (ev) => {
+      const b = ev.target.closest("button[data-action]");
+      if (!b) return;
+      const id = b.dataset.id;
+      const c = stateCultivos.find(x => x.id === id);
+      if (!c) return;
+
+      if (b.dataset.action === "riego") {
+        c.ultimoRiego = todayISO();
+        saveCultivos(stateCultivos);
+        stateDiario.push({ id: Date.now().toString(36), fecha: todayISO(), texto:`Riego registrado para ${c.nombre}.`, tipo:"Riego" });
+        saveDiario(stateDiario);
+        renderCultivos(); renderDiario(); renderInicio(); updateAccionesRapidasUI();
+        alert("Riego ✅");
+      }
+
+      if (b.dataset.action === "abono") {
+        c.ultimaFertilizacion = todayISO();
+        saveCultivos(stateCultivos);
+        stateDiario.push({ id: Date.now().toString(36), fecha: todayISO(), texto:`Abono registrado para ${c.nombre}.`, tipo:"Abono" });
+        saveDiario(stateDiario);
+        renderCultivos(); renderDiario(); renderInicio(); updateAccionesRapidasUI();
+        alert("Abono ✅");
+      }
+
+      if (b.dataset.action === "delete") {
+        if (!confirm("¿Borrar este cultivo?")) return;
+        stateCultivos = stateCultivos.filter(x => x.id !== id);
+        saveCultivos(stateCultivos);
+        renderCultivos(); renderInicio(); updateAccionesRapidasUI();
+      }
     });
   }
 }
 
+/* =========================
+   DIARIO (completo)
+========================= */
+function renderDiario() {
+  const list = document.getElementById("diarioList");
+  const chip = document.getElementById("diarioCountChip");
+  if (chip) chip.textContent = `${stateDiario.length} entradas`;
+  if (!list) return;
+
+  const filtro = diarioFiltroActual;
+  const items = (stateDiario || []).slice().reverse().filter(e => {
+    if (filtro === "todos") return true;
+    return e?.tipo === filtro;
+  });
+
+  const resumenHoy = document.getElementById("diarioResumenHoy");
+  if (resumenHoy) {
+    const hoy = todayISO();
+    const hoyCount = (stateDiario || []).filter(e => e?.fecha === hoy).length;
+    resumenHoy.textContent = hoyCount ? `Hoy llevas ${hoyCount} entrada(s).` : "Hoy no hay entradas.";
+  }
+
+  list.innerHTML = "";
+  if (!items.length) {
+    list.innerHTML = `<div class="muted">No hay entradas aún.</div>`;
+    return;
+  }
+
+  items.slice(0, 60).forEach(e => {
+    const div = document.createElement("div");
+    div.className = "diario-item";
+    div.innerHTML = `
+      <div class="diario-item-header">
+        <div><strong>${escapeHTML(e.tipo || "General")}</strong> <span class="muted">· ${escapeHTML(e.fecha || "")}</span></div>
+        <button class="btn btn-danger" style="padding:6px 10px;" data-action="del" data-id="${escapeHTML(e.id)}">🗑️</button>
+      </div>
+      <div class="muted">${escapeHTML(e.texto || "")}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+function bindDiario() {
+  const btn = document.getElementById("btnGuardarDiario");
+  if (btn && btn.dataset.bound !== "1") {
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", () => {
+      const texto = (document.getElementById("diarioTexto")?.value || "").trim();
+      if (!texto) { alert("Escribe una nota para el diario."); return; }
+      stateDiario.push({ id: Date.now().toString(36), fecha: todayISO(), texto, tipo: "General" });
+      saveDiario(stateDiario);
+      document.getElementById("diarioTexto").value = "";
+      renderDiario();
+      renderInicio();
+      alert("Guardado ✅");
+    });
+  }
+
+  const filtros = document.getElementById("diarioFiltros");
+  if (filtros && filtros.dataset.bound !== "1") {
+    filtros.dataset.bound = "1";
+    filtros.addEventListener("click", (ev) => {
+      const b = ev.target.closest("button.pill[data-filtro]");
+      if (!b) return;
+      document.querySelectorAll("#diarioFiltros .pill").forEach(x => x.classList.remove("pill--active"));
+      b.classList.add("pill--active");
+      diarioFiltroActual = b.dataset.filtro;
+      renderDiario();
+    });
+  }
+
+  const list = document.getElementById("diarioList");
+  if (list && list.dataset.bound !== "1") {
+    list.dataset.bound = "1";
+    list.addEventListener("click", (ev) => {
+      const b = ev.target.closest("button[data-action='del']");
+      if (!b) return;
+      const id = b.dataset.id;
+      if (!confirm("¿Borrar esta entrada?")) return;
+      stateDiario = stateDiario.filter(x => x.id !== id);
+      saveDiario(stateDiario);
+      renderDiario();
+      renderInicio();
+    });
+  }
+}
+
+/* =========================
+   PLAGAS + PESTICIDAS (render)
+========================= */
+const PLAGAS_DATA = [
+  { id:"pulgones", nombre:"Pulgones", comoSeVe:"Insectos pequeños en brotes; hojas enrolladas.", manejoSuave:"Lavar con agua suave y revisar brotes.", preparadosCaseros:"Jabón potásico diluido al atardecer.", productosComerciales:"Insecticidas de contacto autorizados." },
+  { id:"mosca_blanca", nombre:"Mosca blanca", comoSeVe:"Volantitos blancos al mover la hoja.", manejoSuave:"Retirar hojas afectadas y ventilar.", preparadosCaseros:"Trampas amarillas + jabón potásico.", productosComerciales:"Productos específicos domésticos." },
+  { id:"hongos_hoja", nombre:"Hongos de hoja (mildiu, oídio, manchas)", comoSeVe:"Manchas o polvillo blanco.", manejoSuave:"Ventilar, no mojar de noche, retirar hojas.", preparadosCaseros:"Bicarbonato suave.", productosComerciales:"Fungicidas autorizados." }
+];
+function renderPlagas() {
+  const wrap = document.getElementById("plagasList");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  PLAGAS_DATA.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "plaga-card";
+    div.innerHTML = `
+      <div class="media-item-title">${escapeHTML(p.nombre)}</div>
+      <div class="media-item-body"><strong>Cómo se ve:</strong> ${escapeHTML(p.comoSeVe)}</div>
+      <div class="media-item-body"><strong>Manejo suave:</strong> ${escapeHTML(p.manejoSuave)}</div>
+      <div class="media-item-body"><strong>Casero:</strong> ${escapeHTML(p.preparadosCaseros)}</div>
+      <div class="media-item-body"><strong>Comercial:</strong> ${escapeHTML(p.productosComerciales)}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+function renderPesticidas() {
+  const wrap = document.getElementById("pesticidasList");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  PESTICIDAS_DATA.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "plaga-card";
+    div.innerHTML = `
+      <div class="media-item-title">${escapeHTML(p.nombre)}</div>
+      <div class="media-item-body"><strong>Uso:</strong> ${escapeHTML(p.uso)}</div>
+      <div class="media-item-body"><strong>Nota:</strong> ${escapeHTML(p.nota)}</div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+/* =========================
+   OPCIONES (guardar + backup)
+========================= */
+function renderOpciones() {
+  const n = document.getElementById("nombreHuerto");
+  const c = document.getElementById("climaSelect");
+  const h = document.getElementById("hemisferioSelect");
+  if (n) n.value = stateSettings.nombreHuerto || DEFAULT_SETTINGS.nombreHuerto;
+  if (c) c.value = stateSettings.clima || DEFAULT_SETTINGS.clima;
+  if (h) h.value = stateSettings.hemisferio || DEFAULT_SETTINGS.hemisferio;
+}
+function downloadBlob(filename, blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function bindOpciones() {
+  const btnSave = document.getElementById("btnGuardarConfig");
+  if (btnSave && btnSave.dataset.bound !== "1") {
+    btnSave.dataset.bound = "1";
+    btnSave.addEventListener("click", () => {
+      stateSettings = {
+        nombreHuerto: (document.getElementById("nombreHuerto")?.value || DEFAULT_SETTINGS.nombreHuerto).trim() || DEFAULT_SETTINGS.nombreHuerto,
+        clima: document.getElementById("climaSelect")?.value || DEFAULT_SETTINGS.clima,
+        hemisferio: document.getElementById("hemisferioSelect")?.value || DEFAULT_SETTINGS.hemisferio
+      };
+      saveSettings(stateSettings);
+      renderHeader();
+      renderInicio();
+      renderCalendario();
+      alert("Configuración guardada ✅");
+    });
+  }
+
+  const btnExport = document.getElementById("btnExportarJson");
+  if (btnExport && btnExport.dataset.bound !== "1") {
+    btnExport.dataset.bound = "1";
+    btnExport.addEventListener("click", () => {
+      const data = {
+        version: "v17.1",
+        exportedAt: new Date().toISOString(),
+        settings: stateSettings,
+        cultivos: stateCultivos,
+        diario: stateDiario,
+        customCultivos: loadCustomCultivos()
+      };
+      downloadBlob("mi-siembra-backup.json", new Blob([JSON.stringify(data, null, 2)], { type:"application/json" }));
+    });
+  }
+
+  const btnImport = document.getElementById("btnImportarJson");
+  const input = document.getElementById("inputRespaldoJSON");
+  if (btnImport && input && btnImport.dataset.bound !== "1") {
+    btnImport.dataset.bound = "1";
+    btnImport.addEventListener("click", () => input.click());
+    input.addEventListener("change", async () => {
+      const f = input.files?.[0];
+      input.value = "";
+      if (!f) return;
+      try {
+        const raw = await f.text();
+        const data = JSON.parse(raw);
+
+        if (data?.settings) { stateSettings = { ...DEFAULT_SETTINGS, ...data.settings }; saveSettings(stateSettings); }
+        if (Array.isArray(data?.cultivos)) { stateCultivos = normalizeAllCultivos(data.cultivos); saveCultivos(stateCultivos); }
+        if (Array.isArray(data?.diario)) { stateDiario = data.diario; saveDiario(stateDiario); }
+        if (Array.isArray(data?.customCultivos)) { saveCustomCultivos(data.customCultivos); }
+
+        injectCustomIntoCatalogo(loadCustomCultivos());
+        renderAll();
+        alert("Respaldo restaurado ✅");
+      } catch (e) {
+        console.error(e);
+        alert("No pude importar ese archivo. Verifica que sea un .json válido.");
+      }
+    });
+  }
+
+  const btnBorrar = document.getElementById("btnBorrarTodo");
+  if (btnBorrar && btnBorrar.dataset.bound !== "1") {
+    btnBorrar.dataset.bound = "1";
+    btnBorrar.addEventListener("click", () => {
+      if (!confirm("Esto borrará TODO (cultivos, diario, ajustes). ¿Seguro?")) return;
+      localStorage.removeItem(STORAGE_KEYS.settings);
+      localStorage.removeItem(STORAGE_KEYS.cultivos);
+      localStorage.removeItem(STORAGE_KEYS.diario);
+      localStorage.removeItem(STORAGE_CUSTOM_CULTIVOS);
+      stateSettings = loadSettings();
+      stateCultivos = [];
+      stateDiario = [];
+      injectCustomIntoCatalogo([]);
+      renderAll();
+      alert("Listo. Todo fue borrado ✅");
+    });
+  }
+}
+
+/* =========================
+   BINDS extra
+========================= */
+function bindAccionesRapidas() {
+  const r = document.getElementById("btnQuickRiego");
+  const a = document.getElementById("btnQuickAbono");
+  if (r && r.dataset.bound !== "1") { r.dataset.bound = "1"; r.addEventListener("click", () => quickRegistrar("riego")); }
+  if (a && a.dataset.bound !== "1") { a.dataset.bound = "1"; a.addEventListener("click", () => quickRegistrar("abono")); }
+}
+
+/* =========================
+   INIT
+========================= */
 function renderAll() {
   renderHeader();
   injectCustomIntoCatalogo(loadCustomCultivos());
   renderInicio();
   renderCalendario();
   renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
-  // Si ya tienes renderCultivos/renderDiario/binds en tu script, se llamarán desde setActiveSection cuando entres.
+  renderOpciones();
 }
-
 function init() {
   injectCustomIntoCatalogo(loadCustomCultivos());
   bindNav();
   bindCalendario();
   bindCatalogo();
   bindAccionesRapidas();
-  bindPWAInstall();
-  setupCultivoManualUI();
+  bindHuerto();
+  bindDiario();
+  bindOpciones();
 
   const f = document.getElementById("cultivoFecha");
   if (f && !f.value) f.value = todayISO();
@@ -2018,7 +2874,6 @@ function init() {
   renderAll();
   setActiveSection("inicio");
 }
-
 document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
