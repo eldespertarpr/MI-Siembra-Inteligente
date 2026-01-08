@@ -1070,7 +1070,173 @@ function normText(s) {
       const dia = d.getDate().toString().padStart(2, "0");
       return `${dia} ${meses[d.getMonth()]} ${d.getFullYear()}`;
     }
+/*********************
+ * Pendientes (riego/abono/rotación)
+ *********************/
+function safeISO(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr + "T00:00:00");
+  return Number.isNaN(d.getTime()) ? null : dateStr;
+}
 
+function daysBetween(fromISO, toISO) {
+  const a = new Date(fromISO + "T00:00:00");
+  const b = new Date(toISO + "T00:00:00");
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return null;
+  const ms = b.getTime() - a.getTime();
+  return Math.floor(ms / (1000 * 60 * 60 * 24));
+}
+
+function normalizeCultivo(c) {
+  const hoy = todayISO();
+  const out = { ...c };
+
+  // Defaults seguros (no rompen datos viejos)
+  out.ultimoRiego = safeISO(out.ultimoRiego);
+  out.ultimaFertilizacion = safeISO(out.ultimaFertilizacion);
+  out.ultimaRotacion = safeISO(out.ultimaRotacion);
+
+  // Frecuencias por defecto si no existen
+  if (!Number.isFinite(out.frecuenciaRiegoDias) || out.frecuenciaRiegoDias <= 0) out.frecuenciaRiegoDias = 3;
+  if (!Number.isFinite(out.frecuenciaAbonoDias) || out.frecuenciaAbonoDias <= 0) out.frecuenciaAbonoDias = 30;
+
+  // Rotación: si no hay, la dejamos en null (opcional)
+  // Si quieres default global, pon 90 (3 meses)
+  if (out.rotacionDias != null) {
+    const r = parseInt(out.rotacionDias, 10);
+    out.rotacionDias = Number.isFinite(r) && r > 0 ? r : null;
+  } else {
+    out.rotacionDias = null;
+  }
+
+  // Si no hay fecha de siembra, dejamos la que exista; si viene mal, null
+  out.fechaSiembra = safeISO(out.fechaSiembra) || out.fechaSiembra || hoy;
+
+  return out;
+}
+
+function normalizeAllCultivos(list) {
+  const arr = Array.isArray(list) ? list.map(normalizeCultivo) : [];
+  return arr;
+}
+
+// Calcula “próxima fecha” para cada acción
+function calcNextDate(ultimaISO, frecuenciaDias) {
+  const base = safeISO(ultimaISO) || todayISO(); // si nunca lo hizo, lo tratamos como “toca hoy”
+  return addDays(base, frecuenciaDias);
+}
+
+function getPendientes({ rangeDays = 0 } = {}) {
+  const hoy = todayISO();
+  const fin = rangeDays > 0 ? addDays(hoy, rangeDays) : hoy;
+
+  const items = [];
+
+  stateCultivos.forEach(c => {
+    const nombre = c.nombre || "Cultivo";
+
+    // RIEGO
+    if (c.frecuenciaRiegoDias) {
+      const proxima = calcNextDate(c.ultimoRiego, c.frecuenciaRiegoDias);
+      const d = daysBetween(hoy, proxima);
+      if (d !== null && proxima >= hoy && proxima <= fin) {
+        items.push({
+          tipo: "Riego",
+          cultivoId: c.id,
+          nombre,
+          fecha: proxima,
+          texto: d === 0 ? `${nombre}: riego hoy` : `${nombre}: riego en ${d} día(s)`
+        });
+      }
+      // Si está vencido (proxima < hoy), lo marcamos como “atrasado”
+      if (proxima < hoy) {
+        const atras = daysBetween(proxima, hoy);
+        items.push({
+          tipo: "Riego",
+          cultivoId: c.id,
+          nombre,
+          fecha: hoy,
+          texto: `${nombre}: riego atrasado (${atras} día(s))`
+        });
+      }
+    }
+
+    // ABONO
+    if (c.frecuenciaAbonoDias) {
+      const proxima = calcNextDate(c.ultimaFertilizacion, c.frecuenciaAbonoDias);
+      const d = daysBetween(hoy, proxima);
+      if (d !== null && proxima >= hoy && proxima <= fin) {
+        items.push({
+          tipo: "Abono",
+          cultivoId: c.id,
+          nombre,
+          fecha: proxima,
+          texto: d === 0 ? `${nombre}: abono hoy` : `${nombre}: abono en ${d} día(s)`
+        });
+      }
+      if (proxima < hoy) {
+        const atras = daysBetween(proxima, hoy);
+        items.push({
+          tipo: "Abono",
+          cultivoId: c.id,
+          nombre,
+          fecha: hoy,
+          texto: `${nombre}: abono atrasado (${atras} día(s))`
+        });
+      }
+    }
+
+    // ROTACIÓN (opcional)
+    if (c.rotacionDias) {
+      const proxima = calcNextDate(c.ultimaRotacion, c.rotacionDias);
+      const d = daysBetween(hoy, proxima);
+      if (d !== null && proxima >= hoy && proxima <= fin) {
+        items.push({
+          tipo: "Rotación",
+          cultivoId: c.id,
+          nombre,
+          fecha: proxima,
+          texto: d === 0 ? `${nombre}: rotación hoy` : `${nombre}: rotación en ${d} día(s)`
+        });
+      }
+      if (proxima < hoy) {
+        const atras = daysBetween(proxima, hoy);
+        items.push({
+          tipo: "Rotación",
+          cultivoId: c.id,
+          nombre,
+          fecha: hoy,
+          texto: `${nombre}: rotación atrasada (${atras} día(s))`
+        });
+      }
+    }
+  });
+
+  // Orden: primero fecha, luego tipo
+  items.sort((a, b) => (a.fecha || "").localeCompare(b.fecha || "") || (a.tipo || "").localeCompare(b.tipo || ""));
+  return items;
+}
+
+function renderPendientesEnInicio() {
+  const el = document.getElementById("pendientesHoy");
+  if (!el) return;
+
+  if (!stateCultivos.length) {
+    el.textContent = "Pendientes: añade tu primer cultivo en “Mi huerto”.";
+    return;
+  }
+
+  const hoy = getPendientes({ rangeDays: 0 });
+  if (!hoy.length) {
+    el.textContent = "Pendientes: nada para hoy ✅";
+    return;
+  }
+
+  // mostramos máx 5 para no saturar
+  const top = hoy.slice(0, 5).map(i => `• ${i.texto}`).join("\n");
+  el.innerHTML = `<strong>Pendientes hoy:</strong><br>${escapeHTML(top).replace(/\n/g, "<br>")}` +
+    (hoy.length > 5 ? `<br><span class="muted">(+${hoy.length - 5} más)</span>` : "");
+}
     /*********************
      * Calendario de siembra
      *********************/
