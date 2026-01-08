@@ -1636,69 +1636,67 @@ function normText(s) {
     }
 
     function renderCatalogo(filtroTexto = "") {
-      const listEl = document.getElementById("catalogoList");
-      if (!listEl) return;
+  const listEl = document.getElementById("catalogoList");
+  if (!listEl) return;
 
-      const filtro = normText(filtroTexto).trim();
-...
-return normText(c.nombre).includes(filtro) || normText(c.id).includes(filtro);
-      const lista = CATALOGO_CULTIVOS.filter(c => {
-        if (!filtro) return true;
-        return (c.nombre || "").toLowerCase().includes(filtro) || (c.id || "").toLowerCase().includes(filtro);
-      });
+  const filtro = normText(filtroTexto).trim();
 
-      if (!lista.length) {
-        listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${escapeHTML(filtroTexto)}".</p>`;
-        return;
-      }
+  const lista = CATALOGO_CULTIVOS.filter(c => {
+    if (!filtro) return true;
+    return normText(c.nombre || "").includes(filtro) || normText(c.id || "").includes(filtro);
+  });
 
-      listEl.innerHTML = "";
-      lista.forEach(c => {
-        const imgSrc = c.imagen || "img/placeholder.jpg";
-        const card = document.createElement("div");
-        card.className = "cultivo-card";
+  if (!lista.length) {
+    listEl.innerHTML = `<p class="muted">No hay cultivos que coincidan con "${escapeHTML(filtroTexto)}".</p>`;
+    return;
+  }
 
-        const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "—";
+  listEl.innerHTML = "";
+  lista.forEach(c => {
+    const imgSrc = c.imagen || "img/placeholder.jpg";
+    const card = document.createElement("div");
+    card.className = "cultivo-card";
 
-        card.innerHTML = `
-          <div class="cultivo-header">
-            <div class="cultivo-title">
-              <img src="${escapeHTML(imgSrc)}" alt="${escapeHTML(c.nombre)}" class="cultivo-thumb"
-                   onerror="this.onerror=null;this.src='img/placeholder.jpg';" />
-              <span>🌱 ${escapeHTML(c.nombre)}</span>
-            </div>
-            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
-              <span class="chip">${escapeHTML(c.categoria)}</span>
-              ${c.esPersonalizado ? `<span class="chip badge">Personalizado</span>` : ``}
-            </div>
-          </div>
+    const plagasTxt = Array.isArray(c.plagas) && c.plagas.length ? c.plagas.join(", ") : "—";
 
-          <div class="cultivo-body">
-            <div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias)}</div>
-            <div><strong>Luz:</strong> ${escapeHTML(c.luz)}</div>
-            <div><strong>Riego:</strong> ${escapeHTML(c.riego)}</div>
-            <div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto)}</div>
-            <div><strong>Profundidad de siembra:</strong> ${escapeHTML(c.profundidad)}</div>
-            <div><strong>Plagas frecuentes:</strong> ${escapeHTML(plagasTxt)}</div>
-          </div>
+    card.innerHTML = `
+      <div class="cultivo-header">
+        <div class="cultivo-title">
+          <img src="${escapeHTML(imgSrc)}" alt="${escapeHTML(c.nombre)}" class="cultivo-thumb"
+               onerror="this.onerror=null;this.src='img/placeholder.jpg';" />
+          <span>🌱 ${escapeHTML(c.nombre)}</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+          <span class="chip">${escapeHTML(c.categoria)}</span>
+          ${c.esPersonalizado ? `<span class="chip badge">Personalizado</span>` : ``}
+        </div>
+      </div>
 
-          <div class="cultivo-actions">
-            <button class="btn btn-secondary" data-id="${escapeHTML(c.id)}" data-action="germinacion">🔁 Germinación / reproducción</button>
-            ${c.esPersonalizado ? `
-              <button class="btn btn-secondary" data-id="${escapeHTML(c.id)}" data-action="editar-custom">✏️ Editar</button>
-              <button class="btn btn-danger" data-id="${escapeHTML(c.id)}" data-action="borrar-custom">🗑 Borrar</button>
-            ` : ``}
-          </div>
-        `;
+      <div class="cultivo-body">
+        <div><strong>Días a cosecha:</strong> ${escapeHTML(c.dias)}</div>
+        <div><strong>Luz:</strong> ${escapeHTML(c.luz)}</div>
+        <div><strong>Riego:</strong> ${escapeHTML(c.riego)}</div>
+        <div><strong>Tiesto / suelo:</strong> ${escapeHTML(c.tiesto)}</div>
+        <div><strong>Profundidad de siembra:</strong> ${escapeHTML(c.profundidad)}</div>
+        <div><strong>Plagas frecuentes:</strong> ${escapeHTML(plagasTxt)}</div>
+      </div>
 
-        // panel germinación
-        const panel = document.createElement("div");
-        panel.className = "germinacion-panel";
-        card.appendChild(panel);
+      <div class="cultivo-actions">
+        <button class="btn btn-secondary" data-id="${escapeHTML(c.id)}" data-action="germinacion">🔁 Germinación / reproducción</button>
+        ${c.esPersonalizado ? `
+          <button class="btn btn-secondary" data-id="${escapeHTML(c.id)}" data-action="editar-custom">✏️ Editar</button>
+          <button class="btn btn-danger" data-id="${escapeHTML(c.id)}" data-action="borrar-custom">🗑 Borrar</button>
+        ` : ``}
+      </div>
+    `;
 
-        listEl.appendChild(card);
-      });
-    }
+    const panel = document.createElement("div");
+    panel.className = "germinacion-panel";
+    card.appendChild(panel);
+
+    listEl.appendChild(card);
+  });
+}
 
     function getRiegoYCosechaParaNombre(nombre, fechaSiembraISO) {
       let frecuenciaRiego = null;
