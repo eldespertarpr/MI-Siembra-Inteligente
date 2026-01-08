@@ -1418,7 +1418,8 @@ function renderPendientesEnInicio() {
      * Estado global
      *********************/
     let stateSettings = loadSettings();
-    let stateCultivos = loadCultivos();
+    let stateCultivos = normalizeAllCultivos(loadCultivos());
+saveCultivos(stateCultivos); // opcional, pero recomendado para “migrar” defaults
     let stateDiario = loadDiario();
     let diarioFiltroActual = "todos";
     let diarioEnEdicionId = null;
