@@ -2396,6 +2396,11 @@ function setupDiario() {
       const nombreInput = document.getElementById("nombreHuerto");
       const climaSelect = document.getElementById("climaSelect");
       const hemisSelect = document.getElementById("hemisferioSelect");
+      const geoLatInput = document.getElementById("geoLat");
+const geoLonInput = document.getElementById("geoLon");
+
+if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
+if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
 
       if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
       if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
