@@ -1051,10 +1051,12 @@ window.addEventListener("unhandledrejection", (e) => debug("Promise error: " + (
     };
 
     const DEFAULT_SETTINGS = {
-      nombreHuerto: "Mi huerto",
-      clima: "tropical",
-      hemisferio: "norte"
-    };
+  nombreHuerto: "Mi huerto",
+  clima: "tropical",
+  hemisferio: "norte",
+  geoLat: null,
+  geoLon: null
+};
 
     const CLIMA_LABEL = {
       tropical: "tropical",
