@@ -956,7 +956,32 @@
 
   <script>
     "use strict";
+// ==== DEBUG EN PANTALLA (Bloque 1) ====
+function debug(msg) {
+  let el = document.getElementById("debugBox");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "debugBox";
+    el.style.position = "fixed";
+    el.style.top = "8px";
+    el.style.right = "8px";
+    el.style.zIndex = "9999";
+    el.style.maxWidth = "70vw";
+    el.style.padding = "8px 10px";
+    el.style.borderRadius = "12px";
+    el.style.fontSize = "12px";
+    el.style.background = "rgba(15,23,42,0.92)";
+    el.style.border = "1px solid rgba(148,163,184,0.45)";
+    el.style.color = "#e5e7eb";
+    el.style.boxShadow = "0 12px 30px rgba(0,0,0,0.35)";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+}
 
+window.addEventListener("error", (e) => debug("JS error: " + (e.message || e.error)));
+window.addEventListener("unhandledrejection", (e) => debug("Promise error: " + (e.reason?.message || e.reason)));
+// ==== FIN DEBUG (Bloque 1) ====
     /*********************
      * Helpers (seguridad básica de HTML)
      *********************/
