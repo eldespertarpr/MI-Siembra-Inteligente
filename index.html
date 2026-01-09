@@ -2410,8 +2410,20 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
         const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
         const nuevoClima = climaSelect.value || "tropical";
         const nuevoHemis = hemisSelect.value || "norte";
+        const geoLatInput = document.getElementById("geoLat");
+        const geoLonInput = document.getElementById("geoLon");
 
-        stateSettings = { ...stateSettings, nombreHuerto: nuevoNombre, clima: nuevoClima, hemisferio: nuevoHemis };
+if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
+if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
+
+        stateSettings = {
+  ...stateSettings,
+  nombreHuerto: nuevoNombre,
+  clima: nuevoClima,
+  hemisferio: nuevoHemis,
+  geoLat: nuevoLat ? parseFloat(nuevoLat) : null,
+  geoLon: nuevoLon ? parseFloat(nuevoLon) : null
+};
         saveSettings(stateSettings);
 
         updateHeader();
