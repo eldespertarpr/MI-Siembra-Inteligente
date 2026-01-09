@@ -2407,23 +2407,28 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
       if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
 
       document.getElementById("btnGuardarConfig")?.addEventListener("click", () => {
-        const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
-        const nuevoClima = climaSelect.value || "tropical";
-        const nuevoHemis = hemisSelect.value || "norte";
-        const geoLatInput = document.getElementById("geoLat");
-        const geoLonInput = document.getElementById("geoLon");
+      btnGuardarConfig.addEventListener("click", () => {
+  const nombre = document.getElementById("nombreHuerto")?.value?.trim();
+  const clima = document.getElementById("climaSelect")?.value;
+  const hemisferio = document.getElementById("hemisferioSelect")?.value;
 
-if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
-if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
+  const latInput = document.getElementById("geoLat");
+  const lonInput = document.getElementById("geoLon");
 
-        stateSettings = {
-  ...stateSettings,
-  nombreHuerto: nuevoNombre,
-  clima: nuevoClima,
-  hemisferio: nuevoHemis,
-  geoLat: nuevoLat ? parseFloat(nuevoLat) : null,
-  geoLon: nuevoLon ? parseFloat(nuevoLon) : null
-};
+  const nuevoLat = latInput?.value ? parseFloat(latInput.value) : null;
+  const nuevoLon = lonInput?.value ? parseFloat(lonInput.value) : null;
+
+  stateSettings.nombreHuerto = nombre || stateSettings.nombreHuerto;
+  stateSettings.clima = clima;
+  stateSettings.hemisferio = hemisferio;
+  stateSettings.geoLat = Number.isFinite(nuevoLat) ? nuevoLat : null;
+  stateSettings.geoLon = Number.isFinite(nuevoLon) ? nuevoLon : null;
+
+  saveSettings(stateSettings);
+  renderInicio();
+
+  alert("Configuración guardada ✅");
+});
         saveSettings(stateSettings);
 
         updateHeader();
