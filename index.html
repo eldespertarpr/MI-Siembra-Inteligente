@@ -1044,6 +1044,103 @@ window.addEventListener("unhandledrejection", (e) => debug("Promise error: " + (
     /*********************
      * Storage
      *********************/
+    /*********************
+ * Clima real (Open-Meteo)
+ *********************/
+function toNumOrNull(v) {
+  const n = parseFloat(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+function getUserGeoFromSettings() {
+  const lat = toNumOrNull(stateSettings.geoLat);
+  const lon = toNumOrNull(stateSettings.geoLon);
+  if (lat == null || lon == null) return null;
+  return { lat, lon };
+}
+
+function setClimaError(msg) {
+  const el = document.getElementById("climaErrorTxt");
+  if (!el) return;
+  if (!msg) {
+    el.style.display = "none";
+    el.textContent = "";
+  } else {
+    el.style.display = "block";
+    el.textContent = msg;
+  }
+}
+
+function setClimaUI({ tempC, windKmh, lluviaMm, code, fuente }) {
+  const ahoraTxt = document.getElementById("climaAhoraTxt");
+  const ahoraSub = document.getElementById("climaAhoraSub");
+  const lluviaTxt = document.getElementById("climaLluviaTxt");
+  const lluviaSub = document.getElementById("climaLluviaSub");
+
+  if (ahoraTxt) ahoraTxt.textContent = (tempC == null) ? "—" : `${Math.round(tempC)}°C`;
+  if (ahoraSub) {
+    const partes = [];
+    if (code != null) partes.push(`código ${code}`);
+    if (windKmh != null) partes.push(`viento ${Math.round(windKmh)} km/h`);
+    ahoraSub.textContent = partes.length ? partes.join(" · ") : "—";
+  }
+
+  if (lluviaTxt) lluviaTxt.textContent = (lluviaMm == null) ? "—" : `${lluviaMm.toFixed(1)} mm`;
+  if (lluviaSub) lluviaSub.textContent = fuente ? `Fuente: ${fuente}` : "—";
+}
+
+async function fetchOpenMeteo(lat, lon) {
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${encodeURIComponent(lat)}` +
+    `&longitude=${encodeURIComponent(lon)}` +
+    `&current=temperature_2m,weather_code,wind_speed_10m` +
+    `&daily=precipitation_sum` +
+    `&timezone=auto`;
+
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.json();
+}
+
+async function refreshClimaReal() {
+  try {
+    setClimaError("");
+
+    // 1) si el usuario puso lat/lon manual, usamos eso
+    let geo = getUserGeoFromSettings();
+
+    // 2) si no, intentamos geolocalización del navegador
+    if (!geo && "geolocation" in navigator) {
+      geo = await new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+          () => resolve(null),
+          { enableHighAccuracy: false, timeout: 8000, maximumAge: 10 * 60 * 1000 }
+        );
+      });
+    }
+
+    if (!geo) {
+      setClimaError("Clima real: no hay ubicación (define Lat/Lon en Opciones o permite ubicación).");
+      setClimaUI({ tempC: null, windKmh: null, lluviaMm: null, code: null, fuente: null });
+      return;
+    }
+
+    const data = await fetchOpenMeteo(geo.lat, geo.lon);
+
+    const tempC = data?.current?.temperature_2m ?? null;
+    const windKmh = data?.current?.wind_speed_10m ?? null;
+    const code = data?.current?.weather_code ?? null;
+    const lluviaMm = Array.isArray(data?.daily?.precipitation_sum) ? (data.daily.precipitation_sum[0] ?? null) : null;
+
+    setClimaUI({ tempC, windKmh, lluviaMm, code, fuente: "Open-Meteo" });
+
+  } catch (e) {
+    console.error("Clima real error:", e);
+    setClimaError("Clima real: error consultando Open-Meteo. Intenta más tarde.");
+  }
+}
     const STORAGE_KEYS = {
       settings: "msi-settings",
       cultivos: "msi-cultivos",
