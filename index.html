@@ -2526,48 +2526,80 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
     }
 
     function importarRespaldoJSON() {
-      const input = document.getElementById("inputRespaldoJSON");
-      if (!input) { alert("No se encontró el campo de archivo para restaurar el respaldo."); return; }
+  const input = document.getElementById("inputRespaldoJSON");
+  if (!input) {
+    alert("No se encontró el campo de archivo para restaurar el respaldo.");
+    return;
+  }
 
-      input.value = "";
-      input.onchange = event => {
-        const file = event.target.files[0];
-        if (!file) return;
+  input.value = "";
+  input.onchange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = e => {
-          try {
-            const data = JSON.parse(e.target.result);
-            if (!data || typeof data !== "object") throw new Error("Formato inválido");
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!data || typeof data !== "object") {
+          throw new Error("Formato inválido");
+        }
 
-            if (!confirm("Esto reemplazará los datos actuales por los del respaldo. ¿Continuar?")) return;
+        if (!confirm("Esto reemplazará los datos actuales por los del respaldo. ¿Continuar?")) {
+          return;
+        }
 
-            stateSettings = { ...DEFAULT_SETTINGS, ...(data.settings || {}) };
-            stateCultivos = Array.isArray(data.cultivos) ? data.cultivos : [];
-            stateDiario = Array.isArray(data.diario) ? data.diario : [];
+        // Restaurar estado principal
+        stateSettings = { ...DEFAULT_SETTINGS, ...(data.settings || {}) };
+        stateCultivos = Array.isArray(data.cultivos) ? data.cultivos : [];
+        stateDiario = Array.isArray(data.diario) ? data.diario : [];
 
-            saveSettings(stateSettings);
-            saveCultivos(stateCultivos);
-            saveDiario(stateDiario);
+        // Restaurar cultivos personalizados si el respaldo los trae
+        const customList = Array.isArray(data.customCultivos) ? data.customCultivos : [];
+        saveCustomCultivos(customList);
+        injectCustomIntoCatalogo(customList); // refresca catálogo en memoria
 
-            updateHeader();
-            updateSettingsContexts();
-            renderCultivos();
-            renderDiario();
-            renderInicio();
-            renderCalendario(new Date().getMonth());
+        // Guardar en localStorage
+        saveSettings(stateSettings);
+        saveCultivos(stateCultivos);
+        saveDiario(stateDiario);
 
-            alert("Respaldo restaurado correctamente ✅");
-          } catch (err) {
-            console.error(err);
-            alert("No se pudo leer el respaldo. Usa un .json exportado por esta app.");
-          }
-        };
-        reader.readAsText(file);
-      };
+        // Actualizar campos de Opciones (UI)
+        const nombreInput = document.getElementById("nombreHuerto");
+        const climaSelect = document.getElementById("climaSelect");
+        const hemisSelect = document.getElementById("hemisferioSelect");
+        const geoLatInput = document.getElementById("geoLat");
+        const geoLonInput = document.getElementById("geoLon");
 
-      input.click();
-    }
+        if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
+        if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
+        if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
+        if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
+        if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
+
+        // Re-render general
+        updateHeader();
+        updateSettingsContexts();
+        renderInicio();
+        renderCalendario(new Date().getMonth());
+        renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+        renderCultivos();
+        renderDiario();
+        renderPlagas();
+        renderPesticidas();
+
+        alert("Respaldo restaurado correctamente ✅");
+      } catch (err) {
+        console.error(err);
+        alert("No se pudo leer el respaldo. Usa un .json exportado por esta app.");
+      }
+    };
+
+    reader.readAsText(file);
+  };
+
+  input.click();
+}
 
     function borrarTodo() {
   if (!confirm("Esto borrará ajustes, cultivos y diario en este dispositivo. ¿Seguro?")) return;
