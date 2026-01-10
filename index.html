@@ -2292,7 +2292,7 @@ function setupDiario() {
   const listEl = document.getElementById("diarioList");
 
   if (!btn || !campo) return;
-
+document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
   // Guardar / actualizar
   btn.addEventListener("click", () => {
     const texto = campo.value.trim();
