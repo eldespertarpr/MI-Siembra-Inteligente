@@ -2609,20 +2609,20 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
   localStorage.removeItem(STORAGE_KEYS.cultivos);
   localStorage.removeItem(STORAGE_KEYS.diario);
 
-  // Borra cultivos personalizados (y compat con versiones viejas)
+  // Borra cultivos personalizados (claves actuales y antiguas)
   localStorage.removeItem(STORAGE_CUSTOM_CULTIVOS);
   ["msi-custom-cultivos", "msi-custom-cultivos-v16", "msi-custom-cultivos-v15"].forEach(k => {
     try { localStorage.removeItem(k); } catch {}
   });
 
-  // Resetea estado
+  // Reset estado en memoria
   stateSettings = { ...DEFAULT_SETTINGS };
   stateCultivos = [];
   stateDiario = [];
-
-  // IMPORTANTÍSIMO: limpia personalizados del catálogo EN MEMORIA
-  injectCustomIntoCatalogo([]);     // <- quita esPersonalizado del array base
   customEditId = null;
+
+  // Limpia personalizados del catálogo en memoria
+  injectCustomIntoCatalogo([]);
 
   // Resetea UI de formulario personalizado
   const card = document.getElementById("nuevoCultivoCard");
@@ -2630,16 +2630,20 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
   clearCustomCultivoUI();
   resetEditCustomCultivoUI();
 
-  // Resetea inputs opciones
+  // Resetea campos de opciones
   const nombreInput = document.getElementById("nombreHuerto");
   const climaSelect = document.getElementById("climaSelect");
   const hemisSelect = document.getElementById("hemisferioSelect");
+  const geoLatInput = document.getElementById("geoLat");
+  const geoLonInput = document.getElementById("geoLon");
 
   if (nombreInput) nombreInput.value = stateSettings.nombreHuerto;
   if (climaSelect) climaSelect.value = stateSettings.clima;
   if (hemisSelect) hemisSelect.value = stateSettings.hemisferio;
+  if (geoLatInput) geoLatInput.value = "";
+  if (geoLonInput) geoLonInput.value = "";
 
-  // Re-render todo (incluye catálogo)
+  // Re-render completo
   updateHeader();
   updateSettingsContexts();
   renderInicio();
@@ -2647,6 +2651,8 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
   renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
   renderCultivos();
   renderDiario();
+  renderPlagas();
+  renderPesticidas();
 
   alert("Se borraron todos los datos. Empezarás de cero 🌱");
 }
