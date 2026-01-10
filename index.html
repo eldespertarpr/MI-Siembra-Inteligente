@@ -2705,6 +2705,12 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
       setupOpciones();
       setupCatalogo();
       setupCalendarioLinksSafe();
+      // Botones de exportar / respaldo / borrar
+  document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
+  document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
+  document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
+  document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
+  document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
     });
   </script>
 </body>
