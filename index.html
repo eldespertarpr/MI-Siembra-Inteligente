@@ -2419,6 +2419,10 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
   const nuevoLon = lonInput?.value ? parseFloat(lonInput.value) : null;
 const nuevoLat = (geoLatInput?.value || "").trim();
 let nuevoLon = (geoLonInput?.value || "").trim();
+
+// Si el usuario no puede escribir "-", y puso un valor positivo, lo hacemos negativo
+if (nuevoLon && !nuevoLon.startsWith("-")) {
+  nuevoLon = "-" + nuevoLon;
                                                 }
   stateSettings.nombreHuerto = nombre || stateSettings.nombreHuerto;
   stateSettings.clima = clima;
@@ -2731,4 +2735,4 @@ let nuevoLon = (geoLonInput?.value || "").trim();
     });
   </script>
 </body>
-                                                  </html>
+            </html>
