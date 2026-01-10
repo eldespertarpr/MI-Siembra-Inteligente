@@ -2393,58 +2393,62 @@ function setupDiario() {
   }
 }
     function setupOpciones() {
-      const nombreInput = document.getElementById("nombreHuerto");
-      const climaSelect = document.getElementById("climaSelect");
-      const hemisSelect = document.getElementById("hemisferioSelect");
-      const geoLatInput = document.getElementById("geoLat");
-const geoLonInput = document.getElementById("geoLon");
+  const nombreInput = document.getElementById("nombreHuerto");
+  const climaSelect = document.getElementById("climaSelect");
+  const hemisSelect = document.getElementById("hemisferioSelect");
 
-if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
-if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
+  // Estos IDs deben existir SOLO UNA VEZ en toda la página
+  const geoLatInput = document.getElementById("geoLat");
+  const geoLonInput = document.getElementById("geoLon");
 
-      if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
-      if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
-      if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
+  if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
+  if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
+  if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
 
-      document.getElementById("btnGuardarConfig")?.addEventListener("click", () => {
-      btnGuardarConfig.addEventListener("click", () => {
-  const nombre = document.getElementById("nombreHuerto")?.value?.trim();
-  const clima = document.getElementById("climaSelect")?.value;
-  const hemisferio = document.getElementById("hemisferioSelect")?.value;
+  if (geoLatInput) geoLatInput.value = (stateSettings.geoLat ?? "");
+  if (geoLonInput) geoLonInput.value = (stateSettings.geoLon ?? "");
 
-  const latInput = document.getElementById("geoLat");
-  const lonInput = document.getElementById("geoLon");
+  const btnGuardar = document.getElementById("btnGuardarConfig");
+  if (!btnGuardar) return;
+  if (btnGuardar.dataset.bound === "1") return;
+  btnGuardar.dataset.bound = "1";
 
-  const nuevoLat = latInput?.value ? parseFloat(latInput.value) : null;
-  const nuevoLon = lonInput?.value ? parseFloat(lonInput.value) : null;
-const nuevoLat = (geoLatInput?.value || "").trim();
-let nuevoLon = (geoLonInput?.value || "").trim();
-                                                }
-  stateSettings.nombreHuerto = nombre || stateSettings.nombreHuerto;
-  stateSettings.clima = clima;
-  stateSettings.hemisferio = hemisferio;
-  stateSettings.geoLat = Number.isFinite(nuevoLat) ? nuevoLat : null;
-  stateSettings.geoLon = Number.isFinite(nuevoLon) ? nuevoLon : null;
+  btnGuardar.addEventListener("click", () => {
+    const nombre = (nombreInput?.value || "").trim();
+    const clima = climaSelect?.value || "tropical";
+    const hemisferio = hemisSelect?.value || "norte";
 
-  saveSettings(stateSettings);
-  renderInicio();
+    const latStr = (geoLatInput?.value || "").trim();
+    let lonStr = (geoLonInput?.value || "").trim();
 
-  alert("Configuración guardada ✅");
-});
-        saveSettings(stateSettings);
+    // SOLUCIÓN a tu problema del teclado sin "-"
+    if (lonStr && !lonStr.startsWith("-")) lonStr = "-" + lonStr;
 
-        updateHeader();
-        updateSettingsContexts();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        alert("Configuración guardada ✅");
-      });
+    const lat = latStr ? parseFloat(latStr) : null;
+    const lon = lonStr ? parseFloat(lonStr) : null;
 
-      document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
-      document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
-      document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
-      document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
-    }
+    stateSettings.nombreHuerto = nombre || "Mi huerto";
+    stateSettings.clima = clima;
+    stateSettings.hemisferio = hemisferio;
+    stateSettings.geoLat = Number.isFinite(lat) ? lat : null;
+    stateSettings.geoLon = Number.isFinite(lon) ? lon : null;
+
+    saveSettings(stateSettings);
+
+    updateHeader();
+    updateSettingsContexts();
+    renderInicio();
+    renderCalendario(new Date().getMonth());
+    try { refreshClimaReal(); } catch {}
+
+    alert("Configuración guardada ✅");
+  });
+
+  document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
+  document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
+  document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
+  document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
+}
 
     /*********************
      * PDF y respaldo
