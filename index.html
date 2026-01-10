@@ -1656,22 +1656,7 @@ async function refreshClimaReal() {
     }
 
     function updateSettingsContexts() {
-  const nombre = stateSettings.nombreHuerto || "Mi huerto";
-  const clima = CLIMA_LABEL[stateSettings.clima] || CLIMA_LABEL.tropical;
-  const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio] || HEMISFERIO_LABEL.norte;
-
-  document.querySelectorAll(".settings-context").forEach(el => {
-    el.innerHTML = `
-      <span class="chip"><span>🌿</span> Huerto: ${escapeHTML(nombre)}</span>
-      <span class="chip"><span>☁️</span> Clima: ${escapeHTML(clima)}</span>
-      <span class="chip"><span>🧭</span> ${escapeHTML(hemis)}</span>
-    `;
-  });
-
-  const climaText = `Clima ${clima}`;
-  document.getElementById("estadoClimaChip")?.textContent = climaText;
-  document.getElementById("calendarioClimaChip2")?.textContent = climaText;
-}
+  cofunction updateSettingsContexts
 
     function renderInicio() {
       const cultivosCount = stateCultivos.length;
