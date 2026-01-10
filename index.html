@@ -1654,7 +1654,7 @@ async function refreshClimaReal() {
     }
 
     function updateSettingsContexts() {
-      const nombre = stateSettings.nombreHuerto || "Mi huerto";
+      stateSettings.nombreHuerto = nombre || stateSettings.nombreHuerto || "Mi huerto";
       const clima = CLIMA_LABEL[stateSettings.clima] || CLIMA_LABEL.tropical;
       const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio] || HEMISFERIO_LABEL.norte;
 
