@@ -709,7 +709,7 @@
 
 <p class="muted" style="margin-top:6px;">
   Tip: si lo dejas en blanco, la app intentará usar tu ubicación del teléfono (si das permiso).
-</p>
+</p>.
               <div class="field">
                 <label for="nuevoCultivoNombre">Nombre del cultivo *</label>
                 <input type="text" id="nuevoCultivoNombre" placeholder="Ej. cilantro criollo" />
@@ -726,7 +726,8 @@
                   <option value="Otro">Otro</option>
                 </select>
               </div>
-              </div>
+            </div>
+
             <div class="form-grid form-grid--2">
               <div class="field">
                 <label for="nuevoCultivoDiasGerminacion">Días de germinación (opcional)</label>
@@ -914,9 +915,7 @@
         <div class="app-card">
           <div class="app-card-header"><div class="app-card-title">Datos generales</div></div>
           <div class="media-list settings-context"></div>
-<div class="form-grid">
-  <div class="field">
-    <label for="nombreHuerto">Nombre de huerto</label>
+
           <div class="form-grid">
             <div class="field">
               <label for="nombreHuerto">Nombre de huerto</label>
@@ -1655,22 +1654,24 @@ async function refreshClimaReal() {
     }
 
     function updateSettingsContexts() {
-  const nombre = stateSettings.nombreHuerto || "Mi huerto";
-  const clima = CLIMA_LABEL[stateSettings.clima] || CLIMA_LABEL.tropical;
-  const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio] || HEMISFERIO_LABEL.norte;
+      const nombre = stateSettings.nombreHuerto || "Mi huerto";
+      const clima = CLIMA_LABEL[stateSettings.clima] || CLIMA_LABEL.tropical;
+      const hemis = HEMISFERIO_LABEL[stateSettings.hemisferio] || HEMISFERIO_LABEL.norte;
 
-  document.querySelectorAll(".settings-context").forEach(el => {
-    el.innerHTML = `
-      <span class="chip"><span>🌿</span> Huerto: ${escapeHTML(nombre)}</span>
-      <span class="chip"><span>☁️</span> Clima: ${escapeHTML(clima)}</span>
-      <span class="chip"><span>🧭</span> ${escapeHTML(hemis)}</span>
-    `;
-  });
+      document.querySelectorAll(".settings-context").forEach(el => {
+        el.innerHTML = `
+          <span class="chip"><span>🌿</span> Huerto: ${escapeHTML(nombre)}</span>
+          <span class="chip"><span>☁️</span> Clima: ${escapeHTML(clima)}</span>
+          <span class="chip"><span>🧭</span> ${escapeHTML(hemis)}</span>
+        `;
+      });
 
-  const climaText = `Clima ${clima}`;
-  document.getElementById("estadoClimaChip")?.textContent = climaText;
-  document.getElementById("calendarioClimaChip2")?.textContent = climaText;
-}
+      const climaText = `Clima ${clima}`;
+      const estadoClimaChip = document.getElementById("estadoClimaChip");
+      if (estadoClimaChip) estadoClimaChip.textContent = climaText;
+      const calChip2 = document.getElementById("calendarioClimaChip2");
+      if (calChip2) calChip2.textContent = climaText;
+    }
 
     function renderInicio() {
       const cultivosCount = stateCultivos.length;
@@ -1702,75 +1703,71 @@ async function refreshClimaReal() {
     }
 
     function renderCalendario(monthIndex) {
-  const listEl = document.getElementById("calendarList");
-  const emptyEl = document.getElementById("calendarEmpty");
-  if (!listEl || !emptyEl) return;
+      const listEl = document.getElementById("calendarList");
+      const emptyEl = document.getElementById("calendarEmpty");
+      if (!listEl || !emptyEl) return;
 
-  listEl.innerHTML = "";
-  emptyEl.style.display = "none";
+      listEl.innerHTML = "";
+      const data = getCalendarData(stateSettings, monthIndex);
+const MESES_ABR = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+const mesAjustado = ajustarMesPorHemisferio(stateSettings, monthIndex);
 
-  const data = getCalendarData(stateSettings, monthIndex);
+if (mesAjustado !== monthIndex) {
+  const info = document.createElement("p");
+  info.className = "muted";
+  info.textContent = `Hemisferio sur: ${MESES_ABR[monthIndex]} se interpreta como ${MESES_ABR[mesAjustado]} (+6m).`;
+  listEl.appendChild(info);
+}
+      if (data.length) {
+        emptyEl.style.display = "none";
+        data.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "calendar-item";
+          div.innerHTML = `
+            <div class="calendar-item-title">
+              <span>${escapeHTML(item.titulo)}</span>
+              <span class="chip">${escapeHTML(item.tipo)}</span>
+            </div>
+            <div>${escapeHTML(item.detalle)}</div>
+          `;
+          listEl.appendChild(div);
+        });
+      } else {
+        emptyEl.style.display = "block";
+      }
+      const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
+      const sugeridos = CATALOGO_CULTIVOS.filter(c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo));
 
-  const MESES_ABR = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-  const mesAjustado = ajustarMesPorHemisferio(stateSettings, monthIndex);
+      if (sugeridos.length) {
+        emptyEl.style.display = "none";
 
-  if (mesAjustado !== monthIndex) {
-    const info = document.createElement("p");
-    info.className = "muted";
-    info.textContent = `Hemisferio sur: ${MESES_ABR[monthIndex]} se interpreta como ${MESES_ABR[mesAjustado]} (+6m).`;
-    listEl.appendChild(info);
-  }
+        const separador = document.createElement("div");
+        separador.className = "divider-soft";
+        listEl.appendChild(separador);
 
-  if (data.length) {
-    data.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "calendar-item";
-      div.innerHTML = `
-        <div class="calendar-item-title">
-          <span>${escapeHTML(item.titulo)}</span>
-          <span class="chip">${escapeHTML(item.tipo)}</span>
-        </div>
-        <div>${escapeHTML(item.detalle)}</div>
-      `;
-      listEl.appendChild(div);
-    });
-  }
+        const tituloExtra = document.createElement("p");
+        tituloExtra.className = "muted";
+        tituloExtra.textContent = "Desde el catálogo: cultivos recomendados para este mes.";
+        listEl.appendChild(tituloExtra);
 
-  const mesCatalogo = ajustarMesPorHemisferio(stateSettings, monthIndex);
-  const sugeridos = CATALOGO_CULTIVOS.filter(c => Array.isArray(c.meses) && c.meses.includes(mesCatalogo));
-
-  if (sugeridos.length) {
-    const separador = document.createElement("div");
-    separador.className = "divider-soft";
-    listEl.appendChild(separador);
-
-    const tituloExtra = document.createElement("p");
-    tituloExtra.className = "muted";
-    tituloExtra.textContent = "Desde el catálogo: cultivos recomendados para este mes.";
-    listEl.appendChild(tituloExtra);
-
-    sugeridos.forEach(c => {
-      const div = document.createElement("div");
-      div.className = "calendar-item";
-      div.innerHTML = `
-        <div class="calendar-item-title">
-          <span>${escapeHTML(c.nombre)}</span>
-          <span class="chip">${escapeHTML(c.categoria)}</span>
-        </div>
-        <div>Días a cosecha: ${escapeHTML(c.dias)}. Luz: ${escapeHTML(c.luz)}.</div>
-        <div style="margin-top:6px;">
-          <button class="btn btn-secondary btn-full" data-action="ver-catalogo" data-id="${escapeHTML(c.id)}">
-            🔍 Ver en catálogo
-          </button>
-        </div>
-      `;
-      listEl.appendChild(div);
-    });
-  }
-
-  if (!data.length && !sugeridos.length) {
-    emptyEl.style.display = "block";
-  }
+        sugeridos.forEach(c => {
+          const div = document.createElement("div");
+          div.className = "calendar-item";
+          div.innerHTML = `
+            <div class="calendar-item-title">
+              <span>${escapeHTML(c.nombre)}</span>
+              <span class="chip">${escapeHTML(c.categoria)}</span>
+            </div>
+            <div>Días a cosecha: ${escapeHTML(c.dias)}. Luz: ${escapeHTML(c.luz)}.</div>
+            <div style="margin-top:6px;">
+              <button class="btn btn-secondary btn-full" data-action="ver-catalogo" data-id="${escapeHTML(c.id)}">
+                🔍 Ver en catálogo
+              </button>
+            </div>
+          `;
+          listEl.appendChild(div);
+        });
+      }
 }
     function irACultivoEnCatalogo(cultivoId) {
       const cultivo = CATALOGO_CULTIVOS.find(c => c.id === cultivoId);
@@ -2297,7 +2294,7 @@ function setupDiario() {
   const listEl = document.getElementById("diarioList");
 
   if (!btn || !campo) return;
-document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
+
   // Guardar / actualizar
   btn.addEventListener("click", () => {
     const texto = campo.value.trim();
@@ -2396,62 +2393,58 @@ document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", expor
   }
 }
     function setupOpciones() {
-  const nombreInput = document.getElementById("nombreHuerto");
-  const climaSelect = document.getElementById("climaSelect");
-  const hemisSelect = document.getElementById("hemisferioSelect");
+      const nombreInput = document.getElementById("nombreHuerto");
+      const climaSelect = document.getElementById("climaSelect");
+      const hemisSelect = document.getElementById("hemisferioSelect");
+      const geoLatInput = document.getElementById("geoLat");
+const geoLonInput = document.getElementById("geoLon");
 
-  // Estos IDs deben existir SOLO UNA VEZ en toda la página
-  const geoLatInput = document.getElementById("geoLat");
-  const geoLonInput = document.getElementById("geoLon");
+if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
+if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
 
-  if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
-  if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
-  if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
+      if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
+      if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
+      if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
 
-  if (geoLatInput) geoLatInput.value = (stateSettings.geoLat ?? "");
-  if (geoLonInput) geoLonInput.value = (stateSettings.geoLon ?? "");
+      document.getElementById("btnGuardarConfig")?.addEventListener("click", () => {
+      btnGuardarConfig.addEventListener("click", () => {
+  const nombre = document.getElementById("nombreHuerto")?.value?.trim();
+  const clima = document.getElementById("climaSelect")?.value;
+  const hemisferio = document.getElementById("hemisferioSelect")?.value;
 
-  const btnGuardar = document.getElementById("btnGuardarConfig");
-  if (!btnGuardar) return;
-  if (btnGuardar.dataset.bound === "1") return;
-  btnGuardar.dataset.bound = "1";
+  const latInput = document.getElementById("geoLat");
+  const lonInput = document.getElementById("geoLon");
 
-  btnGuardar.addEventListener("click", () => {
-    const nombre = (nombreInput?.value || "").trim();
-    const clima = climaSelect?.value || "tropical";
-    const hemisferio = hemisSelect?.value || "norte";
+  const nuevoLat = latInput?.value ? parseFloat(latInput.value) : null;
+  const nuevoLon = lonInput?.value ? parseFloat(lonInput.value) : null;
+const nuevoLat = (geoLatInput?.value || "").trim();
+let nuevoLon = (geoLonInput?.value || "").trim();
+                                                }
+  stateSettings.nombreHuerto = nombre || stateSettings.nombreHuerto;
+  stateSettings.clima = clima;
+  stateSettings.hemisferio = hemisferio;
+  stateSettings.geoLat = Number.isFinite(nuevoLat) ? nuevoLat : null;
+  stateSettings.geoLon = Number.isFinite(nuevoLon) ? nuevoLon : null;
 
-    const latStr = (geoLatInput?.value || "").trim();
-    let lonStr = (geoLonInput?.value || "").trim();
+  saveSettings(stateSettings);
+  renderInicio();
 
-    // SOLUCIÓN a tu problema del teclado sin "-"
-    if (lonStr && !lonStr.startsWith("-")) lonStr = "-" + lonStr;
+  alert("Configuración guardada ✅");
+});
+        saveSettings(stateSettings);
 
-    const lat = latStr ? parseFloat(latStr) : null;
-    const lon = lonStr ? parseFloat(lonStr) : null;
+        updateHeader();
+        updateSettingsContexts();
+        renderInicio();
+        renderCalendario(new Date().getMonth());
+        alert("Configuración guardada ✅");
+      });
 
-    stateSettings.nombreHuerto = nombre || stateSettings.nombreHuerto || "Mi huerto";
-    stateSettings.clima = clima;
-    stateSettings.hemisferio = hemisferio;
-    stateSettings.geoLat = Number.isFinite(lat) ? lat : null;
-    stateSettings.geoLon = Number.isFinite(lon) ? lon : null;
-
-    saveSettings(stateSettings);
-
-    updateHeader();
-    updateSettingsContexts();
-    renderInicio();
-    renderCalendario(new Date().getMonth());
-    try { refreshClimaReal(); } catch {}
-
-    alert("Configuración guardada ✅");
-  });
-
-  document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
-  document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
-  document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
-  document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
-}
+      document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
+      document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
+      document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
+      document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
+    }
 
     /*********************
      * PDF y respaldo
@@ -2738,4 +2731,4 @@ document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", expor
     });
   </script>
 </body>
-  </html>
+                                                  </html>
