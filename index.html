@@ -2394,37 +2394,33 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
       if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
 
       document.getElementById("btnGuardarConfig")?.addEventListener("click", () => {
-        const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
-        const nuevoClima = climaSelect.value || "tropical";
-        const nuevoHemis = hemisSelect.value || "norte";
-        const geoLatInput = document.getElementById("geoLat");
-        const geoLonInput = document.getElementById("geoLon");
+  const nuevoNombre = (nombreInput.value || "").trim() || "Mi huerto";
+  const nuevoClima = climaSelect.value || "tropical";
+  const nuevoHemis = hemisSelect.value || "norte";
 
-if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
-if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
+  const nuevoLat = (geoLatInput?.value || "").trim();
+  const nuevoLon = (geoLonInput?.value || "").trim();
 
-        stateSettings = {
-  ...stateSettings,
-  nombreHuerto: nuevoNombre,
-  clima: nuevoClima,
-  hemisferio: nuevoHemis,
-  geoLat: nuevoLat ? parseFloat(nuevoLat) : null,
-  geoLon: nuevoLon ? parseFloat(nuevoLon) : null
-};
-        saveSettings(stateSettings);
+  stateSettings = {
+    ...stateSettings,
+    nombreHuerto: nuevoNombre,
+    clima: nuevoClima,
+    hemisferio: nuevoHemis,
+    geoLat: nuevoLat ? toNumOrNull(nuevoLat) : null,
+    geoLon: nuevoLon ? toNumOrNull(nuevoLon) : null
+  };
 
-        updateHeader();
-        updateSettingsContexts();
-        renderInicio();
-        renderCalendario(new Date().getMonth());
-        alert("Configuración guardada ✅");
-      });
+  saveSettings(stateSettings);
 
-      document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
-      document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
-      document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
-      document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
-    }
+  updateHeader();
+  updateSettingsContexts();
+  renderInicio();
+  renderCalendario(new Date().getMonth());
+
+  refreshClimaReal(); // <-- para que actualice el clima al momento
+
+  alert("Configuración guardada ✅");
+});
 
     /*********************
      * PDF y respaldo
