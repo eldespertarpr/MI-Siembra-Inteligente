@@ -2524,7 +2524,37 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
         alert("Ocurrió un problema al exportar el diario.");
       }
     }
+function exportarRespaldoJSON() {
+  try {
+    // Incluye también los cultivos personalizados
+    const customList = loadCustomCultivos();
 
+    const data = {
+      version: "v17",
+      generadoEn: new Date().toISOString(),
+      settings: stateSettings,
+      cultivos: stateCultivos,
+      diario: stateDiario,
+      customCultivos: customList
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "mi-siembra-respaldo.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error(e);
+    alert("No se pudo crear el respaldo JSON.");
+  }
+}
     function importarRespaldoJSON() {
   const input = document.getElementById("inputRespaldoJSON");
   if (!input) {
