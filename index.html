@@ -2525,25 +2525,6 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
       }
     }
 
-    function exportarRespaldoJSON() {
-      const respaldo = { settings: stateSettings, cultivos: stateCultivos, diario: stateDiario };
-      const contenido = JSON.stringify(respaldo, null, 2);
-      const blob = new Blob([contenido], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-
-      const enlace = document.createElement("a");
-      const fecha = new Date().toISOString().slice(0, 10);
-      enlace.href = url;
-      enlace.download = `mi-siembra-respaldo-${fecha}.json`;
-
-      document.body.appendChild(enlace);
-      enlace.click();
-      document.body.removeChild(enlace);
-      URL.revokeObjectURL(url);
-
-      alert("Respaldo (.json) exportado correctamente ✅");
-    }
-
     function importarRespaldoJSON() {
       const input = document.getElementById("inputRespaldoJSON");
       if (!input) { alert("No se encontró el campo de archivo para restaurar el respaldo."); return; }
