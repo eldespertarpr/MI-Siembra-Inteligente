@@ -2427,7 +2427,7 @@ function setupDiario() {
     const lat = latStr ? parseFloat(latStr) : null;
     const lon = lonStr ? parseFloat(lonStr) : null;
 
-    stateSettings.nombreHuerto = nombre || stateSettings.nombreHuerto || "Mi huerto";
+    stateSettings.nombreHuerto = nombre || "Mi huerto";
     stateSettings.clima = clima;
     stateSettings.hemisferio = hemisferio;
     stateSettings.geoLat = Number.isFinite(lat) ? lat : null;
