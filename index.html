@@ -698,161 +698,102 @@
 
           <div class="cultivos-list" id="catalogoList"></div>
 
-          <!-- Formulario cultivo manual -->
-          <div class="app-card" id="nuevoCultivoCard" style="margin-top: 12px; display:none;">
-            <div class="app-card-header">
-              <div class="app-card-title" id="nuevoCultivoTitulo">Nuevo cultivo</div>
-              <span class="chip badge">Personalizado</span>
-            </div>
-             <div id="nuevoCultivoCard" style="display:none;">
-            <div class="form-grid form-grid--2">
-              <div class="divider-soft"></div>
-
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoNombre">Nombre del cultivo *</label>
-                <input type="text" id="nuevoCultivoNombre" placeholder="Ej. cilantro criollo" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoCategoria">Categoría</label>
-                <select id="nuevoCultivoCategoria">
-                  <option value="Hoja">Hoja</option>
-                  <option value="Fruto">Fruto</option>
-                  <option value="Raíz">Raíz</option>
-                  <option value="Tubérculo">Tubérculo</option>
-                  <option value="Aromática">Aromática</option>
-                  <option value="Frutal perenne">Frutal perenne</option>
-                  <option value="Otro">Otro</option>
-                </select>
-              </div>
-            </div>
-
-            <div id="bloqueGerminacion" class="form-grid form-grid--2" style="display:none;">
-              <div class="field">
-                <label for="nuevoCultivoDiasGerminacion">Días de germinación (opcional)</label>
-                <input type="number" id="nuevoCultivoDiasGerminacion" min="0" placeholder="Ej. 7" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoDiasCosecha">Días hasta cosecha (opcional)</label>
-                <input type="number" id="nuevoCultivoDiasCosecha" min="0" placeholder="Ej. 90" />
-              </div>
-            </div>
-
-            <div class="form-grid form-grid--2">
-              <div class="field">
-                <label for="nuevoCultivoLuz">Luz</label>
-                <input type="text" id="nuevoCultivoLuz" placeholder="Ej. Sol directo (6–8 h)" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoRiego">Riego</label>
-                <input type="text" id="nuevoCultivoRiego" placeholder="Ej. Suelo siempre ligeramente húmedo" />
-              </div>
-            </div>
-
-            <div class="form-grid form-grid--2">
-              <div class="field">
-                <label for="nuevoCultivoTiesto">Tiesto / suelo</label>
-                <input type="text" id="nuevoCultivoTiesto" placeholder="Ej. Maceta 5+ galones o suelo directo" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoProfundidad">Profundidad de siembra</label>
-                <input type="text" id="nuevoCultivoProfundidad" placeholder="Ej. 0.5–1 cm" />
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="nuevoCultivoPlagas">Plagas frecuentes (separadas por coma)</label>
-              <input type="text" id="nuevoCultivoPlagas" placeholder="Ej. pulgones, babosas, hongos" />
-            </div>
-
 <!-- Formulario cultivo manual -->
-          <div class="app-card" id="nuevoCultivoCard" style="margin-top: 12px; display:none;">
-            <div class="app-card-header">
-              <div class="app-card-title" id="nuevoCultivoTitulo">Nuevo cultivo</div>
-              <span class="chip badge">Personalizado</span>
-            </div>
+<div class="app-card" id="nuevoCultivoCard" style="margin-top: 12px; display:none;">
+  <div class="app-card-header">
+    <div class="app-card-title" id="nuevoCultivoTitulo">Nuevo cultivo</div>
+    <span class="chip badge">Personalizado</span>
+  </div>
 
-            <div class="form-grid form-grid--2">
-              <div class="field">
-                <label for="nuevoCultivoNombre">Nombre del cultivo *</label>
-                <input type="text" id="nuevoCultivoNombre" placeholder="Ej. cilantro criollo" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoCategoria">Categoría</label>
-                <select id="nuevoCultivoCategoria">
-                  <option value="Hoja">Hoja</option>
-                  <option value="Fruto">Fruto</option>
-                  <option value="Raíz">Raíz</option>
-                  <option value="Tubérculo">Tubérculo</option>
-                  <option value="Aromática">Aromática</option>
-                  <option value="Frutal perenne">Frutal perenne</option>
-                  <option value="Otro">Otro</option>
-                </select>
-              </div>
-            </div>
+  <div class="form-grid form-grid--2">
+    <div class="field">
+      <label for="nuevoCultivoNombre">Nombre del cultivo *</label>
+      <input type="text" id="nuevoCultivoNombre" placeholder="Ej. cilantro criollo" />
+    </div>
+    <div class="field">
+      <label for="nuevoCultivoCategoria">Categoría</label>
+      <select id="nuevoCultivoCategoria">
+        <option value="Hoja">Hoja</option>
+        <option value="Fruto">Fruto</option>
+        <option value="Raíz">Raíz</option>
+        <option value="Tubérculo">Tubérculo</option>
+        <option value="Aromática">Aromática</option>
+        <option value="Frutal perenne">Frutal perenne</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+  </div>
 
-            <div id="bloqueGerminacion" class="form-grid form-grid--2" style="display:none;">
-              <div class="field">
-                <label for="nuevoCultivoDiasGerminacion">Días de germinación (opcional)</label>
-                <input type="number" id="nuevoCultivoDiasGerminacion" min="0" placeholder="Ej. 7" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoDiasCosecha">Días hasta cosecha (opcional)</label>
-                <input type="number" id="nuevoCultivoDiasCosecha" min="0" placeholder="Ej. 90" />
-              </div>
-            </div>
+  <div id="bloqueGerminacion" class="form-grid form-grid--2" style="display:none;">
+    <div class="field">
+      <label for="nuevoCultivoDiasGerminacion">Días de germinación (opcional)</label>
+      <input type="number" id="nuevoCultivoDiasGerminacion" min="0" placeholder="Ej. 7" />
+    </div>
+    <div class="field">
+      <label for="nuevoCultivoDiasCosecha">Días hasta cosecha (opcional)</label>
+      <input type="number" id="nuevoCultivoDiasCosecha" min="0" placeholder="Ej. 90" />
+    </div>
+  </div>
 
-            <div class="form-grid form-grid--2">
-              <div class="field">
-                <label for="nuevoCultivoLuz">Luz</label>
-                <input type="text" id="nuevoCultivoLuz" placeholder="Ej. Sol directo (6–8 h)" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoRiego">Riego</label>
-                <input type="text" id="nuevoCultivoRiego" placeholder="Ej. Suelo siempre ligeramente húmedo" />
-              </div>
-            </div>
+  <div class="form-grid form-grid--2">
+    <div class="field">
+      <label for="nuevoCultivoLuz">Luz</label>
+      <input type="text" id="nuevoCultivoLuz" placeholder="Ej. Sol directo (6–8 h)" />
+    </div>
+    <div class="field">
+      <label for="nuevoCultivoRiego">Riego</label>
+      <input type="text" id="nuevoCultivoRiego" placeholder="Ej. Suelo siempre ligeramente húmedo" />
+    </div>
+  </div>
 
-            <div class="form-grid form-grid--2">
-              <div class="field">
-                <label for="nuevoCultivoTiesto">Tiesto / suelo</label>
-                <input type="text" id="nuevoCultivoTiesto" placeholder="Ej. Maceta 5+ galones o suelo directo" />
-              </div>
-              <div class="field">
-                <label for="nuevoCultivoProfundidad">Profundidad de siembra</label>
-                <input type="text" id="nuevoCultivoProfundidad" placeholder="Ej. 0.5–1 cm" />
-              </div>
-            </div>
+  <div class="form-grid form-grid--2">
+    <div class="field">
+      <label for="nuevoCultivoTiesto">Tiesto / suelo</label>
+      <input type="text" id="nuevoCultivoTiesto" placeholder="Ej. Maceta 5+ galones o suelo directo" />
+    </div>
+    <div class="field">
+      <label for="nuevoCultivoProfundidad">Profundidad de siembra</label>
+      <input type="text" id="nuevoCultivoProfundidad" placeholder="Ej. 0.5–1 cm" />
+    </div>
+  </div>
 
-            <div class="field">
-              <label for="nuevoCultivoPlagas">Plagas frecuentes (separadas por coma)</label>
-              <input type="text" id="nuevoCultivoPlagas" placeholder="Ej. pulgones, babosas, hongos" />
-            </div>
+  <div class="field">
+    <label for="nuevoCultivoPlagas">Plagas frecuentes (separadas por coma)</label>
+    <input type="text" id="nuevoCultivoPlagas" placeholder="Ej. pulgones, babosas, hongos" />
+  </div>
 
-            <div class="field" style="margin-top: 10px;">
-              <label>Meses de siembra (para recomendaciones del Calendario)</label>
-              <div class="pill-group" id="nuevoCultivoMesesPills">
-                <button type="button" class="pill" data-mes="0">Ene</button><button type="button" class="pill" data-mes="1">Feb</button>
-                <button type="button" class="pill" data-mes="2">Mar</button><button type="button" class="pill" data-mes="3">Abr</button>
-                <button type="button" class="pill" data-mes="4">May</button><button type="button" class="pill" data-mes="5">Jun</button>
-                <button type="button" class="pill" data-mes="6">Jul</button><button type="button" class="pill" data-mes="7">Ago</button>
-                <button type="button" class="pill" data-mes="8">Sep</button><button type="button" class="pill" data-mes="9">Oct</button>
-                <button type="button" class="pill" data-mes="10">Nov</button><button type="button" class="pill" data-mes="11">Dic</button>
-              </div>
-              <p class="muted" style="margin-top:6px;">Si no seleccionas ninguno, se asumirá <strong>todo el año</strong>.</p>
-            </div>
+  <div class="field" style="margin-top: 10px;">
+    <label>Meses de siembra (para recomendaciones del Calendario)</label>
+    <div class="pill-group" id="nuevoCultivoMesesPills">
+      <button type="button" class="pill" data-mes="0">Ene</button>
+      <button type="button" class="pill" data-mes="1">Feb</button>
+      <button type="button" class="pill" data-mes="2">Mar</button>
+      <button type="button" class="pill" data-mes="3">Abr</button>
+      <button type="button" class="pill" data-mes="4">May</button>
+      <button type="button" class="pill" data-mes="5">Jun</button>
+      <button type="button" class="pill" data-mes="6">Jul</button>
+      <button type="button" class="pill" data-mes="7">Ago</button>
+      <button type="button" class="pill" data-mes="8">Sep</button>
+      <button type="button" class="pill" data-mes="9">Oct</button>
+      <button type="button" class="pill" data-mes="10">Nov</button>
+      <button type="button" class="pill" data-mes="11">Dic</button>
+    </div>
+    <p class="muted" style="margin-top:6px;">
+      Si no seleccionas ninguno, se asumirá <strong>todo el año</strong>.
+    </p>
+  </div>
 
-            <div style="margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap;">
-              <button type="button" class="btn" id="btnGuardarNuevoCultivo">Guardar cultivo</button>
-              <button type="button" class="btn btn-secondary" id="btnCancelarNuevoCultivo">Cancelar</button>
-            </div>
+  <div style="margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap;">
+    <button type="button" class="btn" id="btnGuardarNuevoCultivo">Guardar cultivo</button>
+    <button type="button" class="btn btn-secondary" id="btnCancelarNuevoCultivo">Cancelar</button>
+  </div>
 
-            <p class="muted" style="margin-top: 10px;">
-              El cultivo se guardará en este dispositivo y aparecerá en el catálogo como <strong>“Cultivo personalizado”</strong>.
-            </p>
-          </div>
-        </div>
-      </section>
+  <p class="muted" style="margin-top: 10px;">
+    El cultivo se guardará en este dispositivo y aparecerá en el catálogo como
+    <strong>“Cultivo personalizado”</strong>.
+  </p>
+</div>
+
       <!-- MI HUERTO -->
       <section id="section-huerto" class="section">
         <div class="section-title-row"><div class="section-icon-pill">🌿</div><h2>Mi huerto</h2></div>
