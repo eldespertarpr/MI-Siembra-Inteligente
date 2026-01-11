@@ -2278,6 +2278,7 @@ if (mesAjustado !== monthIndex) {
         }
       });
     }
+// ==== Diario ====
 function setupDiario() {
   const btn = document.getElementById("btnGuardarDiario");
   const campo = document.getElementById("diarioTexto");
@@ -2289,7 +2290,10 @@ function setupDiario() {
   // Guardar / actualizar
   btn.addEventListener("click", () => {
     const texto = campo.value.trim();
-    if (!texto) { alert("Escribe algo antes de guardar."); return; }
+    if (!texto) {
+      alert("Escribe algo antes de guardar.");
+      return;
+    }
 
     const titleEl = document.getElementById("diarioFormTitle");
 
@@ -2359,8 +2363,9 @@ function setupDiario() {
         if (titleEl) titleEl.textContent = "Editar entrada";
 
         btn.innerHTML = '<span>💾</span> Actualizar entrada';
-        document.getElementById("diarioFormCard")
-          ?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+        document
+          .getElementById("diarioFormCard")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
 
@@ -2388,6 +2393,51 @@ function setupDiario() {
       }
     });
   }
+}
+
+// ==== Opciones ====
+function setupOpciones() {
+  const nombreInput = document.getElementById("nombreHuerto");
+  const climaSelect = document.getElementById("climaSelect");
+  const hemisSelect = document.getElementById("hemisferioSelect");
+  const geoLatInput = document.getElementById("geoLat");
+  const geoLonInput = document.getElementById("geoLon");
+
+  if (geoLatInput) geoLatInput.value = stateSettings.geoLat ?? "";
+  if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
+
+  if (nombreInput) nombreInput.value = stateSettings.nombreHuerto || "";
+  if (climaSelect) climaSelect.value = stateSettings.clima || "tropical";
+  if (hemisSelect) hemisSelect.value = stateSettings.hemisferio || "norte";
+
+  const btnGuardar = document.getElementById("btnGuardarConfig");
+  if (!btnGuardar) return;
+
+  btnGuardar.addEventListener("click", () => {
+    const nuevoNombre = (nombreInput?.value || "").trim() || "Mi huerto";
+    const nuevoClima = climaSelect?.value || "tropical";
+    const nuevoHemis = hemisSelect?.value || "norte";
+
+    const nuevoLat = (geoLatInput?.value || "").trim();
+    const nuevoLon = (geoLonInput?.value || "").trim();
+
+    stateSettings = {
+      ...stateSettings,
+      nombreHuerto: nuevoNombre,
+      clima: nuevoClima,
+      hemisferio: nuevoHemis,
+      geoLat: nuevoLat ? toNumOrNull(nuevoLat) : null,
+      geoLon: nuevoLon ? toNumOrNull(nuevoLon) : null
+    };
+
+    saveSettings(stateSettings);
+    updateHeader();
+    updateSettingsContexts();
+    renderInicio();
+    renderCalendario(new Date().getMonth());
+    refreshClimaReal();
+    alert("Configuración guardada ✅");
+  });
 }
 function setupGuardarCoordsInicio() {
   const btn = document.getElementById("btnGuardarCoords");
