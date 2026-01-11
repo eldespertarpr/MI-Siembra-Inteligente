@@ -2285,7 +2285,60 @@ function setupDiario() {
   const listEl = document.getElementById("diarioList");
 
   if (!btn || !campo) return;
+function setupGuardarCoordsInicio() {
+  const btn = document.getElementById("btnGuardarCoords");
+  const latInput = document.getElementById("geoLat");
+  const lonInput = document.getElementById("geoLon");
+  if (!btn || !latInput || !lonInput) return;
+  if (btn.dataset.bound === "1") return;
+  btn.dataset.bound = "1";
 
+  btn.addEventListener("click", () => {
+    const rawLat = (latInput.value || "").trim();
+    const rawLon = (lonInput.value || "").trim();
+
+    // Si ambas vacías → borrar coords y volver a usar GPS automático
+    if (!rawLat && !rawLon) {
+      stateSettings = {
+        ...stateSettings,
+        geoLat: null,
+        geoLon: null
+      };
+      saveSettings(stateSettings);
+      refreshClimaReal();
+      alert("Se borraron las coordenadas. La app intentará usar la ubicación del teléfono. ✅");
+      return;
+    }
+
+    // Deben venir las dos
+    if (!rawLat || !rawLon) {
+      alert("Escribe latitud y longitud para guardar.");
+      return;
+    }
+
+    const lat = toNumOrNull(rawLat);
+    const lon = toNumOrNull(rawLon);
+
+    if (lat == null || lon == null) {
+      alert("Revisa las coordenadas. Usa solo números (puedes usar punto o coma).");
+      return;
+    }
+
+    stateSettings = {
+      ...stateSettings,
+      geoLat: lat,
+      geoLon: lon
+    };
+    saveSettings(stateSettings);
+
+    // Actualiza clima y contexto
+    updateHeader();
+    updateSettingsContexts();
+    refreshClimaReal();
+
+    alert("Coordenadas guardadas ✅");
+  });
+}
   // Guardar / actualizar
   btn.addEventListener("click", () => {
     const texto = campo.value.trim();
