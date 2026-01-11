@@ -2480,6 +2480,28 @@ if (geoLonInput) geoLonInput.value = stateSettings.geoLon ?? "";
 });
     }
 
+function setupGuardarCoordsInicio() {
+  const btn = document.getElementById("btnGuardarCoordsInicio");
+  const latInput = document.getElementById("geoLat");
+  const lonInput = document.getElementById("geoLon");
+
+  if (!btn || !latInput || !lonInput) return;
+
+  btn.addEventListener("click", () => {
+    const latStr = (latInput.value || "").trim();
+    const lonStr = (lonInput.value || "").trim();
+
+    stateSettings.geoLat = latStr ? toNumOrNull(latStr) : null;
+    stateSettings.geoLon = lonStr ? toNumOrNull(lonStr) : null;
+
+    saveSettings(stateSettings);
+    updateHeader();
+    updateSettingsContexts();
+    refreshClimaReal();
+
+    alert("Coordenadas guardadas ✅");
+  });
+      }
     /*********************
      * PDF y respaldo
      *********************/
