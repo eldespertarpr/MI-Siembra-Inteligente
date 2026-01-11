@@ -2808,38 +2808,41 @@ function exportarRespaldoJSON() {
      * Inicio app
      *********************/
     document.addEventListener("DOMContentLoaded", () => {
-      debug("App cargó ✅");
-      stateSettings = loadSettings();
-      stateCultivos = loadCultivos();
-      stateDiario = loadDiario();
+  debug("App cargó ✅");
+  stateSettings = loadSettings();
+  stateCultivos = loadCultivos();
+  stateDiario = loadDiario();
 
-      initCustomCultivos(); // <-- IMPORTANT: antes de renderCalendario / renderCatalogo
+  initCustomCultivos();
 
-      updateHeader();
-      updateSettingsContexts();
+  updateHeader();
+  updateSettingsContexts();
 
-      renderInicio();
-      renderCalendario(new Date().getMonth());
-      renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
-      renderCultivos();
-      renderDiario();
-      renderPlagas();
-      renderPesticidas();
+  renderInicio();
+  renderCalendario(new Date().getMonth());
+  renderCatalogo((document.getElementById("catalogoBusqueda")?.value || "").trim());
+  renderCultivos();
+  renderDiario();
+  renderPlagas();
+  renderPesticidas();
 
-      setupNavigation();
-      setupMesesPills();
-      setupMiHuertoForm();
-      setupDiario();
-      setupOpciones();
-      setupCatalogo();
-      setupCalendarioLinksSafe();
-      // Botones de exportar / respaldo / borrar
+  setupNavigation();
+  setupMesesPills();
+  setupMiHuertoForm();
+  setupDiario();
+  setupOpciones();
+  setupCatalogo();
+  setupCalendarioLinksSafe();
+  // <-- AQUÍ METEMOS EL NUEVO
+  setupGuardarCoordsInicio();
+
+  // Botones de exportar / respaldo / borrar
   document.getElementById("btnExportarDatosPdf")?.addEventListener("click", exportarDatosPDF);
   document.getElementById("btnExportarDiarioPdf")?.addEventListener("click", exportarDiarioPDF);
   document.getElementById("btnExportarJson")?.addEventListener("click", exportarRespaldoJSON);
   document.getElementById("btnImportarJson")?.addEventListener("click", importarRespaldoJSON);
   document.getElementById("btnBorrarTodo")?.addEventListener("click", borrarTodo);
-    });
+});
   </script>
 </body>
                                                             </html>
